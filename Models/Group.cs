@@ -5,7 +5,8 @@ namespace BPMPlus.Models
 {
     public class Group
     {
-
+        public List<Function> Functions { get; } = [];
+        public List<User> Users{ get; } = [];
         [Column(TypeName = "VARCHAR")]
         [MaxLength(20)]
         [Key]
