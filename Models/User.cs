@@ -15,7 +15,7 @@ namespace BPMPlus.Models
         public string GradeId { get; set; }
         public bool UserIsActive { get; set; }
         public DateTime CreatedTime { get; set; }
-        public DateTime UpdateTime { get; set; }
+        public DateTime UpdatedTime { get; set; }
         [Column(TypeName = "VARCHAR")]
         [MaxLength(20)]
         public string TEL { get; set; }
