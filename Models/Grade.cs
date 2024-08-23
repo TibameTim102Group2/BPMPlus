@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BPMPlus.Models
 {
+    [Table("Grade")]
     public class Grade
     {
         [Column(TypeName = "VARCHAR")]

@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BPMPlus.Models
 {
+    [Table("FormRecord")]
     public class FormRecord
     {
         [Key]
@@ -12,30 +13,41 @@ namespace BPMPlus.Models
 
         [Column(TypeName = "nvarchar")]
         [MaxLength(300)]
-        public string Remark { get; set; }
-
+        public string? Remark { get; set; }
+  
         [Column(TypeName = "varchar")]
         [MaxLength(20)]
-        public string FormId { get; set; }
+        [ForeignKey("Form")]
+        public string? FormId { get; set; }
+        public virtual Form? Form { get; set; }
 
-        [Column(TypeName = "varchar")]
+        [Column(TypeName = "VARCHAR")]
         [MaxLength(20)]
+
         public string DepartmentId { get; set; }
 
-        [Column(TypeName = "varchar")]
-        [MaxLength(20)]
+        [Column(TypeName = "NVARCHAR")]
+        [MaxLength(450)]
+
         public string UserId { get; set; }
 
-        [Column(TypeName = "varchar")]
-        [MaxLength(20)]
-        public string ResultId { get; set; }
-
-        [Column(TypeName = "int")]
-        public string FunctionId { get; set; }
 
         [Column(TypeName = "varchar")]
         [MaxLength(20)]
-        public string GradeId { get; set; }
+        [ForeignKey("Result")]
+        public string? ResultId { get; set; }
+        public virtual Result? Result { get; set; }
+
+        [Column(TypeName = "VARCHAR")]
+        [MaxLength(20)]
+        [ForeignKey("Function")]
+        public string? FunctionId { get; set; }
+        public virtual Function? Function { get; set; }
+        [Column(TypeName = "VARCHAR")]
+        [MaxLength(20)]
+        [ForeignKey("Grade")]
+        public string? GradeId { get; set; }
+        public virtual Grade? Grade { get; set; }
 
         [Column(TypeName = "datetime")]
         public DateTime Date { get; set; }

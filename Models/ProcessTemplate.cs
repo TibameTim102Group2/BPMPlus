@@ -10,13 +10,18 @@ namespace BPMPlus.Models
         [MaxLength(20)]
         public string ProcessNodeId { get; set; }
 
-        [Column(TypeName = "varchar")]
+        [Column(TypeName = "VARCHAR")]
         [MaxLength(20)]
-        public string FunctionId { get; set; }
+        [ForeignKey("Function")]
+        public string? FunctionId { get; set; }
+        public virtual Function? Function { get; set; }
 
-        [Column(TypeName = "varchar")]
+        
+        [Column(TypeName = "VARCHAR")]
         [MaxLength(20)]
-        public string CategoryId { get; set; }
+        [ForeignKey("Category")]
+        public string? CategoryId { get; set; }
+        public virtual Category? Category { get; set; }
 
         [Column(TypeName = "datetime")]
         public DateTime CreatedTime { get; set; }

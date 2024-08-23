@@ -4,6 +4,7 @@ using BPMPlus.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BPMPlus.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240823123757_Add ALLFK")]
+    partial class AddALLFK
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -327,6 +330,10 @@ namespace BPMPlus.Data.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("VARCHAR");
 
+                    b.Property<string>("FormId")
+                        .HasMaxLength(20)
+                        .HasColumnType("VARCHAR");
+
                     b.Property<string>("FunctionId")
                         .HasMaxLength(20)
                         .HasColumnType("VARCHAR");
@@ -342,6 +349,8 @@ namespace BPMPlus.Data.Migrations
                     b.HasKey("ProcessNodeId");
 
                     b.HasIndex("DepartmentId");
+
+                    b.HasIndex("FormId");
 
                     b.HasIndex("FunctionId");
 
@@ -735,11 +744,17 @@ namespace BPMPlus.Data.Migrations
                         .WithMany()
                         .HasForeignKey("DepartmentId");
 
+                    b.HasOne("BPMPlus.Models.Form", "Form")
+                        .WithMany()
+                        .HasForeignKey("FormId");
+
                     b.HasOne("BPMPlus.Models.Function", "Function")
                         .WithMany()
                         .HasForeignKey("FunctionId");
 
                     b.Navigation("Department");
+
+                    b.Navigation("Form");
 
                     b.Navigation("Function");
                 });

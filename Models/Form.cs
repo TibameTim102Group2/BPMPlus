@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BPMPlus.Models
 {
+    [Table("Form")]
     public class Form
     {
         [Key]
@@ -10,19 +11,25 @@ namespace BPMPlus.Models
         [MaxLength(20)]
         public string FormId { get; set; }
 
-        [Column(TypeName = "VARCHAR")]
-        [MaxLength(20)]
+        [Column(TypeName = "NVARCHAR")]
+        [MaxLength(450)]
+ 
         public string UserId { get; set; }
+        
 
         public DateTime Date { get; set; }
 
         [Column(TypeName = "VARCHAR")]
         [MaxLength(20)]
-        public string CategoryId { get; set; }
+        [ForeignKey("Category")]
+        public string? CategoryId { get; set; }
+        public virtual Category? Category { get; set; }
 
         [Column(TypeName = "VARCHAR")]
         [MaxLength(20)]
-        public string ProjectId { get; set; }
+        [ForeignKey("Project")]
+        public string? ProjectId { get; set; }
+        public virtual Project? Project { get; set; }
 
         [Column(TypeName = "VARCHAR")]
         [MaxLength(20)]
@@ -38,14 +45,18 @@ namespace BPMPlus.Models
         [Column(TypeName = "VARCHAR")]
         [MaxLength(20)]
         public string HandleDepartmentId { get; set; }
+       
 
         [Column(TypeName = "VARCHAR")]
         [MaxLength(10)]
         public string Tel { get; set; }
 
+
         [Column(TypeName = "VARCHAR")]
         [MaxLength(20)]
-        public string ProcessNodeId { get; set; }
+        [ForeignKey("ProcessNode")]
+        public string? ProcessNodeId { get; set; }
+        public virtual ProcessNode? ProcessNode { get; set; }
 
         public bool FormIsActive { get; set; }
 
