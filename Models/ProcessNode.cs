@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BPMPlus.Models
 {
+    [Table("ProcessNode")]
     public class ProcessNode
     {
         [Key]
@@ -12,19 +13,21 @@ namespace BPMPlus.Models
 
         [Column(TypeName = "VARCHAR")]
         [MaxLength(20)]
-        public string FunctionId { get; set; }
-
-        [Column(TypeName = "VARCHAR")]
-        [MaxLength(20)]
-        public string UserId { get; set; }
+        [ForeignKey("Function")]
+        public string? FunctionId { get; set; }
+        public virtual Function? Function { get; set; }
 
         [Column(TypeName = "NVARCHAR")]
-        [MaxLength(20)]
-        public string Department { get; set; }
+        [MaxLength(450)]
+        public string UserId { get; set; }
 
         [Column(TypeName = "VARCHAR")]
         [MaxLength(20)]
-        public string FormId { get; set; }
+        [ForeignKey("Department")]
+        public string? DepartmentId { get; set; }
+        public virtual Department? Department { get; set; }
+
+       
 
         public DateTime CreatedTime { get; set; }
 

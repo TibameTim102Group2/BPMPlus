@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BPMPlus.Models
 {
+    [Table("Project")]
     public class Project
     {
         [Key]
