@@ -30,7 +30,18 @@ namespace BPMPlus.Data
                     Config.GetConnectionString("DefaultConnection"));
             }
         }
-        public DbSet<BPMPlus.Models.Meeting> Meeting { get; set; } = default!;
-
+        public DbSet<BPMPlus.Models.Meeting> Meeting { get; set; }
+        public DbSet<BPMPlus.Models.Form> Form { get; set; }
+        public DbSet<BPMPlus.Models.ProcessNode> ProcessNodes { get; set; }
+        public DbSet<BPMPlus.Models.Project> Project { get; set; }
+        public DbSet<BPMPlus.Models.Category> Category { get; set; }
+        public DbSet<BPMPlus.Models.Department> Department { get; set; }
+        public DbSet<BPMPlus.Models.FormRecord> FormRecord { get; set; }
+        public DbSet<BPMPlus.Models.Function> Function { get; set; }
+        public DbSet<BPMPlus.Models.Grade> Grade { get; set; }
+        public DbSet<BPMPlus.Models.Result> Result { get; set; }
+        public DbSet<BPMPlus.Models.ProcessTemplate> ProcessTemplate { get; set; }
+        public DbSet<BPMPlus.Models.MeetingRooms> MeetingRooms { get; set; }
+        public DbSet<BPMPlus.Models.Group> Group { get; set; }
     }
 }
