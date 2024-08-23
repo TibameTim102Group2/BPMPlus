@@ -8,6 +8,7 @@ namespace BPMPlus.Models
     public class Meeting
     {
         public List<User> Users{ get; } = [];
+        [Key]
         [Column(TypeName = "VARCHAR")]
         [MaxLength(20)]
         public string MeetingId { get; set; }
