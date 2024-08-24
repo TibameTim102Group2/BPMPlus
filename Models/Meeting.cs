@@ -15,7 +15,7 @@ namespace BPMPlus.Models
         [Column(TypeName = "VARCHAR")]
         [MaxLength(20)]
         [ForeignKey("MeetingRooms")]
-        public string ?MeetingRoom { get; set; }
+        public string ?MeetingRoomId { get; set; }
         public virtual MeetingRooms? MeetingRooms { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
