@@ -10,8 +10,8 @@ namespace BPMPlus.Models
         [Column(TypeName = "VARCHAR")]
         [MaxLength(20)]
         [Key]
-        public string MeetingRoom { get; set; }
-        public int Accomadation { get; set; }
+        public string MeetingRoomId { get; set; }
+        public int Accomodation { get; set; }
         public DateTime CreatedTime { get; set; }
         public DateTime UpdatedTime { get; set; }
 
