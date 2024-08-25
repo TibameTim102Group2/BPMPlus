@@ -15,7 +15,7 @@ namespace BPMPlus.Data
             base.OnModelCreating(builder);
             builder.Entity<User>(b =>
             {
-                b.ToTable("Users");
+                b.ToTable("Users").HasAlternateKey(b => b.EmployeeId); 
             });
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
