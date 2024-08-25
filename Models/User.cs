@@ -17,6 +17,10 @@ namespace BPMPlus.Models
         public virtual Department? Department { get; set; }
         [Column(TypeName = "VARCHAR")]
         [MaxLength(20)]
+        public string EmployeeId { get; set; }
+        
+        [Column(TypeName = "VARCHAR")]
+        [MaxLength(20)]
         [ForeignKey("Grade")]
         public string? GradeId { get; set; }
         public virtual Grade? Grade { get; set; }
