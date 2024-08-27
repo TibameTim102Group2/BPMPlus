@@ -44,7 +44,9 @@
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a href="index3.html" class="nav-link">BPMPlus</a>
+                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                        BPMPlus
+                    </a>
                 </li>
             </ul>
         </nav>
@@ -73,31 +75,31 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="~/AdminLTE/pages/UI/icons.html" class="nav-link">
+                                    <a class="nav-link" asp-area="" asp-controller="ToDoList" asp-action="Index">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>代辦清單</p>
+                                        <p>待辦清單</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="~/AdminLTE/pages/UI/icons.html" class="nav-link">
+                                    <a class="nav-link" asp-area="" asp-controller="QueryForms" asp-action="Index">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>查詢工單</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="~/AdminLTE/pages/UI/buttons.html" class="nav-link">
+                                    <a class="nav-link" asp-area="" asp-controller="CreateForms" asp-action="Index">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>新增工單</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="~/AdminLTE/pages/UI/sliders.html" class="nav-link">
+                                    <a class="nav-link" asp-area="" asp-controller="FormRecords" asp-action="Index">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>工單處理流程</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="~/AdminLTE/pages/UI/sliders.html" class="nav-link">
+                                    <a class="nav-link" asp-area="" asp-controller="FormReview" asp-action="Index">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>審核工單</p>
                                     </a>
