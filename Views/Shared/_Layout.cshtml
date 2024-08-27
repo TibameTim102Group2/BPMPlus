@@ -1,55 +1,234 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - BPMPlus</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/BPMPlus.styles.css" asp-append-version="true" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BPMPLUS</title>
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/AdminLTE/plugins/fontawesome-free/css/all.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <!-- <link rel="stylesheet" href="~/AdminLTE/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css"> -->
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="~/AdminLTE/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- JQVMap -->
+    <link rel="stylesheet" href="~/AdminLTE/plugins/jqvmap/jqvmap.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/AdminLTE/dist/css/adminlte.min.css">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="~/AdminLTE/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+    <!-- Daterange picker -->
+    <link rel="stylesheet" href="~/AdminLTE/plugins/daterangepicker/daterangepicker.css">
+    <!-- summernote -->
+    <link rel="stylesheet" href="~/AdminLTE/plugins/summernote/summernote-bs4.min.css">
+    @await RenderSectionAsync("Style", required: false)
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">BPMPlus</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+
+        <!-- Preloader -->
+        <div class="flex-column justify-content-center align-items-center">
+        </div>
+
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="index3.html" class="nav-link">BPMPlus</a>
+                </li>
+            </ul>
+        </nav>
+        <!-- /.navbar -->
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <!-- Brand Logo -->
+            <a href="" class="brand-link">
+                <img src="~/images/bpmplus.png" class="elevation-3" style="width:13rem;" />
+            </a>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Sidebar Menu -->
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        <!-- Add icons to the links using the .nav-icon class
+                             with font-awesome or any other icon font library -->
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-tree"></i>
+                                <p>
+                                    工單管理
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="~/AdminLTE/pages/UI/icons.html" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>代辦清單</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="~/AdminLTE/pages/UI/icons.html" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>查詢工單</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="~/AdminLTE/pages/UI/buttons.html" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>新增工單</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="~/AdminLTE/pages/UI/sliders.html" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>工單處理流程</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="~/AdminLTE/pages/UI/sliders.html" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>審核工單</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-tree"></i>
+                                <p>
+                                    專案管理
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="~/AdminLTE/pages/UI/general.html" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>新建專案</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="~/AdminLTE/pages/UI/icons.html" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>查刪專案</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="~/AdminLTE/pages/UI/buttons.html" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>投票統計</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="~/AdminLTE/pages/UI/sliders.html" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>人員管理</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Meetings" asp-action="Index">會議資訊</a>
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-tree"></i>
+                                <p>
+                                    會議室預約
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="~/AdminLTE/pages/UI/general.html" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>目前會議室</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="~/AdminLTE/pages/UI/icons.html" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>新增預約</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="~/AdminLTE/pages/UI/icons.html" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>查詢預約</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-tree"></i>
+                                <p>
+                                    當日概覽
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
+                            </a>
                         </li>
                     </ul>
-                    <partial name="_LoginPartial" />
-                </div>
+                </nav>
+                <!-- /.sidebar-menu -->
             </div>
-        </nav>
-    </header>
-    <p>大家好</p>
-    <p>安安</p>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+            <!-- /.sidebar -->
+        </aside>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - BPMPlus - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            
+            <!-- Main content -->
+            <section class="content">
+                @RenderBody()
+            </section>
+            <!-- /.content -->
         </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    </div>
+    <!-- /.content-wrapper -->
+    <!-- jQuery -->
+    <script src="~/AdminLTE/plugins/jquery/jquery.min.js"></script>
+    <!-- jQuery UI 1.11.4 -->
+    <script src="~/AdminLTE/plugins/jquery-ui/jquery-ui.min.js"></script>
+    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+    <script>
+        $.widget.bridge('uibutton', $.ui.button)
+    </script>
+    <!-- Bootstrap 4 -->
+    <script src="~/AdminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- ChartJS -->
+    <script src="~/AdminLTE/plugins/chart.js/Chart.min.js"></script>
+    <!-- Sparkline -->
+    <script src="~/AdminLTE/plugins/sparklines/sparkline.js"></script>
+    <!-- JQVMap -->
+    <script src="~/AdminLTE/plugins/jqvmap/jquery.vmap.min.js"></script>
+    <script src="~/AdminLTE/plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
+    <!-- jQuery Knob Chart -->
+    <script src="~/AdminLTE/plugins/jquery-knob/jquery.knob.min.js"></script>
+    <!-- daterangepicker -->
+    <script src="~/AdminLTE/plugins/moment/moment.min.js"></script>
+    <script src="~/AdminLTE/plugins/daterangepicker/daterangepicker.js"></script>
+    <!-- Tempusdominus Bootstrap 4 -->
+    <script src="~/AdminLTE/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+    <!-- Summernote -->
+    <script src="~/AdminLTE/plugins/summernote/summernote-bs4.min.js"></script>
+    <!-- overlayScrollbars -->
+    <script src="~/AdminLTE/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/AdminLTE/dist/js/adminlte.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="~/AdminLTE/dist/js/demo.js"></script>
+    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+    <script src="~/AdminLTE/dist/js/pages/dashboard.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
