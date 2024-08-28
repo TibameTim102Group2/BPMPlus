@@ -1,20 +1,20 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace BPMPlus.Models
 {
-    public class Group
+    public class UserActivity
     {
-        public List<Function> Functions { get; } = [];
-        public List<User> Users{ get; } = [];
+        public List<PermissionGroup> PermissionGroups { get; } = [];
         [Column(TypeName = "VARCHAR")]
         [MaxLength(20)]
         [Key]
-        public string GroupId { get; set; }
+        public string UserActivityId { get; set; }
 
         [Column(TypeName = "NVARCHAR")]
-        [MaxLength(20)]
-        public string GroupName { get; set; }
+        [MaxLength(100)]
+        public string UserActivityIdDescription { get; set; }
         public DateTime CreatedTime { get; set; }
         public DateTime UpdatedTime { get; set; }
     }

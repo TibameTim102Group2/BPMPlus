@@ -8,7 +8,7 @@ namespace BPMPlus.Models
     public class User : IdentityUser
     {
         public List<Project> Projects { get; } = [];
-        public List<Group> Groups { get; } = [];
+        public List<PermissionGroup> PermissionGroups { get; } = [];
         public List<Meeting> Meetings{ get; } = [];
         [Column(TypeName = "VARCHAR")]
         [MaxLength(20)]

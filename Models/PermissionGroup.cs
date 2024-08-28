@@ -3,18 +3,19 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BPMPlus.Models
 {
-    [Table("Function")]
-    public class Function
+    [Table("PermissionGroup")]
+    public class PermissionGroup
     {
-        public List<Group> Groups{ get; } = [];
+        public List<UserActivity> UserActivities { get; } = [];
+        public List<User> Users { get; } = [];
         [Column(TypeName = "VARCHAR")]
         [MaxLength(20)]
         [Key]
-        public string FunctionId { get; set; }
+        public string PermissionGroupId { get; set; }
 
         [Column(TypeName = "NVARCHAR")]
-        [MaxLength(100)]
-        public string FunctionDescription { get; set; }
+        [MaxLength(20)]
+        public string PermissionGroupName { get; set; }
         public DateTime CreatedTime { get; set; }
         public DateTime UpdatedTime { get; set; }
     }
