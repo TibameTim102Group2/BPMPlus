@@ -1,113 +1,166 @@
-﻿@section Style {
+﻿@section Style
+{
     <style>
-
-        .content-wrapper {
-            background-color: rgb(225, 239, 252);
+        #formArea {
+            padding-left:30px;
+            padding-right:30px;
+            padding-bottom:20px;
+            display:flex;
         }
-
-        .outside {
-            padding: 20px;
-            background-color: rgb(225, 239, 252);
-            height: 100%;
+        #formArea label {
+        background-color:lightgray;
+        margin: auto;
+        width: 120px;
+        text-align: center;
+        border-radius: 5%;
+        margin-right:20px;
         }
-
-        .title {
-            color: rgba(0, 81, 255, 0.884);
-            margin-top: 20px;
-            margin-bottom: 30px;
-            margin-left: 30px;
-            font-weight: bold;
+        #formArea input {
+        width: 180px;
+        height:30px;
+        display: inline;
         }
-
-        .inside {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: #fff;
-            overflow: hidden;
-            border: 0.5px solid gainsboro;
+        .process{
+            padding-left:30px;
+            padding-right:30px;
+            padding-bottom:20px;
         }
-
-        .list {
-            display: flex;
-            justify-content: space-around;
-            list-style: none;
-        }
-
-        .bar {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-            padding-left: 10px;
-        }
-
-        #BackToForm {
-            margin-left: auto;
-        }
-
-        #FormCategory {
-            margin-left: auto;
-        }
-
-        table {
+        .process label{
+            padding-top:5px;
+            background-color: #D1DEFF;
+            margin: auto;
+            height: 30px;
+            width: 120px;
             text-align: center;
-            line-height: 1.5;
+            border-radius: 5%;
+            margin-right: 20px;
+        }
+        .btnArea {
+            background-color: #D1DEFF;
+            padding-left: 40px;
+            display: block;
+            height:80px;
+            padding-top:15px;
+        }
+        .btnArea button {
+            width:90px;
+            margin:auto,0;
+        }
+        .bottomArea{
+            padding-left: 30px;
+            padding-right:30px;
+            padding-bottom: 20px
+        }
+        .bottomArea label{
+            padding-top: 5px;
+            background-color: #D1DEFF;
+            margin: auto;
+            height: 30px;
+            width: 120px;
+            text-align: center;
+            border-radius: 5%;
+            margin-right: 20px;
+        }
+
+        .submit{
+            width:120px;
+            margin-top:20px;
+        }
+
+        .submit button{
+            margin-right: 30px;
         }
     </style>
 }
 
 
+<div style="background-color: #DFF1FF; padding:10px;">
+    <!--  title  -->
+    <div class="title">
+        <h4 class="m-3">審核工單</h4>
+    </div>
 
-<!-- outside -->
-<div class="outside">
-    <h1 class="title">工單管理</h1>
-    <ul class="list">
-        <li><button class="btn btn-light">待辦清單</button></li>
-        <li><button class="btn btn-light">查詢工單</button></li>
-        <li><button class="btn btn-light">新增工單</button></li>
-        <li><button class="btn btn-primary">工單處理流程</button></li>
-        <li><button class="btn btn-light">審核工單</button></li>
-    </ul>
-
-    <!-- inside -->
-    <div class="inside">
-        <!-- bar -->
-        <div class="bar">
-            <h3 id="FormNumber">單號M202408010001</h3>
-            <h3 id="FormCategory">資訊需求單</h3>
-            <button id="BackToForm" class="btn btn-primary">回工單</button>
+    <!-- 工單區域 -->
+    <form id="formArea">
+        <div class="row" style="display:flex;">
+            <div class="col-6 mb-3 form-label">
+                <label>工單編號</label><input type="text" class="form-control" />
+            </div>
+            <div class="col-6 mb-3 form-label">
+                <label>需求部門</label><input type="text" class="form-control" />
+            </div>
+            <div class="col-6 mb-3 form-label">
+                <label>需求類別</label><input type="text" class="form-control" />
+            </div>
+            <div class="col-6 mb-3 form-label">
+                <label>處理狀態</label><input type="text" class="form-control" />
+            </div>
+            <div class="col-6 mb-3 form-label">
+                <label>所屬專案</label><input type="text" class="form-control" />
+            </div>
+            <div class="col-6 mb-3 form-label">
+                <label>建立日期</label><input type="text" class="form-control" />
+            </div>
+            <div class="col-6 mb-3 form-label">
+                <label>需求員工</label><input type="text" class="form-control" />
+            </div>
+            <div class="col-6 mb-3 form-label">
+                <label>希望完成日期</label><input type="text" class="form-control" />
+            </div>
+            <div class="col-6 mb-3 form-label">
+                <label>指派人員</label><input type="text" class="form-control" />
+            </div>
+            <div class="col-6 mb-3 form-label">
+                <label>預估工時</label><input type="text" class="form-control" />
+            </div>
+        </div>
+    </form>
+            
+    <!-- 流程進度 -->
+        <div class="process">
+            <label>流程進度</label><br>
+            <div class="btnArea">
+                <div class="btn">
+                    <button class="btn btn-primary">提單</button> → <button class="btn btn-danger">部級主管</button> → <button class="btn btn-primary">單位主管</button> → <button class="btn btn-primary">處理人員</button> → <button class="btn btn-primary">驗收</button>
+                </div>
+            </div>
         </div>
 
-        <!-- table -->
-        <table class="table table-hover table-bordered ">
-            <thead>
-                <tr>
-                    <th>時間</th>
-                    <th>處理狀態</th>
-                    <th>處理人員</th>
-                    <th>出示意見</th>
-                    <th>需求項目類別</th>
-                    <th>審核結果</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>2024-08-01 13:17</td>
-                    <td>部門主管審核</td>
-                    <td>張三</td>
-                    <td>因業務需求提出申請</td>
-                    <td>資訊需求單</td>
-                    <td>送出</td>
-                </tr>
-                <tr>
-                    <td>2024-08-02 08:23</td>
-                    <td>處理部門主管審核</td>
-                    <td>林香</td>
-                    <td>-</td>
-                    <td>資訊需求單</td>
-                    <td>審核中</td>
-                </tr>
+        <div class="bottomArea">
+            <div style="padding-bottom:20px">
+                <!-- 需求內容 -->
+                <label>需求內容</label><br>
+                <textarea class="form-control"></textarea>
+            </div>
+            <div style="padding-bottom: 20px;">
+                <!-- 附件上傳/下載 -->
+                <input type="file"/>
+                <button class="btn bg-info btn-sm">附件下載</button>
+            </div>
 
-            </tbody>
-        </table>
+            <!-- 出示意見 -->
+            <div>
+                <label>出示意見</label>
+                <div id="summernote"></div>
+            </div>
+    </div>
+    <!--  submit  -->
+    <div class="bottomArea row">
+        <div class="submit col-6">
+            <button class="btn btn-primary">處理流程</button>
+            <button class="btn btn-success">送出</button>
+            <button class="btn btn-danger">退回</button>
+        </div>
     </div>
 </div>
+
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#summernote').summernote();
+            });
+        var html = $('#summernote').summernote('code');
+    </script>
+}
