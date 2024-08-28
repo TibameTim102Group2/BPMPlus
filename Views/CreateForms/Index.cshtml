@@ -16,7 +16,6 @@
 
         .backcolor {
             background-color: rgb(225, 229, 252);
-
         }
 
         .inside {
@@ -49,12 +48,11 @@
         .formCrud {
             display: flex;
             height: 150px;
-
         }
 
         .nav {
             /* width: 120px;
-           height: 40px; */
+                           height: 40px; */
             color: blue;
             margin: auto;
             /* border-radius: 15%; */
@@ -69,8 +67,6 @@
         .note {
             margin-top: 50px;
             margin-left: 55px;
-
-
         }
 
         .noteContent {
@@ -90,6 +86,20 @@
             display: flex;
             justify-content: center;
             margin-top: 20px;
+        }
+
+        .form-file {
+            display: flex;
+            padding-top: 20px;
+            width: 905px;
+            padding-left: 55px;
+        }
+
+        .form-date {
+            padding-top: 20px;
+            margin-left: 55px;
+            height: 58px;
+            display: flex;
         }
     </style>
 }
@@ -154,16 +164,6 @@
                     </div>
                     <div class="mb-3 inputField ">
                         <div class="mb-3 form-label">
-                            <label for="xxx1">檔案上傳</label>
-                            <input type="xxx1" class="form-control">
-                        </div>
-                        <div class="mb-3 form-label">
-                            <label for="xxx2">希望完成日期</label>
-                            <input type="xxx2" class="form-control">
-                        </div>
-                    </div>
-                    <div class="mb-3 inputField ">
-                        <div class="mb-3 form-label">
                             <label for="xxx1">複製單號</label>
                             <input type="xxx1" class="form-control">
                         </div>
@@ -172,14 +172,24 @@
                             <input type="xxx2" class="form-control">
                         </div>
                     </div>
+                    <div class="mb-3 inputField">
+                        <div class="mb-3 form-date">
+                            <label for="xxx2">希望完成日期</label>
+                            <input type="xxx2" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="mb-3 form-file">
+                        <label for="xxx1">檔案上傳</label>
+                        <input type="file" class="form-control">
+                    </div>
                     <!-- 需求內容的位置 -->
 
                     <div class="note">
                         <div class="noteContent">需求內容</div>
-                        <!-- 引用Summer文字編輯器的div-->
+                        <!-- 引用quill文字編輯器的div-->
                         <div class="txtInput">
                             <div id="summernote">Hello Summernote</div>
-
 
                         </div>
 

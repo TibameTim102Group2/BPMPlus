@@ -1,0 +1,109 @@
+﻿@section Style {
+    <style>
+
+        .outside {
+            padding: 20px;
+            background-color: rgb(225, 239, 252);
+            height: 100%;
+        }
+
+        .title {
+            color: rgba(0, 81, 255, 0.884);
+            margin-top: 20px;
+            margin-bottom: 30px;
+            margin-left: 30px;
+            font-weight: bold;
+        }
+
+        .inside {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #fff;
+            overflow: hidden;
+            border: 0.5px solid gainsboro;
+        }
+
+        .list {
+            display: flex;
+            justify-content: space-around;
+            list-style: none;
+        }
+
+        .bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-left: 10px;
+        }
+
+        #BackToForm {
+            margin-left: auto;
+        }
+
+        #FormCategory {
+            margin-left: auto;
+        }
+
+        table {
+            text-align: center;
+            line-height: 1.5;
+        }
+    </style>
+}
+
+
+
+<!-- outside -->
+<div class="outside">
+    <h1 class="title">工單管理</h1>
+    <ul class="list">
+        <li><button class="btn btn-light">待辦清單</button></li>
+        <li><button class="btn btn-light">查詢工單</button></li>
+        <li><button class="btn btn-light">新增工單</button></li>
+        <li><button class="btn btn-primary">工單處理流程</button></li>
+        <li><button class="btn btn-light">審核工單</button></li>
+    </ul>
+
+    <!-- inside -->
+    <div class="inside">
+        <!-- bar -->
+        <div class="bar">
+            <h3 id="FormNumber">單號M202408010001</h3>
+            <h3 id="FormCategory">資訊需求單</h3>
+            <button id="BackToForm" class="btn btn-primary">回工單</button>
+        </div>
+
+        <!-- table -->
+        <table class="table table-hover table-bordered ">
+            <thead>
+                <tr>
+                    <th>時間</th>
+                    <th>處理狀態</th>
+                    <th>處理人員</th>
+                    <th>出示意見</th>
+                    <th>需求項目類別</th>
+                    <th>審核結果</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2024-08-01 13:17</td>
+                    <td>部門主管審核</td>
+                    <td>張三</td>
+                    <td>因業務需求提出申請</td>
+                    <td>資訊需求單</td>
+                    <td>送出</td>
+                </tr>
+                <tr>
+                    <td>2024-08-02 08:23</td>
+                    <td>處理部門主管審核</td>
+                    <td>林香</td>
+                    <td>-</td>
+                    <td>資訊需求單</td>
+                    <td>審核中</td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+</div>
