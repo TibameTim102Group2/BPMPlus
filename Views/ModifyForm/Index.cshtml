@@ -1,42 +1,7 @@
 ﻿@model BPMPlus.Models.Form
 
 @section Style {
-    <style>
-        .backcolor {
-            background-color: rgb(225, 239, 252);
-        }
-
-        .item-name {
-            padding-right: 1%;
-            width: 25%;
-        }
-
-        .item-value {
-            width: 0%;
-        }
-
-        .button {
-            width: 12 %;
-        }
-
-        .button-icon {
-            width: 20%;
-        }
-
-        .process-node {
-            background-color: rgb(232, 244, 255);
-            height: 200px;
-        }
-
-        textarea {
-            resize: none;
-        }
-
-        .content {
-            padding: 3%
-        }
-
-    </style>
+    
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
@@ -61,6 +26,56 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="~/AdminLTE/dist/css/adminlte.min.css">
     <link rel="stylesheet" href="~/font-awesome/css/all.css" />
+    <style>
+        .backcolor {
+            background-color: rgb(225, 239, 252);
+        }
+
+        .item-name {
+            padding-right: 1%;
+            width: 28%;
+        }
+
+        .item-value {
+            width: 0%;
+        }
+
+        .button {
+            width: 12 %;
+        }
+
+        .button-icon {
+            width: 20%;
+        }
+
+        .process-node {
+            background-color: rgb(232, 244, 255);
+            height: 200px;
+        }
+
+        textarea {
+            resize: none;
+        }
+
+        .txt-box {
+            width: 50%;
+        }
+
+        .selection {
+            width: 50%;
+        }
+
+        .date {
+            width: 50%;
+        }
+
+        .content {
+            padding: 3%
+        }
+        .form-group{
+            display:flex;
+        }
+    </style>
 }
 
 <div class="wrapper backcolor">
@@ -75,22 +90,32 @@
             <div class="card card-default col-md-12">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-7">
+                        <div class="col-md-6">
                             <div class="form-group">
-                                <label class="item-name">單號</label><input disabled>
+                                <label class="item-name">單號</label><input class = "form-control txt-box" disabled>
                             </div>
                             <br />
                             <br />
                             <!-- /.form-group -->
                             <div class="form-group">
-                                <label class="item-name">建立日期</label><input disabled>
+                                <label class="item-name">建立日期</label><input class="form-control txt-box" disabled>
                             </div>
-                            <div class="form-group">
-                                <label class="item-name">需求部門</label><input>
+                            <div class="form-group" style="display:flex">
+                                <label class="item-name">需求部門</label>
+                                <select class="form-control select2 selection">
+                                    <option selected="selected">Alabama</option>
+                                    <option>Alaska</option>
+                                    <option disabled="disabled">California (disabled)</option>
+                                    <option>Delaware</option>
+                                    <option>Tennessee</option>
+                                    <option>Texas</option>
+                                    <option>Washington</option>
+                                </select>
                             </div>
-                            <div class="form-group" style="">
+                            
+                            <div class="form-group" style="display:flex">
                                 <label class="item-name">希望完成日期</label>
-                                <div class="input-group" style="width:40%">
+                                <div class="input-group date">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">
                                             <i class="far fa-calendar-alt"></i>
@@ -103,7 +128,7 @@
                             <!-- /.form-group -->
                         </div>
                         <!-- /.col -->
-                        <div class="col-md-5">
+                        <div class="col-md-6">
                             <div style="display:flex">
                                 <div style="width:10%"></div>
                                 <div class="form-group">
@@ -114,14 +139,23 @@
                             <br />
                             <br />
                             <div>
-                                <div class="form-group">
-                                    <label class="item-name">需求類別</label><input>
+                                <div class="form-group" style="display:flex">
+                                    <label class="item-name">需求類別</label>
+                                    <select class="form-control select2 selection">
+                                        <option selected="selected">Alabama</option>
+                                        <option>Alaska</option>
+                                        <option disabled="disabled">California (disabled)</option>
+                                        <option>Delaware</option>
+                                        <option>Tennessee</option>
+                                        <option>Texas</option>
+                                        <option>Washington</option>
+                                    </select>
                                 </div>
                                 <div class="form-group">
-                                    <label class="item-name">需求員工</label><input>
+                                    <label class="item-name">需求員工</label><input class="form-control txt-box">
                                 </div>
                                 <div class="form-group">
-                                    <label class="item-name">所屬專案</label><input disabled>
+                                    <label class="item-name">所屬專案</label><input class="form-control txt-box" disabled>
                                 </div>
                             </div>
                         </div>
@@ -146,7 +180,7 @@
                     <div class="row">
                         <!-- /.form-group -->
                         <div class="form-group">
-                            <label style="margin-right:5%">聯繫電話</label><input>
+                            <label style="margin-right:5%">聯繫電話</label><input class=" form-control" style="width:25%">
                         </div>
                         
                         <!-- /.form-group -->
@@ -168,12 +202,12 @@
                         </div>
 
                         <div class="col-12 col-sm-5" style="display:flex">
-                            <div class="form-group">
-                                <input type="checkbox" style="margin-top:10px"> pdf
+                            <div>
+                                <input type="checkbox"> pdf
                             </div>
                             <div style="width:10%"></div>
-                            <div class="form-group">
-                                <input type="checkbox" style="margin-top:10px"> excel
+                            <div>
+                                <input type="checkbox"> excel
                             </div>
 
                             <div style="width:10%"></div>

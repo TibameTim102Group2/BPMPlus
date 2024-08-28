@@ -12,9 +12,13 @@ namespace BPMPlus.Models
 
         [Column(TypeName = "VARCHAR")]
         [MaxLength(20)]
-        [ForeignKey("Function")]
-        public string? FunctionId { get; set; }
-        public virtual Function? Function { get; set; }
+        [ForeignKey("UserActivity")]
+        public string? UserActivityId { get; set; }
+        [Column(TypeName = "VARCHAR")]
+        [MaxLength(20)]
+
+        public string DepartmentId { get; set; }
+        public virtual UserActivity? UserActivity { get; set; }
 
         
         [Column(TypeName = "VARCHAR")]
