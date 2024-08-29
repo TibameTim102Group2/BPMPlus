@@ -1,91 +1,235 @@
 ﻿@model BPMPlus.Models.Form
 
-<h4>Form</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Index">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="FormId" />
-            <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <input asp-for="UserId" class="form-control" />
-                <span asp-validation-for="UserId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Date" class="control-label"></label>
-                <input asp-for="Date" class="form-control" />
-                <span asp-validation-for="Date" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CategoryId" class="control-label"></label>
-                <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
-                <span asp-validation-for="CategoryId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ProjectId" class="control-label"></label>
-                <select asp-for="ProjectId" class="form-control" asp-items="ViewBag.ProjectId"></select>
-                <span asp-validation-for="ProjectId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DepartmentId" class="control-label"></label>
-                <input asp-for="DepartmentId" class="form-control" />
-                <span asp-validation-for="DepartmentId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Content" class="control-label"></label>
-                <input asp-for="Content" class="form-control" />
-                <span asp-validation-for="Content" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ExpectedFinishedDay" class="control-label"></label>
-                <input asp-for="ExpectedFinishedDay" class="form-control" />
-                <span asp-validation-for="ExpectedFinishedDay" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="HandleDepartmentId" class="control-label"></label>
-                <input asp-for="HandleDepartmentId" class="form-control" />
-                <span asp-validation-for="HandleDepartmentId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Tel" class="control-label"></label>
-                <input asp-for="Tel" class="form-control" />
-                <span asp-validation-for="Tel" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ProcessNodeId" class="control-label"></label>
-                <select asp-for="ProcessNodeId" class="form-control" asp-items="ViewBag.ProcessNodeId"></select>
-                <span asp-validation-for="ProcessNodeId" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="FormIsActive" /> @Html.DisplayNameFor(model => model.FormIsActive)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="man_day" class="control-label"></label>
-                <input asp-for="man_day" class="form-control" />
-                <span asp-validation-for="man_day" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedTime" class="control-label"></label>
-                <input asp-for="CreatedTime" class="form-control" />
-                <span asp-validation-for="CreatedTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UpdatedTime" class="control-label"></label>
-                <input asp-for="UpdatedTime" class="form-control" />
-                <span asp-validation-for="UpdatedTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
-
-<div>
+@section Style {
     
-    <a asp-action="Index">Back to List</a>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/AdminLTE/plugins/fontawesome-free/css/all.min.css">
+    <!-- daterange picker -->
+    <link rel="stylesheet" href="~/AdminLTE/plugins/daterangepicker/daterangepicker.css">
+    <!-- iCheck for checkboxes and radio inputs -->
+    <link rel="stylesheet" href="~/AdminLTE/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- Bootstrap Color Picker -->
+    <link rel="stylesheet" href="~/AdminLTE/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="~/AdminLTE/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="~/AdminLTE/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="~/AdminLTE/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+    <!-- Bootstrap4 Duallistbox -->
+    <link rel="stylesheet" href="~/AdminLTE/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
+    <!-- BS Stepper -->
+    <link rel="stylesheet" href="~/AdminLTE/plugins/bs-stepper/css/bs-stepper.min.css">
+    <!-- dropzonejs -->
+    <link rel="stylesheet" href="~/AdminLTE/plugins/dropzone/min/dropzone.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/AdminLTE/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="~/font-awesome/css/all.css" />
+    <style>
+        .backcolor {
+            background-color: rgb(225, 239, 252);
+        }
+
+        .item-name {
+            padding-right: 1%;
+            width: 28%;
+        }
+
+        .item-value {
+            width: 0%;
+        }
+
+        .button {
+            width: 12 %;
+        }
+
+        .button-icon {
+            width: 20%;
+        }
+
+        .process-node {
+            background-color: rgb(232, 244, 255);
+            height: 200px;
+        }
+
+        textarea {
+            resize: none;
+        }
+
+        .txt-box {
+            width: 50%;
+        }
+
+        .selection {
+            width: 50%;
+        }
+
+        .date {
+            width: 50%;
+        }
+
+        .content {
+            padding: 3%
+        }
+        .form-group{
+            display:flex;
+        }
+    </style>
+}
+
+<div class="wrapper backcolor">
+
+
+    <!-- Content Wrapper. Contains page content -->
+    <!-- Content Header (Page header) -->
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            <!-- SELECT2 EXAMPLE -->
+            <div class="card card-default col-md-12">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="item-name">單號</label><input class = "form-control txt-box" disabled>
+                            </div>
+                            <br />
+                            <br />
+                            <!-- /.form-group -->
+                            <div class="form-group">
+                                <label class="item-name">建立日期</label><input class="form-control txt-box" disabled>
+                            </div>
+                            <div class="form-group" style="display:flex">
+                                <label class="item-name">需求部門</label>
+                                <select class="form-control select2 selection">
+                                    <option selected="selected">Alabama</option>
+                                    <option>Alaska</option>
+                                    <option disabled="disabled">California (disabled)</option>
+                                    <option>Delaware</option>
+                                    <option>Tennessee</option>
+                                    <option>Texas</option>
+                                    <option>Washington</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group" style="display:flex">
+                                <label class="item-name">希望完成日期</label>
+                                <div class="input-group date">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <i class="far fa-calendar-alt"></i>
+                                        </span>
+                                    </div>
+                                    <input type="text" class="form-control float-right" id="reservation">
+                                </div>
+                            </div>
+
+                            <!-- /.form-group -->
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-md-6">
+                            <div style="display:flex">
+                                <div style="width:10%"></div>
+                                <div class="form-group">
+                                    <button class="button btn btn-primary"><i class="fa-solid fa-trash"></i> 刪除</button>
+                                </div>
+                            </div>
+
+                            <br />
+                            <br />
+                            <div>
+                                <div class="form-group" style="display:flex">
+                                    <label class="item-name">需求類別</label>
+                                    <select class="form-control select2 selection">
+                                        <option selected="selected">Alabama</option>
+                                        <option>Alaska</option>
+                                        <option disabled="disabled">California (disabled)</option>
+                                        <option>Delaware</option>
+                                        <option>Tennessee</option>
+                                        <option>Texas</option>
+                                        <option>Washington</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="item-name">需求員工</label><input class="form-control txt-box">
+                                </div>
+                                <div class="form-group">
+                                    <label class="item-name">所屬專案</label><input class="form-control txt-box" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- /.col -->
+                    </div>
+
+                    <br />
+                    <br />
+
+                    <!-- /.row -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="item-name">需求內容</label>
+                            </div>
+                            <textarea rows="8" cols="110"></textarea>
+                        </div>
+                        <!-- /.col -->
+                        <!-- /.col -->
+                    </div>
+                    <div class="row">
+                        <!-- /.form-group -->
+                        <div class="form-group">
+                            <label style="margin-right:5%">聯繫電話</label><input class=" form-control" style="width:25%">
+                        </div>
+                        
+                        <!-- /.form-group -->
+                        <div class="col-12 col-sm-6">
+
+                            <!-- /.form-group -->
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-12 col-sm-7" style="display:flex">
+
+                            <div class="form-group">
+                                <button class="button btn btn-primary"><i class="fa-solid fa-cloud-arrow-up"></i>  附件上傳</button>
+                            </div>
+                            <div style="width:10%"></div>
+                            <div class="form-group">
+                                <button class="button btn btn-primary"><i class="fa-solid fa-file-arrow-down"></i>  附件下載</button>
+                            </div>
+                            <!-- /.form-group -->
+                        </div>
+
+                        <div class="col-12 col-sm-5" style="display:flex">
+                            <div>
+                                <input type="checkbox"> pdf
+                            </div>
+                            <div style="width:10%"></div>
+                            <div>
+                                <input type="checkbox"> excel
+                            </div>
+
+                            <div style="width:10%"></div>
+                            <div class="form-group">
+                                <button class="button btn btn-primary"><i class="fa-solid fa-file-export"></i> 匯出工單 </button>
+                            </div>
+
+                            <!-- /.form-group -->
+                        </div>
+
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                </div>
+
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+    <!-- /.content-wrapper -->
+
 </div>
 
