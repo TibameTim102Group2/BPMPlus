@@ -1,0 +1,164 @@
+﻿@section Style
+{
+    <style>
+        #formArea {
+            padding-left:30px;
+            padding-right:30px;
+            padding-bottom:20px;
+            display:flex;
+        }
+        #formArea label {
+        background-color:lightgray;
+        margin: auto;
+        width: 120px;
+        text-align: center;
+        border-radius: 5%;
+        margin-right:20px;
+        }
+        #formArea input {
+        width: 180px;
+        height:30px;
+        display: inline;
+        }
+        .process{
+            padding-left:30px;
+            padding-right:30px;
+            padding-bottom:20px;
+        }
+        .process label{
+            padding-top:5px;
+            background-color: #D1DEFF;
+            margin: auto;
+            height: 30px;
+            width: 120px;
+            text-align: center;
+            border-radius: 5%;
+            margin-right: 20px;
+        }
+        .btnArea {
+            background-color: #D1DEFF;
+            padding-left: 40px;
+            display: block;
+            height:80px;
+            padding-top:15px;
+        }
+        .btnArea button {
+            width:90px;
+            margin:auto,0;
+        }
+        .bottomArea{
+            padding-left: 30px;
+            padding-right:30px;
+            padding-bottom: 20px
+        }
+        .bottomArea label{
+            padding-top: 5px;
+            background-color: #D1DEFF;
+            margin: auto;
+            height: 30px;
+            width: 120px;
+            text-align: center;
+            border-radius: 5%;
+            margin-right: 20px;
+        }
+        .submit{
+            width:120px;
+            margin-top:20px;
+        }
+        .submit button{
+            margin-right: 30px;
+        }
+    </style>
+}
+
+
+<div style="background-color: #DFF1FF; padding:10px;">
+    <!--  title  -->
+    <div class="title">
+        <h4 class="m-3">審核工單</h4>
+    </div>
+
+    <!-- 工單區域 -->
+    <form id="formArea">
+        <div class="row" style="display:flex;">
+            <div class="col-6 mb-3 form-label">
+                <label>工單編號</label><input type="text" class="form-control" />
+            </div>
+            <div class="col-6 mb-3 form-label">
+                <label>需求部門</label><input type="text" class="form-control" />
+            </div>
+            <div class="col-6 mb-3 form-label">
+                <label>需求類別</label><input type="text" class="form-control" />
+            </div>
+            <div class="col-6 mb-3 form-label">
+                <label>處理狀態</label><input type="text" class="form-control" />
+            </div>
+            <div class="col-6 mb-3 form-label">
+                <label>所屬專案</label><input type="text" class="form-control" />
+            </div>
+            <div class="col-6 mb-3 form-label">
+                <label>建立日期</label><input type="text" class="form-control" />
+            </div>
+            <div class="col-6 mb-3 form-label">
+                <label>需求員工</label><input type="text" class="form-control" />
+            </div>
+            <div class="col-6 mb-3 form-label">
+                <label>希望完成日期</label><input type="text" class="form-control" />
+            </div>
+            <div class="col-6 mb-3 form-label">
+                <label>指派人員</label><input type="text" class="form-control" />
+            </div>
+            <div class="col-6 mb-3 form-label">
+                <label>預估工時</label><input type="text" class="form-control" />
+            </div>
+        </div>
+    </form>
+            
+    <!-- 流程進度 -->
+        <div class="process">
+            <label>流程進度</label><br>
+            <div class="btnArea">
+                <div class="btn">
+                    <button class="btn btn-primary">提單</button> → <button class="btn btn-danger">部級主管</button> → <button class="btn btn-primary">單位主管</button> → <button class="btn btn-primary">處理人員</button> → <button class="btn btn-primary">驗收</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottomArea">
+            <div style="padding-bottom:20px">
+                <!-- 需求內容 -->
+                <label>需求內容</label><br>
+                <textarea class="form-control"></textarea>
+            </div>
+            <div style="padding-bottom: 20px;">
+                <!-- 附件上傳/下載 -->
+                <input type="file"/>
+                <button class="btn bg-info btn-sm">附件下載</button>
+            </div>
+
+            <!-- 出示意見 -->
+            <div>
+                <label>出示意見</label>
+                <div id="summernote"></div>
+            </div>
+    </div>
+    <!--  submit  -->
+    <div class="bottomArea row">
+        <div class="submit col-6">
+            <button class="btn btn-primary">處理流程</button>
+            <button class="btn btn-success">送出</button>
+            <button class="btn btn-danger">退回</button>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('#summernote').summernote();
+            });
+        var html = $('#summernote').summernote('code');
+    </script>
+}
