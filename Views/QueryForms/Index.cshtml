@@ -1,0 +1,180 @@
+﻿@section Style {
+    <style>
+        #mainWrapper {
+            background-color: #cfecff;
+        }
+
+        #mainpart {
+            padding: 30px 40px;
+        }
+
+        .selectbtn {
+            background-color: #458bfc;
+            color: white;
+            font-weight: bold;
+        }
+
+        .content .connectedSortable option {
+            background-color: white;
+            color: #458bfc;
+            font-weight: bold;
+        }
+
+        .clearfix button {
+            background-color: #458bfc;
+        }
+    </style>
+}
+
+
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-3 mx-4 justify-content-between">
+            <h1 class="m-0">工單管理</h1>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-between">
+    <div class="col-2 d-flex justify-content-center">
+        <button type="button" class="btn btn-outline-primary">待辦清單</button>
+    </div>
+    <div class="col-2 d-flex justify-content-center">
+        <button type="button" class="btn btn-outline-primary">查詢工單</button>
+    </div>
+    <div class="col-2 d-flex justify-content-center">
+        <button type="button" class="btn btn-outline-primary">新增工單</button>
+    </div>
+    <div class="col-2 d-flex justify-content-center">
+        <button type="button" class="btn btn-outline-primary">工單處理流程</button>
+    </div>
+    <div class="col-2 d-flex justify-content-center">
+        <button type="button" class="btn btn-outline-primary">審核工單</button>
+    </div>
+</div>
+
+
+<div class="container-fluid">
+    <br>
+    <br>
+    <div class="row">
+        <section class="connectedSortable">
+            <div class="card">
+                <div class="accordion" id="accordionExample">
+                    <div id="mainpart" class="card">
+                        <div class="row justify-content-between mb-3">
+                            <div class="selctID col-2 d-flex justify-content-center">
+                                <select class="selectbtn form-select" aria-label="Default select example">
+                                    <option selected>需求篩選</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                </select>
+                            </div>
+                            <div class="col-2 d-flex justify-content-center">
+                                <select class="selectbtn form-select" aria-label="Default select example">
+                                    <option selected>單號篩選</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                </select>
+                            </div>
+                            <div class="col-2 d-flex justify-content-center">
+                                <select class="selectbtn form-select" aria-label="Default select example">
+                                    <option selected>日期篩選</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                </select>
+                            </div>
+                            <div class="col-2 d-flex justify-content-center">
+                                <select class="selectbtn form-select" aria-label="Default select example">
+                                    <option selected>專案篩選</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                </select>
+                            </div>
+                            <div class="col-2 d-flex justify-content-center">
+                                <select class="selectbtn form-select" aria-label="Default select example">
+                                    <option selected>申請人篩選</option>
+                                    <option value="1">One</option>
+                                    <option value="2">Two</option>
+                                    <option value="3">Three</option>
+                                </select>
+                            </div>
+                        </div>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col">單號</th>
+                                    <th scope="col">部門</th>
+                                    <th scope="col">員工編號</th>
+                                    <th scope="col">姓名</th>
+                                    <th scope="col">需求項目類別</th>
+                                    <th scope="col">狀態</th>
+                                    <th scope="col">編輯</th>
+                                    <th scope="col">刪除</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">A001</th>
+                                    <td>DESIGN</td>
+                                    <td>Otto</td>
+                                    <td>LIN</td>
+                                    <td>環境整潔</td>
+                                    <td>Finish</td>
+                                    <td><i class="fa-solid fa-pen-to-square"></i></td>
+                                    <td><i class="fa-solid fa-trash"></i> </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">A001</th>
+                                    <td>DESIGN</td>
+                                    <td>Otto</td>
+                                    <td>LIN</td>
+                                    <td>環境整潔</td>
+                                    <td>Finish</td>
+                                    <td><i class="fa-solid fa-pen-to-square"></i></td>
+                                    <td><i class="fa-solid fa-trash"></i> </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">A001</th>
+                                    <td>DESIGN</td>
+                                    <td>Otto</td>
+                                    <td>LIN</td>
+                                    <td>環境整潔</td>
+                                    <td>Finish</td>
+                                    <td><i class="fa-solid fa-pen-to-square"></i></td>
+                                    <td><i class="fa-solid fa-trash"></i> </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">A001</th>
+                                    <td>DESIGN</td>
+                                    <td>Otto</td>
+                                    <td>LIN</td>
+                                    <td>環境整潔</td>
+                                    <td>Finish</td>
+                                    <td><i class="fa-solid fa-pen-to-square"></i></td>
+                                    <td><i class="fa-solid fa-trash"></i> </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card-footer clearfix">
+                    <button type="button" class="btn btn-primary float-right me-4"><i class="fas fa-plus"></i>匯出EXCEL</button>
+                    <button type="button" class="btn btn-primary float-right me-2"><i class="fas fa-plus"></i>匯出PDF</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+</div>
+<!-- /.container-fluid -->
+@section Scripts {
+    <script>
+
+    </script>
+}

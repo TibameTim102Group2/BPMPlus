@@ -2,7 +2,208 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@section Style {
+    <style>
+        .maincard{
+            border-color: white;
+        }
+        #mainpart{
+            padding: 30px 40px;
+        }
+        .selectbtn{
+            background-color: #458bfc;
+            color: white;
+            font-weight: bold;
+        }
+        .content .connectedSortable option{
+            background-color: white;
+            color: #458bfc;
+            font-weight: bold;
+        }
+        .clearfix button{
+            background-color: #458bfc;
+        }
+    </style>
+}
+
+<div class="content-header">
+    <div class="row">
+        <div class="col">
+            <div class="accordion" id="accordionExample">
+                <div class=" accordion-item">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            工程部需求
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">單號</th>
+                                        <th scope="col">部門</th>
+                                        <th scope="col">員工編號</th>
+                                        <th scope="col">姓名</th>
+                                        <th scope="col">需求項目類別</th>
+                                        <th scope="col">狀態</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">A001</th>
+                                        <td>DESIGN</td>
+                                        <td>Otto</td>
+                                        <td>LIN</td>
+                                        <td>環境整潔</td>
+                                        <td>Finish</td>
+                                        <td><i class="fa-solid fa-pen-to-square"></i></td>
+                                        <td><i class="fa-solid fa-trash"></i> </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">A001</th>
+                                        <td>DESIGN</td>
+                                        <td>Otto</td>
+                                        <td>LIN</td>
+                                        <td>環境整潔</td>
+                                        <td>Finish</td>
+                                        <td><i class="fa-solid fa-pen-to-square"></i></td>
+                                        <td><i class="fa-solid fa-trash"></i> </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class=" accordion-item">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            設計部需求
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">單號</th>
+                                        <th scope="col">部門</th>
+                                        <th scope="col">員工編號</th>
+                                        <th scope="col">姓名</th>
+                                        <th scope="col">需求項目類別</th>
+                                        <th scope="col">狀態</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">A001</th>
+                                        <td>DESIGN</td>
+                                        <td>Otto</td>
+                                        <td>LIN</td>
+                                        <td>環境整潔</td>
+                                        <td>Finish</td>
+                                        <td><i class="fa-solid fa-pen-to-square"></i></td>
+                                        <td><i class="fa-solid fa-trash"></i> </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">A001</th>
+                                        <td>DESIGN</td>
+                                        <td>Otto</td>
+                                        <td>LIN</td>
+                                        <td>環境整潔</td>
+                                        <td>Finish</td>
+                                        <td><i class="fa-solid fa-pen-to-square"></i></td>
+                                        <td><i class="fa-solid fa-trash"></i> </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingThree">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            會計部需求
+                        </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">單號</th>
+                                        <th scope="col">部門</th>
+                                        <th scope="col">員工編號</th>
+                                        <th scope="col">姓名</th>
+                                        <th scope="col">需求項目類別</th>
+                                        <th scope="col">狀態</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">A001</th>
+                                        <td>DESIGN</td>
+                                        <td>Otto</td>
+                                        <td>LIN</td>
+                                        <td>環境整潔</td>
+                                        <td>Finish</td>
+                                        <td><i class="fa-solid fa-pen-to-square"></i></td>
+                                        <td><i class="fa-solid fa-trash"></i> </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">A001</th>
+                                        <td>DESIGN</td>
+                                        <td>Otto</td>
+                                        <td>LIN</td>
+                                        <td>環境整潔</td>
+                                        <td>Finish</td>
+                                        <td><i class="fa-solid fa-pen-to-square"></i></td>
+                                        <td><i class="fa-solid fa-trash"></i> </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <!-- /.content-header -->
+    <!-- Main content -->
+    <section class="content">
+        <div class="">
+            <!-- Main row -->
+            <div class="row">
+                <!-- Left col -->
+                <section class="connectedSortable">
+                    <!-- TO DO List -->
+                    <div class="maincard card">
+                        <div class="accordion" id="accordionExample">
+                            <div id="mainpart">
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <!-- /.row (main row) -->
+        </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
 </div>
