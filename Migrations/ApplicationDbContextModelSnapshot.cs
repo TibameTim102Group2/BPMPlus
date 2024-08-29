@@ -4,19 +4,16 @@ using BPMPlus.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace BPMPlus.Data.Migrations
+namespace BPMPlus.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240823123757_Add ALLFK")]
-    partial class AddALLFK
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -162,10 +159,6 @@ namespace BPMPlus.Data.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("varchar");
 
-                    b.Property<string>("FunctionId")
-                        .HasMaxLength(20)
-                        .HasColumnType("VARCHAR");
-
                     b.Property<string>("GradeId")
                         .HasMaxLength(20)
                         .HasColumnType("VARCHAR");
@@ -181,6 +174,10 @@ namespace BPMPlus.Data.Migrations
                     b.Property<DateTime>("UpdateTime")
                         .HasColumnType("datetime");
 
+                    b.Property<string>("UserActivityId")
+                        .HasMaxLength(20)
+                        .HasColumnType("VARCHAR");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasMaxLength(450)
@@ -190,35 +187,13 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasIndex("FormId");
 
-                    b.HasIndex("FunctionId");
-
                     b.HasIndex("GradeId");
 
                     b.HasIndex("ResultId");
 
+                    b.HasIndex("UserActivityId");
+
                     b.ToTable("FormRecord");
-                });
-
-            modelBuilder.Entity("BPMPlus.Models.Function", b =>
-                {
-                    b.Property<string>("FunctionId")
-                        .HasMaxLength(20)
-                        .HasColumnType("VARCHAR");
-
-                    b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("FunctionDescription")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("NVARCHAR");
-
-                    b.Property<DateTime>("UpdatedTime")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("FunctionId");
-
-                    b.ToTable("Function");
                 });
 
             modelBuilder.Entity("BPMPlus.Models.Grade", b =>
@@ -243,28 +218,6 @@ namespace BPMPlus.Data.Migrations
                     b.ToTable("Grade");
                 });
 
-            modelBuilder.Entity("BPMPlus.Models.Group", b =>
-                {
-                    b.Property<string>("GroupId")
-                        .HasMaxLength(20)
-                        .HasColumnType("VARCHAR");
-
-                    b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("GroupName")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("NVARCHAR");
-
-                    b.Property<DateTime>("UpdatedTime")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("GroupId");
-
-                    b.ToTable("Group");
-                });
-
             modelBuilder.Entity("BPMPlus.Models.Meeting", b =>
                 {
                     b.Property<string>("MeetingId")
@@ -277,7 +230,7 @@ namespace BPMPlus.Data.Migrations
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("MeetingRoom")
+                    b.Property<string>("MeetingRoomId")
                         .HasMaxLength(20)
                         .HasColumnType("VARCHAR");
 
@@ -292,18 +245,18 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasKey("MeetingId");
 
-                    b.HasIndex("MeetingRoom");
+                    b.HasIndex("MeetingRoomId");
 
                     b.ToTable("Meeting");
                 });
 
             modelBuilder.Entity("BPMPlus.Models.MeetingRooms", b =>
                 {
-                    b.Property<string>("MeetingRoom")
+                    b.Property<string>("MeetingRoomId")
                         .HasMaxLength(20)
                         .HasColumnType("VARCHAR");
 
-                    b.Property<int>("Accomadation")
+                    b.Property<int>("Accomodation")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedTime")
@@ -312,9 +265,31 @@ namespace BPMPlus.Data.Migrations
                     b.Property<DateTime>("UpdatedTime")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("MeetingRoom");
+                    b.HasKey("MeetingRoomId");
 
                     b.ToTable("MeetingRooms");
+                });
+
+            modelBuilder.Entity("BPMPlus.Models.PermissionGroup", b =>
+                {
+                    b.Property<string>("PermissionGroupId")
+                        .HasMaxLength(20)
+                        .HasColumnType("VARCHAR");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PermissionGroupName")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("NVARCHAR");
+
+                    b.Property<DateTime>("UpdatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("PermissionGroupId");
+
+                    b.ToTable("PermissionGroup");
                 });
 
             modelBuilder.Entity("BPMPlus.Models.ProcessNode", b =>
@@ -330,16 +305,12 @@ namespace BPMPlus.Data.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("VARCHAR");
 
-                    b.Property<string>("FormId")
-                        .HasMaxLength(20)
-                        .HasColumnType("VARCHAR");
-
-                    b.Property<string>("FunctionId")
-                        .HasMaxLength(20)
-                        .HasColumnType("VARCHAR");
-
                     b.Property<DateTime>("UpdatedTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("UserActivityId")
+                        .HasMaxLength(20)
+                        .HasColumnType("VARCHAR");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -350,9 +321,7 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.HasIndex("FormId");
-
-                    b.HasIndex("FunctionId");
+                    b.HasIndex("UserActivityId");
 
                     b.ToTable("ProcessNode");
                 });
@@ -370,18 +339,23 @@ namespace BPMPlus.Data.Migrations
                     b.Property<DateTime>("CreatedTime")
                         .HasColumnType("datetime");
 
-                    b.Property<string>("FunctionId")
+                    b.Property<string>("DepartmentId")
+                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("VARCHAR");
 
                     b.Property<DateTime>("UpdateTime")
                         .HasColumnType("datetime");
 
+                    b.Property<string>("UserActivityId")
+                        .HasMaxLength(20)
+                        .HasColumnType("VARCHAR");
+
                     b.HasKey("ProcessNodeId");
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("FunctionId");
+                    b.HasIndex("UserActivityId");
 
                     b.ToTable("ProcessTemplate");
                 });
@@ -464,6 +438,11 @@ namespace BPMPlus.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("EmployeeId")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("VARCHAR");
+
                     b.Property<string>("GradeId")
                         .HasMaxLength(20)
                         .HasColumnType("VARCHAR");
@@ -514,6 +493,8 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasAlternateKey("EmployeeId");
+
                     b.HasIndex("DepartmentId");
 
                     b.HasIndex("GradeId");
@@ -527,6 +508,28 @@ namespace BPMPlus.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("Users", (string)null);
+                });
+
+            modelBuilder.Entity("BPMPlus.Models.UserActivity", b =>
+                {
+                    b.Property<string>("UserActivityId")
+                        .HasMaxLength(20)
+                        .HasColumnType("VARCHAR");
+
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("UpdatedTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserActivityIdDescription")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("NVARCHAR");
+
+                    b.HasKey("UserActivityId");
+
+                    b.ToTable("UserActivity");
                 });
 
             modelBuilder.Entity("MeetingUser", b =>
@@ -681,6 +684,51 @@ namespace BPMPlus.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("PermissionGroupUser", b =>
+                {
+                    b.Property<string>("PermissionGroupsPermissionGroupId")
+                        .HasColumnType("VARCHAR(20)");
+
+                    b.Property<string>("UsersId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("PermissionGroupsPermissionGroupId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("PermissionGroupUser");
+                });
+
+            modelBuilder.Entity("PermissionGroupUserActivity", b =>
+                {
+                    b.Property<string>("PermissionGroupsPermissionGroupId")
+                        .HasColumnType("VARCHAR(20)");
+
+                    b.Property<string>("UserActivitiesUserActivityId")
+                        .HasColumnType("VARCHAR(20)");
+
+                    b.HasKey("PermissionGroupsPermissionGroupId", "UserActivitiesUserActivityId");
+
+                    b.HasIndex("UserActivitiesUserActivityId");
+
+                    b.ToTable("PermissionGroupUserActivity");
+                });
+
+            modelBuilder.Entity("ProjectUser", b =>
+                {
+                    b.Property<string>("ProjectsProjectId")
+                        .HasColumnType("VARCHAR(20)");
+
+                    b.Property<string>("UsersId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ProjectsProjectId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("ProjectUser");
+                });
+
             modelBuilder.Entity("BPMPlus.Models.Form", b =>
                 {
                     b.HasOne("BPMPlus.Models.Category", "Category")
@@ -708,10 +756,6 @@ namespace BPMPlus.Data.Migrations
                         .WithMany()
                         .HasForeignKey("FormId");
 
-                    b.HasOne("BPMPlus.Models.Function", "Function")
-                        .WithMany()
-                        .HasForeignKey("FunctionId");
-
                     b.HasOne("BPMPlus.Models.Grade", "Grade")
                         .WithMany()
                         .HasForeignKey("GradeId");
@@ -720,20 +764,24 @@ namespace BPMPlus.Data.Migrations
                         .WithMany()
                         .HasForeignKey("ResultId");
 
-                    b.Navigation("Form");
+                    b.HasOne("BPMPlus.Models.UserActivity", "UserActivity")
+                        .WithMany()
+                        .HasForeignKey("UserActivityId");
 
-                    b.Navigation("Function");
+                    b.Navigation("Form");
 
                     b.Navigation("Grade");
 
                     b.Navigation("Result");
+
+                    b.Navigation("UserActivity");
                 });
 
             modelBuilder.Entity("BPMPlus.Models.Meeting", b =>
                 {
                     b.HasOne("BPMPlus.Models.MeetingRooms", "MeetingRooms")
                         .WithMany()
-                        .HasForeignKey("MeetingRoom");
+                        .HasForeignKey("MeetingRoomId");
 
                     b.Navigation("MeetingRooms");
                 });
@@ -744,19 +792,13 @@ namespace BPMPlus.Data.Migrations
                         .WithMany()
                         .HasForeignKey("DepartmentId");
 
-                    b.HasOne("BPMPlus.Models.Form", "Form")
+                    b.HasOne("BPMPlus.Models.UserActivity", "UserActivity")
                         .WithMany()
-                        .HasForeignKey("FormId");
-
-                    b.HasOne("BPMPlus.Models.Function", "Function")
-                        .WithMany()
-                        .HasForeignKey("FunctionId");
+                        .HasForeignKey("UserActivityId");
 
                     b.Navigation("Department");
 
-                    b.Navigation("Form");
-
-                    b.Navigation("Function");
+                    b.Navigation("UserActivity");
                 });
 
             modelBuilder.Entity("BPMPlus.Models.ProcessTemplate", b =>
@@ -765,13 +807,13 @@ namespace BPMPlus.Data.Migrations
                         .WithMany()
                         .HasForeignKey("CategoryId");
 
-                    b.HasOne("BPMPlus.Models.Function", "Function")
+                    b.HasOne("BPMPlus.Models.UserActivity", "UserActivity")
                         .WithMany()
-                        .HasForeignKey("FunctionId");
+                        .HasForeignKey("UserActivityId");
 
                     b.Navigation("Category");
 
-                    b.Navigation("Function");
+                    b.Navigation("UserActivity");
                 });
 
             modelBuilder.Entity("BPMPlus.Models.User", b =>
@@ -851,6 +893,51 @@ namespace BPMPlus.Data.Migrations
                     b.HasOne("BPMPlus.Models.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PermissionGroupUser", b =>
+                {
+                    b.HasOne("BPMPlus.Models.PermissionGroup", null)
+                        .WithMany()
+                        .HasForeignKey("PermissionGroupsPermissionGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BPMPlus.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PermissionGroupUserActivity", b =>
+                {
+                    b.HasOne("BPMPlus.Models.PermissionGroup", null)
+                        .WithMany()
+                        .HasForeignKey("PermissionGroupsPermissionGroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BPMPlus.Models.UserActivity", null)
+                        .WithMany()
+                        .HasForeignKey("UserActivitiesUserActivityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("ProjectUser", b =>
+                {
+                    b.HasOne("BPMPlus.Models.Project", null)
+                        .WithMany()
+                        .HasForeignKey("ProjectsProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BPMPlus.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
