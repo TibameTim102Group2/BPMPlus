@@ -32,6 +32,9 @@ namespace BPMPlus.Data.Migrations
             migrationBuilder.DropTable(
                 name: "Group");
 
+            migrationBuilder.DropTable(
+                name: "Function");
+
             migrationBuilder.RenameColumn(
                 name: "FunctionId",
                 table: "ProcessTemplate",
