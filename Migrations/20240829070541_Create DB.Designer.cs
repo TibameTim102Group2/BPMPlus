@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace BPMPlus.Data.Migrations
+namespace BPMPlus.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240829014724_delete function")]
-    partial class deletefunction
+    [Migration("20240829070541_Create DB")]
+    partial class CreateDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
