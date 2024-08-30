@@ -4,16 +4,19 @@ using BPMPlus.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace BPMPlus.Migrations
+namespace BPMPlus.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240830035406_CreateDb")]
+    partial class CreateDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,14 +37,16 @@ namespace BPMPlus.Migrations
                         .HasColumnType("NVARCHAR");
 
                     b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.Property<DateTime>("UpdatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("Category", (string)null);
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("BPMPlus.Models.Department", b =>
@@ -51,6 +56,7 @@ namespace BPMPlus.Migrations
                         .HasColumnType("varchar");
 
                     b.Property<DateTime>("CreatedTime")
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime");
 
                     b.Property<string>("DepartmentName")
@@ -58,12 +64,13 @@ namespace BPMPlus.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar");
 
-                    b.Property<DateTime>("UpdateTime")
+                    b.Property<DateTime>("UpdatedTime")
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime");
 
                     b.HasKey("DepartmentId");
 
-                    b.ToTable("Department", (string)null);
+                    b.ToTable("Department");
                 });
 
             modelBuilder.Entity("BPMPlus.Models.Form", b =>
@@ -82,7 +89,8 @@ namespace BPMPlus.Migrations
                         .HasColumnType("NVARCHAR");
 
                     b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
@@ -117,7 +125,8 @@ namespace BPMPlus.Migrations
                         .HasColumnType("VARCHAR");
 
                     b.Property<DateTime>("UpdatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -135,7 +144,7 @@ namespace BPMPlus.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("Form", (string)null);
+                    b.ToTable("Form");
                 });
 
             modelBuilder.Entity("BPMPlus.Models.FormRecord", b =>
@@ -145,6 +154,7 @@ namespace BPMPlus.Migrations
                         .HasColumnType("varchar");
 
                     b.Property<DateTime>("CreatedTime")
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime");
 
                     b.Property<DateTime>("Date")
@@ -171,7 +181,8 @@ namespace BPMPlus.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("varchar");
 
-                    b.Property<DateTime>("UpdateTime")
+                    b.Property<DateTime>("UpdatedTime")
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime");
 
                     b.Property<string>("UserActivityId")
@@ -193,7 +204,7 @@ namespace BPMPlus.Migrations
 
                     b.HasIndex("UserActivityId");
 
-                    b.ToTable("FormRecord", (string)null);
+                    b.ToTable("FormRecord");
                 });
 
             modelBuilder.Entity("BPMPlus.Models.Grade", b =>
@@ -203,7 +214,8 @@ namespace BPMPlus.Migrations
                         .HasColumnType("VARCHAR");
 
                     b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.Property<string>("GradeName")
                         .IsRequired()
@@ -211,11 +223,12 @@ namespace BPMPlus.Migrations
                         .HasColumnType("NVARCHAR");
 
                     b.Property<DateTime>("UpdatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.HasKey("GradeId");
 
-                    b.ToTable("Grade", (string)null);
+                    b.ToTable("Grade");
                 });
 
             modelBuilder.Entity("BPMPlus.Models.Meeting", b =>
@@ -225,7 +238,8 @@ namespace BPMPlus.Migrations
                         .HasColumnType("VARCHAR");
 
                     b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
@@ -240,14 +254,15 @@ namespace BPMPlus.Migrations
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("UpdateTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime>("UpdatedTime")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.HasKey("MeetingId");
 
                     b.HasIndex("MeetingRoomId");
 
-                    b.ToTable("Meeting", (string)null);
+                    b.ToTable("Meeting");
                 });
 
             modelBuilder.Entity("BPMPlus.Models.MeetingRooms", b =>
@@ -260,14 +275,16 @@ namespace BPMPlus.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.Property<DateTime>("UpdatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.HasKey("MeetingRoomId");
 
-                    b.ToTable("MeetingRooms", (string)null);
+                    b.ToTable("MeetingRooms");
                 });
 
             modelBuilder.Entity("BPMPlus.Models.PermissionGroup", b =>
@@ -277,7 +294,8 @@ namespace BPMPlus.Migrations
                         .HasColumnType("VARCHAR");
 
                     b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.Property<string>("PermissionGroupName")
                         .IsRequired()
@@ -285,11 +303,12 @@ namespace BPMPlus.Migrations
                         .HasColumnType("NVARCHAR");
 
                     b.Property<DateTime>("UpdatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.HasKey("PermissionGroupId");
 
-                    b.ToTable("PermissionGroup", (string)null);
+                    b.ToTable("PermissionGroup");
                 });
 
             modelBuilder.Entity("BPMPlus.Models.ProcessNode", b =>
@@ -299,14 +318,16 @@ namespace BPMPlus.Migrations
                         .HasColumnType("VARCHAR");
 
                     b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.Property<string>("DepartmentId")
                         .HasMaxLength(20)
                         .HasColumnType("VARCHAR");
 
                     b.Property<DateTime>("UpdatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.Property<string>("UserActivityId")
                         .HasMaxLength(20)
@@ -323,7 +344,7 @@ namespace BPMPlus.Migrations
 
                     b.HasIndex("UserActivityId");
 
-                    b.ToTable("ProcessNode", (string)null);
+                    b.ToTable("ProcessNode");
                 });
 
             modelBuilder.Entity("BPMPlus.Models.ProcessTemplate", b =>
@@ -337,6 +358,7 @@ namespace BPMPlus.Migrations
                         .HasColumnType("VARCHAR");
 
                     b.Property<DateTime>("CreatedTime")
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime");
 
                     b.Property<string>("DepartmentId")
@@ -344,7 +366,8 @@ namespace BPMPlus.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("VARCHAR");
 
-                    b.Property<DateTime>("UpdateTime")
+                    b.Property<DateTime>("UpdatedTime")
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime");
 
                     b.Property<string>("UserActivityId")
@@ -357,7 +380,7 @@ namespace BPMPlus.Migrations
 
                     b.HasIndex("UserActivityId");
 
-                    b.ToTable("ProcessTemplate", (string)null);
+                    b.ToTable("ProcessTemplate");
                 });
 
             modelBuilder.Entity("BPMPlus.Models.Project", b =>
@@ -367,7 +390,8 @@ namespace BPMPlus.Migrations
                         .HasColumnType("VARCHAR");
 
                     b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.Property<DateTime>("DeadLine")
                         .HasColumnType("datetime2");
@@ -383,11 +407,12 @@ namespace BPMPlus.Migrations
                         .HasColumnType("NCHAR");
 
                     b.Property<DateTime>("UpdatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.HasKey("ProjectId");
 
-                    b.ToTable("Project", (string)null);
+                    b.ToTable("Project");
                 });
 
             modelBuilder.Entity("BPMPlus.Models.Result", b =>
@@ -397,6 +422,7 @@ namespace BPMPlus.Migrations
                         .HasColumnType("varchar");
 
                     b.Property<DateTime>("CreatedTime")
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime");
 
                     b.Property<string>("ResultDescription")
@@ -404,12 +430,13 @@ namespace BPMPlus.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar");
 
-                    b.Property<DateTime>("UpdateTime")
+                    b.Property<DateTime>("UpdatedTime")
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime");
 
                     b.HasKey("ResultId");
 
-                    b.ToTable("Result", (string)null);
+                    b.ToTable("Result");
                 });
 
             modelBuilder.Entity("BPMPlus.Models.User", b =>
@@ -425,7 +452,8 @@ namespace BPMPlus.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.Property<string>("DepartmentId")
                         .HasMaxLength(20)
@@ -482,7 +510,8 @@ namespace BPMPlus.Migrations
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("UpdatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.Property<bool>("UserIsActive")
                         .HasColumnType("bit");
@@ -517,10 +546,12 @@ namespace BPMPlus.Migrations
                         .HasColumnType("VARCHAR");
 
                     b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.Property<DateTime>("UpdatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.Property<string>("UserActivityIdDescription")
                         .IsRequired()
@@ -529,7 +560,7 @@ namespace BPMPlus.Migrations
 
                     b.HasKey("UserActivityId");
 
-                    b.ToTable("UserActivity", (string)null);
+                    b.ToTable("UserActivity");
                 });
 
             modelBuilder.Entity("MeetingUser", b =>
@@ -544,7 +575,7 @@ namespace BPMPlus.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("MeetingUser", (string)null);
+                    b.ToTable("MeetingUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -696,7 +727,7 @@ namespace BPMPlus.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("PermissionGroupUser", (string)null);
+                    b.ToTable("PermissionGroupUser");
                 });
 
             modelBuilder.Entity("PermissionGroupUserActivity", b =>
@@ -711,7 +742,7 @@ namespace BPMPlus.Migrations
 
                     b.HasIndex("UserActivitiesUserActivityId");
 
-                    b.ToTable("PermissionGroupUserActivity", (string)null);
+                    b.ToTable("PermissionGroupUserActivity");
                 });
 
             modelBuilder.Entity("ProjectUser", b =>
@@ -726,7 +757,7 @@ namespace BPMPlus.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("ProjectUser", (string)null);
+                    b.ToTable("ProjectUser");
                 });
 
             modelBuilder.Entity("BPMPlus.Models.Form", b =>

@@ -4,19 +4,16 @@ using BPMPlus.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace BPMPlus.Migrations
+namespace BPMPlus.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240829070541_Create DB")]
-    partial class CreateDB
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,10 +34,12 @@ namespace BPMPlus.Migrations
                         .HasColumnType("NVARCHAR");
 
                     b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.Property<DateTime>("UpdatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.HasKey("CategoryId");
 
@@ -54,6 +53,7 @@ namespace BPMPlus.Migrations
                         .HasColumnType("varchar");
 
                     b.Property<DateTime>("CreatedTime")
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime");
 
                     b.Property<string>("DepartmentName")
@@ -61,7 +61,8 @@ namespace BPMPlus.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar");
 
-                    b.Property<DateTime>("UpdateTime")
+                    b.Property<DateTime>("UpdatedTime")
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime");
 
                     b.HasKey("DepartmentId");
@@ -85,7 +86,8 @@ namespace BPMPlus.Migrations
                         .HasColumnType("NVARCHAR");
 
                     b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
@@ -120,7 +122,8 @@ namespace BPMPlus.Migrations
                         .HasColumnType("VARCHAR");
 
                     b.Property<DateTime>("UpdatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -148,6 +151,7 @@ namespace BPMPlus.Migrations
                         .HasColumnType("varchar");
 
                     b.Property<DateTime>("CreatedTime")
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime");
 
                     b.Property<DateTime>("Date")
@@ -174,7 +178,8 @@ namespace BPMPlus.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("varchar");
 
-                    b.Property<DateTime>("UpdateTime")
+                    b.Property<DateTime>("UpdatedTime")
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime");
 
                     b.Property<string>("UserActivityId")
@@ -206,7 +211,8 @@ namespace BPMPlus.Migrations
                         .HasColumnType("VARCHAR");
 
                     b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.Property<string>("GradeName")
                         .IsRequired()
@@ -214,7 +220,8 @@ namespace BPMPlus.Migrations
                         .HasColumnType("NVARCHAR");
 
                     b.Property<DateTime>("UpdatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.HasKey("GradeId");
 
@@ -228,7 +235,8 @@ namespace BPMPlus.Migrations
                         .HasColumnType("VARCHAR");
 
                     b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
@@ -243,8 +251,9 @@ namespace BPMPlus.Migrations
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("UpdateTime")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTime>("UpdatedTime")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.HasKey("MeetingId");
 
@@ -263,10 +272,12 @@ namespace BPMPlus.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.Property<DateTime>("UpdatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.HasKey("MeetingRoomId");
 
@@ -280,7 +291,8 @@ namespace BPMPlus.Migrations
                         .HasColumnType("VARCHAR");
 
                     b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.Property<string>("PermissionGroupName")
                         .IsRequired()
@@ -288,7 +300,8 @@ namespace BPMPlus.Migrations
                         .HasColumnType("NVARCHAR");
 
                     b.Property<DateTime>("UpdatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.HasKey("PermissionGroupId");
 
@@ -302,14 +315,16 @@ namespace BPMPlus.Migrations
                         .HasColumnType("VARCHAR");
 
                     b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.Property<string>("DepartmentId")
                         .HasMaxLength(20)
                         .HasColumnType("VARCHAR");
 
                     b.Property<DateTime>("UpdatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.Property<string>("UserActivityId")
                         .HasMaxLength(20)
@@ -340,6 +355,7 @@ namespace BPMPlus.Migrations
                         .HasColumnType("VARCHAR");
 
                     b.Property<DateTime>("CreatedTime")
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime");
 
                     b.Property<string>("DepartmentId")
@@ -347,7 +363,8 @@ namespace BPMPlus.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("VARCHAR");
 
-                    b.Property<DateTime>("UpdateTime")
+                    b.Property<DateTime>("UpdatedTime")
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime");
 
                     b.Property<string>("UserActivityId")
@@ -370,7 +387,8 @@ namespace BPMPlus.Migrations
                         .HasColumnType("VARCHAR");
 
                     b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.Property<DateTime>("DeadLine")
                         .HasColumnType("datetime2");
@@ -386,7 +404,8 @@ namespace BPMPlus.Migrations
                         .HasColumnType("NCHAR");
 
                     b.Property<DateTime>("UpdatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.HasKey("ProjectId");
 
@@ -400,6 +419,7 @@ namespace BPMPlus.Migrations
                         .HasColumnType("varchar");
 
                     b.Property<DateTime>("CreatedTime")
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime");
 
                     b.Property<string>("ResultDescription")
@@ -407,7 +427,8 @@ namespace BPMPlus.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar");
 
-                    b.Property<DateTime>("UpdateTime")
+                    b.Property<DateTime>("UpdatedTime")
+                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime");
 
                     b.HasKey("ResultId");
@@ -428,7 +449,8 @@ namespace BPMPlus.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.Property<string>("DepartmentId")
                         .HasMaxLength(20)
@@ -485,7 +507,8 @@ namespace BPMPlus.Migrations
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("UpdatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.Property<bool>("UserIsActive")
                         .HasColumnType("bit");
@@ -520,10 +543,12 @@ namespace BPMPlus.Migrations
                         .HasColumnType("VARCHAR");
 
                     b.Property<DateTime>("CreatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.Property<DateTime>("UpdatedTime")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("datetime");
 
                     b.Property<string>("UserActivityIdDescription")
                         .IsRequired()

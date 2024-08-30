@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
 
 namespace BPMPlus.Models
 {
@@ -53,9 +54,12 @@ namespace BPMPlus.Models
         public DateTime Date { get; set; }
 
         [Column(TypeName = "datetime")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        [DefaultValue("getutcdate()")]
         public DateTime CreatedTime { get; set; }
-
         [Column(TypeName = "datetime")]
-        public DateTime UpdateTime { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        [DefaultValue("getutcdate()")]
+        public DateTime UpdatedTime { get; set; }
     }
 }

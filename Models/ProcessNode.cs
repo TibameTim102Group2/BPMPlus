@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BPMPlus.Models
@@ -27,10 +28,15 @@ namespace BPMPlus.Models
         public string? DepartmentId { get; set; }
         public virtual Department? Department { get; set; }
 
-       
 
+
+        [Column(TypeName = "datetime")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        [DefaultValue("getutcdate()")]
         public DateTime CreatedTime { get; set; }
-
+        [Column(TypeName = "datetime")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        [DefaultValue("getutcdate()")]
         public DateTime UpdatedTime { get; set; }
     }
 }
