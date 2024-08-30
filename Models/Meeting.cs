@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using Azure;
+using System.ComponentModel;
 
 namespace BPMPlus.Models
 {
@@ -20,7 +21,13 @@ namespace BPMPlus.Models
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
         public string? Note { get; set; }
+        [Column(TypeName = "datetime")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        [DefaultValue("getutcdate()")]
         public DateTime CreatedTime { get; set; }
-        public DateTime UpdateTime { get; set; }
+        [Column(TypeName = "datetime")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        [DefaultValue("getutcdate()")]
+        public DateTime UpdatedTime { get; set; }
     }
 }

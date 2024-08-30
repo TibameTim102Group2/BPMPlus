@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
 
 namespace BPMPlus.Models
 {
@@ -25,7 +26,13 @@ namespace BPMPlus.Models
         public string? GradeId { get; set; }
         public virtual Grade? Grade { get; set; }
         public bool UserIsActive { get; set; }
+        [Column(TypeName = "datetime")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        [DefaultValue("getutcdate()")]
         public DateTime CreatedTime { get; set; }
+        [Column(TypeName = "datetime")]
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        [DefaultValue("getutcdate()")]
         public DateTime UpdatedTime { get; set; }
         [Column(TypeName = "VARCHAR")]
         [MaxLength(20)]

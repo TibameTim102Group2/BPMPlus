@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace BPMPlus.Migrations
+namespace BPMPlus.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class CreateDB : Migration
+    public partial class CreateDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,8 +31,8 @@ namespace BPMPlus.Migrations
                 {
                     CategoryId = table.Column<string>(type: "VARCHAR(20)", maxLength: 20, nullable: false),
                     CategoryDescription = table.Column<string>(type: "NVARCHAR(50)", maxLength: 50, nullable: false),
-                    CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedTime = table.Column<DateTime>(type: "datetime", nullable: false),
+                    UpdatedTime = table.Column<DateTime>(type: "datetime", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -46,7 +46,7 @@ namespace BPMPlus.Migrations
                     DepartmentId = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false),
                     DepartmentName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     CreatedTime = table.Column<DateTime>(type: "datetime", nullable: false),
-                    UpdateTime = table.Column<DateTime>(type: "datetime", nullable: false)
+                    UpdatedTime = table.Column<DateTime>(type: "datetime", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -59,8 +59,8 @@ namespace BPMPlus.Migrations
                 {
                     GradeId = table.Column<string>(type: "VARCHAR(20)", maxLength: 20, nullable: false),
                     GradeName = table.Column<string>(type: "NVARCHAR(100)", maxLength: 100, nullable: false),
-                    CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedTime = table.Column<DateTime>(type: "datetime", nullable: false),
+                    UpdatedTime = table.Column<DateTime>(type: "datetime", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -73,8 +73,8 @@ namespace BPMPlus.Migrations
                 {
                     MeetingRoomId = table.Column<string>(type: "VARCHAR(20)", maxLength: 20, nullable: false),
                     Accomodation = table.Column<int>(type: "int", nullable: false),
-                    CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedTime = table.Column<DateTime>(type: "datetime", nullable: false),
+                    UpdatedTime = table.Column<DateTime>(type: "datetime", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -87,8 +87,8 @@ namespace BPMPlus.Migrations
                 {
                     PermissionGroupId = table.Column<string>(type: "VARCHAR(20)", maxLength: 20, nullable: false),
                     PermissionGroupName = table.Column<string>(type: "NVARCHAR(20)", maxLength: 20, nullable: false),
-                    CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedTime = table.Column<DateTime>(type: "datetime", nullable: false),
+                    UpdatedTime = table.Column<DateTime>(type: "datetime", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -103,8 +103,8 @@ namespace BPMPlus.Migrations
                     ProjectName = table.Column<string>(type: "NVARCHAR(64)", maxLength: 64, nullable: false),
                     Summary = table.Column<string>(type: "NCHAR(500)", maxLength: 500, nullable: false),
                     DeadLine = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedTime = table.Column<DateTime>(type: "datetime", nullable: false),
+                    UpdatedTime = table.Column<DateTime>(type: "datetime", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -118,7 +118,7 @@ namespace BPMPlus.Migrations
                     ResultId = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false),
                     ResultDescription = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     CreatedTime = table.Column<DateTime>(type: "datetime", nullable: false),
-                    UpdateTime = table.Column<DateTime>(type: "datetime", nullable: false)
+                    UpdatedTime = table.Column<DateTime>(type: "datetime", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -131,8 +131,8 @@ namespace BPMPlus.Migrations
                 {
                     UserActivityId = table.Column<string>(type: "VARCHAR(20)", maxLength: 20, nullable: false),
                     UserActivityIdDescription = table.Column<string>(type: "NVARCHAR(100)", maxLength: 100, nullable: false),
-                    CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedTime = table.Column<DateTime>(type: "datetime", nullable: false),
+                    UpdatedTime = table.Column<DateTime>(type: "datetime", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -169,8 +169,8 @@ namespace BPMPlus.Migrations
                     EmployeeId = table.Column<string>(type: "VARCHAR(20)", maxLength: 20, nullable: false),
                     GradeId = table.Column<string>(type: "VARCHAR(20)", maxLength: 20, nullable: true),
                     UserIsActive = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedTime = table.Column<DateTime>(type: "datetime", nullable: false),
+                    UpdatedTime = table.Column<DateTime>(type: "datetime", nullable: false),
                     TEL = table.Column<string>(type: "VARCHAR(20)", maxLength: 20, nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -212,8 +212,8 @@ namespace BPMPlus.Migrations
                     StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedTime = table.Column<DateTime>(type: "datetime", nullable: false),
+                    UpdatedTime = table.Column<DateTime>(type: "datetime", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -257,8 +257,8 @@ namespace BPMPlus.Migrations
                     UserActivityId = table.Column<string>(type: "VARCHAR(20)", maxLength: 20, nullable: true),
                     UserId = table.Column<string>(type: "NVARCHAR(450)", maxLength: 450, nullable: false),
                     DepartmentId = table.Column<string>(type: "VARCHAR(20)", maxLength: 20, nullable: true),
-                    CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedTime = table.Column<DateTime>(type: "datetime", nullable: false),
+                    UpdatedTime = table.Column<DateTime>(type: "datetime", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -284,7 +284,7 @@ namespace BPMPlus.Migrations
                     DepartmentId = table.Column<string>(type: "VARCHAR(20)", maxLength: 20, nullable: false),
                     CategoryId = table.Column<string>(type: "VARCHAR(20)", maxLength: 20, nullable: true),
                     CreatedTime = table.Column<DateTime>(type: "datetime", nullable: false),
-                    UpdateTime = table.Column<DateTime>(type: "datetime", nullable: false)
+                    UpdatedTime = table.Column<DateTime>(type: "datetime", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -475,8 +475,8 @@ namespace BPMPlus.Migrations
                     ProcessNodeId = table.Column<string>(type: "VARCHAR(20)", maxLength: 20, nullable: true),
                     FormIsActive = table.Column<bool>(type: "bit", nullable: false),
                     man_day = table.Column<int>(type: "int", nullable: false),
-                    CreatedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedTime = table.Column<DateTime>(type: "datetime", nullable: false),
+                    UpdatedTime = table.Column<DateTime>(type: "datetime", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -512,7 +512,7 @@ namespace BPMPlus.Migrations
                     GradeId = table.Column<string>(type: "VARCHAR(20)", maxLength: 20, nullable: true),
                     Date = table.Column<DateTime>(type: "datetime", nullable: false),
                     CreatedTime = table.Column<DateTime>(type: "datetime", nullable: false),
-                    UpdateTime = table.Column<DateTime>(type: "datetime", nullable: false)
+                    UpdatedTime = table.Column<DateTime>(type: "datetime", nullable: false)
                 },
                 constraints: table =>
                 {
