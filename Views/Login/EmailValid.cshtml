@@ -1,0 +1,41 @@
+﻿@section Style {
+    <style>
+        .validConfirm {
+            font-size: 25px;
+        }
+    </style>
+}
+
+<div class="login-page bg-light">
+    <div class="login-box">
+        <div class="login-logo">
+            <img src="/BPMPLUS.png" alt="" class="mb-3" style="width:20rem;">
+        </div>
+        <!-- /.login-logo -->
+        <div>
+            <p class="validConfirm login-box-msg text-bold">已寄至您的信箱, 請輸入驗證碼</p>
+            <div class="input-group mb-3">
+                <input type="password" class="form-control" placeholder="請輸入驗證碼">
+                <div class="input-group-append">
+                    <div class="input-group">
+                    </div>
+                </div>
+            </div>
+            <form action="../../index3.html" method="post">
+                <div class="row">
+                    <div class="col-8">
+                        <div class="icheck-primary">
+                            <input type="checkbox" id="remember">
+                            <a href="#" class="">返回登入</a>
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-4">
+                        <button type="submit" class="btn btn-primary btn-block">送出</button>
+                    </div>
+                    <!-- /.col -->
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
