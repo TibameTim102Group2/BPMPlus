@@ -1,20 +1,32 @@
 ﻿@section Style
 {
     <style>
+
+        #fullPage{
+            background-color: #DFF1FF; 
+            padding:10px;
+        }
+
         h4{
             color: #3D60A5;
+        }
+
+        #secondeBackground{
+            background-color: #D1DEFF;
+            margin-left:15px;
+            margin-right: 15px;
+            margin-bottom: 15px;
         }
 
         .formBackground{
             background-color: #D1DEFF;
             padding-left: 35px;
+            padding-right: 35px;
             display: block;
             padding-top: 15px;
         }
 
         #formArea {
-            padding-left:30px;
-            padding-right:30px;
             padding-bottom:20px;
             display:flex;
         }
@@ -32,58 +44,57 @@
             display: inline;
         }
         .process{
-            padding-left:30px;
-            padding-right:30px;
             padding-bottom:20px;
         }
         .process label{
-            padding-top:5px;
-            background-color: #D1DEFF;
             margin: auto;
             height: 30px;
             width: 120px;
             text-align: center;
-            border-radius: 5%;
-            margin-right: 20px;
+        }
+
+        .process button{
+            width:80px;
+            margin-right:10px;
+        }
+
+        table {
+            text-align: center;
+            line-height: 1.5;
+            padding-left: 50px;
         }
 
         .btnArea {
-            background-color: #D1DEFF;
-            height:80px;
-            padding-top:15px;
+            height:60px;
             display: flex;
             align-items: center;
         }
 
         .btns {
-            width:90px;
+            width:auto;
             margin:auto,0;
         }
-        .bottomArea{
+        .result{
             padding-left: 30px;
             padding-right:30px;
             padding-bottom: 20px
         }
-        .bottomArea label{
-            padding-top: 5px;
-            background-color: #D1DEFF;
-            margin: auto;
-            height: auto;
-            width: 120px;
-            text-align: center;
-            border-radius: 5%;
-            margin-right: 20px;
+
+        .reviewResult{
+            margin-left:10px;
+        }
+
+        .reviewResult label{
+         margin-right:20px;   
         }
 
         .file{
             padding-left:50px;
         }
 
-        .submit{
-            width:120px;
-        }
         .submit button{
             margin-right: 30px;
+            width: 120px;
         }
         .pd{
             padding-left:50px;
@@ -92,89 +103,149 @@
 }
 
 
-<div style="background-color: #DFF1FF; padding:10px;">
+<div id="fullPage">
     <!--  title  -->
     <div class="title">
         <h4 class="m-3">審核工單</h4>
     </div>
 
-    <!-- 工單區域 -->
-    <form id="formArea">
-        <div class="formBackground">
-            <div class="row" style="display:flex;">
-                <div class="col-6 mb-3 form-label">
-                    <label>工單編號</label><input type="text" class="form-control" />
-                </div>
-                <div class="col-6 mb-3 form-label">
-                    <label>建立日期</label><input type="text" class="form-control" />
-                </div>
-                <div class="col-6 mb-3 form-label">
-                    <label>需求類別</label><input type="text" class="form-control" />
-                </div>
-                <div class="col-6 mb-3 form-label">
-                    <label>處理狀態</label><input type="text" class="form-control" />
-                </div>
-                <div class="col-6 mb-3 form-label">
-                    <label>需求部門</label><input type="text" class="form-control" />
-                </div>
-                <div class="col-6 mb-3 form-label">
-                    <label>指派人員</label><input type="text" class="form-control" />
-                </div>
-                <div class="col-6 mb-3 form-label">
-                    <label>需求員工</label><input type="text" class="form-control" />
-                </div>
-                <div class="col-6 mb-3 form-label">
-                    <label>希望完成日期</label><input type="text" class="form-control" />
-                </div>
-                <div class="col-6 mb-3 form-label">
-                    <label>所屬專案</label><input type="text" class="form-control" />
-                </div>
-                <div class="col-6 mb-3 form-label">
-                    <label>預估工時</label><input type="text" class="form-control" />
-                </div>
-            </div>
+    <div id="secondeBackground">
 
-        </div>
-    </form>
-            
-    <!-- 流程進度 -->
+        <!-- 工單區域 -->
+        <form id="formArea">
+            <div class="formBackground">
+                <div class="row" style="display:flex;">
+                    <div class="col-6 mb-3 form-label">
+                        <label>工單編號</label><input type="text" class="form-control" />
+                    </div>
+                    <div class="col-6 mb-3 form-label">
+                        <label>建立日期</label><input type="text" class="form-control" />
+                    </div>
+                    <div class="col-6 mb-3 form-label">
+                        <label>需求類別</label><input type="text" class="form-control" />
+                    </div>
+                    <div class="col-6 mb-3 form-label">
+                        <label>處理狀態</label><input type="text" class="form-control" />
+                    </div>
+                    <div class="col-6 mb-3 form-label">
+                        <label>需求部門</label><input type="text" class="form-control" />
+                    </div>
+                    <div class="col-6 mb-3 form-label">
+                        <label>指派人員</label><input type="text" class="form-control" />
+                    </div>
+                    <div class="col-6 mb-3 form-label">
+                        <label>需求員工</label><input type="text" class="form-control" />
+                    </div>
+                    <div class="col-6 mb-3 form-label">
+                        <label>希望完成日期</label><input type="text" class="form-control" />
+                    </div>
+                    <div class="col-6 mb-3 form-label">
+                        <label>所屬專案</label><input type="text" class="form-control" />
+                    </div>
+                    <div class="col-6 mb-3 form-label">
+                        <label>預估工時</label><input type="text" class="form-control" />
+                    </div>
+                </div>
+
+            </div>
+        </form>
+
+        <!-- 流程進度 -->
         <div class="process">
-            <label>流程進度</label><br>
-        <div class="formBackground btnArea">
+            <label>流程進度</label>
+            <br>
+            <div class="formBackground btnArea">
                 <div>
-                <button class="btn btn-primary btns">提單</button> → <button class="btn btn-danger btns">部級主管</button> → <button class="btn btn-primary btns">單位主管</button> → <button class="btn btn-primary btns">處理人員</button> → <button class="btn btn-primary btns">驗收</button>
+                    <button class="btn btn-sm btn-success btns">提單</button>
+                    <button class="btn btn-sm btn-danger btns">一級主管</button>
+                    <button class="btn btn-sm btn-primary btns">二級主管</button>
+                    <button class="btn btn-sm btn-primary btns">三級主管</button>
+                    <button class="btn btn-sm btn-primary btns">三級主管</button>
+                    <button class="btn btn-sm btn-primary btns">二級主管</button>
+                    <button class="btn btn-sm btn-primary btns">一級主管</button>
+                    <button class="btn btn-sm btn-primary btns">處理人員</button>
+                    <button class="btn btn-sm btn-primary btns">驗收</button>
                 </div>
             </div>
         </div>
 
+        <!--  工單處理紀錄  -->
+        <table class="table table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th>時間</th>
+                    <th>處理狀態</th>
+                    <th>處理人員</th>
+                    <th>出示意見</th>
+                    <th>需求項目類別</th>
+                    <th>審核結果</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>2024-08-01 13:17</td>
+                    <td>部門主管審核</td>
+                    <td>張三</td>
+                    <td>因業務需求提出申請</td>
+                    <td>資訊需求單</td>
+                    <td>送出</td>
+                </tr>
+                <tr>
+                    <td>2024-08-02 08:23</td>
+                    <td>處理部門主管審核</td>
+                    <td>林香</td>
+                    <td>-</td>
+                    <td>資訊需求單</td>
+                    <td>審核中</td>
+                </tr>
+
+            </tbody>
+        </table>
+
+
+
+        <!-- 需求內容/附件/出示意見 -->
         <div>
-            <div class="bottomArea">
-                <!-- 需求內容 -->
+            <!-- 需求內容 -->
+            <div class="result">
                 <label>需求內容</label><br>
                 <textarea class="form-control"></textarea>
             </div>
-            <div class="bottomArea file">
-                <!-- 附件上傳/下載 -->
-                <input type="file"/>
+
+            <!-- 附件上傳/下載 -->
+            <div class="result file">
+                <input type="file" />
                 <button class="btn bg-info btn-sm">附件下載</button>
             </div>
+
             <!-- 出示意見 -->
-            <div class="bottomArea">
+        <div class="result">
                 <label>出示意見</label>
                 <div id="summernote"></div>
+
+                <div style="display:flex;">
+                    <label>審核結果: </label>
+                    <div class="reviewResult">
+                        <label for="arrow"><input name="result" id="arrow" type="radio" />核准</label>
+                        <label for="backoff"><input name="result" id="backoff" type="radio" />退回</label>
+                    </div>
+                </div>
+
+        </div><!-- 需求內容/附件/出示意見 END -->
+
+        <!--  submit  -->
+        <div class="row result pd">
+            <div class="submit col-8">
+                <button class="btn btn-primary btns">處理流程</button>
+                <button class="btn btn-success btns">送出審核</button>
+                @* <button class="btn btn-danger btns">退回</button> *@
             </div>
-    </div>
-
-    <!--  submit  -->
-    <div class="row bottomArea pd">
-        <div class="submit col-8">
-            <button class="btn btn-primary btns">處理流程</button>
-            <button class="btn btn-success btns">送出</button>
-            <button class="btn btn-danger btns">退回</button>
         </div>
-    </div>
-</div>
 
+    </div><!-- secondeBackground END -->
+
+</div>
+</div>
 
 @section Scripts
 {

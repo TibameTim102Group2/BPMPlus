@@ -80,6 +80,11 @@
         .form-group {
             display: flex;
         }
+
+        table {
+            text-align: center;
+            line-height: 1.5;
+        }
     </style>
 }
 
@@ -146,7 +151,7 @@
                                 </div>
                                 <div style="width:15%"></div>
                                 <div class="form-group">
-                                    <button class="button btn btn-primary"><i class="fa-solid fa-trash"></i> 刪除</button>
+                                    <button class="button btn btn-danger"><i class="fa-solid fa-trash"></i> 刪除</button>
                                 </div>
                             </div>
 
@@ -175,7 +180,7 @@
                         </div>
 
                         <!-- /.col -->
-                    </div>
+@*                     </div>
                     <div>
                         <div class="form-group">
                             <label class="item-name">處理狀態</label>
@@ -184,7 +189,57 @@
                         </div>
                     </div>
                     <br />
-                    <br />
+                    <br /> *@
+
+                        <label>流程進度</label>
+                        <br>
+                        <div class="formBackground btnArea">
+                            <div>
+                                <button class="btn btn-sm btn-success btns">提單</button>
+                                <button class="btn btn-sm btn-danger btns">一級主管</button>
+                                <button class="btn btn-sm btn-primary btns">二級主管</button>
+                                <button class="btn btn-sm btn-primary btns">三級主管</button>
+                                <button class="btn btn-sm btn-primary btns">三級主管</button>
+                                <button class="btn btn-sm btn-primary btns">二級主管</button>
+                                <button class="btn btn-sm btn-primary btns">一級主管</button>
+                                <button class="btn btn-sm btn-primary btns">處理人員</button>
+                                <button class="btn btn-sm btn-primary btns">驗收</button>
+                            </div>
+                        </div><br /><br /><br />
+
+                    <!--  工單處理紀錄  -->
+                    <table class="table table-hover table-bordered ">
+                        <thead>
+                            <tr>
+                                <th>時間</th>
+                                <th>處理狀態</th>
+                                <th>處理人員</th>
+                                <th>出示意見</th>
+                                <th>需求項目類別</th>
+                                <th>審核結果</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2024-08-01 13:17</td>
+                                <td>部門主管審核</td>
+                                <td>張三</td>
+                                <td>因業務需求提出申請</td>
+                                <td>資訊需求單</td>
+                                <td>送出</td>
+                            </tr>
+                            <tr>
+                                <td>2024-08-02 08:23</td>
+                                <td>處理部門主管審核</td>
+                                <td>林香</td>
+                                <td>-</td>
+                                <td>資訊需求單</td>
+                                <td>審核中</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
 
                     <!-- /.row -->
                     <div class="row">
@@ -222,14 +277,6 @@
                         </div>
 
                         <div class="col-12 col-sm-5" style="display:flex">
-                            <div>
-                                <input type="checkbox"> pdf
-                            </div>
-                            <div style="width:10%"></div>
-                            <div>
-                                <input type="checkbox"> excel
-                            </div>
-
                             <div style="width:10%"></div>
                             <div class="form-group">
                                 <button class="button btn btn-primary"><i class="fa-solid fa-file-export"></i> 匯出工單 </button>
