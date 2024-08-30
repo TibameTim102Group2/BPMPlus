@@ -1,0 +1,60 @@
+﻿@section Style {
+    <style>
+        .welcomeText {
+            font-size: 25px;
+        }
+    </style>
+}
+<div class="login-page bg-light">
+    <div class="login-box">
+        <div class="login-logo">
+            <img src="" alt="" class="mb-3" style="width:20rem;">
+        </div>
+        <!-- /.login-logo -->
+        <div>
+            <p class="welcomeText login-box-msg text-bold">歡迎使用公司內部需求系統</p>
+            <div class="input-group mb-3">
+                <input type="email" class="form-control" placeholder="電子信箱">
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-envelope"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group mb-3">
+                <input type="password" class="form-control" placeholder="密碼">
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-lock"></span>
+                    </div>
+                </div>
+            </div>
+            <form action="../../index3.html" method="post">
+                <div class="row">
+                    <div class="col-8">
+                        <div class="icheck-primary">
+                            <input type="checkbox" id="remember">
+                            <label for="remember">
+                                記住我
+                            </label>
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-4">
+                        <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                    </div>
+                    <!-- /.col -->
+                </div>
+            </form>
+        </div>
+
+        <p class="mb-1">
+            <a href="forgot-password.html">忘記密碼</a>
+        </p>
+
+        <p class="mb-0">
+            <a href="register.html" class="text-center">註冊</a>
+        </p>
+
+    </div>
+</div>
