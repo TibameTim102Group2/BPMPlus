@@ -53,6 +53,10 @@
             height: 200px;
         }
 
+        .btn-link {
+            color: white;
+        }
+
         textarea {
             resize: none;
         }
@@ -105,14 +109,7 @@
                             </div>
                             <div class="form-group" style="display:flex">
                                 <label class="item-name">需求部門</label>
-                                <select class="form-control select2 selection">
-                                    <option selected="selected">Alabama</option>
-                                    <option>Alaska</option>
-                                    <option disabled="disabled">California (disabled)</option>
-                                    <option>Delaware</option>
-                                    <option>Tennessee</option>
-                                    <option>Texas</option>
-                                    <option>Washington</option>
+                                <select class="form-control select2 selection" Disabled>
                                 </select>
                             </div>
                             
@@ -135,7 +132,7 @@
                             <div style="display:flex">
                                 <div style="width:60%"></div>
                                 <div class="form-group">
-                                    <button class="button btn btn-primary"><i class="fa-solid fa-trash"></i> 刪除</button>
+                                    <button class="button btn btn-danger"><i class="fa-solid fa-trash"></i> 刪除</button>
                                 </div>
                             </div>
 
@@ -155,10 +152,10 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label class="item-name">需求員工</label><input class="form-control txt-box">
+                                    <label class="item-name">需求員工</label><input class="form-control txt-box" Disabled>
                                 </div>
                                 <div class="form-group">
-                                    <label class="item-name">所屬專案</label><input class="form-control txt-box" disabled>
+                                    <label class="item-name">所屬專案</label><input class="form-control txt-box">
                                 </div>
                             </div>
                         </div>
@@ -198,24 +195,13 @@
                                 <button class="button btn btn-primary"><i class="fa-solid fa-cloud-arrow-up"></i>  附件上傳</button>
                             </div>
                             <div style="width:10%"></div>
-                            <div class="form-group">
-                                <button class="button btn btn-primary"><i class="fa-solid fa-file-arrow-down"></i>  附件下載</button>
-                            </div>
                             <!-- /.form-group -->
                         </div>
 
                         <div class="col-12 col-sm-5" style="display:flex">
-                            <div>
-                                <input type="checkbox"> pdf
-                            </div>
-                            <div style="width:10%"></div>
-                            <div>
-                                <input type="checkbox"> excel
-                            </div>
-
                             <div style="width:10%"></div>
                             <div class="form-group">
-                                <button class="button btn btn-primary"><i class="fa-solid fa-file-export"></i> 送出修改</button>
+                                <button class="button btn btn-warning btn-link"><i class="fa-solid fa-file-export"></i> 送出修改</button>
                             </div>
 
                             <!-- /.form-group -->
