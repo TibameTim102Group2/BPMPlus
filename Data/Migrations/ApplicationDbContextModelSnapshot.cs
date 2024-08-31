@@ -43,7 +43,7 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("Category");
+                    b.ToTable("Category", (string)null);
                 });
 
             modelBuilder.Entity("BPMPlus.Models.Department", b =>
@@ -67,7 +67,7 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasKey("DepartmentId");
 
-                    b.ToTable("Department");
+                    b.ToTable("Department", (string)null);
                 });
 
             modelBuilder.Entity("BPMPlus.Models.Form", b =>
@@ -141,7 +141,7 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("Form");
+                    b.ToTable("Form", (string)null);
                 });
 
             modelBuilder.Entity("BPMPlus.Models.FormRecord", b =>
@@ -201,7 +201,7 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasIndex("UserActivityId");
 
-                    b.ToTable("FormRecord");
+                    b.ToTable("FormRecord", (string)null);
                 });
 
             modelBuilder.Entity("BPMPlus.Models.Grade", b =>
@@ -225,7 +225,7 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasKey("GradeId");
 
-                    b.ToTable("Grade");
+                    b.ToTable("Grade", (string)null);
                 });
 
             modelBuilder.Entity("BPMPlus.Models.Meeting", b =>
@@ -259,7 +259,7 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasIndex("MeetingRoomId");
 
-                    b.ToTable("Meeting");
+                    b.ToTable("Meeting", (string)null);
                 });
 
             modelBuilder.Entity("BPMPlus.Models.MeetingRooms", b =>
@@ -281,7 +281,7 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasKey("MeetingRoomId");
 
-                    b.ToTable("MeetingRooms");
+                    b.ToTable("MeetingRooms", (string)null);
                 });
 
             modelBuilder.Entity("BPMPlus.Models.PermissionGroup", b =>
@@ -305,7 +305,7 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasKey("PermissionGroupId");
 
-                    b.ToTable("PermissionGroup");
+                    b.ToTable("PermissionGroup", (string)null);
                 });
 
             modelBuilder.Entity("BPMPlus.Models.ProcessNode", b =>
@@ -341,7 +341,7 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasIndex("UserActivityId");
 
-                    b.ToTable("ProcessNode");
+                    b.ToTable("ProcessNode", (string)null);
                 });
 
             modelBuilder.Entity("BPMPlus.Models.ProcessTemplate", b =>
@@ -377,7 +377,7 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasIndex("UserActivityId");
 
-                    b.ToTable("ProcessTemplate");
+                    b.ToTable("ProcessTemplate", (string)null);
                 });
 
             modelBuilder.Entity("BPMPlus.Models.Project", b =>
@@ -409,7 +409,7 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasKey("ProjectId");
 
-                    b.ToTable("Project");
+                    b.ToTable("Project", (string)null);
                 });
 
             modelBuilder.Entity("BPMPlus.Models.Result", b =>
@@ -433,7 +433,7 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasKey("ResultId");
 
-                    b.ToTable("Result");
+                    b.ToTable("Result", (string)null);
                 });
 
             modelBuilder.Entity("BPMPlus.Models.User", b =>
@@ -486,7 +486,7 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasIndex("GradeId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("BPMPlus.Models.UserActivity", b =>
@@ -510,7 +510,7 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasKey("UserActivityId");
 
-                    b.ToTable("UserActivity");
+                    b.ToTable("UserActivity", (string)null);
                 });
 
             modelBuilder.Entity("MeetingUser", b =>
@@ -525,7 +525,7 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasIndex("UsersUserId");
 
-                    b.ToTable("MeetingUser");
+                    b.ToTable("MeetingUser", (string)null);
                 });
 
             modelBuilder.Entity("PermissionGroupUser", b =>
@@ -540,7 +540,7 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasIndex("UsersUserId");
 
-                    b.ToTable("PermissionGroupUser");
+                    b.ToTable("PermissionGroupUser", (string)null);
                 });
 
             modelBuilder.Entity("PermissionGroupUserActivity", b =>
@@ -555,7 +555,7 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasIndex("UserActivitiesUserActivityId");
 
-                    b.ToTable("PermissionGroupUserActivity");
+                    b.ToTable("PermissionGroupUserActivity", (string)null);
                 });
 
             modelBuilder.Entity("ProjectUser", b =>
@@ -570,7 +570,7 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasIndex("UsersUserId");
 
-                    b.ToTable("ProjectUser");
+                    b.ToTable("ProjectUser", (string)null);
                 });
 
             modelBuilder.Entity("BPMPlus.Models.Form", b =>
