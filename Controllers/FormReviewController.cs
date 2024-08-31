@@ -3,14 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BPMPlus.Controllers
 {
-    public class FormRecords : Controller
+    public class FormReviewController : Controller
     {
-        // GET: FormRecords
+        // GET: FormReview
         public ActionResult Index()
         {
             return View();
         }
-
-       
     }
 }

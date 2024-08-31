@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BPMPlus.Controllers
 {
-    public class FormReview : Controller
+    public class ModifyFormController : Controller
     {
-        // GET: FormReview
+        // GET: ModifyForm
         public ActionResult Index()
         {
             return View();
