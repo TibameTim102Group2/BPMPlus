@@ -9,7 +9,7 @@ namespace BPMPlus.Models
         [Key]
         [Column(TypeName = "varchar")]
         [MaxLength(20)]
-        public string ProcessNodeId { get; set; }
+        public string ProcessTemplateId { get; set; }
 
         [Column(TypeName = "VARCHAR")]
         [MaxLength(20)]
