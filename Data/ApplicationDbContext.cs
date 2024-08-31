@@ -4,19 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BPMPlus.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<User>
+    public class ApplicationDbContext:DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
-        }
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
-            builder.Entity<User>(b =>
-            {
-                b.ToTable("Users").HasAlternateKey(b => b.EmployeeId); 
-            });
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
