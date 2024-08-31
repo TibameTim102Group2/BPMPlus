@@ -3,14 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BPMPlus.Controllers
 {
-    public class ToDoList : Controller
+    public class FormDetailsController : Controller
     {
-        // GET: ToDoList
+        // GET: FormDetails
         public ActionResult Index()
         {
             return View();
         }
 
-       
     }
 }
