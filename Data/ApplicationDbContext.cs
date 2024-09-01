@@ -22,6 +22,7 @@ namespace BPMPlus.Data
                     Config.GetConnectionString("DefaultConnection"));
             }
         }
+        public DbSet<BPMPlus.Models.User> User { get; set; }
         public DbSet<BPMPlus.Models.Meeting> Meeting { get; set; }
         public DbSet<BPMPlus.Models.Form> Form { get; set; }
         public DbSet<BPMPlus.Models.ProcessNode> ProcessNodes { get; set; }
