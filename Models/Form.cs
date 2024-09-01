@@ -16,7 +16,7 @@ namespace BPMPlus.Models
         [MaxLength(450)]
  
         public string UserId { get; set; }
-        
+        public virtual User? User { get; set; }
 
         public DateTime Date { get; set; }
 
@@ -35,6 +35,7 @@ namespace BPMPlus.Models
         [Column(TypeName = "VARCHAR")]
         [MaxLength(20)]
         public string DepartmentId { get; set; }
+        public virtual Department? Department { get; set; }
 
         [Column(TypeName = "NVARCHAR")]
         [MaxLength(200)]
@@ -52,12 +53,10 @@ namespace BPMPlus.Models
         [MaxLength(10)]
         public string Tel { get; set; }
 
+        
+        public virtual ICollection<ProcessNode>  ProcessNode { get; set; }
 
-        [Column(TypeName = "VARCHAR")]
-        [MaxLength(20)]
-        [ForeignKey("ProcessNode")]
-        public string? ProcessNodeId { get; set; }
-        public virtual ProcessNode? ProcessNode { get; set; }
+        public virtual ICollection<FormRecord> FormRecord { get; set; }
 
         public bool FormIsActive { get; set; }
 
