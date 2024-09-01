@@ -22,6 +22,7 @@ namespace BPMPlus.Models
         public string? FormId { get; set; }
         public virtual Form? Form { get; set; }
 
+
         [Column(TypeName = "VARCHAR")]
         [MaxLength(20)]
 
@@ -29,8 +30,11 @@ namespace BPMPlus.Models
 
         [Column(TypeName = "NVARCHAR")]
         [MaxLength(450)]
+        [ForeignKey("User")]
 
         public string UserId { get; set; }
+
+        public virtual User? User { get; set; }
 
 
         [Column(TypeName = "varchar")]
