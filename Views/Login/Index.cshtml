@@ -5,46 +5,56 @@
         }
     </style>
 }
-<div class="login-page bg-light">
-    <div class="login-box">
-        <div class="login-logo">
-            <img src="" alt="" class="mb-3" style="width:20rem;">
-        </div>
-        <!-- /.login-logo -->
-        <div>
-            <p class="welcomeText login-box-msg text-bold">歡迎使用公司內部需求系統</p>
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="帳號">
-                <div class="input-group-append">
-                    <div class="input-group-text">
-                        <span class="fas fa-envelope"></span>
-                    </div>
-                </div>
-            </div>
-            <div class="input-group mb-3">
-                <input type="password" class="form-control" placeholder="密碼">
-                <div class="input-group-append">
-                    <div class="input-group-text">
-                        <span class="fas fa-lock"></span>
-                    </div>
-                </div>
-            </div>
-            <form action="../../index3.html" method="post">
 
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+<!--登入區塊-->
+@using (Html.BeginForm("login", "login", new { ReturnUrl = Context.Request.Query["ReturnUrl"] }, FormMethod.Post, true, new { name = "loginForm", autocomplete = "off" }))
+{
+    <div class="login-page bg-light">
+        <div class="login-box">
+            <div class="login-logo">
+                <img src="" alt="" class="mb-3" style="width:20rem;">
+            </div>
+            <!-- /.login-logo -->
+            <div>
+                <p class="welcomeText login-box-msg text-bold">歡迎使用公司內部需求系統</p>
+                <div class="input-group mb-3">
+                    @Html.TextBox("UserId", null, new { @class = "form-control", placeholder = "員工編號" })
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-envelope"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-group mb-3">
+                    @Html.TextBox("Password", null, new { @class = "form-control", placeholder = "登入密碼" })
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-lock"></span>
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <p class="mb-1 col-8">
                         <a href="forgot-password.html">忘記密碼</a>
                     </p>
                     <div class="col-4">
-                        <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+                        <button type="submit" class="btn btn-primary btn-block">登入</button>
                     </div>
                     <!-- /.col -->
                 </div>
-            </form>
+                <div style="color:red;">
+                    <!--顯示登入失敗訊息 -->
+                    @ViewBag.errMsg
+                </div>
+            </div>
         </div>
-
-
-
-
     </div>
-</div>
+    
+    
+}
+<!--./登入區塊-->
