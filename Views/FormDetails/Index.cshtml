@@ -1,4 +1,5 @@
-﻿@model BPMPlus.Models.Form
+﻿@* @model BPMPlus.ViewModels.FormDetailsViewModel *@
+@model BPMPlus.Models.Form
 
 @section Style {
 
@@ -106,7 +107,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="item-name">單號</label><input class="form-control txt-box" disabled>
+                                <label class="item-name">單號</label><input class="form-control txt-box" disabled value="@Model.FormId">
                             </div>
                             <br />
                             <br />
@@ -171,10 +172,10 @@
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label class="item-name">需求員工</label><input class="form-control txt-box" disabled>
+                                    <label class="item-name">需求員工</label><input class="form-control txt-box" disabled >
                                 </div>
                                 <div class="form-group">
-                                    <label class="item-name">所屬專案</label><input class="form-control txt-box" disabled>
+                                    <label class="item-name">所屬專案</label><input class="form-control txt-box" disabled >
                                 </div>
                             </div>
                         </div>
@@ -247,7 +248,7 @@
                             <div class="form-group">
                                 <label class="item-name">需求內容</label>
                             </div>
-                            <textarea rows="8" cols="110" disabled></textarea>
+                            <textarea rows="8" cols="110" disabled ></textarea>
                         </div>
                         <!-- /.col -->
                         <!-- /.col -->
@@ -255,7 +256,7 @@
                     <div class="row">
                         <!-- /.form-group -->
                         <div class="form-group">
-                            <label style="margin-right:5%">聯繫電話</label><input class=" form-control" style="width:25%">
+                            <label style="margin-right:5%">聯繫電話</label><input class=" form-control" style="width:25%" >
                         </div>
 
                         <!-- /.form-group -->
