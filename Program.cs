@@ -31,7 +31,7 @@ namespace BPMPlus
                 // 登入逾期設定，如果沒給預設14天
 
                 // 限制cookie不能延期
-                option.SlidingExpiration = false;
+                option.SlidingExpiration = true;
                 option.LoginPath = "/Login/Index";
             });
             

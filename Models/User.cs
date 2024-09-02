@@ -15,9 +15,9 @@ namespace BPMPlus.Models
         
         [MaxLength(256)]
         public string UserName {  get; set; }
-        public List<Project> Projects { get; } = [];
-        public List<PermissionGroup> PermissionGroups { get; } = [];
-        public List<Meeting> Meetings { get; } = [];
+        public virtual List<Project> Projects { get; } = [];
+        public virtual  List<PermissionGroup> PermissionGroups { get; } = [];
+        public virtual  List<Meeting> Meetings { get; } = [];
         [Column(TypeName = "VARCHAR")]
         [MaxLength(20)]
         [ForeignKey("Department")]
@@ -48,5 +48,17 @@ namespace BPMPlus.Models
         [Column(TypeName = "VARCHAR")]
         [MaxLength(20)]
         public string TEL { get; set; }
+
+        public bool PermittedTo(string functionId)
+        {
+            foreach (var permissionGroup in PermissionGroups)
+            {
+                foreach(var UserActivity in permissionGroup.UserActivities)
+                {
+                    if (UserActivity.UserActivityId == functionId) return true;
+                }
+            }
+            return false;
+        }
     }
 }

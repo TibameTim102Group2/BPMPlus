@@ -7,8 +7,8 @@ namespace BPMPlus.Models
     [Table("PermissionGroup")]
     public class PermissionGroup
     {
-        public List<UserActivity> UserActivities { get; } = [];
-        public List<User> Users { get; } = [];
+        public virtual List<UserActivity> UserActivities { get; } = [];
+        public virtual List<User> Users { get; } = [];
         [Column(TypeName = "VARCHAR")]
         [MaxLength(20)]
         [Key]

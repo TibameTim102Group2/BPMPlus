@@ -10,33 +10,32 @@ using System.Security.Claims;
 namespace BPMPlus.Controllers
 {
     
-    public class CreateFormsController : Controller
+    public class CreateFormsController : BaseController
     {
+
         private readonly ApplicationDbContext _context;
 
-        public CreateFormsController(ApplicationDbContext context)
+        public CreateFormsController(ApplicationDbContext context):base(context)
         {
             _context = context;
         }
-        public async Task<User> GetAuthorizedUser()
-        {
-            var userId = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "UserId")?.Value;
-
-            var user = await _context.User.FirstOrDefaultAsync(m => m.UserId == userId && m.UserIsActive == true);
-            if (user == null)
-            {
-                throw new Exception("User is null, Server Error");
-            }
-            return user;
-        }
+        
         // GET: CreateForms
         [Authorize]
 
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(string ReturnUrl)
         {
+
+            User user = await GetAuthorizedUser();
+            //functionId:  01 -> 需求方申請人送出
             
-            
+            if (!user.PermittedTo("01"))
+            {
+                return LocalRedirect(ReturnUrl);
+            }
+
             return View();
+            
         }
 
 
