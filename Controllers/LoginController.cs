@@ -5,11 +5,19 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using BPMPlus.Models;
 using System.Diagnostics;
+using BPMPlus.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace BPMPlus.Controllers
 {
-	public class LoginController : Controller
-	{
+    public class LoginController : Controller
+    {
+        private readonly ApplicationDbContext _context;
+
+        public LoginController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
@@ -19,12 +27,14 @@ namespace BPMPlus.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string UserId, string Password, bool IsRememberMe)
         {
-
-            if ((UserId == "123" && Password == "456") == false)
+            var user = await _context.User
+                 .FirstOrDefaultAsync(m => m.UserId == UserId && m.Password == Password && m.UserIsActive == true);
+            if (user == null)
             {
                 ViewBag.errMsg = "帳號或密碼輸入錯誤";
                 return View("~/Views/Login/Index.cshtml"); // 登入失敗導回頁面
             }
+
 
 
             // 登入成功，建立驗證 cookie
