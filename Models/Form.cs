@@ -11,10 +11,10 @@ namespace BPMPlus.Models
         [Column(TypeName = "VARCHAR")]
         [MaxLength(20)]
         public string FormId { get; set; }
+        
+        [Column(TypeName = "VARCHAR")]
+        [MaxLength(20)]
 
-        [Column(TypeName = "NVARCHAR")]
-        [MaxLength(450)]
- 
         public string UserId { get; set; }
         public virtual User? User { get; set; }
 
@@ -53,7 +53,10 @@ namespace BPMPlus.Models
         [MaxLength(10)]
         public string Tel { get; set; }
 
-        
+        [Column(TypeName = "VARCHAR")]
+        [MaxLength(20)]
+        public string ProcessNodeId { get; set; }
+
         public virtual ICollection<ProcessNode>  ProcessNode { get; set; }
 
         public virtual ICollection<FormRecord> FormRecord { get; set; }
