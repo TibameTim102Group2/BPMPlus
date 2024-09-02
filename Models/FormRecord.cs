@@ -28,8 +28,8 @@ namespace BPMPlus.Models
 
         public string DepartmentId { get; set; }
 
-        [Column(TypeName = "NVARCHAR")]
-        [MaxLength(450)]
+        [Column(TypeName = "VARCHAR")]
+        [MaxLength(20)]
         [ForeignKey("User")]
 
         public string UserId { get; set; }
