@@ -87,7 +87,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-area="" asp-controller="CreateForms" asp-action="Index">
+                                    <a class="nav-link" asp-area="" asp-controller="CreateForms" asp-action="Index" asp-route-ReturnUrl = "@Context.Request.Path">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>新增工單</p>
                                     </a>
