@@ -46,20 +46,30 @@
                 <li class="nav-item d-none d-sm-inline-block">
                     <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">BPMPlus</a>
                 </li>
+
+                @* 暫放登出 *@
                 <li class="nav-item d-none d-sm-inline-block">
                     <a class="nav-link" href="@Url.Action("Logout","Login")">登出</a>
                 </li>
 
+                @* 修改密碼 *@
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a class="nav-link" href="@Url.Action("ResetPassWord","Login")">修改密碼</a>
+                </li>
 
-@*                 <li>
-                    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                        <div class="image">
-                            <img src="~/images/237143-0147e.jpg" class="img-circle elevation-2" alt="User Image">
-                        </div>
-                        <div class="info">
-                            <a href="#" class="d-block">@ViewBag.UserName</a>
-                        </div>
-                    </div>
+
+
+
+                @*          使用者頭像+名字
+                <li>
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                <div class="image">
+                <img src="~/images/237143-0147e.jpg" class="img-circle elevation-2" alt="User Image">
+                </div>
+                <div class="info">
+                <a href="#" class="d-block">@ViewBag.UserName</a>
+                </div>
+                </div>
                 </li> *@
 
             </ul>
@@ -101,9 +111,21 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-area="" asp-controller="CreateForms" asp-action="Index" asp-route-ReturnUrl = "@Context.Request.Path">
+                                    <a class="nav-link" asp-area="" asp-controller="CreateForms" asp-action="Index" asp-route-ReturnUrl="@Context.Request.Path">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>新增工單</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="FormRecords" asp-action="Index">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>工單處理流程</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="FormReview" asp-action="Index">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>審核工單</p>
                                     </a>
                                 </li>
                             </ul>
@@ -182,7 +204,7 @@
                             </a>
                         </li>
 
-                        @*↓測試區 *@                        
+                        @*↓測試區 *@
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Login" asp-action="EmailForgetPassWord">
                                 <i class="nav-icon fas fa-tree"></i>
@@ -191,17 +213,6 @@
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Login" asp-action="ResetPassWord">
-                                <i class="nav-icon fas fa-tree"></i>
-                                <p>
-                                    修改密碼
-                                </p>
-                            </a>
-                        </li>
-
-
-
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
@@ -211,7 +222,7 @@
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
-            
+
             <!-- Main content -->
             <section class="content">
                 @RenderBody()
