@@ -13,9 +13,14 @@
         </div>
         <!-- /.login-logo -->
         <div>
-            <p class="validConfirm login-box-msg text-bold">已寄至您的信箱, 請輸入驗證碼</p>
+
+
+
+
+
+            <p class="validConfirm login-box-msg text-bold">忘記密碼</p>
             <div class="input-group mb-3">
-                <input type="password" class="form-control" placeholder="請輸入驗證碼">
+                <input type="password" class="form-control" placeholder="請輸入您的帳號">
                 <div class="input-group-append">
                     <div class="input-group">
                     </div>
@@ -26,12 +31,13 @@
                     <div class="col-8">
                         <div class="icheck-primary">
                             <input type="checkbox" id="remember">
-                            <a href="#" class="">返回登入</a>
+                            @Html.ActionLink("返回登入", "Login", "Login")
+
                         </div>
                     </div>
                     <!-- /.col -->
                     <div class="col-4">
-                        <button type="submit" class="btn btn-primary btn-block">送出</button>
+                        <button type="submit" class="btn btn-primary btn-block">寄送驗證碼</button>
                     </div>
                     <!-- /.col -->
                 </div>

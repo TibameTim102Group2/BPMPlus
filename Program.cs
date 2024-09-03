@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using System.Configuration;
 
 namespace BPMPlus
 {
@@ -21,24 +22,26 @@ namespace BPMPlus
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-            builder.Services.AddControllersWithViews();
+
             // 從appsettings.json讀取登入逾時設定
-            
+            double LoginExpireMinute = builder.Configuration.GetValue<double>("LoginExpireMinute");
 
             // 建立驗證中介軟體服務
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
             {
                 // 登入逾期設定，如果沒給預設14天
-
+                option.ExpireTimeSpan = TimeSpan.FromMinutes(LoginExpireMinute);
                 // 限制cookie不能延期
-                option.SlidingExpiration = true;
+                option.SlidingExpiration = false;
                 option.LoginPath = "/Login/Index";
             });
-            
+
+            // 設定 MVC 與 CSRF 驗證
             builder.Services.AddControllersWithViews(options => {
                 // CSRF資安有關，這裡就加入全域驗證範圍Filter的話，待會Controller就不必再加上[AutoValidateAntiforgeryToken]屬性
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
             });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

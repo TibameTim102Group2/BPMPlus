@@ -44,13 +44,24 @@
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
-                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
-                        BPMPlus
-                    </a>
+                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">BPMPlus</a>
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a class="nav-link" href="@Url.Action("Logout","Login")">登出</a>
                 </li>
+
+
+@*                 <li>
+                    <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                        <div class="image">
+                            <img src="~/images/237143-0147e.jpg" class="img-circle elevation-2" alt="User Image">
+                        </div>
+                        <div class="info">
+                            <a href="#" class="d-block">@ViewBag.UserName</a>
+                        </div>
+                    </div>
+                </li> *@
+
             </ul>
         </nav>
         <!-- /.navbar -->
@@ -182,15 +193,34 @@
                                 </p>
                             </a>
                         </li>
+
+                        @*↓測試區 *@                        
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Login" asp-action="Index">
+                            <a class="nav-link" asp-area="" asp-controller="Login" asp-action="EmailValid">
                                 <i class="nav-icon fas fa-tree"></i>
                                 <p>
-                                    登入test
-                                    <i class="fas fa-angle-left right"></i>
+                                    EmailValid
                                 </p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Login" asp-action="EmailForgetPassWord">
+                                <i class="nav-icon fas fa-tree"></i>
+                                <p>
+                                    EmailForgetPassWord
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Login" asp-action="ResetPassWord">
+                                <i class="nav-icon fas fa-tree"></i>
+                                <p>
+                                    ResetPassWord
+                                </p>
+                            </a>
+                        </li>
+
+
 
                     </ul>
                 </nav>
