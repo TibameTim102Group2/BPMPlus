@@ -34,6 +34,13 @@ namespace BPMPlus.Controllers
                 return LocalRedirect(ReturnUrl);
             }
 
+            var Department = await _context.Department
+                 .FirstOrDefaultAsync(d => d.DepartmentId == user.DepartmentId);
+
+
+            ViewBag.UserId = user.UserId;
+            
+            
             return View();
             
         }
