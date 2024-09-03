@@ -29,7 +29,7 @@ namespace BPMPlus
             // 建立驗證中介軟體服務
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
             {
-                // 登入逾期設定，如果沒給預設14天
+                // 目前逾期時間設定為60分鐘 (appsettings.json)
                 option.ExpireTimeSpan = TimeSpan.FromMinutes(LoginExpireMinute);
                 // 限制cookie不能延期
                 option.SlidingExpiration = false;
