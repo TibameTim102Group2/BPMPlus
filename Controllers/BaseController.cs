@@ -19,7 +19,7 @@ namespace BPMPlus.Controllers
 
             var user = await _context.User
                 .Include(u => u.PermissionGroups)
-                    .ThenInclude(pg => pg.UserActivities)
+                .ThenInclude(pg => pg.UserActivities)
                 .Include(u => u.Projects)         // 加載 Projects
                 .Include(u => u.Meetings)
                 .FirstOrDefaultAsync(m => m.UserId == userId && m.UserIsActive == true);

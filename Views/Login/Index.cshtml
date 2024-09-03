@@ -1,4 +1,5 @@
-﻿@section Style {
+﻿@model BPMPlus.ViewModels.LoginVM
+@section Style {
     <style>
         .welcomeText {
             font-size: 25px;
@@ -23,7 +24,7 @@
             <div>
                 <p class="welcomeText login-box-msg text-bold">歡迎使用公司內部需求系統</p>
                 <div class="input-group mb-3">
-                    @Html.TextBox("UserId", null, new { @class = "form-control", placeholder = "員工編號" })
+                    @Html.TextBoxFor(m => m.UserId, new { @class = "form-control", placeholder = "員工編號" })
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-envelope"></span>
@@ -31,7 +32,7 @@
                     </div>
                 </div>
                 <div class="input-group mb-3">
-                    @Html.TextBox("Password", null, new { @class = "form-control", placeholder = "登入密碼" })
+                    @Html.PasswordFor(p => p.Password, new { @class = "form-control", placeholder = "登入密碼" })
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-lock"></span>
@@ -40,7 +41,7 @@
                 </div>
                 <div class="row">
                     <p class="mb-1 col-8">
-                        <a href="forgot-password.html">忘記密碼</a>
+                        @Html.ActionLink("忘記密碼", "EmailValid", "Login")
                     </p>    
                     <div class="col-4">
                         <button type="submit" class="btn btn-primary btn-block">登入</button>
