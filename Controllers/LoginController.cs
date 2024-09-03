@@ -90,25 +90,25 @@ namespace BPMPlus.Controllers
 
 
 
-        [Authorize]
-        [HttpPost]
-        public async Task<IActionResult> ResetPassWord(ChangePasswordVM vm)
-        {
-            var user = await GetAuthorizedUser();
-            var request = await _context.User.SingleOrDefaultAsync(m => m.Password == vm.OldPassword == true);
-            // 確認輸入的舊密碼 == 密碼
+        //[Authorize]
+        //[HttpPost]
+        //public async Task<IActionResult> ResetPassWord(ChangePasswordVM vm)
+        //{
+        //    var user = await GetAuthorizedUser();
+        //    var request = await _context.User.SingleOrDefaultAsync(m => m.Password == vm.OldPassword == true);
+        //    // 確認輸入的舊密碼 == 密碼
 
-            //if (request == null)
-            //{
-            //    ViewBag.errMsg = "舊密碼輸入錯誤!";
-            //    return View("~/Views/Login/ResetPassWord.cshtml"); // 登入失敗導回頁面
-            //}else if (vm.OldPassword == vm.ConfirmPassword)
-            //{
+        //    //if (request == null)
+        //    //{
+        //    //    ViewBag.errMsg = "舊密碼輸入錯誤!";
+        //    //    return View("~/Views/Login/ResetPassWord.cshtml"); // 登入失敗導回頁面
+        //    //}else if (vm.OldPassword == vm.ConfirmPassword)
+        //    //{
 
-            //}
+        //    //}
 
-            //return View();
-        }
+        //    return View();
+        //}
 
 
         //修改密碼
