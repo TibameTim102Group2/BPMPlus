@@ -29,7 +29,6 @@
             margin-top: 30px;
             padding: 20px;
             background-color: rgb(225, 229, 252);
-            
             overflow: hidden;
             border: 0.5px solid gainsboro;
         }
@@ -64,8 +63,10 @@
         .form-label {
             padding-top: 20px;
             display: flex;
-            margin: auto;
+            width: 50%;
+            margin: 2%;
         }
+
         label {
             margin: auto;
             display: inline;
@@ -79,9 +80,10 @@
         }
 
         .form-file {
-            display: flex;
             padding-top: 20px;
-            width: 100%;
+            display: flex;
+            width: 50%;
+            margin: 2%;
         }
 
         .form-date {
@@ -89,7 +91,6 @@
             margin-left: 40px;
             height: 58px;
             display: flex;
-  
         }
 
         .noteContent {
@@ -110,6 +111,10 @@
             justify-content: center;
             margin-top: 20px;
         }
+        .upload{
+            width:100%;
+        }
+
     </style>
 }
 
@@ -125,31 +130,43 @@
             <div class="mb-3 inputField ">
                 <div class="mb-3 form-label">
                     <label for="xxx1">員工編號</label>
-                    <input type="xxx1" class="form-control">
+                    <input type="xxx1" class="form-control" value="@ViewBag.UserId" Disabled>
                 </div>
                 <div class="mb-3 form-label">
                     <label for="xxx2">需求類別</label>
-                    <input type="xxx2" class="form-control">
+                    <select type="xxx2" class="form-control" id="CategoryId" name="CategoryId">
+                        <option value="">-- 請選擇需求類別 --</option>
+                        @foreach (var category in ViewBag.Categories)
+                        {
+                            <option value="@category.CategoryId">@category.CategoryDescription</option>
+                        }
+                    </select>
                 </div>
             </div>
             <div class="mb-3 inputField ">
                 <div class="mb-3 form-label">
                     <label for="xxx1">需求部門</label>
-                    <input type="xxx1" class="form-control">
+                    <input type="xxx1" class="form-control" value="@ViewBag.DepartmentName" Disabled>
                 </div>
                 <div class="mb-3 form-label">
                     <label for="xxx2">派單對象</label>
-                    <input type="xxx2" class="form-control">
+                    <input type="xxx2" class="form-control" Disabled>
                 </div>
             </div>
             <div class="mb-3 inputField ">
                 <div class="mb-3 form-label">
                     <label for="xxx1">聯繫電話</label>
-                    <input type="xxx1" class="form-control">
+                    <input type="xxx1" class="form-control" value="@ViewBag.UserTEL">
                 </div>
                 <div class="mb-3 form-label">
                     <label for="xxx2">專案編號</label>
-                    <input type="xxx2" class="form-control">
+                    <select type="xxx2" class="form-control" id="ProjectId" name="ProjectId">
+                        <option value="">-- 請選擇專案編號 --</option>
+                        @foreach (var project in ViewBag.Projects)
+                        {
+                            <option value="@project.ProjectId">@project.ProjectId</option>
+                        }
+                    </select>
                 </div>
             </div>
             <div class="mb-3 inputField ">
@@ -158,8 +175,14 @@
                     <input type="xxx1" class="form-control">
                 </div>
                 <div class="mb-3 form-label">
-                    <label for="xxx2">歸納至專案</label>
-                    <input type="xxx2" class="form-control">
+                    <label for="xxx2">專案名稱</label>
+                    <select type="xxx2" class="form-control" id="ProjectName" name="ProjectName">
+                        <option value="">-- 請選擇專案名稱 --</option>
+                        @foreach (var project in ViewBag.Projects)
+                        {
+                            <option value="@project.ProjectId">@project.ProjectName</option>
+                        }
+                    </select>
                 </div>
             </div>
             <div class="mb-3 inputField">
@@ -172,14 +195,16 @@
                     <input type="xxx2" class="form-control" style="visibility:hidden">
                 </div>
             </div>
-
-            <div class="mb-3 form-file">
-                <label for="xxx1">檔案上傳</label>
-                <input type="file" class="form-control">
+            <div class="mb-3 inputField" style="margin-top:5%;">
+                <div class="mb-3 form-label">
+                    <label for="xxx1">檔案上傳</label>
+                    <input type="file" class="form-control upload">
+                </div>
             </div>
+
             <!-- 需求內容的位置 -->
 
-            <div class="note">
+            <div class="note" style="margin-top:10%; padding:2%; width:150%">
                 <div class="noteContent">需求內容</div>
                 <div class="txtInput">
                     <div id="summernote">Hello Summernote</div>
@@ -192,12 +217,42 @@
                 <button type="submit" class="btn btn-primary">送出</button>
             </div>
         </form>
+    </div>
 </div>
-    @section Scripts {
-        <script>
-            $(document).ready(function () {
-                $('#summernote').summernote();
-            });
-            var html = $('#summernote').summernote('code');
-        </script>
+@section Scripts {
+    <script type="text/javascript">
+    function updateProjectId() {
+        var projectNameSelect = document.getElementById("ProjectName");
+        var projectIdSelect = document.getElementById("ProjectId");
+        var selectedProjectId = projectNameSelect.value;
+
+        // 根據選擇的名稱更新編號
+        for (var i = 0; i < projectIdSelect.options.length; i++) {
+            if (projectIdSelect.options[i].value === selectedProjectId) {
+                projectIdSelect.value = selectedProjectId;
+                break;
+            }
+        }
     }
+
+    function updateProjectName() {
+        var projectNameSelect = document.getElementById("ProjectName");
+        var projectIdSelect = document.getElementById("ProjectId");
+        var selectedProjectId = projectIdSelect.value;
+
+        // 根據選擇的編號更新名稱
+        for (var i = 0; i < projectNameSelect.options.length; i++) {
+            if (projectNameSelect.options[i].value === selectedProjectId) {
+                projectNameSelect.value = selectedProjectId;
+                break;
+            }
+        }
+    }
+</script>
+    <script>
+        $(document).ready(function () {
+            $('#summernote').summernote();
+        });
+        var html = $('#summernote').summernote('code');
+    </script>
+}

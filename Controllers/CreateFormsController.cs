@@ -36,11 +36,31 @@ namespace BPMPlus.Controllers
 
             var Department = await _context.Department
                  .FirstOrDefaultAsync(d => d.DepartmentId == user.DepartmentId);
+            
+            if (Department == null)
+            {
+                throw new Exception("Department is null, Server Error");
+            }
+            
+            var Categories = await _context.Category.ToListAsync();
+            var Projects = await _context.Project.ToListAsync();
+            
 
+            if (Categories == null)
+            {
+                throw new Exception("Categories is null, Server Error");
+            }
 
+            
+            
+            ViewBag.DepartmentName = Department.DepartmentName;
+            ViewBag.DepartmentId = Department.DepartmentId;
             ViewBag.UserId = user.UserId;
-            
-            
+            ViewBag.UserTEL = user.TEL;
+            ViewBag.Categories = Categories;
+            ViewBag.Projects = Projects;
+
+
             return View();
             
         }
