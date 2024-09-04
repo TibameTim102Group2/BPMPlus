@@ -220,35 +220,6 @@
     </div>
 </div>
 @section Scripts {
-    <script type="text/javascript">
-    function updateProjectId() {
-        var projectNameSelect = document.getElementById("ProjectName");
-        var projectIdSelect = document.getElementById("ProjectId");
-        var selectedProjectId = projectNameSelect.value;
-
-        // 根據選擇的名稱更新編號
-        for (var i = 0; i < projectIdSelect.options.length; i++) {
-            if (projectIdSelect.options[i].value === selectedProjectId) {
-                projectIdSelect.value = selectedProjectId;
-                break;
-            }
-        }
-    }
-
-    function updateProjectName() {
-        var projectNameSelect = document.getElementById("ProjectName");
-        var projectIdSelect = document.getElementById("ProjectId");
-        var selectedProjectId = projectIdSelect.value;
-
-        // 根據選擇的編號更新名稱
-        for (var i = 0; i < projectNameSelect.options.length; i++) {
-            if (projectNameSelect.options[i].value === selectedProjectId) {
-                projectNameSelect.value = selectedProjectId;
-                break;
-            }
-        }
-    }
-</script>
     <script>
         $(document).ready(function () {
             $('#summernote').summernote();
