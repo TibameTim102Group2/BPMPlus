@@ -44,23 +44,31 @@ namespace BPMPlus.Controllers
             }
             
             var Categories = await _context.Category.ToListAsync();
-            var Projects = await _context.Project.ToListAsync();
-            
-
             if (Categories == null)
             {
                 throw new Exception("Categories is null, Server Error");
             }
+            var Projects = await _context.Project.ToListAsync();
+            if(Projects == null)
+            {
+                throw new Exception("Projects is null, Server Error");
+            }
 
-            
-            
+            var Forms = await _context.Form.ToListAsync();
+            if (Forms == null)
+            {
+                throw new Exception("Forms is null, Server Error");
+            }
+
+
+
             ViewBag.DepartmentName = Department.DepartmentName;
             ViewBag.DepartmentId = Department.DepartmentId;
             ViewBag.UserId = user.UserId;
             ViewBag.UserTEL = user.TEL;
             ViewBag.Categories = Categories;
             ViewBag.Projects = Projects;
-
+            ViewBag.Forms = Forms;
 
             return View();
             

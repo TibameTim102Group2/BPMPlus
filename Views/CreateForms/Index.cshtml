@@ -150,8 +150,6 @@
                     <input type="xxx1" class="form-control" value="@ViewBag.DepartmentName" Disabled>
                 </div>
                 <div class="mb-3 form-label">
-                    <label for="xxx2">派單對象</label>
-                    <input type="xxx2" class="form-control" Disabled>
                 </div>
             </div>
             <div class="mb-3 inputField ">
@@ -161,20 +159,28 @@
                 </div>
                 <div class="mb-3 form-label">
                     <label for="xxx2">專案編號</label>
-                    <select asp-for="ProjectId" class="form-control" asp-items="@(new SelectList(ViewBag.Projects, "ProjectId", "ProjectId"))">
+                    <select id="projectId" name="ProjectId" class="form-control" onchange="updateProjectName()">
                         <option value="">-- 請選擇專案編號 --</option>
+                        @foreach (var project in ViewBag.Projects)
+                        {
+                            <!option value="@project.ProjectId" data-id="@project.ProjectName" @(project.ProjectId == ViewBag.SelectProjectId ? "selected" : "")>@project.ProjectId</!option>
+                        }
                     </select>
                 </div>
             </div>
             <div class="mb-3 inputField ">
                 <div class="mb-3 form-label">
                     <label for="xxx1">複製單號</label>
-                    <input type="xxx1" class="form-control">
+                    <input id="" type="xxx1" class="form-control">
                 </div>
                 <div class="mb-3 form-label">
                     <label for="xxx2">專案名稱</label>
-                    <select asp-for="ProjectName" class="form-control" asp-items="@(new SelectList(ViewBag.Projects, "ProjectId", "ProjectName"))" oninput="UpdateProjectId()">
+                    <select id="projectName" name="ProjectName" class="form-control" onchange="updateProjectId()">
                         <option value="">-- 請選擇專案名稱 --</option>
+                        @foreach (var project in ViewBag.Projects)
+                        {
+                            <!option value="@project.ProjectName" data-id="@project.ProjectId" @(project.ProjectName == ViewBag.SelectedProjectName ? "selected" : "")>@project.ProjectName</!option>
+                        }
                     </select>
                 </div>
             </div>
@@ -218,5 +224,22 @@
             $('#summernote').summernote();
         });
         var html = $('#summernote').summernote('code');
+    </script>
+    <script>
+        function updateProjectId() {
+            var projectNameSelect = document.getElementById('projectName');
+            var projectIdSelect = document.getElementById('projectId');
+            var selectedProjectId = projectNameSelect.options[projectNameSelect.selectedIndex].getAttribute('data-id');
+    
+            projectIdSelect.value = selectedProjectId || '';
+        }
+
+        function updateProjectName() {
+            var projectIdSelect = document.getElementById('projectId');
+            var projectNameSelect = document.getElementById('projectName');
+            var selectedProjectName = projectIdSelect.options[projectIdSelect.selectedIndex].getAttribute('data-id');
+    
+            projectNameSelect.value = selectedProjectName || '';
+        }
     </script>
 }
