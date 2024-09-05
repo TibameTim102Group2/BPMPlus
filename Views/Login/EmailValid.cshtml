@@ -1,4 +1,5 @@
-﻿@section Style {
+﻿@model BPMPlus.ViewModels.LoginVM
+@section Style {
     <style>
         .validConfirm {
             font-size: 25px;
@@ -12,30 +13,34 @@
             <img src="/BPMPLUS.png" alt="" class="mb-3" style="width:20rem;">
         </div>
         <!-- /.login-logo -->
+        @using (Html.BeginForm("EmailValid", "login", new { ReturnUrl = Context.Request.Query["ReturnUrl"] }, FormMethod.Post, true, new { name = "loginForm", autocomplete = "off" }))
+{
         <div>
-            <p class="validConfirm login-box-msg text-bold">已寄至您的信箱, 請輸入驗證碼</p>
+            <p class="validConfirm login-box-msg text-bold">忘記密碼</p>
             <div class="input-group mb-3">
-                <input type="password" class="form-control" placeholder="請輸入驗證碼">
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "請輸入您的信箱" })
                 <div class="input-group-append">
                     <div class="input-group">
                     </div>
                 </div>
             </div>
-            <form action="../../index3.html" method="post">
+            <form>
                 <div class="row">
+                    <div class="col-4">
+                        <button type="submit" class="btn btn-primary btn-block">寄送驗證碼</button>
+                    </div>
+                    <!-- /.col -->
                     <div class="col-8">
                         <div class="icheck-primary">
                             <input type="checkbox" id="remember">
-                            <a href="#" class="">返回登入</a>
+                            <a></a>
+                                @Html.ActionLink("返回登入", "Index", "Home")
                         </div>
-                    </div>
-                    <!-- /.col -->
-                    <div class="col-4">
-                        <button type="submit" class="btn btn-primary btn-block">送出</button>
                     </div>
                     <!-- /.col -->
                 </div>
             </form>
         </div>
+}
     </div>
 </div>
