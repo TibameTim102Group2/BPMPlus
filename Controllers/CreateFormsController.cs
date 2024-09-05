@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 
 namespace BPMPlus.Controllers
@@ -64,7 +65,5 @@ namespace BPMPlus.Controllers
             return View();
             
         }
-
-
     }
 }
