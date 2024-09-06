@@ -161,7 +161,7 @@
                         <option value="">-- 請選擇需求類別 --</option>
                         @foreach (var category in ViewBag.Categories)
                         {
-                            <option value="@category.CategoryId">@category.CategoryDescription</option>
+                            <option value="@category.CategoryId" data-id="@category.CategoryId">@category.CategoryDescription</option>
                         }
                     </select>
                 </div>
@@ -218,7 +218,7 @@
                         <option value="">-- 請選擇複製單號 --</option>
                         @foreach (var form in ViewBag.Forms as List<Form>)
                         {
-                            <option value="@form.FormId">@form.FormId</option>
+                            <option value="@form.FormId" data-id="@form.FormId">@form.FormId</option>
                         }
                     </select>
                     
@@ -240,8 +240,8 @@
 
             <div class="note" style="margin-top:10%; padding:2%; width:150%">
                 <div class="noteContent">需求內容</div>
-                <div class="txtInput">
-                    <div id="summernote">Hello Summernote</div>
+                <div class="txtInput" id="txtInput">
+                    <div id="summernote"></div>
 
                 </div>
 
@@ -255,10 +255,11 @@
 </div>
 @section Scripts {
     <script>
-        $(document).ready(function () {
-            $('#summernote').summernote();
-        });
-        var html = $('#summernote').summernote('code');
+        $.getScript('https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js', function () 
+        {
+        $('#summernote').summernote('code');
+             }); 
+
     </script>
     <script>
         function updateProjectId() {
@@ -276,6 +277,35 @@
     
             projectNameSelect.value = selectedProjectName || '';
         }
+        function updateFormId() {
+            referenceId = document.getElementById('formDropdown').value;
+            var CategorySelect = document.getElementById('CategoryId');
+            var Content = document.getElementById('summernote');
+            $.ajax({
+                url: '/CreateForms/GetFormById',
+                type: 'GET',
+                data: { formId: referenceId},
+                success: function (data) {
+                    for (var i = 0; i < CategorySelect.options.length; i++) {
+                        var option = CategorySelect.options[i];
+                        
+                        if (option.getAttribute('data-id') == data['categoryId']) {
+                            CategorySelect.selectedIndex = i; // 設置選中的選項
+                            break;
+                        }
+                    }
+
+                    $('#summernote').summernote('code', data['content']);
+                    
+                },
+                error: function (xhr, status, error) {
+                    if(status == 401)
+                    {
+                        window.location.href = "/Login/Index/";
+                    }
+                }
+            });
+        }
         document.getElementById('filterInput').addEventListener('input', function () {
             var filterValue = this.value.toLowerCase();
             var dropdown = document.getElementById('formDropdown');
@@ -287,6 +317,7 @@
                 option.style.display = text.includes(filterValue) ? '' : 'none';
             }
         });
+
         
     </script>
     <script src="~/AdminLTE/plugins/jquery/jquery.min.js"></script>

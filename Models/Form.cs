@@ -63,7 +63,7 @@ namespace BPMPlus.Models
 
         public bool FormIsActive { get; set; }
 
-        public int man_day { get; set; }
+        public int? ManDay { get; set; }
 
         [Column(TypeName = "datetime")]
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
