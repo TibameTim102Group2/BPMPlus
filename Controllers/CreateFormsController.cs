@@ -104,8 +104,10 @@ namespace BPMPlus.Controllers
 
         [Authorize]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<JsonResult> CreateNewForm([FromBody] NewFormViewModel model)
         {
+            
             User user = await GetAuthorizedUser();
             //functionId:  01 -> 需求方申請人送出
 
