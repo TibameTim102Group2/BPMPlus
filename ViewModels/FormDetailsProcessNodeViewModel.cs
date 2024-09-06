@@ -2,8 +2,8 @@
 {
     public class FormDetailsProcessNodeViewModel
     {
-        public string? UserActivityIdDescription { get; set; }
+        public string ProcessNodeId { get; set; }
 
-        public bool IsHightLight { get; set; }
+        public string UserActivityId { get; set; }
     }
 }

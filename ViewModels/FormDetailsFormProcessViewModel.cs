@@ -4,7 +4,7 @@ namespace BPMPlus.ViewModels
 {
     public class FormDetailsFormProcessViewModel
     {
-        public DateTime? CreatedTime { get; set; }
+        public string Date { get; set; }
 
         public string UserActivityIdDescription { get; set; }
 
