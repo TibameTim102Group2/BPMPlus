@@ -1,4 +1,5 @@
-﻿@section Style {
+﻿@model IEnumerable<BPMPlus.Models.Form>
+@section Style {
     <style>
         #mainWrapper {
             background-color: #cfecff;
@@ -23,6 +24,14 @@
         .clearfix button {
             background-color: #458bfc;
         }
+
+        .table-bordered {
+            text-align: center;
+        }
+
+        ::placeholder {
+            color: aliceblue;
+        }
     </style>
     <link rel="stylesheet" href="~/font-awesome/css/all.css" />
 
@@ -39,126 +48,358 @@
 </div>
 
 
+
 <div class="container-fluid">
     <br>
     <br>
     <div class="row">
         <section class="connectedSortable">
-            <div class="card">
-                <div class="accordion" id="accordionExample">
-                    <div id="mainpart" class="card">
-                        <div class="row justify-content-between mb-3">
-                            <div class="selctID col-2 d-flex justify-content-center">
-                                <select class="selectbtn form-select" aria-label="Default select example">
-                                    <option selected>需求篩選</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                </select>
-                            </div>
-                            <div class="col-2 d-flex justify-content-center">
-                                <select class="selectbtn form-select" aria-label="Default select example">
-                                    <option selected>單號篩選</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                </select>
-                            </div>
-                            <div class="col-2 d-flex justify-content-center">
-                                <select class="selectbtn form-select" aria-label="Default select example">
-                                    <option selected>日期篩選</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                </select>
-                            </div>
-                            <div class="col-2 d-flex justify-content-center">
-                                <select class="selectbtn form-select" aria-label="Default select example">
-                                    <option selected>專案篩選</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                </select>
-                            </div>
-                            <div class="col-2 d-flex justify-content-center">
-                                <select class="selectbtn form-select" aria-label="Default select example">
-                                    <option selected>申請人篩選</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                </select>
-                            </div>
+
+            <div class="accordion" id="accordionExample">
+                <div id="mainpart" class="card">
+                    <div class="row justify-content-between mb-3">
+
+
+                        <div class="col-2 d-flex justify-content-center">
+                            <input type="text" class="btn btn-primary fID" style="outline:none ;width:80%" placeholder="請填工單編號" />
                         </div>
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th scope="col">單號</th>
-                                    <th scope="col">部門</th>
-                                    <th scope="col">員工編號</th>
-                                    <th scope="col">姓名</th>
-                                    <th scope="col">需求項目類別</th>
-                                    <th scope="col">狀態</th>
-                                    <th scope="col">編輯</th>
-                                    <th scope="col">刪除</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th scope="row"><a asp-area="" asp-controller="FormDetails" asp-action="Index" asp-route-id="F00001">A001</a></th>
-                                    <td>DESIGN</td>
-                                    <td>Otto</td>
-                                    <td>LIN</td>
-                                    <td>環境整潔</td>
-                                    <td>Finish</td>
-                                    <td><a asp-area="" asp-controller="ModifyForm" asp-action="Index" asp-route-id="F00001"><i class="fa-solid fa-pen-to-square"></i></a></td>
-                                    <td><i class="fa-solid fa-trash"></i> </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">A001</th>
-                                    <td>DESIGN</td>
-                                    <td>Otto</td>
-                                    <td>LIN</td>
-                                    <td>環境整潔</td>
-                                    <td>Finish</td>
-                                    <td><i class="fa-solid fa-pen-to-square"></i></td>
-                                    <td><i class="fa-solid fa-trash"></i> </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">A001</th>
-                                    <td>DESIGN</td>
-                                    <td>Otto</td>
-                                    <td>LIN</td>
-                                    <td>環境整潔</td>
-                                    <td>Finish</td>
-                                    <td><i class="fa-solid fa-pen-to-square"></i></td>
-                                    <td><i class="fa-solid fa-trash"></i> </td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">A001</th>
-                                    <td>DESIGN</td>
-                                    <td>Otto</td>
-                                    <td>LIN</td>
-                                    <td>環境整潔</td>
-                                    <td>Finish</td>
-                                    <td><i class="fa-solid fa-pen-to-square"></i></td>
-                                    <td><i class="fa-solid fa-trash"></i> </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="col-2 d-flex justify-content-center">
+                            <select class="form-select selectbtn selectUserName" asp-items="ViewBag.UserId">
+                                <option value="" disabled selected>申請者</option>
+                            </select>
+                        </div>
+                        <div class="col-2 d-flex justify-content-center">
+                            <select class="form-select selectbtn selectCategoryId" asp-items="ViewBag.CategoryId">
+                                <option value="" disabled selected>需求類別</option>
+                            </select>
+                        </div>
+
+
+                        <div class="col-2 d-flex justify-content-center">
+                            <select class="form-select selectbtn selectProjectId" asp-items="ViewBag.ProjectId">
+                                <option value="" disabled selected>專案名稱</option>
+                            </select>
+                        </div>
+
+                        <div class="col-2 d-flex justify-content-center">
+                            <input type="date" class="btn btn-primary createddate" style="outline:none" min="2024-01-01" />
+                        </div>
                     </div>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">單號</th>
+                                <th scope="col">部門</th>
+                                <th scope="col">姓名</th>
+                                <th scope="col">需求項目類別</th>
+                                <th scope="col">專案名稱</th>
+                                <th scope="col">狀態</th>
+                                <th scope="col">建立時間</th>
+                                @*                                 <th scope="col">編輯</th>
+                                <th scope="col">作廢</th> *@
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var item in Model)
+                            {
+
+                                <tr>
+                                    <td>
+                                        <a asp-area="" asp-controller="FormDetails" asp-action="Index" asp-route-id="@item.FormId">
+                                            @Html.DisplayFor(modelItem => item.FormId)
+                                        </a>
+
+                                    </td>
+                                    <td>
+                                        @{
+                                            var dapartmentname = ViewBag.Departments[item.DepartmentId];
+
+                                        }
+                                        @dapartmentname
+                                    </td>
+                                    <td>
+                                        @{
+                                            var userName = ViewBag.UserName[item.UserId];
+
+                                        }
+                                        @userName
+                                    </td>
+                                    <td>
+                                        @{
+                                            var category = ViewBag.category[item.CategoryId];
+
+                                        }
+                                        @category
+                                    </td>
+                                    <td>
+                                        @{
+                                            var projectName = ViewBag.ProjectName[item.ProjectId];
+
+                                        }
+                                        @projectName
+                                    </td>
+                                    <td>
+                                        @{
+                                            var process = ViewBag.process[item.ProcessNodeId];
+                                            var situation = ViewBag.situation[process];
+
+                                        }
+                                        @situation
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Date)
+
+                                    </td>
+
+                                    @*                                     <td>
+                                <a class="nav-link" asp-controller="ModifyForm" asp-action="Index" asp-route-id="@item.FormId">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                                </a>
+                                </td>
+                                <td>
+                                <form asp-controller="QueryForms" asp-action="Delete" method="post" class=" Deletform " asp-route-formId="@item.FormId">
+                                <button type="button" class="btn  Delete" style="border:none; background:none;">
+                                <i class="fa-solid fa-trash"></i>
+                                </button>
+                                </form>
+                                </td> *@
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    @if (ViewBag.noForm != null)
+                    {
+                        <div class="alert alert-danger">
+                            <!--顯示沒有資料的訊息 -->
+                            @ViewBag.noForm
+                        </div>
+                    }
+
                 </div>
 
-                <div class="card-footer clearfix">
-                    <button type="button" class="btn btn-primary float-right me-4"><i class="fas fa-plus"></i>匯出EXCEL</button>
-                </div>
+
             </div>
         </section>
     </div>
 
 </div>
+
 <!-- /.container-fluid -->
 @section Scripts {
     <script>
+        //刪除表單
+        // $(".Delete").click(function (e) {
+        //     e.preventDefault()
+        //     let check = confirm("你確定要作廢這筆工單嗎");
+        //     if (check == true) {
+        //         var form = $(this).closest("form");
+        //         $.ajax({
+        //             url: form.attr("action"),
+        //             type: form.attr("method"),
+        //             data: form.serialize(),
+        //             success: function (response) {
+        //                 alert("作廢成功")
+        //                 form.closest("tr").remove();
+        //             }
+        //         })
+
+        //     }
+        // });
+        //透過表單編號篩選
+        $(".fID").change(function (e) {
+            var inputId = $(this).val();
+            $(".fID").val(""); //清除內部值
+            $.ajax({
+                url: '@Url.Action("SearchByFormId", "QueryForms")',
+                type: 'GET',
+                data: { formId: inputId },
+                success: function (response) {
+                    if (response.data) {
+                        var item = response.data;
+                        console.log(item);
+
+                        //重新加入新的標籤
+                        $("tbody").empty();
+                        var newRow = `<tr>
+                                                    <td>
+                                                        <a href="/FormDetails/Index/${item.formId}">
+                                                            ${item.formId}
+                                                        </a>
+                                                    </td>
+                                                    <td>${item.departmentName}</td>
+                                                    <td>${item.userName}</td>
+                                                    <td>${item.categoryDescription}</td>
+                                                    <td>${item.projectName}</td>
+                                                    <td>${item.situation}</td>
+                                                    <td>${item.createdTime}</td>
+                                                </tr>`;
+                        $("tbody").append(newRow);
+
+
+                    } else {
+                        alert(response.message || "連接失敗，請重新輸入");
+                    }
+                },
+            });
+        });
+        //透過UserId篩選
+        $(".selectUserName").change(function (e) {
+            var value = this.value;
+            $.ajax({
+                url: '@Url.Action("UserName", "QueryForms")',
+                type: 'GET',
+                data: { userId: value },
+                success: function (response) {
+                    if (response.success) {
+                        let model = response.data;
+                        $("tbody").empty();
+                        model.findForm.forEach(function (item) {
+                            var newRow = `<tr>
+                                                        <td>
+                                                            <a href="/FormDetails/Index/${item.formId}">
+                                                                ${item.formId}
+                                                            </a>
+                                                        </td>
+                                                        <td>${model.departments[item.departmentId]}</td>
+                                                        <td>${model.userName[item.userId]}</td>
+                                                        <td>${model.category[item.categoryId]}</td>
+                                                        <td>${model.projectName[item.projectId]}</td>
+                                                        <td>${model.userActivity[model.processNodes[item.processNodeId]]}</td>
+                                                        <td>${item.createdTime}</td>
+                                                    </tr>`;
+                            $("tbody").append(newRow);
+                        });
+
+
+                    } else {
+                        alert(response.message);
+                    }
+
+                },
+                error: function (response) {
+                    alert("搜尋失敗")
+                }
+            })
+
+        });
+        //透過categoryId 篩選
+        $(".selectCategoryId").change(function () {
+            var value = this.value;
+            $.ajax({
+                url: '@Url.Action("Category", "QueryForms")',
+                type: 'GET',
+                data: { categoryId: value },
+                success: function (response) {
+                    if (response.success) {
+                        let model = response.data;
+                        $("tbody").empty();
+                        model.findForm.forEach(function (item) {
+                            var newRow = `<tr>
+                                                                <td>
+                                                                    <a href="/FormDetails/Index/${item.formId}">
+                                                                        ${item.formId}
+                                                                    </a>
+                                                                </td>
+                                                                <td>${model.departments[item.departmentId]}</td>
+                                                                <td>${model.userName[item.userId]}</td>
+                                                                <td>${model.category[item.categoryId]}</td>
+                                                                <td>${model.projectName[item.projectId]}</td>
+                                                                <td>${model.userActivity[model.processNodes[item.processNodeId]]}</td>
+                                                                <td>${item.createdTime}</td>
+                                                            </tr>`;
+                            $("tbody").append(newRow);
+                        });
+                    } else {
+                        alert(response.message);
+                    }
+
+                },
+                error: function (response) {
+                    alert("搜尋失敗")
+                }
+            })
+
+        });
+        //透過projectId 篩選
+        $(".selectProjectId").change(function () {
+            var value = this.value;
+            $.ajax({
+                url: '@Url.Action("Project", "QueryForms")',
+                type: 'Get',
+                data: { projectId: value },
+                success: function (response) {
+                    if (response.success) {
+                        let model = response.data;
+                        $("tbody").empty();
+                        model.findForm.forEach(function (item) {
+                            var newRow = `<tr>
+                                                                        <td>
+                                                                            <a href="/FormDetails/Index/${item.formId}">
+                                                                                ${item.formId}
+                                                                            </a>
+                                                                        </td>
+                                                                        <td>${model.departments[item.departmentId]}</td>
+                                                                        <td>${model.userName[item.userId]}</td>
+                                                                        <td>${model.category[item.categoryId]}</td>
+                                                                        <td>${model.projectName[item.projectId]}</td>
+                                                                        <td>${model.userActivity[model.processNodes[item.processNodeId]]}</td>
+                                                                        <td>${item.createdTime}</td>
+                                                                    </tr>`;
+                            $("tbody").append(newRow);
+                        });
+
+                    } else {
+                        alert(response.message);
+                    }
+
+                },
+                error: function (response) {
+                    alert("搜尋失敗")
+                }
+            })
+
+        });
+
+        //透過日期篩選
+        $(".createddate").change(function () {
+
+            var inputId = $(this).val();
+            $.ajax({
+                url: '@Url.Action("CreatDate", "QueryForms")',
+                type: 'GET',
+                data: { date: inputId },
+                success: function (response) {
+                    if (response.data) {
+                        var model = response.data;
+                        $("tbody").empty();
+                        model.findForm.forEach(function (item) {
+                            var newRow = `<tr>
+                                                                                <td>
+                                                                                    <a href="/FormDetails/Index/${item.formId}">
+                                                                                        ${item.formId}
+                                                                                    </a>
+                                                                                </td>
+                                                                                <td>${model.departments[item.departmentId]}</td>
+                                                                                <td>${model.userName[item.userId]}</td>
+                                                                                <td>${model.category[item.categoryId]}</td>
+                                                                                <td>${model.projectName[item.projectId]}</td>
+                                                                                <td>${model.userActivity[model.processNodes[item.processNodeId]]}</td>
+                                                                                <td>${model.creatTime}</td>
+                                                                            </tr>`;
+                            $("tbody").append(newRow);
+                        });
+                    } else {
+                        alert(response.message || "連接失敗，請重新輸入");
+                    }
+                },
+            });
+
+
+
+        });
+
 
     </script>
 }
