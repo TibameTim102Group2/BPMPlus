@@ -103,7 +103,6 @@ namespace BPMPlus.Controllers
         }
 
         [Authorize]
-        [HttpPost]
         [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<JsonResult> CreateNewForm([FromBody] NewFormViewModel model)
