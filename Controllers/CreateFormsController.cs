@@ -109,19 +109,30 @@ namespace BPMPlus.Controllers
         {
             
             User user = await GetAuthorizedUser();
+            
             //functionId:  01 -> 需求方申請人送出
 
             if (!user.PermittedTo("01"))
             {
                 throw new Exception("User is not permitted)");
             }
-            if (ModelState.IsValid)
+            DateTime ExpectedFinishedDayDateTimeUtc8 = DateTime.Parse(model.ExpectedFinishedDay);
+            if(ExpectedFinishedDayDateTimeUtc8.Date < (DateTime.UtcNow).AddHours(8).Date)
             {
-                // 處理接收到的資料 (model.Name, model.Email)
-                return Json(new { message = "Data received successfully!" });
+                string msg = "希望完成時間需晚於當天日期";
+                return Json(new { errorCode = 400, message = msg });
+            }
+            if (!ModelState.IsValid)
+            {
+                string msg = "資料缺漏，無法新建工單";
+                return Json(new { errorCode=400 , message = msg });
             }
 
-            return Json(new { message = "Invalid data received!" });
+
+            Form newForm = new Form();
+            
+
+            return Json(new { message = "Data received successfully!" });
         }
     }
 }

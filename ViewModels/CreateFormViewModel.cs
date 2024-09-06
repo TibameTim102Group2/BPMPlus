@@ -10,7 +10,7 @@
         public string CategoryId { get; set; }
         public string? ProjectId { get; set; }
         public string DepartmentId { get; set; }
-        public DateTime ExpectedFinishedDay { get; set; }
+        public string ExpectedFinishedDay { get; set; }
         public string TEL { get; set; }
         public string Content {  get; set; }
     }
