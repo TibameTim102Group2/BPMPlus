@@ -11,9 +11,8 @@
     ViewData["Title"] = "Home Page";
 }
 
-
 <!--登入區塊-->
-@using (Html.BeginForm("login", "login", new { ReturnUrl = Context.Request.Query["ReturnUrl"] }, FormMethod.Post, true, new { name = "loginForm", autocomplete = "off" }))
+@using (Html.BeginForm("Login", "Login", new { ReturnUrl = Context.Request.Query["ReturnUrl"] }, FormMethod.Post, true, new { name = "loginForm", autocomplete = "off" }))
 {
     <div class="login-page bg-light">
         <div class="login-box">
@@ -55,7 +54,5 @@
             </div>
         </div>
     </div>
-    
-    
 }
 <!--./登入區塊-->
