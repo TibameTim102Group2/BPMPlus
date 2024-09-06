@@ -1,5 +1,5 @@
-﻿@* @model BPMPlus.ViewModels.FormDetailsViewModel *@
-@model BPMPlus.Models.Form
+﻿@model BPMPlus.ViewModels.FormDetailsGroupViewModel
+
 
 @section Style {
 
@@ -28,6 +28,13 @@
     <link rel="stylesheet" href="~/AdminLTE/dist/css/adminlte.min.css">
     <link rel="stylesheet" href="~/font-awesome/css/all.css" />
     <style>
+         .title {
+            color: rgba(0, 81, 255, 0.884);
+            margin-top: 20px;
+            margin-bottom: 30px;
+            margin-left: 30px;
+            font-weight: bold;
+        }
         .backcolor {
             background-color: rgb(225, 239, 252);
         }
@@ -86,6 +93,7 @@
             text-align: center;
             line-height: 1.5;
         }
+
     </style>
 }
 
@@ -97,9 +105,9 @@
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
-            <h5>
+            <h3 class="title">
                 工單細節
-            </h5>
+            </h3>
             <!-- SELECT2 EXAMPLE -->
             <div class="card card-default col-md-12">
 
@@ -107,25 +115,16 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="item-name">單號</label><input class="form-control txt-box" disabled value="@Model.FormId">
+                                <label class="item-name">單號</label><input class="form-control txt-box" disabled value="@Model.FormDetails.FormId">
                             </div>
                             <br />
                             <br />
                             <!-- /.form-group -->
                             <div class="form-group">
-                                <label class="item-name">建立日期</label><input class="form-control txt-box" disabled>
+                                <label class="item-name">建立日期</label><input class="form-control txt-box" disabled value="@Model.FormDetails.Date">
                             </div>
                             <div class="form-group" style="display:flex">
-                                <label class="item-name">需求部門</label>
-                                <select class="form-control select2 selection" disabled>
-                                    <option selected="selected">Alabama</option>
-                                    <option>Alaska</option>
-                                    <option disabled="disabled">California (disabled)</option>
-                                    <option>Delaware</option>
-                                    <option>Tennessee</option>
-                                    <option>Texas</option>
-                                    <option>Washington</option>
-                                </select>
+                                <label class="item-name">需求部門</label><input class="form-control txt-box" disabled value="@Model.FormDetails.DepartmentName">
                             </div>
 
                             <div class="form-group" style="display:flex">
@@ -136,7 +135,7 @@
                                             <i class="far fa-calendar-alt"></i>
                                         </span>
                                     </div>
-                                    <input disabled type="text" class="form-control float-right" id="reservation">
+                                    <input disabled type="text" class="form-control float-right" id="reservation"  value="@Model.FormDetails.ExpectedFinishedDay">
                                 </div>
                             </div>
 
@@ -148,35 +147,30 @@
                             <div style="display:flex">
                                 <div style="width:27%"></div>
                                 <div class="form-group">
-                                    <a class="button btn btn-warning btn-link" asp-area="" asp-controller="ModifyForm" asp-action="Index"><i class="fa-solid fa-pen-to-square"></i> 修改</a>
+                                    <a class="button btn btn-warning btn-link" asp-area="" asp-controller="ModifyForm" asp-action="Index" asp-route-id="@Model.FormDetails.FormId"><i class="fa-solid fa-pen-to-square"></i> 修改</a>
                                 </div>
                                 <div style="width:15%"></div>
+                                 <form id="myform" method="post" asp-controller="FormDetails" asp-action="Invalid" >
+                                    <input type="hidden" name="id" value="@Model.FormDetails.Id" />
                                 <div class="form-group">
-                                    <button class="button btn btn-danger"><i class="fa-solid fa-trash"></i> 刪除</button>
+                                        <button id="btnInvalid" class="button btn btn-danger" type="submit" onclick='this.form.action="@Url.Action("Invalid", "FormDetails")";'><i class="fa-solid fa-trash"></i> 作廢</button>
                                 </div>
+                                </form>
                             </div>
 
                             <br />
                             <br />
                             <div>
                                 <div class="form-group" style="display:flex">
-                                    <label class="item-name">需求類別</label>
-                                    <select class="form-control select2 selection" disabled>
-                                        <option selected="selected">Alabama</option>
-                                        <option>Alaska</option>
-                                        <option disabled="disabled">California (disabled)</option>
-                                        <option>Delaware</option>
-                                        <option>Tennessee</option>
-                                        <option>Texas</option>
-                                        <option>Washington</option>
-                                    </select>
+                                    <label class="item-name">需求類別</label><input class="form-control txt-box" disabled value="@Model.FormDetails.CategoryDescription">
+                                    
                                 </div>
                                 <div class="form-group">
-                                    <label class="item-name">需求員工</label><input class="form-control txt-box" disabled >
+                                    <label class="item-name">需求員工</label><input class="form-control txt-box" disabled value="@Model.FormDetails.EmployeeName">
                                 </div>
-                                <div class="form-group">
-                                    <label class="item-name">所屬專案</label><input class="form-control txt-box" disabled >
-                                </div>
+                    @*          <div class="form-group">
+                                    <label class="item-name">所屬專案</label><input class="form-control txt-box" disabled value="@Model.ProjectName">
+                                </div> *@
                             </div>
                         </div>
 
@@ -196,19 +190,18 @@
                         <br>
                         <div class="formBackground btnArea">
                             <div>
-                                <button class="btn btn-sm btn-success btns">提單</button>
+                                <button class="btn btn-sm btn-primary btns">提單</button>
                                 <button class="btn btn-sm btn-danger btns">一級主管</button>
                                 <button class="btn btn-sm btn-primary btns">二級主管</button>
-                                <button class="btn btn-sm btn-primary btns">三級主管</button>
-                                <button class="btn btn-sm btn-primary btns">三級主管</button>
                                 <button class="btn btn-sm btn-primary btns">二級主管</button>
                                 <button class="btn btn-sm btn-primary btns">一級主管</button>
                                 <button class="btn btn-sm btn-primary btns">處理人員</button>
                                 <button class="btn btn-sm btn-primary btns">驗收</button>
                             </div>
-                        </div><br /><br /><br />
+                        </div><br /><br />
 
                     <!--  工單處理紀錄  -->
+                    <label>處理紀錄</label>
                     <table class="table table-hover table-bordered ">
                         <thead>
                             <tr>
@@ -216,27 +209,20 @@
                                 <th>處理狀態</th>
                                 <th>處理人員</th>
                                 <th>出示意見</th>
-                                <th>需求項目類別</th>
                                 <th>審核結果</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>2024-08-01 13:17</td>
-                                <td>部門主管審核</td>
-                                <td>張三</td>
-                                <td>因業務需求提出申請</td>
-                                <td>資訊需求單</td>
-                                <td>送出</td>
+                                @foreach (var item in Model.FormDetails.FormDetailsFormProcesses) { 
+                                <tr>
+                                <td>@item.Date</td>
+                                <td>@item.UserActivityIdDescription</td>
+                                <td>@item.EmployeeName</td>
+                                <td>@item.Remark</td>
+                                <td>@item.ResultDescription</td>
                             </tr>
-                            <tr>
-                                <td>2024-08-02 08:23</td>
-                                <td>處理部門主管審核</td>
-                                <td>林香</td>
-                                <td>-</td>
-                                <td>資訊需求單</td>
-                                <td>審核中</td>
-                            </tr>
+                            }
+                          
 
                         </tbody>
                     </table>
@@ -248,7 +234,7 @@
                             <div class="form-group">
                                 <label class="item-name">需求內容</label>
                             </div>
-                            <textarea rows="8" cols="110" disabled ></textarea>
+                                <textarea rows="8" cols="110" disabled > @Model.FormDetails.Content</textarea>
                         </div>
                         <!-- /.col -->
                         <!-- /.col -->
@@ -256,7 +242,7 @@
                     <div class="row">
                         <!-- /.form-group -->
                         <div class="form-group">
-                            <label style="margin-right:5%">聯繫電話</label><input class=" form-control" style="width:25%" >
+                            <label style="margin-right:5%">聯繫電話</label><input class=" form-control" style="width:25%" disabled value="@Model.FormDetails.Tel" >
                         </div>
 
                         <!-- /.form-group -->
@@ -269,7 +255,7 @@
 
 
                             <div class="form-group">
-                                <button class="button btn btn-primary"><i class="fa-solid fa-file-arrow-down"></i>  附件下載</button>
+                                <button class="button btn btn-primary" type="button"><i class="fa-solid fa-file-arrow-down"></i>  附件下載</button>
                             </div>
                             <!-- /.form-group -->
                         </div>
@@ -290,3 +276,15 @@
 
 </div>
 
+@section Scripts
+{
+   
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script>
+        $(document).ready(function () {
+            $("#btnInvalid").click(function () {
+                 alert("工單已作廢");
+            })
+        });
+    </script>
+}
