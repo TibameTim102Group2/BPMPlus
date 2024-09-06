@@ -22,7 +22,7 @@
 <!-- dropzonejs -->
 <link rel="stylesheet" href="~/AdminLTE/plugins/dropzone/min/dropzone.min.css">
 <!-- Theme style -->
-<link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+<link rel="stylesheet" href="~/AdminLTE/dist/css/adminlte.min.css">
 @section Style {
     <style>
         
@@ -169,7 +169,7 @@
             <div class="mb-3 inputField ">
                 <div class="mb-3 form-label">
                     <label for="xxx1">需求部門</label>
-                    <input type="xxx1" class="form-control" value="@ViewBag.DepartmentName" Disabled>
+                    <input id="DepartmentId" type="xxx1" class="form-control" value="@ViewBag.DepartmentName" Disabled>
                 </div>
                 <div class="mb-3 form-label">
                 </div>
@@ -177,7 +177,7 @@
             <div class="mb-3 inputField ">
                 <div class="mb-3 form-label">
                     <label for="xxx1">聯繫電話</label>
-                    <input type="xxx1" class="form-control" value="@ViewBag.UserTEL">
+                    <input id = "Tel" type="xxx1" class="form-control" value="@ViewBag.UserTEL">
                 </div>
                 <div class="mb-3 form-label">
                     <label for="xxx2">專案編號</label>
@@ -194,7 +194,7 @@
                 <div class="mb-3 form-label">
                     <label for="xxx2">希望完成日期</label>
                     <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                        <input type="text" class="form-control datetimepicker-input" data-target="#reservationdate" />
+                        <input id="ExpectedFinishedDay" type="text" class="form-control datetimepicker-input" data-target="#reservationdate" />
                         <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
                             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                         </div>
@@ -320,71 +320,7 @@
 
         
     </script>
-    <script src="~/AdminLTE/plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap 4 -->
-<script src="~/AdminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- Select2 -->
-<script src="~/AdminLTE/plugins/select2/js/select2.full.min.js"></script>
-<!-- Bootstrap4 Duallistbox -->
-<script src="~/AdminLTE/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
-<!-- InputMask -->
-<script src="~/AdminLTE/plugins/moment/moment.min.js"></script>
-<script src="~/AdminLTE/plugins/inputmask/jquery.inputmask.min.js"></script>
-<!-- date-range-picker -->
-<script src="~/AdminLTE/plugins/daterangepicker/daterangepicker.js"></script>
-<!-- bootstrap color picker -->
-<script src="~/AdminLTE/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"></script>
-<!-- Tempusdominus Bootstrap 4 -->
-<script src="~/AdminLTE/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
-<!-- Bootstrap Switch -->
-<script src="~/AdminLTE/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
-<!-- BS-Stepper -->
-<script src="~/AdminLTE/plugins/bs-stepper/js/bs-stepper.min.js"></script>
-<!-- dropzonejs -->
-<script src="~/AdminLTE/plugins/dropzone/min/dropzone.min.js"></script>
-<!-- AdminLTE App -->
-<script src="../../dist/js/adminlte.min.js"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="../../dist/js/demo.js"></script>
-<!-- Page specific script -->
 <script>
-    $(document).ready(function() {
-        // 綁定按鈕點擊事件
-        $("#submitButton").on("click", function(e) {
-            e.preventDefault();  // 阻止默認的提交行為
-
-            // 獲取輸入欄位的值
-            var name = $("#name").val();
-            var email = $("#email").val();
-            
-             var categoryId = $("#categoryId").val()
-             var projectId = $("")
-             var departmentId { get; set; }
-             var expectedFinishedDay { get; set; }
-             Tel { get; set; }
-            // 檢查是否有空值
-            if (!name || !email) {
-                $("#result").html("Please enter both name and email.");
-                return;
-            }
-
-            // 發送 Ajax 請求
-            $.ajax({
-                url: '/YourController/YourAction',  // 伺服器的URL
-                type: 'POST',  // 請求的類型
-                contentType: 'application/json',  // 請求的內容類型
-                data: JSON.stringify({ name: name, email: email }),  // 將資料轉換為 JSON 格式
-                success: function(response) {
-                    // 成功後的操作
-                    $("#result").html("Success: " + response.message);
-                },
-                error: function(xhr, status, error) {
-                    // 錯誤時的操作
-                    $("#result").html("Error: " + error);
-                }
-            });
-        });
-    });
   $(function () {
     //Initialize Select2 Elements
     $('.select2').select2()
@@ -517,36 +453,8 @@
     myDropzone.removeAllFiles(true)
   }
   // DropzoneJS Demo Code End
-</script>
-<!-- jQuery -->
-<script src="~/AdminLTE/plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap 4 -->
-<script src="~/AdminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- Select2 -->
-<script src="~/AdminLTE/plugins/select2/js/select2.full.min.js"></script>
-<!-- Bootstrap4 Duallistbox -->
-<script src="~/AdminLTE/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.min.js"></script>
-<!-- InputMask -->
-<script src="~/AdminLTE/plugins/moment/moment.min.js"></script>
-<script src="~/AdminLTE/plugins/inputmask/jquery.inputmask.min.js"></script>
-<!-- date-range-picker -->
-<script src="~/AdminLTE/plugins/daterangepicker/daterangepicker.js"></script>
-<!-- bootstrap color picker -->
-<script src="~/AdminLTE/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"></script>
-<!-- Tempusdominus Bootstrap 4 -->
-<script src="~/AdminLTE/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
-<!-- Bootstrap Switch -->
-<script src="~/AdminLTE/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
-<!-- BS-Stepper -->
-<script src="~/AdminLTE/plugins/bs-stepper/js/bs-stepper.min.js"></script>
-<!-- dropzonejs -->
-<script src="~/AdminLTE/plugins/dropzone/min/dropzone.min.js"></script>
-<!-- AdminLTE App -->
-<script src="../../dist/js/adminlte.min.js"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="../../dist/js/demo.js"></script>
-<!-- Page specific script -->
-<script>
+
+
     $(function () {
         //Initialize Select2 Elements
         $('.select2').select2()
