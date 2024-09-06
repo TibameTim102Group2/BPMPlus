@@ -1,4 +1,4 @@
-﻿@model BPMPlus.Models.Form
+﻿@model BPMPlus.ViewModels.ModifyFormGroupViewModel
 
 @section Style {
     
@@ -27,6 +27,13 @@
     <link rel="stylesheet" href="~/AdminLTE/dist/css/adminlte.min.css">
     <link rel="stylesheet" href="~/font-awesome/css/all.css" />
     <style>
+        .title {
+            color: rgba(0, 81, 255, 0.884);
+            margin-top: 20px;
+            margin-bottom: 30px;
+            margin-left: 30px;
+            font-weight: bold;
+        }
         .backcolor {
             background-color: rgb(225, 239, 252);
         }
@@ -90,118 +97,123 @@
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
-            <h5>
+            <h3 class="title">
                 修改工單
-            </h5>
+            </h3>
+            
             <!-- SELECT2 EXAMPLE -->
+         <form method="post" asp-controller="ModifyForm"  asp-action="Edit" >
+             <input type="hidden" name="id" value="@Model.ModifyFrom.Id" />
             <div class="card card-default col-md-12">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
+                            <!-- /.form-group單號 -->
                             <div class="form-group">
-                                <label class="item-name">單號</label><input class = "form-control txt-box" disabled>
+                                <label class="item-name">單號</label><input asp-for="ModifyFrom.FormId" class = "form-control txt-box" disabled value="@Model.ModifyFrom.FormId">
                             </div>
                             <br />
                             <br />
-                            <!-- /.form-group -->
+                            <!-- /.form-group 建立日期-->
                             <div class="form-group">
-                                <label class="item-name">建立日期</label><input class="form-control txt-box" disabled>
+                                <label class="item-name">建立日期</label><input class="form-control txt-box" disabled value="@Model.ModifyFrom.Date">
                             </div>
+                            <!-- /.form-group 需求部門-->
                             <div class="form-group" style="display:flex">
                                 <label class="item-name">需求部門</label>
-                                <select class="form-control select2 selection" Disabled>
+                                <select class="form-control select2 selection" disabled >
+                                    <option>@Model.ModifyFrom.DepartmentName</option>
                                 </select>
                             </div>
-                            
+                            <!-- /.form-group 希望完成日期-->
                             <div class="form-group" style="display:flex">
                                 <label class="item-name">希望完成日期</label>
                                 <div class="input-group date">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">
-                                            <i class="far fa-calendar-alt"></i>
-                                        </span>
+                                    <div class="input-group-prepend">  
                                     </div>
-                                    <input type="text" class="form-control float-right" id="reservation">
+                                    <input asp-for="ModifyFrom.ExpectedFinishedDay"  type="date" class="form-control float-right" id="endDatePicker" value="@Model.ModifyFrom.ExpectedFinishedDay" >
                                 </div>
                             </div>
-
-                            <!-- /.form-group -->
                         </div>
-                        <!-- /.col -->
+                          <!-- /作廢 -->
                         <div class="col-md-6">
+                                <form method="post" asp-controller="ModifyForm" asp-action="Invalid" >
+                                    <input type="hidden" name="id" value="@Model.ModifyFrom.Id" />
                             <div style="display:flex">
                                 <div style="width:60%"></div>
                                 <div class="form-group">
-                                    <button class="button btn btn-danger"><i class="fa-solid fa-trash"></i> 刪除</button>
-                                </div>
+                                            <button id="btnInvalid" class="button btn btn-danger" type="submit"  onclick='this.form.action="@Url.Action("Invalid", "ModifyForm")";'><i class="fa-solid fa-trash"></i>作廢</button>
+                                   </div>
                             </div>
-
+                                 </form>
                             <br />
                             <br />
                             <div>
                                 <div class="form-group" style="display:flex">
-                                    <label class="item-name">需求類別</label>
-                                    <select class="form-control select2 selection">
-                                        <option selected="selected">Alabama</option>
-                                        <option>Alaska</option>
-                                        <option disabled="disabled">California (disabled)</option>
-                                        <option>Delaware</option>
-                                        <option>Tennessee</option>
-                                        <option>Texas</option>
-                                        <option>Washington</option>
+                                    <label class="item-name">需求類別</label><input class="form-control txt-box" Disabled value="@Model.ModifyFrom.CategoryDescription">
+                            @*         <select class="form-control select2 selection"> 
+                                      @foreach (var item in Model.Categories)
+                                        {
+                                            <option >@item.CategoryDescription</option>
+                                        }
+                                    </select>  *@
+                                </div>
+                                <!-- /.form-group 需求員工-->
+                                <div class="form-group">
+                                    <label class="item-name">需求員工</label><input class="form-control txt-box" Disabled value="@Model.ModifyFrom.EmployeeName">
+                                </div>
+                                <!-- /.form-group 所屬專案-->
+                              @*   <div class="form-group">
+                                    <label class="item-name">所屬專案</label>
+                                    <select class="form-control select2 selection" >
+                                        @foreach (var project in Model.Projects)
+                                        {
+ 
+                                        }
                                     </select>
-                                </div>
-                                <div class="form-group">
-                                    <label class="item-name">需求員工</label><input class="form-control txt-box" Disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label class="item-name">所屬專案</label><input class="form-control txt-box">
-                                </div>
+                                </div> *@
                             </div>
                         </div>
-
                         <!-- /.col -->
                     </div>
-
-                    <br />
-                    <br />
-
+                         <br />
+                         <br />
                     <!-- /.row -->
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="item-name">需求內容</label>
                             </div>
-                            <textarea rows="8" cols="110"></textarea>
+                            <textarea asp-for="ModifyFrom.Content" rows="8" cols="110">@Model.ModifyFrom.Content</textarea>
                         </div>
                         <!-- /.col -->
                         <!-- /.col -->
                     </div>
                     <div class="row">
-                        <!-- /.form-group -->
+                        <!-- /.form-group聯繫電話 -->
                         <div class="form-group">
-                            <label style="margin-right:5%">聯繫電話</label><input class=" form-control" style="width:25%">
+                            <label style="margin-right:5%">聯繫電話</label><input asp-for="ModifyFrom.Tel" class=" form-control" style="width:25%" value="@Model.ModifyFrom.Tel">
                         </div>
                         
                         <!-- /.form-group -->
                         <div class="col-12 col-sm-6">
 
-                            <!-- /.form-group -->
+                            <!-- /.form-group 附件上傳-->
                         </div>
                         <!-- /.col -->
                         <div class="col-12 col-sm-7" style="display:flex">
 
                             <div class="form-group">
-                                <button class="button btn btn-primary"><i class="fa-solid fa-cloud-arrow-up"></i>  附件上傳</button>
+                                <button class="button btn btn-primary" type="button"><i class="fa-solid fa-cloud-arrow-up"></i>  附件上傳</button>
                             </div>
                             <div style="width:10%"></div>
-                            <!-- /.form-group -->
+                            <!-- /.form-group 送出修改-->
                         </div>
 
                         <div class="col-12 col-sm-5" style="display:flex">
                             <div style="width:10%"></div>
                             <div class="form-group">
-                                <button class="button btn btn-warning btn-link"><i class="fa-solid fa-file-export"></i> 送出修改</button>
+                                    <button class="button btn btn-warning btn-link" type="submit"><i class="fa-solid fa-file-export"></i> 送出修改</button>
                             </div>
 
                             <!-- /.form-group -->
@@ -214,11 +226,25 @@
 
             </div>
             <!-- /.row -->
+            </form>
         </div>
         <!-- /.container-fluid -->
     </section>
     <!-- /.content -->
-    <!-- /.content-wrapper -->
-
 </div>
+<!-- /.content-wrapper -->
+
+
+@section Scripts
+{
+    <script src="~/AdminLTE/plugins/moment/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script>
+        $(document).ready(function () {
+            $("#btnInvalid").click(function () {
+                     alert("工單已作廢");
+                })
+            });
+    </script>
+}
 
