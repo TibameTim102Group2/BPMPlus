@@ -12,6 +12,7 @@ using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Microsoft.AspNetCore.Identity;
 using BPMPlus.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using System.Runtime.Intrinsics.X86;
 
 namespace BPMPlus.Controllers
 {
@@ -38,7 +39,7 @@ namespace BPMPlus.Controllers
             if (user == null)
             {
                 ViewBag.errMsg = "帳號或密碼輸入錯誤";
-                return View("Index", "Home"); // 登入失敗導回頁面
+                return View("Index", vm); // 登入失敗導回頁面
             }
 
             // 登入成功，建立驗證 cookie
@@ -60,7 +61,7 @@ namespace BPMPlus.Controllers
             return RedirectToAction("Index", "Home");
         }
        //登入
-        public ActionResult Index()
+        public IActionResult Index()
 		{
 			return View();
 		}
@@ -74,45 +75,72 @@ namespace BPMPlus.Controllers
         }
 
 
+        [HttpPost]
+        public async Task<IActionResult> EmailValid(LoginVM vm)
+        {
+            var request = await _context.User.SingleOrDefaultAsync(m => m.Email == vm.Email == true);
 
+            if (request == null)
+            {
+                ViewBag.errMsg = "Email輸入錯誤!";
+                return View("EmailValid", vm);
+            }
 
+            return View();
+        }
         //忘記密碼
-        public ActionResult EmailValid()
-        {
-            return View();
-        }
-
-        //驗證
-        public ActionResult EmailForgetPassWord()
+        public IActionResult EmailValid()
         {
             return View();
         }
 
 
-
-        //[Authorize]
-        //[HttpPost]
-        //public async Task<IActionResult> ResetPassWord(ChangePasswordVM vm)
-        //{
-        //    var user = await GetAuthorizedUser();
-        //    var request = await _context.User.SingleOrDefaultAsync(m => m.Password == vm.OldPassword == true);
-        //    // 確認輸入的舊密碼 == 密碼
-
-        //    //if (request == null)
-        //    //{
-        //    //    ViewBag.errMsg = "舊密碼輸入錯誤!";
-        //    //    return View("~/Views/Login/ResetPassWord.cshtml"); // 登入失敗導回頁面
-        //    //}else if (vm.OldPassword == vm.ConfirmPassword)
-        //    //{
-
-        //    //}
-
-        //    return View();
-        //}
+        //輸入驗證
+        public IActionResult EmailForgetPassWord()
+        {
+            return View();
+        }
 
 
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> ResetPassWord(ChangePasswordVM vm)
+        {
+            var user = await GetAuthorizedUser();
+            var request = await _context.User.SingleOrDefaultAsync(m => m.Password == vm.OldPassword == true);
+
+            //輸入不得為空
+            if (request == null)
+            {
+                ViewBag.errMsg = "舊密碼輸入錯誤";
+                return View("ResetPassWord", vm); // 登入失敗導回頁面
+            }
+            //判斷新密碼是否輸入正確
+            if (vm.NewPassword != vm.ConfirmPassword)
+            {
+                ViewBag.errMsg = "請確認新密碼是否輸入一致";
+                return View("ResetPassWord", vm); // 登入失敗導回頁面
+            }
+            //判斷新舊密碼是否重複
+            if (vm.NewPassword == vm.OldPassword)
+            {
+                ViewBag.errMsg = "新舊密碼不得重複";
+                return View("ResetPassWord", vm); // 登入失敗導回頁面
+            }
+
+            user.Password = vm.NewPassword;
+            await _context.SaveChangesAsync();
+
+            ViewBag.Success = "修改成功!";
+
+            //await Logout();
+            //return RedirectToAction("Index", "Home");
+            return View();
+        }
+        [Authorize]
         //修改密碼
-        public ActionResult ResetPassWord()
+        public IActionResult ResetPassWord()
         {
             return View();
         }

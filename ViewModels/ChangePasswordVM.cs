@@ -17,7 +17,6 @@ namespace BPMPlus.ViewModels
         [Required]
         [DataType(DataType.Password)]
         [Display(Name = "確認新密碼")]
-        [Compare("NewPassword", ErrorMessage = "新密碼輸入錯誤!")]
         public string ConfirmPassword { get; set; }
     }
 }
