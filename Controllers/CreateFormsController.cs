@@ -105,9 +105,9 @@ namespace BPMPlus.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [HttpPost]
         public async Task<JsonResult> CreateNewForm([FromBody] NewFormViewModel model)
         {
-            var x = model;
             User user = await GetAuthorizedUser();
             //functionId:  01 -> 需求方申請人送出
 
@@ -117,14 +117,11 @@ namespace BPMPlus.Controllers
             }
             if (ModelState.IsValid)
             {
-                //// 假設有資料庫上下文 db
-                //_context.Form.Add(model); // 假設模型對應到資料庫
-                //_context.SaveChanges();
-
-                return Json(new { success = true, message = "Form submitted successfully!" });
+                // 處理接收到的資料 (model.Name, model.Email)
+                return Json(new { message = "Data received successfully!" });
             }
 
-            return Json(new { success = false, message = "Form submission failed. Please check your data." });
+            return Json(new { message = "Invalid data received!" });
         }
     }
 }
