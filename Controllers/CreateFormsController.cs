@@ -54,13 +54,12 @@ namespace BPMPlus.Controllers
             
             
 
-            var Forms = await _context.Form.ToListAsync(
+            var Forms = await _context.Form
+            .Where(f => f.DepartmentId == user.DepartmentId)
+            .ToListAsync(
                 
             );
-            if (Forms == null)
-            {
-                throw new Exception("Forms is null, Server Error");
-            }
+
 
 
             ViewBag.DepartmentName = Department.DepartmentName;
