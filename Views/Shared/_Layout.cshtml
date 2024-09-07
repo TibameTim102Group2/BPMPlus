@@ -60,43 +60,34 @@
             <a href="" class="brand-link">
                 <img src="~/images/bpmplus.png" class="elevation-3" style="width:13rem;" />
             </a>
-
             <!-- Sidebar -->
-
             <div class="sidebar">
-                <!-- User-->
-                <nav class="mt-2">
-                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                    <div class="image">
-                        <img src="~/images/237143-0147e.jpg" class="img-circle elevation-2" alt="User Image">
-                    </div>
-                    <div class="info">
-                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                        <p>UserName</p>
-                                    </a>
-                                <ul class="nav nav-treeview">
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="@Url.Action("ResetPassWord","Login")">修改密碼</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="@Url.Action("Logout","Login")">登出</a>
-                                    </li>
-                                </ul>
-                        </ul>
-                    </div>
-                </div>
-                </nav>
-
-                <!-- /User -->
-
                 <!-- Sidebar Menu -->
-
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
                              with font-awesome or any other icon font library -->
+                        <!-- User -->
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <div class="user-panel mt-3 pb-3 mb-3 d-flex image">
+                                    <div class="image">
+                                        <img src="~/images/237143-0147e.jpg" class="img-circle elevation-2" alt="User Image">
+                                        <p> ~User~</p>
+                                    </div>
+                                </div>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="@Url.Action("ResetPassWord","Login")">修改密碼</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="@Url.Action("Logout","Login")">登出</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <!-- /User -->
+
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-copy"></i>
