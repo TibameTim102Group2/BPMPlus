@@ -35,12 +35,8 @@ namespace BPMPlus.Models
         public virtual Form Form { get; set; } 
 
         [Column(TypeName = "datetime")]
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        [DefaultValue("getutcdate()")]
         public DateTime CreatedTime { get; set; }
         [Column(TypeName = "datetime")]
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        [DefaultValue("getutcdate()")]
         public DateTime UpdatedTime { get; set; }
     }
 }

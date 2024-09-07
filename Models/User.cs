@@ -37,13 +37,9 @@ namespace BPMPlus.Models
         public virtual Grade? Grade { get; set; }
         public bool UserIsActive { get; set; }
         [Column(TypeName = "datetime")]
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        [DefaultValue("getutcdate()")]
         public DateTime CreatedTime { get; set; }
 
         [Column(TypeName = "datetime")]
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        [DefaultValue("getutcdate()")]
         public DateTime UpdatedTime { get; set; }
         [Column(TypeName = "VARCHAR")]
         [MaxLength(20)]

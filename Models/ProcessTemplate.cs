@@ -29,12 +29,8 @@ namespace BPMPlus.Models
         public virtual Category? Category { get; set; }
 
         [Column(TypeName = "datetime")]
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        [DefaultValue("getutcdate()")]
         public DateTime CreatedTime { get; set; }
         [Column(TypeName = "datetime")]
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        [DefaultValue("getutcdate()")]
         public DateTime UpdatedTime { get; set; }
     }
 }

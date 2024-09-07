@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using System.Data;
 using System.Security.Claims;
 
 namespace BPMPlus.Controllers
@@ -147,9 +148,12 @@ namespace BPMPlus.Controllers
             newForm.Tel = model.TEL;
             newForm.ProcessNodeId = "fake";
             newForm.FormIsActive = true;
+            newForm.UpdatedTime = DateTime.Now;
+            newForm.CreatedTime = DateTime.Now;
+
             _context.Form.Add(newForm);
             await _context.SaveChangesAsync();
-
+            
             return Json(new { message = "Data received successfully!" });
         }
     }
