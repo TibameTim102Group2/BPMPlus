@@ -1,15 +1,15 @@
-﻿@section Style {
+﻿@model IEnumerable<BPMPlus.Models.Form>
+@section Style {
     <style>
 
         .content-wrapper {
             background-color: rgb(225, 239, 252);
         }
-        
-        
+
+
         .outside {
             padding: 20px;
             background-color: rgb(225, 239, 252);
-
         }
 
         .title {
@@ -54,6 +54,7 @@
 <div class="outside">
     <h1 class="title">待辦清單</h1>
 
+
     <!-- inside -->
     <div class="inside">
 
@@ -72,26 +73,59 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td><a href="#">202408010002</a></td>
-                    <td>產品部</td>
-                    <td>A003</td>
-                    <td>張三</td>
-                    <td>採購需求單</td>
-                    <td>部門主管審核中</td>
-                </tr>
-                <tr>
-                    <td><a href="#">202408010002</a></td>
-                    <td>產品部</td>
-                    <td>A001</td>
-                    <td>王武</td>
-                    <td>資訊需求單</td>
-                    <td>部門主管審核中</td>
-                </tr>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <a asp-area="" asp-controller="FormReview" asp-action="Index" asp-route-id="@item.FormId">
+                                @Html.DisplayFor(modelItem => item.FormId)
+                            </a>
+                        </td>
+                        <td>
+                            @{
+                                var dapartmentname = ViewBag.Departments[item.DepartmentId];
 
+                            }
+                            @dapartmentname
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UserId)
+                        </td>
+                        <td>
+                            @{
+                                var userName = ViewBag.UserName[item.UserId];
+
+                            }
+                            @userName
+                        </td>
+                        <td>
+                            @{
+                                var category = ViewBag.category[item.CategoryId];
+
+                            }
+                            @category
+                        </td>
+                        <td>
+                            @{
+                                var process = ViewBag.process[item.ProcessNodeId];
+                                var situation = ViewBag.situation[process];
+
+                            }
+                            @situation
+                        </td>
+
+
+                    </tr>
+                }
             </tbody>
         </table>
+        @if (ViewBag.noForm != null)
+        {
+            <div class="alert alert-danger">
+                <!--顯示沒有資料的訊息 -->
+                @ViewBag.noForm
+            </div>
+        }
     </div>
 </div>
-
 
