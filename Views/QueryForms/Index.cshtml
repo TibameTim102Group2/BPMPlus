@@ -148,8 +148,7 @@
                                         @situation
                                     </td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Date)
-
+                                        @item.Date.ToLocalTime().ToString("yyyy-MM-dd HH:mm")
                                     </td>
 
                                     @*                                     <td>
@@ -364,7 +363,6 @@
 
         //透過日期篩選
         $(".createddate").change(function () {
-
             var inputId = $(this).val();
             $.ajax({
                 url: '@Url.Action("CreatDate", "QueryForms")',
@@ -386,9 +384,10 @@
                                                                                 <td>${model.category[item.categoryId]}</td>
                                                                                 <td>${model.projectName[item.projectId]}</td>
                                                                                 <td>${model.userActivity[model.processNodes[item.processNodeId]]}</td>
-                                                                                <td>${model.creatTime}</td>
+                                                                                        <td>${item.createdTime}</td>
                                                                             </tr>`;
                             $("tbody").append(newRow);
+                            $(".createddate").val("");
                         });
                     } else {
                         alert(response.message || "連接失敗，請重新輸入");
