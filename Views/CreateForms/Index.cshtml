@@ -258,8 +258,9 @@
     </div>
 </div>
 @section Scripts {
-    <script type='text/javascript' src='~\AdminLTE\plugins\summernote\summernote-bs4.min.js'></script>
+    <script type='text/javascript' src='../Users/myUserName/Desktop/myPage.js'></script>
     <script>
+       
         $(document).ready(function() {
         // 綁定按鈕點擊事件
         $("#submitButton").on("click", function(e) {
@@ -321,8 +322,22 @@
             
         });
     });
-        
-    $('#summernote').summernote('code');
+
+        function loadScript(url, callback) {
+            var script = document.createElement('script');
+            script.src = url;
+            script.type = 'text/javascript';
+            script.onload = function () {
+                if (callback) {
+                    callback();
+                }
+            };
+            document.head.appendChild(script);
+        }
+        loadScript('/AdminLTE/plugins/summernote/summernote-bs4.js', function () {
+                        $('#summernote').summernote('code');
+                    }
+        ); 
 
 
     </script>
