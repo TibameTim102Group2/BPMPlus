@@ -54,7 +54,9 @@ namespace BPMPlus.Controllers
             
             
 
-            var Forms = await _context.Form.ToListAsync();
+            var Forms = await _context.Form.ToListAsync(
+                
+            );
             if (Forms == null)
             {
                 throw new Exception("Forms is null, Server Error");
@@ -131,6 +133,7 @@ namespace BPMPlus.Controllers
 
             Form newForm = new Form();
             
+
 
             return Json(new { message = "Data received successfully!" });
         }
