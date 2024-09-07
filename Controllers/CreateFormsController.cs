@@ -131,11 +131,24 @@ namespace BPMPlus.Controllers
 
 
             Form newForm = new Form();
-            
+            newForm.FormId = "F00015";
             newForm.DepartmentId = model.DepartmentId;
-            
-
-            _context.Add(newForm);
+            newForm.Date = DateTime.UtcNow;
+            newForm.CategoryId = model.CategoryId;
+            newForm.UserId = user.UserId;
+            if(model.ProjectId != "")
+            {
+                newForm.ProjectId = model.ProjectId;
+            }
+            newForm.DepartmentId = model.DepartmentId;
+            newForm.Content = model.Content;
+            newForm.ExpectedFinishedDay = ExpectedFinishedDayDateTimeUtc8.AddHours(-8);
+            newForm.HandleDepartmentId = "處理部門";
+            newForm.Tel = model.TEL;
+            newForm.ProcessNodeId = "fake";
+            newForm.FormIsActive = true;
+            _context.Form.Add(newForm);
+            await _context.SaveChangesAsync();
 
             return Json(new { message = "Data received successfully!" });
         }
