@@ -90,22 +90,21 @@ namespace BPMPlus.Controllers
 
 
 
-        [HttpPost]
-        public async Task<IActionResult> EmailValid(ForgetPasswordVM vm)
-        {
-            //var user = await GetAuthorizedUser();
-            var request = await _context.User.FirstOrDefaultAsync(m => m.Email == vm.Email == true);
+        //[HttpPost]
+        //public async Task<IActionResult> EmailValid(ForgetPasswordVM vm)
+        //{
+        //    //var user = await GetAuthorizedUser();
+        //    var request = await _context.User.FirstOrDefaultAsync(m => m.Email == vm.Email == true);
 
-            if (request == null)
-            {
-                ViewBag.errMsg = "Email輸入錯誤!";
-                return View("EmailValid", vm);
-            }
+        //    if (request == null)
+        //    {
+        //        ViewBag.errMsg = "Email輸入錯誤!";
+        //        return View("EmailValid", vm);
+        //    }
 
+        //    return View();
+        //}
 
-
-            return View();
-        }
         //忘記密碼
         public IActionResult EmailValid()
         {
