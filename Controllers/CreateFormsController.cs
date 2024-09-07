@@ -23,13 +23,23 @@ namespace BPMPlus.Controllers
         {
             _context = context;
         }
-        
+        [Authorize]
+        public async Task<string> GetCreateFormId()
+        {
+            var LastForm = await _context.Form.OrderBy(f => f.FormId).LastAsync();
+            if (LastForm == null)
+                return "F00001";
+            string id = LastForm.FormId;
+            id = id[1..];//拿掉第一個 F
+            int idNum = Convert.ToInt32(id);
+            idNum++;
+            return "F" + idNum.ToString().PadLeft(5, '0');
+        }
         // GET: CreateForms
         [Authorize]
 
         public async Task<ActionResult> Index(string ReturnUrl)
         {
-
             User user = await GetAuthorizedUser();
             //functionId:  01 -> 需求方申請人送出
             
@@ -132,7 +142,7 @@ namespace BPMPlus.Controllers
 
 
             Form newForm = new Form();
-            newForm.FormId = "F00015";
+            newForm.FormId = await GetCreateFormId();
             newForm.DepartmentId = model.DepartmentId;
             newForm.Date = DateTime.UtcNow;
             newForm.CategoryId = model.CategoryId;
@@ -146,7 +156,7 @@ namespace BPMPlus.Controllers
             newForm.ExpectedFinishedDay = ExpectedFinishedDayDateTimeUtc8.AddHours(-8);
             newForm.HandleDepartmentId = "處理部門";
             newForm.Tel = model.TEL;
-            newForm.ProcessNodeId = "fake";
+            newForm.ProcessNodeId = "PT000001";
             newForm.FormIsActive = true;
             newForm.UpdatedTime = DateTime.Now;
             newForm.CreatedTime = DateTime.Now;
