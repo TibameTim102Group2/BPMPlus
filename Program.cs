@@ -1,5 +1,6 @@
 using BPMPlus.Data;
 using BPMPlus.Models;
+using BPMPlus.Service;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -22,17 +23,18 @@ namespace BPMPlus
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+            builder.Services.AddScoped<EmailService>();
 
             // 從appsettings.json讀取登入逾時設定
-            double LoginExpireMinute = builder.Configuration.GetValue<double>("LoginExpireMinute");
+            //double LoginExpireMinute = builder.Configuration.GetValue<double>("LoginExpireMinute");
 
             // 建立驗證中介軟體服務
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
             {
                 // 目前逾期時間設定為60分鐘 (appsettings.json)
-                option.ExpireTimeSpan = TimeSpan.FromMinutes(LoginExpireMinute);
-                // 限制cookie不能延期
-                option.SlidingExpiration = false;
+                option.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                // 啟用cookie滑動過期
+                option.SlidingExpiration = true;
                 option.LoginPath = "/Login/Index";
             });
 
