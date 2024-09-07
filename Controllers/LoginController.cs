@@ -13,6 +13,11 @@ using Microsoft.AspNetCore.Identity;
 using BPMPlus.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using System.Runtime.Intrinsics.X86;
+using Microsoft.CodeAnalysis.Scripting;
+using System.Net.Mail;
+using System.Net;
+using System.Text;
+using BPMPlus.Service;
 
 namespace BPMPlus.Controllers
 {
@@ -20,10 +25,12 @@ namespace BPMPlus.Controllers
     {
 
         private readonly ApplicationDbContext _context;
+        private readonly EmailService emailService;
 
-        public LoginController(ApplicationDbContext context) : base(context)
+        public LoginController(ApplicationDbContext context, EmailService emailService) : base(context)
         {
             _context = context;
+            this.emailService = emailService;
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -53,10 +60,8 @@ namespace BPMPlus.Controllers
                 claimsPrincipal,
                 new AuthenticationProperties()
                 {
-                    //IsPersistent = false：瀏覽器關閉立馬登出
-                    IsPersistent = false,
+                    IsPersistent = false,   //瀏覽器關閉立馬登出
                 });
-
             // 導至隱私頁面
             return RedirectToAction("Index", "Home");
         }
@@ -75,16 +80,29 @@ namespace BPMPlus.Controllers
         }
 
 
-        [HttpPost]
-        public async Task<IActionResult> EmailValid(LoginVM vm)
+        [HttpGet]
+        public async Task<IActionResult> Send(string mail)
         {
-            var request = await _context.User.SingleOrDefaultAsync(m => m.Email == vm.Email == true);
+          emailService.SendTestMail(mail);
+            return Ok("寄信ok");
+        }
+
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> EmailValid(ForgetPasswordVM vm)
+        {
+            //var user = await GetAuthorizedUser();
+            var request = await _context.User.FirstOrDefaultAsync(m => m.Email == vm.Email == true);
 
             if (request == null)
             {
                 ViewBag.errMsg = "Email輸入錯誤!";
                 return View("EmailValid", vm);
             }
+
+
 
             return View();
         }
@@ -110,33 +128,36 @@ namespace BPMPlus.Controllers
             var user = await GetAuthorizedUser();
             var request = await _context.User.SingleOrDefaultAsync(m => m.Password == vm.OldPassword == true);
 
-            //輸入不得為空
-            if (request == null)
+            if (request != null)
             {
-                ViewBag.errMsg = "舊密碼輸入錯誤";
-                return View("ResetPassWord", vm); // 登入失敗導回頁面
-            }
-            //判斷新密碼是否輸入正確
-            if (vm.NewPassword != vm.ConfirmPassword)
-            {
-                ViewBag.errMsg = "請確認新密碼是否輸入一致";
-                return View("ResetPassWord", vm); // 登入失敗導回頁面
-            }
-            //判斷新舊密碼是否重複
-            if (vm.NewPassword == vm.OldPassword)
-            {
-                ViewBag.errMsg = "新舊密碼不得重複";
-                return View("ResetPassWord", vm); // 登入失敗導回頁面
-            }
-
-            user.Password = vm.NewPassword;
-            await _context.SaveChangesAsync();
-
-            ViewBag.Success = "修改成功!";
-
+                //判斷新密碼是否輸入正確
+                if (vm.NewPassword != vm.ConfirmPassword)
+                {
+                    ViewBag.errMsg = "請確認新密碼是否輸入一致";
+                    return View("ResetPassWord", vm); // 登入失敗導回頁面
+                }
+                //判斷新舊密碼是否重複
+                if (vm.NewPassword == vm.OldPassword)
+                {
+                    ViewBag.errMsg = "新舊密碼不得重複";
+                    return View("ResetPassWord", vm); // 登入失敗導回頁面
+                }
+                
+                user.Password = vm.NewPassword;
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "密碼變更成功!";
+                return View();
+                
             //await Logout();
             //return RedirectToAction("Index", "Home");
-            return View();
+
+            }
+            else
+            {
+                ViewBag.errMsg = "舊密碼輸入錯誤";
+                vm.isSuccess = false;
+                return View("ResetPassWord", vm); // 登入失敗導回頁面
+            }
         }
         [Authorize]
         //修改密碼
