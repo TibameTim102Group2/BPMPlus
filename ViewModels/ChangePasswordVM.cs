@@ -18,5 +18,6 @@ namespace BPMPlus.ViewModels
         [DataType(DataType.Password)]
         [Display(Name = "確認新密碼")]
         public string ConfirmPassword { get; set; }
+        public bool isSuccess {  get; set; }
     }
 }

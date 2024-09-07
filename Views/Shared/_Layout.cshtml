@@ -27,6 +27,8 @@
     <link rel="stylesheet" href="~/AdminLTE/plugins/daterangepicker/daterangepicker.css">
     <!-- summernote -->
     <link rel="stylesheet" href="~/AdminLTE/plugins/summernote/summernote-bs4.min.css">
+    <!-- SweetAlert -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     @await RenderSectionAsync("Style", required: false)
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -47,34 +49,11 @@
                     <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">BPMPlus</a>
                 </li>
 
-                @* 暫放登出 *@
-                <li class="nav-item d-none d-sm-inline-block">
-                    <a class="nav-link" href="@Url.Action("Logout","Login")">登出</a>
-                </li>
-
-                @* 修改密碼 *@
-                <li class="nav-item d-none d-sm-inline-block">
-                    <a class="nav-link" href="@Url.Action("ResetPassWord","Login")">修改密碼</a>
-                </li>
-
-
-
-
-                @*          使用者頭像+名字
-                <li>
-                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                <div class="image">
-                <img src="~/images/237143-0147e.jpg" class="img-circle elevation-2" alt="User Image">
-                </div>
-                <div class="info">
-                <a href="#" class="d-block">@ViewBag.UserName</a>
-                </div>
-                </div>
-                </li> *@
 
             </ul>
         </nav>
         <!-- /.navbar -->
+
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
@@ -83,15 +62,44 @@
             </a>
 
             <!-- Sidebar -->
+
             <div class="sidebar">
+                <!-- User-->
+                <nav class="mt-2">
+                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                    <div class="image">
+                        <img src="~/images/237143-0147e.jpg" class="img-circle elevation-2" alt="User Image">
+                    </div>
+                    <div class="info">
+                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                        <p>UserName</p>
+                                    </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="@Url.Action("ResetPassWord","Login")">修改密碼</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="@Url.Action("Logout","Login")">登出</a>
+                                    </li>
+                                </ul>
+                        </ul>
+                    </div>
+                </div>
+                </nav>
+
+                <!-- /User -->
+
                 <!-- Sidebar Menu -->
+
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
                              with font-awesome or any other icon font library -->
                         <li class="nav-item">
                             <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-tree"></i>
+                                <i class="nav-icon fas fa-copy"></i>
                                 <p>
                                     工單管理
                                     <i class="fas fa-angle-left right"></i>
@@ -132,7 +140,7 @@
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-tree"></i>
+                                <i class="nav-icon fas fa-book"></i>
                                 <p>
                                     專案管理
                                     <i class="fas fa-angle-left right"></i>
@@ -167,7 +175,7 @@
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-tree"></i>
+                                <i class="nav-icon far fa-plus-square"></i>
                                 <p>
                                     會議室預約
                                     <i class="fas fa-angle-left right"></i>
@@ -196,20 +204,9 @@
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-tree"></i>
+                                <i class="nav-icon far fa-calendar-alt"></i>
                                 <p>
                                     當日概覽
-                                    <i class="fas fa-angle-left right"></i>
-                                </p>
-                            </a>
-                        </li>
-
-                        @*↓測試區 *@
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Login" asp-action="EmailForgetPassWord">
-                                <i class="nav-icon fas fa-tree"></i>
-                                <p>
-                                    EmailForgetPassWord
                                 </p>
                             </a>
                         </li>
@@ -236,9 +233,7 @@
     <!-- jQuery UI 1.11.4 -->
     <script src="~/AdminLTE/plugins/jquery-ui/jquery-ui.min.js"></script>
     <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-    <script>
-        $.widget.bridge('uibutton', $.ui.button)
-    </script>
+    <script>$.widget.bridge('uibutton', $.ui.button)</script>
     <!-- Bootstrap 4 -->
     <script src="~/AdminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- ChartJS -->
@@ -265,6 +260,16 @@
     <script src="~/AdminLTE/dist/js/demo.js"></script>
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="~/AdminLTE/dist/js/pages/dashboard.js"></script>
+    <!-- SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+
 </html>
+
+@section Scripts
+{
+    <script>
+
+    </script>
+}
