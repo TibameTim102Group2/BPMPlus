@@ -61,7 +61,7 @@ namespace BPMPlus.Controllers
             {
                 throw new Exception("Categories is null, Server Error");
             }
-
+            
             
             
 
@@ -139,8 +139,8 @@ namespace BPMPlus.Controllers
                 string msg = "資料缺漏，無法新建工單";
                 return Json(new { errorCode=400 , message = msg });
             }
-
-
+            List<ProcessTemplate> pTemplates = await _context.ProcessTemplate.Where(p => p.CategoryId == model.CategoryId).ToListAsync();
+            
             Form newForm = new Form();
             newForm.FormId = await GetCreateFormId();
             newForm.DepartmentId = model.DepartmentId;
