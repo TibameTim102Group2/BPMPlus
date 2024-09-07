@@ -33,33 +33,34 @@ namespace BPMPlus.Controllers
                 return RedirectToAction("login", "Login");
             }
             //加入撈取資料的判斷條件(必須要和登入者同部門，且還在活動的工單)
-            var alllist = _context.Form.Where(f => f.DepartmentId == user.DepartmentId && f.FormIsActive == true);
+            var alllist = _context.Form.AsNoTracking().Where(f => f.DepartmentId == user.DepartmentId && f.FormIsActive == true);
 
             //把類別變成選項
             ViewBag.CategoryId = new SelectList(_context.Category, "CategoryId", "CategoryDescription");
             //把專案變成選項
             ViewBag.ProjectId = new SelectList(_context.Project, "ProjectId", "ProjectName");
             //把申請者變成選項
-            ViewBag.UserId = new SelectList(_context.User.Where(f => f.DepartmentId == user.DepartmentId), "UserId", "UserName");
+            ViewBag.UserId = new SelectList(_context.User.AsNoTracking().Where(f => f.DepartmentId == user.DepartmentId), "UserId", "UserName");
             var applicationDbContext = alllist.Include(f => f.Category).Include(f => f.ProcessNode);
             //把部門變數導入
-            var departments = await _context.Department.ToDictionaryAsync(d => d.DepartmentId, d => d.DepartmentName);
+            var departments = await _context.Department.AsNoTracking().ToDictionaryAsync(d => d.DepartmentId, d => d.DepartmentName);
             ViewBag.Departments = departments;
             //把申請者變數導入
-            var userName = await _context.User.ToDictionaryAsync(d => d.UserId, d => d.UserName);
+            var userName = await _context.User.AsNoTracking().ToDictionaryAsync(d => d.UserId, d => d.UserName);
             ViewBag.UserName = userName;
             //把專案變數導入
-            var projectName = await _context.Project.ToDictionaryAsync(d => d.ProjectId, d => d.ProjectName);
+            var projectName = await _context.Project.AsNoTracking().ToDictionaryAsync(d => d.ProjectId, d => d.ProjectName);
             ViewBag.ProjectName = projectName;
             //把類別變數導入
-            var Category = await _context.Category.ToDictionaryAsync(d => d.CategoryId, d => d.CategoryDescription);
+            var Category = await _context.Category.AsNoTracking().ToDictionaryAsync(d => d.CategoryId, d => d.CategoryDescription);
             ViewBag.category = Category;
             //把工單狀態變數導入
-            var situation = await _context.ProcessNodes.ToDictionaryAsync(d => d.ProcessNodeId, d => d.UserActivityId);
+            var situation = await _context.ProcessNodes.AsNoTracking().ToDictionaryAsync(d => d.ProcessNodeId, d => d.UserActivityId);
             ViewBag.process = situation;
 
-            var userActivity = await _context.UserActivity.ToDictionaryAsync(d => d.UserActivityId, d => d.UserActivityIdDescription);
+            var userActivity = await _context.UserActivity.AsNoTracking().ToDictionaryAsync(d => d.UserActivityId, d => d.UserActivityIdDescription);
             ViewBag.situation = userActivity;
+
 
 
             //如果沒有任何工單 要跳到別的地方
@@ -98,25 +99,25 @@ namespace BPMPlus.Controllers
             //判斷登入者是誰
             User user = await GetAuthorizedUser();
             //加入撈取資料的判斷條件(必須要和登入者同部門，且還在活動的工單)
-            var alllist = _context.Form.Where(f => f.DepartmentId == user.DepartmentId && f.FormIsActive == true);
+            var alllist = _context.Form.AsNoTracking().Where(f => f.DepartmentId == user.DepartmentId && f.FormIsActive == true);
             var findForm = await alllist.Include(c => c.Category).Include(c => c.Project).FirstOrDefaultAsync(f => f.FormId == formId);
             if (formId == null || findForm == null)
             {
                 return Json(new { success = false, message = "查無此資料請重新輸入" });
             }
             //把時間轉換
-            var creatTime = findForm.Date.ToString("yyyy-MM-dd");
+            var creatTime = findForm.Date.ToString("yyyy-MM-dd HH:mm");
             //找出工單的流程節點 並且回傳功能的id
-            var UserActivity = (await _context.ProcessNodes.FirstOrDefaultAsync(c => c.ProcessNodeId == findForm.ProcessNodeId))?.UserActivityId;
+            var UserActivity = (await _context.ProcessNodes.AsNoTracking().FirstOrDefaultAsync(c => c.ProcessNodeId == findForm.ProcessNodeId))?.UserActivityId;
 
             var result = new
             {
                 findForm.FormId,
                 findForm.Category.CategoryDescription,
-                DepartmentName = (await _context.Department.FirstOrDefaultAsync(c => c.DepartmentId == findForm.DepartmentId))?.DepartmentName,
-                UserName = (await _context.User.FirstOrDefaultAsync(c => c.UserId == findForm.UserId))?.UserName,
+                DepartmentName = (await _context.Department.AsNoTracking().FirstOrDefaultAsync(c => c.DepartmentId == findForm.DepartmentId))?.DepartmentName,
+                UserName = (await _context.User.AsNoTracking().FirstOrDefaultAsync(c => c.UserId == findForm.UserId))?.UserName,
                 findForm.Project.ProjectName,
-                Situation = (await _context.UserActivity.FirstOrDefaultAsync(c => c.UserActivityId == UserActivity))?.UserActivityIdDescription,
+                Situation = (await _context.UserActivity.AsNoTracking().FirstOrDefaultAsync(c => c.UserActivityId == UserActivity))?.UserActivityIdDescription,
                 CreatedTime = creatTime
             };
             return Json(new { success = true, data = result });
@@ -130,7 +131,7 @@ namespace BPMPlus.Controllers
         {
             User user = await GetAuthorizedUser();
             //加入撈取資料的判斷條件(必須要和登入者同部門，且還在活動的工單)
-            var alllist = _context.Form.Where(f => f.DepartmentId == user.DepartmentId && f.FormIsActive == true);
+            var alllist = _context.Form.AsNoTracking().Where(f => f.DepartmentId == user.DepartmentId && f.FormIsActive == true);
             var findForm = await alllist.Include(c => c.Category)
                             .Include(c => c.Project)
                             .Where(f => f.UserId == userId)
@@ -142,17 +143,17 @@ namespace BPMPlus.Controllers
                                 f.ProjectId,
                                 f.ProcessNodeId,
                                 f.Date,
-                                createdTime = f.Date.ToString("yyyy-MM-dd")
+                                createdTime = f.Date.ToLocalTime().ToString("yyyy-MM-dd HH:mm")
                             }).ToListAsync();
 
             //各個欄位資料
-            var departments = await _context.Department.ToDictionaryAsync(d => d.DepartmentId, d => d.DepartmentName);
-            var userName = await _context.User.ToDictionaryAsync(d => d.UserId, d => d.UserName);
-            var projectName = await _context.Project.ToDictionaryAsync(d => d.ProjectId, d => d.ProjectName);
-            var category = await _context.Category.ToDictionaryAsync(d => d.CategoryId, d => d.CategoryDescription);
-            var situation = await _context.ProcessNodes.ToDictionaryAsync(d => d.ProcessNodeId, d => d.UserActivityId);
-            var processNodes = await _context.ProcessNodes.ToDictionaryAsync(d => d.ProcessNodeId, d => d.UserActivityId);
-            var userActivity = await _context.UserActivity.ToDictionaryAsync(d => d.UserActivityId, d => d.UserActivityIdDescription);
+            var departments = await _context.Department.AsNoTracking().ToDictionaryAsync(d => d.DepartmentId, d => d.DepartmentName);
+            var userName = await _context.User.AsNoTracking().ToDictionaryAsync(d => d.UserId, d => d.UserName);
+            var projectName = await _context.Project.AsNoTracking().ToDictionaryAsync(d => d.ProjectId, d => d.ProjectName);
+            var category = await _context.Category.AsNoTracking().ToDictionaryAsync(d => d.CategoryId, d => d.CategoryDescription);
+            var situation = await _context.ProcessNodes.AsNoTracking().ToDictionaryAsync(d => d.ProcessNodeId, d => d.UserActivityId);
+            var processNodes = await _context.ProcessNodes.AsNoTracking().ToDictionaryAsync(d => d.ProcessNodeId, d => d.UserActivityId);
+            var userActivity = await _context.UserActivity.AsNoTracking().ToDictionaryAsync(d => d.UserActivityId, d => d.UserActivityIdDescription);
             //回傳json格式
             var result = new
             {
@@ -184,7 +185,7 @@ namespace BPMPlus.Controllers
         {
             User user = await GetAuthorizedUser();
             //加入撈取資料的判斷條件(必須要和登入者同部門，且還在活動的工單)
-            var alllist = _context.Form.Where(f => f.DepartmentId == user.DepartmentId && f.FormIsActive == true);
+            var alllist = _context.Form.AsNoTracking().Where(f => f.DepartmentId == user.DepartmentId && f.FormIsActive == true);
             var findForm = await alllist.Include(c => c.Category)
                             .Include(c => c.Project)
                             .Where(f => f.CategoryId == categoryId)//改以需求類別判斷
@@ -196,17 +197,17 @@ namespace BPMPlus.Controllers
                                 f.ProjectId,
                                 f.ProcessNodeId,
                                 f.Date,
-                                createdTime = f.Date.ToString("yyyy-MM-dd")
+                                createdTime = f.Date.ToLocalTime().ToString("yyyy-MM-dd HH:mm")
                             }).ToListAsync();
-            var creatTime = _context.Form.Select(f => f.Date.ToString("yyyy-MM-dd")).FirstOrDefault();
+    
             //各個欄位資料
-            var departments = await _context.Department.ToDictionaryAsync(d => d.DepartmentId, d => d.DepartmentName);
-            var userName = await _context.User.ToDictionaryAsync(d => d.UserId, d => d.UserName);
-            var projectName = await _context.Project.ToDictionaryAsync(d => d.ProjectId, d => d.ProjectName);
-            var category = await _context.Category.ToDictionaryAsync(d => d.CategoryId, d => d.CategoryDescription);
-            var situation = await _context.ProcessNodes.ToDictionaryAsync(d => d.ProcessNodeId, d => d.UserActivityId);
-            var processNodes = await _context.ProcessNodes.ToDictionaryAsync(d => d.ProcessNodeId, d => d.UserActivityId);
-            var userActivity = await _context.UserActivity.ToDictionaryAsync(d => d.UserActivityId, d => d.UserActivityIdDescription);
+            var departments = await _context.Department.AsNoTracking().ToDictionaryAsync(d => d.DepartmentId, d => d.DepartmentName);
+            var userName = await _context.User.AsNoTracking().ToDictionaryAsync(d => d.UserId, d => d.UserName);
+            var projectName = await _context.Project.AsNoTracking().ToDictionaryAsync(d => d.ProjectId, d => d.ProjectName);
+            var category = await _context.Category.AsNoTracking().ToDictionaryAsync(d => d.CategoryId, d => d.CategoryDescription);
+            var situation = await _context.ProcessNodes.AsNoTracking().ToDictionaryAsync(d => d.ProcessNodeId, d => d.UserActivityId);
+            var processNodes = await _context.ProcessNodes.AsNoTracking().ToDictionaryAsync(d => d.ProcessNodeId, d => d.UserActivityId);
+            var userActivity = await _context.UserActivity.AsNoTracking().ToDictionaryAsync(d => d.UserActivityId, d => d.UserActivityIdDescription);
             //回傳json格式
             var result = new
             {
@@ -217,7 +218,7 @@ namespace BPMPlus.Controllers
                 category,
                 processNodes,
                 userActivity,
-                creatTime
+     
             };
             if (!findForm.Any())
             {
@@ -234,7 +235,7 @@ namespace BPMPlus.Controllers
         public async Task<IActionResult> Project(string projectId)
         {
             User user = await GetAuthorizedUser();
-            var alllist = _context.Form.Where(f => f.DepartmentId == user.DepartmentId && f.FormIsActive == true);
+            var alllist = _context.Form.AsNoTracking().Where(f => f.DepartmentId == user.DepartmentId && f.FormIsActive == true);
             var findForm = await alllist.Include(c => c.Category)
                 .Include(c => c.Project)
                 .Where(c => c.ProjectId == projectId)
@@ -247,18 +248,17 @@ namespace BPMPlus.Controllers
                     c.ProjectId,
                     c.ProcessNodeId,
                     c.Date,
-                    createdTime = c.Date.ToString("yyyy-MM-dd")
+                    createdTime = c.Date.ToLocalTime().ToString("yyyy-MM-dd HH:mm")
                 })
                 .ToListAsync();
-            var creatTime = _context.Form.Select(f => f.Date.ToString("yyyy-MM-dd")).FirstOrDefault();
             //各個欄位資料
-            var departments = await _context.Department.ToDictionaryAsync(d => d.DepartmentId, d => d.DepartmentName);
-            var userName = await _context.User.ToDictionaryAsync(d => d.UserId, d => d.UserName);
-            var projectName = await _context.Project.ToDictionaryAsync(d => d.ProjectId, d => d.ProjectName);
-            var category = await _context.Category.ToDictionaryAsync(d => d.CategoryId, d => d.CategoryDescription);
-            var situation = await _context.ProcessNodes.ToDictionaryAsync(d => d.ProcessNodeId, d => d.UserActivityId);
-            var processNodes = await _context.ProcessNodes.ToDictionaryAsync(d => d.ProcessNodeId, d => d.UserActivityId);
-            var userActivity = await _context.UserActivity.ToDictionaryAsync(d => d.UserActivityId, d => d.UserActivityIdDescription);
+            var departments = await _context.Department.AsNoTracking().ToDictionaryAsync(d => d.DepartmentId, d => d.DepartmentName);
+            var userName = await _context.User.AsNoTracking().ToDictionaryAsync(d => d.UserId, d => d.UserName);
+            var projectName = await _context.Project.AsNoTracking().ToDictionaryAsync(d => d.ProjectId, d => d.ProjectName);
+            var category = await _context.Category.AsNoTracking().ToDictionaryAsync(d => d.CategoryId, d => d.CategoryDescription);
+            var situation = await _context.ProcessNodes.AsNoTracking().ToDictionaryAsync(d => d.ProcessNodeId, d => d.UserActivityId);
+            var processNodes = await _context.ProcessNodes.AsNoTracking().ToDictionaryAsync(d => d.ProcessNodeId, d => d.UserActivityId);
+            var userActivity = await _context.UserActivity.AsNoTracking().ToDictionaryAsync(d => d.UserActivityId, d => d.UserActivityIdDescription);
             //回傳json格式
             var result = new
             {
@@ -269,7 +269,6 @@ namespace BPMPlus.Controllers
                 category,
                 processNodes,
                 userActivity,
-                creatTime
             };
             if (!findForm.Any())
             {
@@ -287,10 +286,10 @@ namespace BPMPlus.Controllers
         {
             User user = await GetAuthorizedUser();
             //加入撈取資料的判斷條件(必須要和登入者同部門，且還在活動的工單)
-            var alllist = _context.Form.Where(f => f.DepartmentId == user.DepartmentId && f.FormIsActive == true);
+            var alllist = _context.Form.AsNoTracking().Where(f => f.DepartmentId == user.DepartmentId && f.FormIsActive == true);
             var findForm = await alllist.Include(c => c.Category)
                             .Include(c => c.Project)
-                            .Where(f => f.Date == date)
+                            .Where(f => f.Date.Date == date.Date)
                             .Select(f => new {
                                 f.FormId,
                                 f.DepartmentId,
@@ -298,18 +297,18 @@ namespace BPMPlus.Controllers
                                 f.CategoryId,
                                 f.ProjectId,
                                 f.ProcessNodeId,
-                                f.Date
+                                f.Date,
+                                createdTime = f.Date.ToLocalTime().ToString("yyyy-MM-dd HH:mm")
                             }).ToListAsync();
-            //var creatTime = _context.Form.Select(f => f.Date.ToString("yyyy-MM-dd")==date.ToString()).FirstOrDefault();
+            
             //各個欄位資料
-            var creatTime = findForm.FirstOrDefault(f => f.Date.Date == date.Date);
-            var departments = await _context.Department.ToDictionaryAsync(d => d.DepartmentId, d => d.DepartmentName);
-            var userName = await _context.User.ToDictionaryAsync(d => d.UserId, d => d.UserName);
-            var projectName = await _context.Project.ToDictionaryAsync(d => d.ProjectId, d => d.ProjectName);
-            var category = await _context.Category.ToDictionaryAsync(d => d.CategoryId, d => d.CategoryDescription);
-            var situation = await _context.ProcessNodes.ToDictionaryAsync(d => d.ProcessNodeId, d => d.UserActivityId);
-            var processNodes = await _context.ProcessNodes.ToDictionaryAsync(d => d.ProcessNodeId, d => d.UserActivityId);
-            var userActivity = await _context.UserActivity.ToDictionaryAsync(d => d.UserActivityId, d => d.UserActivityIdDescription);
+            var departments = await _context.Department.AsNoTracking().ToDictionaryAsync(d => d.DepartmentId, d => d.DepartmentName);
+            var userName = await _context.User.AsNoTracking().ToDictionaryAsync(d => d.UserId, d => d.UserName);
+            var projectName = await _context.Project.AsNoTracking().ToDictionaryAsync(d => d.ProjectId, d => d.ProjectName);
+            var category = await _context.Category.AsNoTracking().ToDictionaryAsync(d => d.CategoryId, d => d.CategoryDescription);
+            var situation = await _context.ProcessNodes.AsNoTracking().ToDictionaryAsync(d => d.ProcessNodeId, d => d.UserActivityId);
+            var processNodes = await _context.ProcessNodes.AsNoTracking().ToDictionaryAsync(d => d.ProcessNodeId, d => d.UserActivityId);
+            var userActivity = await _context.UserActivity.AsNoTracking().ToDictionaryAsync(d => d.UserActivityId, d => d.UserActivityIdDescription);
             //回傳json格式
             var result = new
             {
@@ -320,7 +319,7 @@ namespace BPMPlus.Controllers
                 category,
                 processNodes,
                 userActivity,
-                creatTime = creatTime?.Date.ToString("yyyy-MM-dd")
+     
             };
             if (!findForm.Any())
             {
