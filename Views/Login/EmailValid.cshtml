@@ -1,4 +1,4 @@
-﻿@model BPMPlus.ViewModels.LoginVM
+﻿@model BPMPlus.ViewModels.ForgetPasswordVM
 @section Style {
     <style>
         .validConfirm {
@@ -15,7 +15,7 @@
         <!-- /.login-logo -->
         @using (Html.BeginForm("EmailValid", "login", new { ReturnUrl = Context.Request.Query["ReturnUrl"] }, FormMethod.Post, true, new { name = "loginForm", autocomplete = "off" }))
 {
-        <div>
+        <div id="app">
             <p class="validConfirm login-box-msg text-bold">忘記密碼</p>
             <div class="input-group mb-3">
                 @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "請輸入您的信箱" })
@@ -39,10 +39,26 @@
                         <div style="color:red;">
                             @ViewBag.errMsg
                         </div>
-                        <!-- /錯誤訊息 -->
-                        <!-- /.col -->
+                    <!-- /.col -->
                 </div>
         </div>
 }
     </div>
 </div>
+
+@section Scripts
+{
+    <script>
+        let app = VueCreateApp({
+            data() { 
+                return {
+                    
+                }
+            },
+            methods: {
+                
+            },
+
+        }).mount("#app");
+    </script>
+}

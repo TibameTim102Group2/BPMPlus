@@ -90,20 +90,20 @@ namespace BPMPlus.Controllers
 
 
 
-        //[HttpPost]
-        //public async Task<IActionResult> EmailValid(ForgetPasswordVM vm)
-        //{
-        //    //var user = await GetAuthorizedUser();
-        //    var request = await _context.User.FirstOrDefaultAsync(m => m.Email == vm.Email == true);
+        [HttpPost]
+        public async Task<IActionResult> EmailValid(ForgetPasswordVM vm, string email)
+        {
+            //var user = await GetAuthorizedUser();
+            var request = await _context.User.FirstOrDefaultAsync(m => m.Email == vm.Email == true);
 
-        //    if (request == null)
-        //    {
-        //        ViewBag.errMsg = "Email輸入錯誤!";
-        //        return View("EmailValid", vm);
-        //    }
+            if (request == null)
+            {
+                ViewBag.errMsg = "Email輸入錯誤!";
+                return View("EmailValid", vm);
+            }
 
-        //    return View();
-        //}
+            return View();
+        }
 
         //忘記密碼
         public IActionResult EmailValid()
@@ -154,7 +154,7 @@ namespace BPMPlus.Controllers
             else
             {
                 ViewBag.errMsg = "舊密碼輸入錯誤";
-                vm.isSuccess = false;
+                //vm.isSuccess = false;
                 return View("ResetPassWord", vm); // 登入失敗導回頁面
             }
         }
