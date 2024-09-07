@@ -18,12 +18,8 @@ namespace BPMPlus.Models
         [MaxLength(20)]
         public string PermissionGroupName { get; set; }
         [Column(TypeName = "datetime")]
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        [DefaultValue("getutcdate()")]
         public DateTime CreatedTime { get; set; }
         [Column(TypeName = "datetime")]
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        [DefaultValue("getutcdate()")]
         public DateTime UpdatedTime { get; set; }
     }
 }

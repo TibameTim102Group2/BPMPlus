@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using System.Data;
 using System.Security.Claims;
 
 namespace BPMPlus.Controllers
@@ -54,11 +55,12 @@ namespace BPMPlus.Controllers
             
             
 
-            var Forms = await _context.Form.ToListAsync();
-            if (Forms == null)
-            {
-                throw new Exception("Forms is null, Server Error");
-            }
+            var Forms = await _context.Form
+            .Where(f => f.DepartmentId == user.DepartmentId)
+            .ToListAsync(
+                
+            );
+
 
 
             ViewBag.DepartmentName = Department.DepartmentName;
@@ -103,24 +105,56 @@ namespace BPMPlus.Controllers
         }
 
         [Authorize]
-        [ValidateAntiForgeryToken]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<JsonResult> CreateNewForm([FromBody] NewFormViewModel model)
         {
+            
             User user = await GetAuthorizedUser();
+            
             //functionId:  01 -> 需求方申請人送出
 
             if (!user.PermittedTo("01"))
             {
                 throw new Exception("User is not permitted)");
             }
-            if (ModelState.IsValid)
+            DateTime ExpectedFinishedDayDateTimeUtc8 = DateTime.Parse(model.ExpectedFinishedDay);
+            if(ExpectedFinishedDayDateTimeUtc8.Date < (DateTime.UtcNow).AddHours(8).Date)
             {
-                // 處理接收到的資料 (model.Name, model.Email)
-                return Json(new { message = "Data received successfully!" });
+                string msg = "希望完成時間需晚於當天日期";
+                return Json(new { errorCode = 400, message = msg });
+            }
+            if (!ModelState.IsValid)
+            {
+                string msg = "資料缺漏，無法新建工單";
+                return Json(new { errorCode=400 , message = msg });
             }
 
-            return Json(new { message = "Invalid data received!" });
+
+            Form newForm = new Form();
+            newForm.FormId = "F00015";
+            newForm.DepartmentId = model.DepartmentId;
+            newForm.Date = DateTime.UtcNow;
+            newForm.CategoryId = model.CategoryId;
+            newForm.UserId = user.UserId;
+            if(model.ProjectId != "")
+            {
+                newForm.ProjectId = model.ProjectId;
+            }
+            newForm.DepartmentId = model.DepartmentId;
+            newForm.Content = model.Content;
+            newForm.ExpectedFinishedDay = ExpectedFinishedDayDateTimeUtc8.AddHours(-8);
+            newForm.HandleDepartmentId = "處理部門";
+            newForm.Tel = model.TEL;
+            newForm.ProcessNodeId = "fake";
+            newForm.FormIsActive = true;
+            newForm.UpdatedTime = DateTime.Now;
+            newForm.CreatedTime = DateTime.Now;
+
+            _context.Form.Add(newForm);
+            await _context.SaveChangesAsync();
+            
+            return Json(new { message = "Data received successfully!" });
         }
     }
 }

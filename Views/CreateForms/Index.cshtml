@@ -48,7 +48,7 @@
             margin-top: 30px;
             padding: 20px;
             background-color: rgb(225, 229, 252);
-            overflow: hidden;
+            
             border: 0.5px solid gainsboro;
         }
 
@@ -145,6 +145,10 @@
 
 <!-- outside -->
 <div class="outside">
+    @Html.AntiForgeryToken()
+    <div style="color:red;">
+        @ViewBag.errMsg
+    </div>
     <h1 class="title">新增工單</h1>
 
     <!-- inside -->
@@ -169,7 +173,7 @@
             <div class="mb-3 inputField ">
                 <div class="mb-3 form-label">
                     <label for="xxx1">需求部門</label>
-                    <input id="DepartmentId" type="xxx1" class="form-control" value="@ViewBag.DepartmentName" Disabled>
+                    <input inside ="@ViewBag.DepartmentId" id="DepartmentId" type="xxx1" class="form-control" value="@ViewBag.DepartmentName" Disabled>
                 </div>
                 <div class="mb-3 form-label">
                 </div>
@@ -238,7 +242,7 @@
 
             <!-- 需求內容的位置 -->
 
-            <div class="note" style="margin-top:10%; padding:2%; width:150%">
+            <div class="note" style="margin-top:10%; padding:2%; width:100%">
                 <div class="noteContent">需求內容</div>
                 <div class="txtInput" id="txtInput">
                     <div id="summernote"></div>
@@ -254,7 +258,9 @@
     </div>
 </div>
 @section Scripts {
+    <script type='text/javascript' src='../Users/myUserName/Desktop/myPage.js'></script>
     <script>
+       
         $(document).ready(function() {
         // 綁定按鈕點擊事件
         $("#submitButton").on("click", function(e) {
@@ -263,56 +269,76 @@
             // 獲取輸入欄位的值
             var tel = $("#Tel").val();
             var expectedFinishedDay = $("#ExpectedFinishedDay").val()
-            var departmentId =$("#DepartmentId").val()
+            var departmentId =document.getElementById("DepartmentId").getAttribute("inside")
             var pj = document.getElementById('projectId');
             var projectId = pj.options[pj.selectedIndex].value;
             var ct = document.getElementById("CategoryId")
-            var categoryId = ct.options[ct.selectedIndex].value;
+            var categoryId = ct.options[ct.selectedIndex].getAttribute("data-id");
             var content = $('#summernote').summernote('code');
             // 檢查是否有空值
-            if (!tel || !departmentId || !projectId || !categoryId || !expectedFinishedDay ) {
+            if (!tel || !departmentId || !categoryId || !expectedFinishedDay || !content || content == "<p><br></p>") {
                 console.log( "分機" + tel)
-                if(!tel) console.log("分機為 null")
+                if(!tel){window.alert("尚未填寫聯絡電話");return ;} 
                 console.log( "部門ID" + departmentId)
-                if(!departmentId) console.log("部門為 null")
-                console.log( "專案" + projectId)
-                if(!projectId) console.log("專案為 null")
+                if(!departmentId){window.alert("尚未填寫聯絡部門");return ;} 
                 console.log( "需求"  + categoryId)
-                if(!categoryId) console.log("需求為 null")
+                if(!categoryId){window.alert("尚未選擇需求類別");return ;} 
                 console.log("希望完成時間" + expectedFinishedDay)
-                if(!expectedFinishedDay) console.log("希望完成時間為 null")
+                if(!expectedFinishedDay){window.alert("尚未填寫希望完成時間");return ;} 
                 console.log("需求內容" + content)
-                if(!content) console.log("需求內容為null")
-                return;
+                if(!content || content == "<p><br></p>"){window.alert("尚未填寫需求內容");return ;} 
             }
-
+            var form = $('#__AjaxAntiForgeryForm');
+            var token = $('input[name="__RequestVerificationToken"]', form).val();
             // 發送 Ajax 請求
             $.ajax({
-                url: '/YourController/YourAction',  // 伺服器的URL
-                type: 'POST',  // 請求的類型
-                contentType: 'application/json',  // 請求的內容類型
+                url: '/CreateForms/CreateNewForm',
+                type: 'POST',
+                contentType: 'application/json',
+                headers: {
+                    'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()  // 傳送驗證 token
+                },
                 data: JSON.stringify({
                     CategoryId: categoryId,
                     ProjectId: projectId,
                     DepartmentId: departmentId,
                     ExpectedFinishedDay: expectedFinishedDay,
-                    TEL: tel
-                }),  // 將資料轉換為 JSON 格式
+                    TEL: tel,
+                    Content: content
+                }),
                 success: function(response) {
+                    if(response['errorCode'] != null && response['errorCode'] == 400)
+                    {
+                        window.alert(response['message']);
+                        return;
+                    }
                     // 成功後的操作
-                    // $("#result").html("Success: " + response.message);
                 },
                 error: function(xhr, status, error) {
+                    
                     // 錯誤時的操作
-                    // $("#result").html("Error: " + error);
                 }
             });
+            
         });
     });
-        $.getScript('https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-bs4.min.js', function () 
-        {
-        $('#summernote').summernote('code');
-             }); 
+
+        function loadScript(url, callback) {
+            var script = document.createElement('script');
+            script.src = url;
+            script.type = 'text/javascript';
+            script.onload = function () {
+                if (callback) {
+                    callback();
+                }
+            };
+            document.head.appendChild(script);
+        }
+        loadScript('/AdminLTE/plugins/summernote/summernote-bs4.js', function () {
+                        $('#summernote').summernote('code');
+                    }
+        ); 
+
 
     </script>
     <script>
@@ -348,7 +374,9 @@
                             break;
                         }
                     }
-
+                    $('.summernote').each(function (index) {
+                        $(this).summernote('destroy');
+                    });
                     $('#summernote').summernote('code', data['content']);
                     
                 },
