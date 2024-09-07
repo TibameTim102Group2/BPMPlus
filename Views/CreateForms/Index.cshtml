@@ -374,7 +374,9 @@
                             break;
                         }
                     }
-
+                    $('.summernote').each(function (index) {
+                        $(this).summernote('destroy');
+                    });
                     $('#summernote').summernote('code', data['content']);
                     
                 },

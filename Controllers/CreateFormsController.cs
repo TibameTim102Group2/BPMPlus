@@ -132,7 +132,10 @@ namespace BPMPlus.Controllers
 
             Form newForm = new Form();
             
+            newForm.DepartmentId = model.DepartmentId;
+            
 
+            _context.Add(newForm);
 
             return Json(new { message = "Data received successfully!" });
         }
