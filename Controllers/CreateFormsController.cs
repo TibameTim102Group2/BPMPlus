@@ -221,35 +221,9 @@ namespace BPMPlus.Controllers
             await _context.FormRecord.AddAsync(firstReviewFormRecord);
             await _context.SaveChangesAsync();
             
-            return Json(new { errorCode = 200, message = $"新增工單成功! 單號 : {newForm.FormId}" });
+            return Json(new { errorCode = 200, message = $"新增工單成功! 單號 : {newForm.FormId}" , formId = newForm.FormId});
         }
-        public async Task UploadFiles(List<IFormFile> files, string FormId)
-        {
-            // 指定專案資料夾名稱
-            var folderName = FormId;
-            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/upload", folderName);
 
-            // 檢查資料夾是否存在，如果不存在則創建一個新資料夾
-            if (!Directory.Exists(folderPath))
-            {
-                Directory.CreateDirectory(folderPath);
-            }
-
-            // 檢查是否有上傳的檔案
-            if (files != null && files.Count > 0)
-            {
-                foreach (var file in files)
-                {
-                    // 檔案存放的完整路徑
-                    var filePath = Path.Combine(folderPath, file.FileName);
-
-                    // 保存檔案
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await file.CopyToAsync(stream);
-                    }
-                }
-            }
-        }
+        
     }
 }
