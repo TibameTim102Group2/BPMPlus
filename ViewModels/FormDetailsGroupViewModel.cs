@@ -4,6 +4,6 @@
     {
         public FormDetailsViewModel FormDetails { get; set; }
 
-        public IList<FormDetailsUserActivityViewModel> FormDetailsUserActivities { get; set; }
+        public IList<FormDetailsProcessFlowViewModel> FormDetailsProcesseFlows { get; set; }
     }
 }

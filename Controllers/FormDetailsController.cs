@@ -70,20 +70,26 @@ namespace BPMPlus.Controllers
               }).FirstOrDefault();
 
             //FormDetailsUserActivityViewModel
-            var userActivities = _context.UserActivity
+            var processNode = _context.ProcessNodes.Include(c=>c.UserActivity)
+                 .Where(c=>c.FormId==formdata.FormId)
                  .AsNoTracking()
                  .AsSplitQuery()
-                 .Select(c => new FormDetailsUserActivityViewModel
+                 .Select(c => new FormDetailsProcessFlowViewModel
                  {
+                     ProcessNodeId=c.ProcessNodeId,
                      UserActivityId = c.UserActivityId,
-                     UserActivityIdDescription = c.UserActivityIdDescription
+                     UserActivityIdDescription = c.UserActivity.UserActivityIdDescription
+
                  }).ToList();
+
+            if(processNode.Any(c => c.ProcessNodeId == formdata.ProcessNodeId)) //Any適用判斷true/false
+                processNode.FirstOrDefault(c=>c.ProcessNodeId== formdata.ProcessNodeId).IsHightLight = true;
 
             //FormDetailsGroupViewModel
             var result = new FormDetailsGroupViewModel
             {
                 FormDetails = formdata,
-                FormDetailsUserActivities = userActivities,
+                FormDetailsProcesseFlows = processNode,
 
             };
 

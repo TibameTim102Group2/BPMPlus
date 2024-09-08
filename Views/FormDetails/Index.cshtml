@@ -189,14 +189,24 @@
                         <label>流程進度</label>
                         <br>
                         <div class="formBackground btnArea">
+                          
                             <div>
-                                <button class="btn btn-sm btn-primary btns">提單</button>
-                                <button class="btn btn-sm btn-danger btns">一級主管</button>
-                                <button class="btn btn-sm btn-primary btns">二級主管</button>
-                                <button class="btn btn-sm btn-primary btns">二級主管</button>
-                                <button class="btn btn-sm btn-primary btns">一級主管</button>
-                                <button class="btn btn-sm btn-primary btns">處理人員</button>
-                                <button class="btn btn-sm btn-primary btns">驗收</button>
+                                @foreach (var activity in Model.FormDetailsProcesseFlows)
+                                {
+                                    if (activity.IsHightLight)
+                                    {
+
+                                        <button class="btn btn-sm btn-danger btns">@activity.UserActivityIdDescription</button>
+                                    }
+                                    else
+                                    {
+
+                                        <button class="btn btn-sm btn-primary btns">@activity.UserActivityIdDescription</button>
+                                    }
+
+                                }
+
+                               
                             </div>
                         </div><br /><br />
 
