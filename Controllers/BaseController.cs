@@ -15,6 +15,76 @@ namespace BPMPlus.Controllers
         {
             _context = context;
         }
+
+        [Authorize]
+        public async Task<List<string>> GetCreateFormIdListAsync(int count)
+        {
+            List<string> retList = new List<string>();
+            var LastForm = await _context.Form.OrderBy(f => f.FormId).LastAsync();
+            if (LastForm == null)
+            {
+                retList.Add("F00001");
+                return retList;
+            }
+                
+            string id = LastForm.FormId;
+            id = id[1..];//拿掉第一個 F
+            int idNum = Convert.ToInt32(id);
+            idNum++;
+            for (int i = 0; i < count; i++, idNum++ )
+            {
+                retList.Add("F" + idNum.ToString().PadLeft(5, '0'));
+            }
+
+            return retList;
+        }
+
+        [Authorize]
+        public async Task<List<string>> GetCreateFormRecordIdListAsync(int count)
+        {
+            List<string> retList = new List<string>();
+            var LastFormRecord = await _context.FormRecord.OrderBy(f => f.ProcessingRecordId).LastAsync();
+            if (LastFormRecord == null)
+            {
+                retList.Add("PR00000001");
+                return retList;
+            }
+
+            string id = LastFormRecord.ProcessingRecordId;
+            id = id[2..];//拿掉第一個 F
+            int idNum = Convert.ToInt32(id);
+            idNum++;
+            for (int i = 0; i < count; i++, idNum++)
+            {
+                retList.Add("PR" + idNum.ToString().PadLeft(8, '0'));
+            }
+
+            return retList;
+        }
+
+        [Authorize]
+        public async Task<List<string>> GetProcessNodeIdListAsync(int count)
+        {
+            List<string> retList = new List<string>();
+            var LastNode = await _context.ProcessNodes.OrderBy(f => f.ProcessNodeId).LastAsync();
+            if (LastNode == null)
+            {
+                retList.Add("PN000001");
+                return retList;
+            }
+
+            string id = LastNode.ProcessNodeId;
+            id = id[2..];//拿掉第一個 F
+            int idNum = Convert.ToInt32(id);
+            idNum++;
+            for (int i = 0; i < count; i++, idNum++)
+            {
+                retList.Add("PN" + idNum.ToString().PadLeft(6, '0'));
+            }
+
+            return retList;
+            
+        }
         [Authorize]
         public async Task<User> GetAuthorizedUser()
         {

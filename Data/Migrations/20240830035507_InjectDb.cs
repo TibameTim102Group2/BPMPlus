@@ -22,6 +22,7 @@ values: new object[,]
     { "C5", "辦公用品申請", new DateTime(2024, 8, 3), new DateTime(2024, 8, 3) },
     { "C6", "差旅申請", new DateTime(2024, 8, 3), new DateTime(2024, 8, 3) },
     { "C7", "費用申請", new DateTime(2024, 8, 3), new DateTime(2024, 8, 3) },
+    { "C8", "教育訓練", new DateTime(2024, 8, 3), new DateTime(2024, 8, 3) }
 });
             migrationBuilder.InsertData(
             table: "Grade", // 確保這裡的表名與你的模型相匹配
@@ -98,37 +99,40 @@ values: new object[,]
                 columns: new[] { "ProcessNodeId", "UserActivityId", "DepartmentId", "CategoryId", "CreatedTime", "UpdatedTime" },
                 values: new object[,]
                 {
-        {"PT01", "01", "C001", "C1", new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
-        {"PT02", "02", "C001", "C1", new DateTime(2024, 8, 2), new DateTime(2024, 8, 2) },
-        {"PT03", "03", "C001", "C1", new DateTime(2024, 8, 3), new DateTime(2024, 8, 3) },
+        {"PT001", "01", "requester", "C1", new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
+        {"PT002", "02", "requester", "C1", new DateTime(2024, 8, 2), new DateTime(2024, 8, 2) },
+        {"PT03", "03", "requester", "C1", new DateTime(2024, 8, 3), new DateTime(2024, 8, 3) },
         {"PT04", "06", "D001", "C1", new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
         {"PT05", "07", "D001", "C1", new DateTime(2024, 8, 2), new DateTime(2024, 8, 2) },
         {"PT06", "08", "D001", "C1", new DateTime(2024, 8, 3), new DateTime(2024, 8, 3) },
-        {"PT07", "09", "C001", "C1", new DateTime(2024, 8, 3), new DateTime(2024, 8, 3) },
-        {"PT08", "01", "C001", "C2", new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
-        {"PT09", "02", "C001", "C2", new DateTime(2024, 8, 2), new DateTime(2024, 8, 2) },
-        {"PT10", "03", "C001", "C2", new DateTime(2024, 8, 3), new DateTime(2024, 8, 3) },
+        {"PT07", "09", "requester", "C1", new DateTime(2024, 8, 3), new DateTime(2024, 8, 3) },
+        {"PT08", "01", "requester", "C2", new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
+        {"PT09", "02", "requester", "C2", new DateTime(2024, 8, 2), new DateTime(2024, 8, 2) },
+        {"PT10", "03", "requester", "C2", new DateTime(2024, 8, 3), new DateTime(2024, 8, 3) },
         {"PT11", "06", "D001", "C2", new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
         {"PT12", "07", "D001", "C2", new DateTime(2024, 8, 2), new DateTime(2024, 8, 2) },
         {"PT13", "08", "D001", "C2", new DateTime(2024, 8, 3), new DateTime(2024, 8, 3) },
-        {"PT14", "09", "C001", "C2", new DateTime(2024, 8, 3), new DateTime(2024, 8, 3) },
-        {"PT15", "01", "C001", "C3", new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
-        {"PT16", "02", "C001", "C3", new DateTime(2024, 8, 2), new DateTime(2024, 8, 2) },
-        {"PT17", "03", "C001", "C3", new DateTime(2024, 8, 3), new DateTime(2024, 8, 3) },
+        {"PT14", "09", "requester", "C2", new DateTime(2024, 8, 3), new DateTime(2024, 8, 3) },
+        {"PT15", "01", "requester", "C3", new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
+        {"PT16", "02", "requester", "C3", new DateTime(2024, 8, 2), new DateTime(2024, 8, 2) },
+        {"PT17", "03", "requester", "C3", new DateTime(2024, 8, 3), new DateTime(2024, 8, 3) },
         {"PT18", "06", "D005", "C3", new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
         {"PT19", "07", "D005", "C3", new DateTime(2024, 8, 2), new DateTime(2024, 8, 2) },
         {"PT20", "08", "D005", "C3", new DateTime(2024, 8, 3), new DateTime(2024, 8, 3) },
-        {"PT21", "09", "C001", "C3", new DateTime(2024, 8, 3), new DateTime(2024, 8, 3) },
-        {"PT22", "01", "C001", "C4", new DateTime(2024, 8, 3), new DateTime(2024, 8, 3) },
-        {"PT23", "02", "C001", "C4", new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
+        {"PT21", "09", "requester", "C3", new DateTime(2024, 8, 3), new DateTime(2024, 8, 3) },
+        {"PT22", "01", "requester", "C4", new DateTime(2024, 8, 3), new DateTime(2024, 8, 3) },
+        {"PT23", "02", "requester", "C4", new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
         {"PT24", "07", "D007", "C4", new DateTime(2024, 8, 2), new DateTime(2024, 8, 2) },
         {"PT25", "08", "D007", "C4", new DateTime(2024, 8, 3), new DateTime(2024, 8, 3) },
-        {"PT26", "09", "C001", "C4", new DateTime(2024, 8, 3), new DateTime(2024, 8, 3) },
-        {"PT27", "01", "C001", "C5", new DateTime(2024, 8, 3), new DateTime(2024, 8, 3) },
-        {"PT28", "02", "C001", "C5", new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
+        {"PT26", "09", "requester", "C4", new DateTime(2024, 8, 3), new DateTime(2024, 8, 3) },
+        {"PT27", "01", "requester", "C5", new DateTime(2024, 8, 3), new DateTime(2024, 8, 3) },
+        {"PT28", "02", "requester", "C5", new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
         {"PT29", "07", "D007", "C5", new DateTime(2024, 8, 2), new DateTime(2024, 8, 2) },
         {"PT30", "08", "D007", "C5", new DateTime(2024, 8, 3), new DateTime(2024, 8, 3) },
-        {"PT31", "09", "C001", "C5", new DateTime(2024, 8, 3), new DateTime(2024, 8, 3) }
+        {"PT31", "09", "requester", "C5", new DateTime(2024, 8, 3), new DateTime(2024, 8, 3) },
+        {"PT32", "01", "requester", "C8", new DateTime(2024, 8, 3), new DateTime(2024, 8, 3) },
+        {"PT33", "08", "D002", "C8", new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
+        {"PT34", "09", "requester", "C8", new DateTime(2024, 8, 3), new DateTime(2024, 8, 3) }
                 });
 
 

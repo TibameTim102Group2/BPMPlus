@@ -23,18 +23,6 @@ namespace BPMPlus.Controllers
         {
             _context = context;
         }
-        [Authorize]
-        public async Task<string> GetCreateFormId()
-        {
-            var LastForm = await _context.Form.OrderBy(f => f.FormId).LastAsync();
-            if (LastForm == null)
-                return "F00001";
-            string id = LastForm.FormId;
-            id = id[1..];//拿掉第一個 F
-            int idNum = Convert.ToInt32(id);
-            idNum++;
-            return "F" + idNum.ToString().PadLeft(5, '0');
-        }
         // GET: CreateForms
         [Authorize]
 
@@ -45,7 +33,8 @@ namespace BPMPlus.Controllers
             
             if (!user.PermittedTo("01"))
             {
-                return LocalRedirect(ReturnUrl);
+                ViewBag.NotPermittedToCreateForm = "您的權限無法新建工單";
+                return View("~/Views/Home/Index.cshtml");
             }
 
             var Department = await _context.Department
@@ -126,7 +115,7 @@ namespace BPMPlus.Controllers
 
             if (!user.PermittedTo("01"))
             {
-                throw new Exception("User is not permitted)");
+                throw new Exception("User is not permitted");
             }
             DateTime ExpectedFinishedDayDateTimeUtc8 = DateTime.Parse(model.ExpectedFinishedDay);
             if(ExpectedFinishedDayDateTimeUtc8.Date < (DateTime.UtcNow).AddHours(8).Date)
@@ -140,9 +129,46 @@ namespace BPMPlus.Controllers
                 return Json(new { errorCode=400 , message = msg });
             }
             List<ProcessTemplate> pTemplates = await _context.ProcessTemplate.Where(p => p.CategoryId == model.CategoryId).ToListAsync();
-            
+            List<string> fIdList = await GetCreateFormIdListAsync(1);
+            List<string> pNidList = await GetProcessNodeIdListAsync(pTemplates.Count);
+            int ptIndex = 0;
+            List<ProcessNode> processNodes = new List<ProcessNode>();
+            foreach (var pt in pTemplates) {
+                string dId = (pt.DepartmentId == "requester" ? user.DepartmentId : pt.DepartmentId);
+                List<User> DepartmentUser = await _context.User
+                    .Where(u => u.DepartmentId == dId)
+                    .Include(u => u.PermissionGroups)
+                    .ThenInclude(pg => pg.UserActivities)
+                    .ToListAsync();
+                User owner = new User();
+                bool noAvailableOwner = true;
+                foreach (var u in DepartmentUser)
+                {
+                    if (u.PermittedTo(pt.UserActivityId))
+                    {
+                        owner = u;
+                        noAvailableOwner = false;
+                        break;
+                    }
+                }
+                if (noAvailableOwner)
+                {
+                    return Json(new { errorCode = 400, message = $"審核流程無法建立，因部門{pt.DepartmentId} 無人能執行功能{pt.UserActivityId}" });
+                }
+                ProcessNode pn  = new ProcessNode();
+                pn.ProcessNodeId = pNidList[ptIndex];
+                pn.UserActivityId = pt.UserActivityId;
+                pn.UserId = owner.UserId;
+                pn.DepartmentId = dId;
+                pn.FormId = fIdList[0];
+                pn.CreatedTime = DateTime.UtcNow;
+                pn.UpdatedTime = DateTime.UtcNow;
+                await  _context.ProcessNodes.AddAsync(pn);
+                processNodes.Add(pn);
+                ptIndex++;
+            }
             Form newForm = new Form();
-            newForm.FormId = await GetCreateFormId();
+            newForm.FormId = fIdList[0];
             newForm.DepartmentId = model.DepartmentId;
             newForm.Date = DateTime.UtcNow;
             newForm.CategoryId = model.CategoryId;
@@ -156,15 +182,74 @@ namespace BPMPlus.Controllers
             newForm.ExpectedFinishedDay = ExpectedFinishedDayDateTimeUtc8.AddHours(-8);
             newForm.HandleDepartmentId = "處理部門";
             newForm.Tel = model.TEL;
-            newForm.ProcessNodeId = "PT000001";
+            newForm.ProcessNodeId = pNidList[1];
             newForm.FormIsActive = true;
-            newForm.UpdatedTime = DateTime.Now;
-            newForm.CreatedTime = DateTime.Now;
+            newForm.UpdatedTime = DateTime.UtcNow;
+            newForm.CreatedTime = DateTime.UtcNow;
+            await _context.Form.AddAsync(newForm);
+            List<string> formRecordIdList = await GetCreateFormRecordIdListAsync(2);
+            FormRecord createFormRecord = new FormRecord(), firstReviewFormRecord = new FormRecord();
+            
+            User createFormRecordUser = await _context.User.FirstOrDefaultAsync(u => u.UserId == processNodes[0].UserId);
+            User firstReviewFormRecordUser = await _context.User.FirstOrDefaultAsync(u => u.UserId == processNodes[1].UserId);
 
-            _context.Form.Add(newForm);
+            createFormRecord.ProcessingRecordId = formRecordIdList[0];
+            createFormRecord.Remark = "";
+            createFormRecord.FormId = processNodes[0].FormId;
+            createFormRecord.DepartmentId = processNodes[0].DepartmentId;
+            createFormRecord.UserId = processNodes[0].UserId;
+            createFormRecord.ResultId = "RS2";
+            createFormRecord.UserActivityId = processNodes[0].UserActivityId;
+            createFormRecord.GradeId = createFormRecordUser.GradeId;
+            createFormRecord.Date = DateTime.UtcNow;
+            createFormRecord.UpdatedTime = DateTime.UtcNow;
+            createFormRecord.CreatedTime = DateTime.UtcNow;
+
+            firstReviewFormRecord.ProcessingRecordId = formRecordIdList[1];
+            firstReviewFormRecord.Remark = "";
+            firstReviewFormRecord.FormId = processNodes[1].FormId;
+            firstReviewFormRecord.DepartmentId = processNodes[1].DepartmentId;
+            firstReviewFormRecord.UserId = processNodes[1].UserId;
+            firstReviewFormRecord.ResultId = "RS4";
+            firstReviewFormRecord.UserActivityId = processNodes[1].UserActivityId;
+            firstReviewFormRecord.GradeId = firstReviewFormRecordUser.GradeId;
+            firstReviewFormRecord.Date = DateTime.UtcNow;
+            firstReviewFormRecord.UpdatedTime = DateTime.UtcNow;
+            firstReviewFormRecord.CreatedTime = DateTime.UtcNow;
+
+            await _context.FormRecord.AddAsync(createFormRecord);
+            await _context.FormRecord.AddAsync(firstReviewFormRecord);
             await _context.SaveChangesAsync();
             
-            return Json(new { message = "Data received successfully!" });
+            return Json(new { errorCode = 200, message = $"新增工單成功! 單號 : {newForm.FormId}" });
+        }
+        public async Task UploadFiles(List<IFormFile> files, string FormId)
+        {
+            // 指定專案資料夾名稱
+            var folderName = FormId;
+            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/upload", folderName);
+
+            // 檢查資料夾是否存在，如果不存在則創建一個新資料夾
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            // 檢查是否有上傳的檔案
+            if (files != null && files.Count > 0)
+            {
+                foreach (var file in files)
+                {
+                    // 檔案存放的完整路徑
+                    var filePath = Path.Combine(folderPath, file.FileName);
+
+                    // 保存檔案
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+                }
+            }
         }
     }
 }
