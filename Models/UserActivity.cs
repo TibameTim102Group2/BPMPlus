@@ -21,5 +21,7 @@ namespace BPMPlus.Models
         public DateTime CreatedTime { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime UpdatedTime { get; set; }
+
+        public virtual ICollection<ProcessNode> ProcessNode { get; set; }
     }
 }
