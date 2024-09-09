@@ -106,7 +106,7 @@ namespace BPMPlus.Controllers
                 return Json(new { success = false, message = "查無此資料請重新輸入" });
             }
             //把時間轉換
-            var creatTime = findForm.Date.ToString("yyyy-MM-dd HH:mm");
+            var creatTime = findForm.Date.ToLocalTime().ToString("yyyy-MM-dd HH:mm");
             //找出工單的流程節點 並且回傳功能的id
             var UserActivity = (await _context.ProcessNodes.AsNoTracking().FirstOrDefaultAsync(c => c.ProcessNodeId == findForm.ProcessNodeId))?.UserActivityId;
 
