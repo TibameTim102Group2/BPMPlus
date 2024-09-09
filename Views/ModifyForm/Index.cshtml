@@ -1,7 +1,7 @@
 ﻿@model BPMPlus.ViewModels.ModifyFormGroupViewModel
 
 @section Style {
-    
+
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
@@ -34,6 +34,7 @@
             margin-left: 30px;
             font-weight: bold;
         }
+
         .backcolor {
             background-color: rgb(225, 239, 252);
         }
@@ -83,8 +84,18 @@
         .content {
             padding: 3%
         }
-        .form-group{
-            display:flex;
+
+        .form-group {
+            display: flex;
+        }
+
+        #btnUpload {
+            width: 200px;
+            margin-left: 10px;
+        }
+
+        #attachment{
+            width: 50px;
         }
     </style>
 }
@@ -100,132 +111,139 @@
             <h3 class="title">
                 修改工單
             </h3>
-            
+
             <!-- SELECT2 EXAMPLE -->
-         <form method="post" asp-controller="ModifyForm"  asp-action="Edit" >
-             <input type="hidden" name="id" value="@Model.ModifyFrom.Id" />
-            <div class="card card-default col-md-12">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <!-- /.form-group單號 -->
-                            <div class="form-group">
-                                <label class="item-name">單號</label><input asp-for="ModifyFrom.FormId" class = "form-control txt-box" disabled value="@Model.ModifyFrom.FormId">
-                            </div>
-                            <br />
-                            <br />
-                            <!-- /.form-group 建立日期-->
-                            <div class="form-group">
-                                <label class="item-name">建立日期</label><input class="form-control txt-box" disabled value="@Model.ModifyFrom.Date">
-                            </div>
-                            <!-- /.form-group 需求部門-->
-                            <div class="form-group" style="display:flex">
-                                <label class="item-name">需求部門</label>
-                                <select class="form-control select2 selection" disabled >
-                                    <option>@Model.ModifyFrom.DepartmentName</option>
-                                </select>
-                            </div>
-                            <!-- /.form-group 希望完成日期-->
-                            <div class="form-group" style="display:flex">
-                                <label class="item-name">希望完成日期</label>
-                                <div class="input-group date">
-                                    <div class="input-group-prepend">  
-                                    </div>
-                                    <input asp-for="ModifyFrom.ExpectedFinishedDay"  type="date" class="form-control float-right" id="endDatePicker" value="@Model.ModifyFrom.ExpectedFinishedDay" >
-                                </div>
-                            </div>
-                        </div>
-                          <!-- /作廢 -->
-                        <div class="col-md-6">
-                                <form method="post" asp-controller="ModifyForm" asp-action="Invalid" >
-                                    <input type="hidden" name="id" value="@Model.ModifyFrom.Id" />
-                            <div style="display:flex">
-                                <div style="width:60%"></div>
+            <form>
+                <input type="hidden" name="id" value="@Model.ModifyFrom.Id" />
+                <div class="card card-default col-md-12">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- /.form-group單號 -->
                                 <div class="form-group">
-                                            <button id="btnInvalid" class="button btn btn-danger" type="submit"  onclick='this.form.action="@Url.Action("Invalid", "ModifyForm")";'><i class="fa-solid fa-trash"></i>作廢</button>
-                                   </div>
-                            </div>
-                                 </form>
-                            <br />
-                            <br />
-                            <div>
+                                    <label class="item-name">單號</label><input asp-for="ModifyFrom.FormId" class="form-control txt-box" disabled value="@Model.ModifyFrom.FormId">
+                                </div>
+                                <br />
+                                <br />
+                                <!-- /.form-group 建立日期-->
+                                <div class="form-group">
+                                    <label class="item-name">建立日期</label><input class="form-control txt-box" disabled value="@Model.ModifyFrom.Date">
+                                </div>
+                                <!-- /.form-group 需求部門-->
                                 <div class="form-group" style="display:flex">
-                                    <label class="item-name">需求類別</label><input class="form-control txt-box" Disabled value="@Model.ModifyFrom.CategoryDescription">
-                            @*         <select class="form-control select2 selection"> 
-                                      @foreach (var item in Model.Categories)
+                                    <label class="item-name">需求部門</label>
+                                    <select class="form-control select2 selection" disabled>
+                                        <option>@Model.ModifyFrom.DepartmentName</option>
+                                    </select>
+                                </div>
+                                <!-- /.form-group 希望完成日期-->
+                                <div class="form-group" style="display:flex">
+                                    <label class="item-name">希望完成日期</label>
+                                    <div class="input-group date">
+                                        <div class="input-group-prepend">
+                                        </div>
+                                        <input asp-for="ModifyFrom.ExpectedFinishedDay" type="date" class="form-control float-right" id="endDatePicker" value="@Model.ModifyFrom.ExpectedFinishedDay">
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /作廢 -->
+                            <div class="col-md-6">
+                                <form>
+                                    <input type="hidden" name="id" value="@Model.ModifyFrom.Id" />
+                                    <div style="display:flex">
+                                        <div style="width:60%"></div>
+                                        <div class="form-group">
+                                            <button id="btnInvalid" class="button btn btn-danger" type="button"><i class="fa-solid fa-trash"></i>作廢</button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <br />
+                                <br />
+                                <div>
+                                    <div class="form-group" style="display:flex">
+                                        <label class="item-name">需求類別</label><input class="form-control txt-box" Disabled value="@Model.ModifyFrom.CategoryDescription">
+                                        @*         <select class="form-control select2 selection">
+                                        @foreach (var item in Model.Categories)
                                         {
-                                            <option >@item.CategoryDescription</option>
+                                        <option >@item.CategoryDescription</option>
                                         }
-                                    </select>  *@
-                                </div>
-                                <!-- /.form-group 需求員工-->
-                                <div class="form-group">
-                                    <label class="item-name">需求員工</label><input class="form-control txt-box" Disabled value="@Model.ModifyFrom.EmployeeName">
-                                </div>
-                                <!-- /.form-group 所屬專案-->
-                              @*   <div class="form-group">
+                                        </select>  *@
+                                    </div>
+                                    <!-- /.form-group 需求員工-->
+                                    <div class="form-group">
+                                        <label class="item-name">需求員工</label><input class="form-control txt-box" Disabled value="@Model.ModifyFrom.EmployeeName">
+                                    </div>
+                                    <!-- /.form-group 所屬專案-->
+                                    @*   <div class="form-group">
                                     <label class="item-name">所屬專案</label>
                                     <select class="form-control select2 selection" >
-                                        @foreach (var project in Model.Projects)
-                                        {
- 
-                                        }
+                                    @foreach (var project in Model.Projects)
+                                    {
+
+                                    }
                                     </select>
-                                </div> *@
+                                    </div> *@
+                                </div>
                             </div>
+                            <!-- /.col -->
                         </div>
-                        <!-- /.col -->
-                    </div>
-                         <br />
-                         <br />
-                    <!-- /.row -->
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="item-name">需求內容</label>
+                        <br />
+                        <br />
+                        <!-- /.row -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="item-name">需求內容</label>
+                                </div>
+                                <textarea asp-for="ModifyFrom.Content" rows="8" cols="110">@Model.ModifyFrom.Content</textarea>
                             </div>
-                            <textarea asp-for="ModifyFrom.Content" rows="8" cols="110">@Model.ModifyFrom.Content</textarea>
+                            <!-- /.col -->
+                            <!-- /.col -->
                         </div>
-                        <!-- /.col -->
-                        <!-- /.col -->
-                    </div>
-                    <div class="row">
-                        <!-- /.form-group聯繫電話 -->
-                        <div class="form-group">
-                            <label style="margin-right:5%">聯繫電話</label><input asp-for="ModifyFrom.Tel" class=" form-control" style="width:25%" value="@Model.ModifyFrom.Tel">
-                        </div>
-                        
-                        <!-- /.form-group -->
-                        <div class="col-12 col-sm-6">
-
-                            <!-- /.form-group 附件上傳-->
-                        </div>
-                        <!-- /.col -->
-                        <div class="col-12 col-sm-7" style="display:flex">
-
+                        <div class="row">
+                            <!-- /.form-group聯繫電話 -->
                             <div class="form-group">
-                                <button class="button btn btn-primary" type="button"><i class="fa-solid fa-cloud-arrow-up"></i>  附件上傳</button>
-                            </div>
-                            <div style="width:10%"></div>
-                            <!-- /.form-group 送出修改-->
-                        </div>
-
-                        <div class="col-12 col-sm-5" style="display:flex">
-                            <div style="width:10%"></div>
-                            <div class="form-group">
-                                    <button class="button btn btn-warning btn-link" type="submit"><i class="fa-solid fa-file-export"></i> 送出修改</button>
+                                <label style="margin-right:5%">聯繫電話</label><input asp-for="ModifyFrom.Tel" class=" form-control" style="width:25%" value="@Model.ModifyFrom.Tel">
                             </div>
 
                             <!-- /.form-group -->
+                            <div class="col-12 col-sm-6">
+
+                                <!-- /.form-group 附件上傳-->
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-12 col-sm-7" style="display:flex">
+                                <form>
+                                    <input type="hidden" name="id" value="@Model.ModifyFrom.Id" />
+                                    <div class="form-group">
+                                        <label id="attachment">附件</label>
+                                        <input type="file" name="file" class="form-control" id="file" multiple />
+                                       @*  <button id="btnUpload" class="button btn btn-primary" type="button"><i class="fa-solid fa-cloud-arrow-up"></i>  附件上傳</button> *@
+                                        <div>
+                                            @ViewBag.Message
+                                        </div>
+                                    </div>
+                                </form>
+                                <div style="width:10%"></div>
+                                <!-- /.form-group 送出修改-->
+                            </div>
+
+                            <div class="col-12 col-sm-5" style="display:flex">
+                                <div style="width:10%"></div>
+                                <div class="form-group">
+                                    <button id="btnEdit" class="button btn btn-warning btn-link" type="button"><i class="fa-solid fa-file-export"></i> 送出修改</button>
+                                </div>
+
+                                <!-- /.form-group -->
+                            </div>
+
+                            <!-- /.col -->
                         </div>
-
-                        <!-- /.col -->
+                        <!-- /.row -->
                     </div>
-                    <!-- /.row -->
-                </div>
 
-            </div>
-            <!-- /.row -->
+                </div>
+                <!-- /.row -->
             </form>
         </div>
         <!-- /.container-fluid -->
@@ -233,18 +251,147 @@
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-
-
 @section Scripts
 {
     <script src="~/AdminLTE/plugins/moment/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
     <script>
-        $(document).ready(function () {
-            $("#btnInvalid").click(function () {
-                     alert("工單已作廢");
+
+        $("#btnInvalid").click(function () {
+            let userConfirmed = confirm("是否作廢?");
+            if (!userConfirmed) return;
+
+            let id = $("#ModifyFrom_FormId").val();
+
+            let formData=new FormData();
+            formData.append("id",id);
+            
+             $.ajax({
+                    'url': `/ModifyForm/InValid`,
+                    'type': 'POST',
+                    'contentType': false, //required
+                    'processData': false, // required
+                    'mimeType': 'multipart/form-data',
+                    'data': formData
+                }).done(function (response) {
+                    alert("作廢成功!");
+                    window.location.href="/QueryForms/Index/";
+                }).fail(function (response) {
+                    alert("作廢失敗，請重新嘗試或洽管理員!")
                 })
-            });
+
+                // // 找到表單
+                // var form = $(this).closest("form");
+                // // 設置表單的 action
+                // form.attr("action", '@Url.Action("Invalid", "ModifyForm")');
+                // // 提交表單
+                // form.submit();
+         
+        });
+
+
+        // $("#btnUpload").click(function () {
+
+        //     let userConfirmed = confirm("是否上傳?");
+        //     if (userConfirmed) {
+        //         // 找到表單
+        //         var form = $(this).closest("form");
+        //         // 設置表單的 action
+        //         form.attr("action", '@Url.Action("Upload", "ModifyForm")');
+        //         // 提交表單
+        //         form.submit();
+        //     }
+        //     else {
+        //     }
+        // });
+        console.log($("#btnEdit"));
+        $("#btnEdit").click(function () {
+            let userConfirmed = confirm("是否送出?");
+            if (!userConfirmed) return;
+
+            //檢查資料
+            let content = $("#ModifyFrom_Content").val();
+            let tel = $("#ModifyFrom_Tel").val();
+            let endDate = $("#endDatePicker").val();
+            // let file = $("#file").get(0).files[0];
+            let files = $("#file").get(0).files; //多檔案
+            let id = $("#ModifyFrom_FormId").val();
+
+            if (tel == "") {
+                alert("電話不可為空");
+                return;
+            }
+            if (content == "") {
+                alert("需求內容不可為空");
+                return;
+            }
+
+            if (endDate == "") {
+                alert("希望完成日期不可為空");
+                return;
+            }
+
+            let formData = new FormData();
+            formData.append('content', content);
+            formData.append('tel', tel);
+            formData.append('endDate', endDate);
+            formData.append('id', id);
+            
+            //單檔案
+            // if (file) { formData.append('file', file) };
+            
+            //多檔案
+            if (files) { 
+            for (let i = 0; i < files.length; i++) {
+                formData.append('Files', files[i]);  
+            }
+            }
+           
+
+            fetch('/ModifyForm/Upload',
+                {
+                    method: 'POST',
+                    body: formData,
+              
+                }).then(response => { 
+                    if (response.ok) {
+                        alert("送出成功");
+                    } else { 
+                        alert("送出失敗");
+                    }
+                }
+                
+                )
+          
+
+
+            // $.ajax({
+            //     'url': `/ModifyForm/Upload`,
+            //     'type': 'POST',
+            //     'contentType': false, //required
+            //     'processData': false, // required
+            //     'mimeType': 'multipart/form-data',
+            //     'data': formData
+            // }).done(function (response) {
+            //     console.log(response)
+            // }).fail(function (response) {
+            //     console.log('api_post_user: Fail ' + response.responseText)
+            // })
+        });
+
+        // $("#btnUpload").click(function (e) {
+        //     let file = $("#file").get(0).files[0];
+        //     $.ajax({
+        //         //設置Url
+        //         url: '@Url.Action("Upload", "ModifyForm")',
+        //         //方法
+        //         type: 'POST',
+        //         data: { file: file },
+        //         success: function (response) {
+        //             alert(json.stringify(response).message);
+        //         }
+        //     });
+        // });
     </script>
 }
 
