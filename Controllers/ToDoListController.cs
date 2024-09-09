@@ -45,13 +45,7 @@ namespace BPMPlus.Controllers
 
             var userActivity = await _context.UserActivity.ToDictionaryAsync(d => d.UserActivityId, d => d.UserActivityIdDescription);
             ViewBag.situation = userActivity;
-            if (!applicationDbContext.Any())
-            {
-                //加入警示的viewbag
-                ViewBag.noForm = "目前沒有待辦工單";
-                //一樣回傳空的 
-                return View(applicationDbContext);
-            }
+
 
 
             return View(applicationDbContext);
