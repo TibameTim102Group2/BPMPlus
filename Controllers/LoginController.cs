@@ -1,23 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using BPMPlus.Models;
 using System.Diagnostics;
 using BPMPlus.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
-using Microsoft.DotNet.Scaffolding.Shared.Messaging;
-using Microsoft.AspNetCore.Identity;
-using BPMPlus.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using System.Runtime.Intrinsics.X86;
-using Microsoft.CodeAnalysis.Scripting;
-using System.Net.Mail;
-using System.Net;
-using System.Text;
 using BPMPlus.Service;
+using BPMPlus.ViewModels.Login;
 
 namespace BPMPlus.Controllers
 {
@@ -26,11 +17,13 @@ namespace BPMPlus.Controllers
 
         private readonly ApplicationDbContext _context;
         private readonly EmailService emailService;
+        private readonly AesEncryptionService aesService;
 
-        public LoginController(ApplicationDbContext context, EmailService emailService) : base(context)
+        public LoginController(ApplicationDbContext context, EmailService emailService, AesEncryptionService aesService) : base(context)
         {
             _context = context;
             this.emailService = emailService;
+            this.aesService = aesService;
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -62,6 +55,7 @@ namespace BPMPlus.Controllers
                 {
                     IsPersistent = false,   //瀏覽器關閉立馬登出
                 });
+
             // 導至隱私頁面
             return RedirectToAction("Index", "Home");
         }
@@ -79,32 +73,21 @@ namespace BPMPlus.Controllers
             return RedirectToAction("Index", "Home");       // 導至登入頁
         }
 
-
-        [HttpGet]
-        public async Task<IActionResult> Send(string mail)
-        {
-          emailService.SendTestMail(mail);
-            return Ok("寄信ok");
-        }
-
-
-
-
         [HttpPost]
-        public async Task<IActionResult> EmailValid(ForgetPasswordVM vm, string email)
+        public async Task<IActionResult> Send(string Email)
         {
-            //var user = await GetAuthorizedUser();
-            var request = await _context.User.FirstOrDefaultAsync(m => m.Email == vm.Email == true);
-
+            var request = await _context.User.FirstOrDefaultAsync(m => m.Email == Email == true);
             if (request == null)
-            {
+            {                
                 ViewBag.errMsg = "Email輸入錯誤!";
-                return View("EmailValid", vm);
+                return View();
             }
 
-            return View();
-        }
+            var UserName = request.UserName;
+            emailService.SendEmail(Email, UserName);
+            return RedirectToAction("Index", "Home");
 
+        }
         //忘記密碼
         public IActionResult EmailValid()
         {
@@ -112,7 +95,10 @@ namespace BPMPlus.Controllers
         }
 
 
-        //輸入驗證
+
+
+
+        //忘記密碼重設
         public IActionResult EmailForgetPassWord()
         {
             return View();
@@ -144,11 +130,11 @@ namespace BPMPlus.Controllers
                 
                 user.Password = vm.NewPassword;
                 await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "密碼變更成功!";
-                return View();
-                
-            //await Logout();
-            //return RedirectToAction("Index", "Home");
+                //TempData["SuccessMessage"] = "密碼變更成功!";
+                //return View();
+
+                await Logout();
+                return RedirectToAction("Index", "Home");
 
             }
             else

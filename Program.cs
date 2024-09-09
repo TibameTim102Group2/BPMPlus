@@ -1,12 +1,8 @@
 using BPMPlus.Data;
-using BPMPlus.Models;
 using BPMPlus.Service;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using System.Configuration;
 
 namespace BPMPlus
 {
@@ -24,6 +20,7 @@ namespace BPMPlus
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddScoped<EmailService>();
+            builder.Services.AddScoped<AesEncryptionService>();
 
             // 從appsettings.json讀取登入逾時設定
             //double LoginExpireMinute = builder.Configuration.GetValue<double>("LoginExpireMinute");
