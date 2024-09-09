@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.SqlServer.Server;
@@ -38,7 +39,8 @@ namespace BPMPlus.Controllers
             //把類別變成選項
             ViewBag.CategoryId = new SelectList(_context.Category, "CategoryId", "CategoryDescription");
             //把專案變成選項
-            ViewBag.ProjectId = new SelectList(_context.Project, "ProjectId", "ProjectName");
+            ViewBag.ProjectId = new SelectList(_context.Project, "ProjectId", "ProjectName") ;
+            
             //把申請者變成選項
             ViewBag.UserId = new SelectList(_context.User.AsNoTracking().Where(f => f.DepartmentId == user.DepartmentId), "UserId", "UserName");
             var applicationDbContext = alllist.Include(f => f.Category).Include(f => f.ProcessNode);
@@ -49,9 +51,11 @@ namespace BPMPlus.Controllers
             var userName = await _context.User.AsNoTracking().ToDictionaryAsync(d => d.UserId, d => d.UserName);
             ViewBag.UserName = userName;
             //把專案變數導入
-            var projectName = await _context.Project.AsNoTracking().ToDictionaryAsync(d => d.ProjectId, d => d.ProjectName);
+            
+            var projectName = await _context.Project.AsNoTracking().ToDictionaryAsync(d => d.ProjectId, d => d.ProjectName)??null;
             ViewBag.ProjectName = projectName;
             //把類別變數導入
+
             var Category = await _context.Category.AsNoTracking().ToDictionaryAsync(d => d.CategoryId, d => d.CategoryDescription);
             ViewBag.category = Category;
             //把工單狀態變數導入

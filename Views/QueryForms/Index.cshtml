@@ -134,7 +134,12 @@
                                     </td>
                                     <td>
                                         @{
-                                            var projectName = ViewBag.ProjectName[item.ProjectId];
+                                            string projectName;
+                                            if(item.ProjectId == null)
+                                            {
+                                                projectName = null;
+                                            }
+                                            else projectName = ViewBag.ProjectName[item.ProjectId];
 
                                         }
                                         @projectName
