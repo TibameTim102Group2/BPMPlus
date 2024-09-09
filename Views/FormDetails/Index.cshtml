@@ -98,7 +98,10 @@
 }
 
 <div class="wrapper backcolor">
-
+    @{
+    ViewBag.Title = "Invalid";
+    }
+    <h2>@ViewBag.Message</h2>
 
     <!-- Content Wrapper. Contains page content -->
     <!-- Content Header (Page header) -->
@@ -115,7 +118,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label class="item-name">單號</label><input class="form-control txt-box" disabled value="@Model.FormDetails.FormId">
+                                <label class="item-name">單號</label><input id="FromDetails_FormId" class="form-control txt-box" disabled value="@Model.FormDetails.FormId">
                             </div>
                             <br />
                             <br />
@@ -147,13 +150,25 @@
                             <div style="display:flex">
                                 <div style="width:27%"></div>
                                 <div class="form-group">
-                                    <a class="button btn btn-warning btn-link" asp-area="" asp-controller="ModifyForm" asp-action="Index" asp-route-id="@Model.FormDetails.FormId"><i class="fa-solid fa-pen-to-square"></i> 修改</a>
+                                     @if (Model.FormDetails.IsUser)
+                                    { 
+                                        <a class="button btn btn-warning btn-link" asp-area="" asp-controller="ModifyForm" asp-action="Index" asp-route-id="@Model.FormDetails.FormId"><i class="fa-solid fa-pen-to-square"></i> 修改</a>
+                                    }else{
+                                        <button class="button btn btn-warning" type="submit" disabled ><i class="fa-solid fa-pen-to-square"></i>  修改</button>
+                                    }
+                                   
                                 </div>
                                 <div style="width:15%"></div>
                                  <form id="myform" method="post" asp-controller="FormDetails" asp-action="Invalid" >
                                     <input type="hidden" name="id" value="@Model.FormDetails.Id" />
                                 <div class="form-group">
-                                        <button id="btnInvalid" class="button btn btn-danger" type="submit" onclick='this.form.action="@Url.Action("Invalid", "FormDetails")";'><i class="fa-solid fa-trash"></i> 作廢</button>
+                                        @if (Model.FormDetails.IsUser)
+                                        {
+                                             <button id="btnInvalid" class="button btn btn-danger" type="submit" ><i class="fa-solid fa-trash"></i> 作廢</button>
+                                        }else{
+                                             <button id="btnInvalid" class="button btn btn-danger" type="submit" disabled><i class="fa-solid fa-trash"></i> 作廢</button>
+                                        }
+
                                 </div>
                                 </form>
                             </div>
@@ -224,7 +239,7 @@
                         </thead>
                         <tbody>
                                 @foreach (var item in Model.FormDetails.FormDetailsFormProcesses) { 
-                                <tr>
+                            <tr>
                                 <td>@item.Date</td>
                                 <td>@item.UserActivityIdDescription</td>
                                 <td>@item.EmployeeName</td>
@@ -291,10 +306,38 @@
    
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
     <script>
-        $(document).ready(function () {
-            $("#btnInvalid").click(function () {
-                 alert("工單已作廢");
+
+        $("#btnInvalid").click(function () {
+
+            let userConfirmed = confirm("是否作廢?");
+            if (!userConfirmed) return;
+
+            let id = $("#FromDetails_FormId").val();
+
+            let formData = new FormData();
+            formData.append("id", id);
+
+            $.ajax({
+                'url': `/FormDetails/InValid`,
+                'type': 'POST',
+                'contentType': false, //required
+                'processData': false, // required
+                'mimeType': 'multipart/form-data',
+                'data': formData
+            }).done(function (response) {
+                alert("作廢成功!");
+                window.location.href = "/QueryForms/Index/";
+            }).fail(function (response) {
+                alert("作廢失敗，請重新嘗試或洽管理員!")
             })
+
+            // // 找到表單
+            // var form = $(this).closest("form");
+            // // 設置表單的 action
+            // form.attr("action", '@Url.Action("Invalid", "ModifyForm")');
+            // // 提交表單
+            // form.submit();
+
         });
     </script>
 }

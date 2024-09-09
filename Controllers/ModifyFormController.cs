@@ -85,8 +85,7 @@ namespace BPMPlus.Controllers
         }
 
 
-        [HttpPost]
-      
+        [HttpPost]      
         public async Task<IActionResult> Edit(string id, ModifyFormGroupViewModel model)
         {
 
@@ -127,7 +126,7 @@ namespace BPMPlus.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult>Invalid(string id, ModifyFormGroupViewModel model) 
+        public async Task<IActionResult>Invalid(string id) 
         {
 
             //確認傳入參數id是否有值
@@ -140,26 +139,94 @@ namespace BPMPlus.Controllers
             var invalidId = _context.Form.FirstOrDefault(c=>c.FormId== id);
             invalidId.FormIsActive = false;
 
+            await _context.SaveChangesAsync();
 
-            try
-            {
-                _context.Update(invalidId);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!FormExists(model.ModifyFrom.FormId))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            //try
+            //{
+            //    _context.Update(invalidId);
+            //    await _context.SaveChangesAsync();
+            //}
+            //catch (DbUpdateConcurrencyException)
+            //{
+            //if (!FormExists(model.ModifyFrom.FormId))
+            //{
+            //    return NotFound();
+            //}
+            //else
+            //{
+            //    throw;
+            //}
+            //}
 
             //返回查詢工單頁面
             return RedirectToAction("Index", "QueryForms");
+       
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Upload(UploadInputModel data)
+        {
+
+            try
+            {
+                var form = _context.Form.FirstOrDefault(x => x.FormId == data.Id);
+
+                form.Content = data.Content;
+                form.Tel = data.Tel;
+                form.ExpectedFinishedDay = data.Enddate;
+
+                // 指定專案資料夾名稱
+                var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/upload", data.Id);
+
+                // 檢查資料夾是否存在，如果不存在則創建一個新資料夾
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+
+                // 檢查是否有上傳的檔案
+                if (data.Files != null && data.Files.Count > 0)
+                {
+                    foreach (var file in data.Files)
+                    {  
+                        // 檔案存放的完整路徑
+                        var filePath = Path.Combine(folderPath, file.FileName);
+
+                        // 保存檔案
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await file.CopyToAsync(stream);
+                        }
+                    }
+                }
+
+                //if (data.File != null)
+                //{
+                //    // 獲得文件檔案類型
+                //    string extension = Path.GetExtension(data.File.FileName);
+
+                //    // 設置路徑
+                //    string uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/UploadFiles", data.File.FileName);
+
+                //    // 確認目錄
+                //    Directory.CreateDirectory(Path.GetDirectoryName(uploadPath));
+
+                //    // 保存文件 
+                //    using (var stream = new FileStream(uploadPath, FileMode.Create))
+                //    {
+                //        await data.File.CopyToAsync(stream);
+                //    }
+                //}
+                _context.SaveChanges();
+                return Json(new { success = true, message = "上傳成功" });
+            }
+            catch (Exception)
+            {
+                return Json(new { success = false, message = "上傳失敗" });
+            }
+
+
+            
         }
 
         private bool FormExists(string id)

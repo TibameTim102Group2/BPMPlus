@@ -41,7 +41,7 @@ namespace BPMPlus
             // 設定 MVC 與 CSRF 驗證
             builder.Services.AddControllersWithViews(options => {
                 // CSRF資安有關，這裡就加入全域驗證範圍Filter的話，待會Controller就不必再加上[AutoValidateAntiforgeryToken]屬性
-                options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+                //options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
             });
 
             var app = builder.Build();
