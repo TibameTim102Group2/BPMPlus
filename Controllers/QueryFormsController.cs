@@ -29,10 +29,7 @@ namespace BPMPlus.Controllers
         public async Task<ActionResult> Index()
         {
             User user = await GetAuthorizedUser();
-            if (user == null)
-            {
-                return RedirectToAction("login", "Login");
-            }
+
             //加入撈取資料的判斷條件(必須要和登入者同部門，且還在活動的工單)
             var alllist = _context.Form.AsNoTracking().Where(f => f.DepartmentId == user.DepartmentId && f.FormIsActive == true);
 

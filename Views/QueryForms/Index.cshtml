@@ -95,8 +95,6 @@
                                 <th scope="col">專案名稱</th>
                                 <th scope="col">狀態</th>
                                 <th scope="col">建立時間</th>
-                                @*                                 <th scope="col">編輯</th>
-                                <th scope="col">作廢</th> *@
                             </tr>
                         </thead>
                         <tbody>
@@ -180,10 +178,8 @@
         $(document).ready(function () {
             $('table').DataTable({
                 paging: true,
-                ordering: true,
-                language: {
-                    "url": "//cdn.datatables.net/plug-ins/1.11.5/i18n/Chinese-traditional.json" // 支援中文翻譯
-                }
+                ordering: true
+
             });
         });
         //透過表單編號篩選
