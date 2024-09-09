@@ -20,10 +20,7 @@ namespace BPMPlus.Controllers
         public async Task<IActionResult> Index()
         {
             User user = await GetAuthorizedUser();
-            if (user == null)
-            {
-                return RedirectToAction("login", "Login");
-            }
+
             //篩資料的條件 工單的流程節點編號的責成人員 是此時使用者登入的人員 且他的功能編號不為1的
 
             var applicationDbContext = _context.Form.Include(f => f.Category)
