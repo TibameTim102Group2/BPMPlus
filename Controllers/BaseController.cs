@@ -103,6 +103,35 @@ namespace BPMPlus.Controllers
             }
             return user;
         }
-        
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task UploadFiles(List<IFormFile> Files, string DirectoryName)
+        {
+            // 指定專案資料夾名稱
+            var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/upload", DirectoryName);
+
+            // 檢查資料夾是否存在，如果不存在則創建一個新資料夾
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            // 檢查是否有上傳的檔案
+            if (Files != null && Files.Count > 0)
+            {
+                foreach (var file in Files)
+                {
+                    // 檔案存放的完整路徑
+                    var filePath = Path.Combine(folderPath, DateTime.UtcNow.AddHours(8).ToString("yyyy-MM-dd-HHmmss-") + file.FileName);
+
+                    // 保存檔案
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+                }
+            }
+        }
     }
 }

@@ -370,7 +370,8 @@
                 filesArray.forEach(function(file) {
                     formData.append("files", file);
                 });
-
+                let formId = "";
+                let createResponseErrorCode = 0;
                 $.ajax({
                     url: '/CreateForms/CreateNewForm',
                     type: 'POST',
@@ -387,10 +388,15 @@
                         Content: content
                     }),
                     success: function(response) {
+                        createResponseErrorCode = response['errorCode'];
+                        if (response['errorCode'] != null && response['errorCode'] == 200) {
+                            formId = response['formId']
+                            upload()
+                            window.alert(response['message']);
+                        }
                         if(response['errorCode'] != null && response['errorCode'] == 400)
                         {
                             window.alert(response['message']);
-                            return;
                         }
                         // 成功後的操作
                     },
@@ -399,7 +405,28 @@
                         // 錯誤時的操作
                     }
                 });
+                var uploadFileFormData = new FormData();
+        // 將 filesArray 中的每個檔案加入 FormData
+                function upload(){
+                    if (createResponseErrorCode == 200) {
 
+                        filesArray.forEach(function (file) {
+                            uploadFileFormData.append("Files", file);
+                        });
+                        uploadFileFormData.append("DirectoryName", formId);
+                        $.ajax({
+                            headers: {
+                                'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()  // 傳送驗證 token
+                            },
+                            url: '/CreateForms/UploadFiles',  // 控制器的Action
+                            type: 'POST',
+                            data: uploadFileFormData,
+                            processData: false,
+                            contentType: false,
+                        });
+                    }
+                }
+                
             });
         });
 
