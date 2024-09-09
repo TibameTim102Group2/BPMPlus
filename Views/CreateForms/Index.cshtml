@@ -392,6 +392,7 @@
                         if (response['errorCode'] != null && response['errorCode'] == 200) {
                             formId = response['formId']
                             upload()
+                            window.alert(response['message']);
                         }
                         if(response['errorCode'] != null && response['errorCode'] == 400)
                         {

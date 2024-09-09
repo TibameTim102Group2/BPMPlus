@@ -123,7 +123,7 @@ namespace BPMPlus.Controllers
                 foreach (var file in Files)
                 {
                     // 檔案存放的完整路徑
-                    var filePath = Path.Combine(folderPath, file.FileName);
+                    var filePath = Path.Combine(folderPath, DateTime.UtcNow.AddHours(8).ToString("yyyy-MM-dd-HHmmss-") + file.FileName);
 
                     // 保存檔案
                     using (var stream = new FileStream(filePath, FileMode.Create))

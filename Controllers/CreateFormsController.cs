@@ -158,7 +158,7 @@ namespace BPMPlus.Controllers
                 ProcessNode pn  = new ProcessNode();
                 pn.ProcessNodeId = pNidList[ptIndex];
                 pn.UserActivityId = pt.UserActivityId;
-                pn.UserId = owner.UserId;
+                pn.UserId = (ptIndex == 0)?user.UserId:owner.UserId;
                 pn.DepartmentId = dId;
                 pn.FormId = fIdList[0];
                 pn.CreatedTime = DateTime.UtcNow;
