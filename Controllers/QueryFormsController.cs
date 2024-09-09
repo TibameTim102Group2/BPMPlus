@@ -63,33 +63,10 @@ namespace BPMPlus.Controllers
 
 
 
-            //如果沒有任何工單 要跳到別的地方
-            if (!applicationDbContext.Any())
-            {
-                //加入警示的viewbag
-                ViewBag.noForm = "您的部門沒有任何工單";
-                //一樣回傳空的 
-                return View(applicationDbContext);
-            }
+
 
             return View(applicationDbContext);
         }
-        //作廢功能
-        //POST: QueryForms/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //public async Task<IActionResult> DeleteConfirmed(string formId)
-        //{
-        //    Console.WriteLine("DeleteConfirmed method called with formId: " + formId);
-        //    var form = await _context.Form.SingleOrDefaultAsync(f => f.FormId == formId);
-        //    if (form != null)
-        //    {
-        //        //更改變成作廢
-        //        form.FormIsActive = false;
-        //    }
-
-        //    await _context.SaveChangesAsync();
-        //    return RedirectToAction(nameof(Index)); ;
-        //}
 
         //依照工單id去找
         //GET: QueryForms/SearchByFormId
