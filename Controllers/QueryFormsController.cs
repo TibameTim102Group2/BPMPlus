@@ -289,7 +289,7 @@ namespace BPMPlus.Controllers
             var alllist = _context.Form.AsNoTracking().Where(f => f.DepartmentId == user.DepartmentId && f.FormIsActive == true);
             var findForm = await alllist.Include(c => c.Category)
                             .Include(c => c.Project)
-                            .Where(f => f.Date.Date == date.Date)
+                            .Where(f => f.Date.AddHours(8).Date == date.Date)
                             .Select(f => new {
                                 f.FormId,
                                 f.DepartmentId,
