@@ -73,7 +73,9 @@
                                 <div class="user-panel mt-3 pb-3 mb-3 d-flex image">
                                     <div class="image">
                                         <img src="~/images/237143-0147e.jpg" class="img-circle elevation-2" alt="User Image">
-                                        <p> ~User~</p>
+                                        <p id="UserName">
+                                            UserName
+                                        </p>
                                     </div>
                                 </div>
                             </a>
@@ -261,6 +263,9 @@
 @section Scripts
 {
     <script>
-
+        fetch('https://localhost:7129/Login/').then(response => { 
+            
+        }
+        );
     </script>
 }
