@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using BPMPlus.Service;
 using BPMPlus.ViewModels.Login;
+using BCryptHelper = BCrypt.Net.BCrypt;
 
 namespace BPMPlus.Controllers
 {
@@ -32,33 +33,50 @@ namespace BPMPlus.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginVM vm)
+        public async Task<IActionResult> Login(LoginInput login)
         {
+            //先判斷user是否存在
             var user = await _context.User
-                 .FirstOrDefaultAsync(m => m.UserId == vm.UserId && m.Password == vm.Password && m.UserIsActive == true);
-            if (user == null)
+                 .FirstOrDefaultAsync(m => m.UserId == login.UserId && m.UserIsActive == true);
+
+            // user存在
+            if (user != null)
+            {
+                //BCrypt 判斷密碼是否正確
+                string password = login.Password;
+                bool cheak = BCryptHelper.Verify(password, user.Password);
+
+                if (cheak == true)
+                {
+                    // 登入成功，建立驗證 cookie
+                    Claim[] claims = new[] { new Claim("UserId", login.UserId) };
+                    ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+                    // 呼叫 SignInAsync 以登入使用者
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal, new AuthenticationProperties()
+                    {
+                        IsPersistent = false,   //瀏覽器關閉立馬登出
+                    });
+                }
+
+                // user不存在
+                else
+                {
+                    ViewBag.errMsg = "帳號或密碼輸入錯誤";
+                    return View("Index", login); // 登入失敗導回頁面
+                }
+            }
+            else
             {
                 ViewBag.errMsg = "帳號或密碼輸入錯誤";
-                return View("Index", vm); // 登入失敗導回頁面
+                return View("Index", login); // 登入失敗導回頁面
             }
-
-            // 登入成功，建立驗證 cookie
-            Claim[] claims = new[] { new Claim("UserId", vm.UserId) };
-            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-
-            // 呼叫 SignInAsync 以登入使用者
-            await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                claimsPrincipal,
-                new AuthenticationProperties()
-                {
-                    IsPersistent = false,   //瀏覽器關閉立馬登出
-                });
 
             // 導至隱私頁面
             return RedirectToAction("Index", "Home");
         }
+
        //登入
         public IActionResult Index()
 		{
@@ -74,13 +92,13 @@ namespace BPMPlus.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Send(string Email)
+        public async Task<IActionResult> ForgetPasswordSendEmail(string Email)
         {
             var request = await _context.User.FirstOrDefaultAsync(m => m.Email == Email == true);
             if (request == null)
             {                
-                ViewBag.errMsg = "Email輸入錯誤!";
-                return View();
+                //ViewBag.errMsg = "Email輸入錯誤!";
+                return RedirectToAction("Index", "Home");
             }
 
             var UserName = request.UserName;
@@ -89,7 +107,7 @@ namespace BPMPlus.Controllers
 
         }
         //忘記密碼
-        public IActionResult EmailValid()
+        public IActionResult ForgetPassword()
         {
             return View();
         }
@@ -99,7 +117,7 @@ namespace BPMPlus.Controllers
 
 
         //忘記密碼重設
-        public IActionResult EmailForgetPassWord()
+        public IActionResult ForgetPwResetPw()
         {
             return View();
         }
