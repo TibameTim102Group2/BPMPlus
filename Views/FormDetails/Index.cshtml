@@ -28,13 +28,14 @@
     <link rel="stylesheet" href="~/AdminLTE/dist/css/adminlte.min.css">
     <link rel="stylesheet" href="~/font-awesome/css/all.css" />
     <style>
-         .title {
+        .title {
             color: rgba(0, 81, 255, 0.884);
             margin-top: 20px;
             margin-bottom: 30px;
             margin-left: 30px;
             font-weight: bold;
         }
+
         .backcolor {
             background-color: rgb(225, 239, 252);
         }
@@ -99,7 +100,7 @@
 
 <div class="wrapper backcolor">
     @{
-    ViewBag.Title = "Invalid";
+        ViewBag.Title = "Invalid";
     }
     <h2>@ViewBag.Message</h2>
 
@@ -138,7 +139,7 @@
                                             <i class="far fa-calendar-alt"></i>
                                         </span>
                                     </div>
-                                    <input disabled type="text" class="form-control float-right" id="reservation"  value="@Model.FormDetails.ExpectedFinishedDay">
+                                    <input disabled type="text" class="form-control float-right" id="reservation" value="@Model.FormDetails.ExpectedFinishedDay">
                                 </div>
                             </div>
 
@@ -150,26 +151,30 @@
                             <div style="display:flex">
                                 <div style="width:27%"></div>
                                 <div class="form-group">
-                                     @if (Model.FormDetails.IsUser)
-                                    { 
+                                    @if (Model.FormDetails.IsUser && Model.FormDetails.IsApply)
+                                    {
                                         <a class="button btn btn-warning btn-link" asp-area="" asp-controller="ModifyForm" asp-action="Index" asp-route-id="@Model.FormDetails.FormId"><i class="fa-solid fa-pen-to-square"></i> 修改</a>
-                                    }else{
-                                        <button class="button btn btn-warning" type="submit" disabled ><i class="fa-solid fa-pen-to-square"></i>  修改</button>
                                     }
-                                   
-                                </div>
-                                <div style="width:15%"></div>
-                                 <form id="myform" method="post" asp-controller="FormDetails" asp-action="Invalid" >
-                                    <input type="hidden" name="id" value="@Model.FormDetails.Id" />
-                                <div class="form-group">
-                                        @if (Model.FormDetails.IsUser)
-                                        {
-                                             <button id="btnInvalid" class="button btn btn-danger" type="submit" ><i class="fa-solid fa-trash"></i> 作廢</button>
-                                        }else{
-                                             <button id="btnInvalid" class="button btn btn-danger" type="submit" disabled><i class="fa-solid fa-trash"></i> 作廢</button>
-                                        }
+                                    else
+                                    {
+                                        <button class="button btn btn-warning" type="submit" disabled><i class="fa-solid fa-pen-to-square"></i>  修改</button>
+                                    }
 
                                 </div>
+                                <div style="width:15%"></div>
+                                <form id="myform" method="post" asp-controller="FormDetails" asp-action="Invalid">
+                                    <input type="hidden" name="id" value="@Model.FormDetails.Id" />
+                                    <div class="form-group">
+                                        @if (Model.FormDetails.IsUser && Model.FormDetails.IsApply)
+                                        {
+                                            <button id="btnInvalid" class="button btn btn-danger" type="submit"><i class="fa-solid fa-trash"></i> 作廢</button>
+                                        }
+                                        else
+                                        {
+                                            <button id="btnInvalid" class="button btn btn-danger" type="submit" disabled><i class="fa-solid fa-trash"></i> 作廢</button>
+                                        }
+
+                                    </div>
                                 </form>
                             </div>
 
@@ -178,33 +183,33 @@
                             <div>
                                 <div class="form-group" style="display:flex">
                                     <label class="item-name">需求類別</label><input class="form-control txt-box" disabled value="@Model.FormDetails.CategoryDescription">
-                                    
+
                                 </div>
                                 <div class="form-group">
                                     <label class="item-name">需求員工</label><input class="form-control txt-box" disabled value="@Model.FormDetails.EmployeeName">
                                 </div>
-                    @*          <div class="form-group">
-                                    <label class="item-name">所屬專案</label><input class="form-control txt-box" disabled value="@Model.ProjectName">
+                                @*          <div class="form-group">
+                                <label class="item-name">所屬專案</label><input class="form-control txt-box" disabled value="@Model.ProjectName">
                                 </div> *@
                             </div>
                         </div>
 
                         <!-- /.col -->
-@*                     </div>
-                    <div>
+                        @*                     </div>
+                        <div>
                         <div class="form-group">
-                            <label class="item-name">處理狀態</label>
+                        <label class="item-name">處理狀態</label>
                         </div>
                         <div style="width:100%; height:150px" class="backcolor">
                         </div>
-                    </div>
-                    <br />
-                    <br /> *@
+                        </div>
+                        <br />
+                        <br /> *@
 
                         <label>流程進度</label>
                         <br>
                         <div class="formBackground btnArea">
-                          
+
                             <div>
                                 @foreach (var activity in Model.FormDetailsProcesseFlows)
                                 {
@@ -221,80 +226,81 @@
 
                                 }
 
-                               
+
                             </div>
                         </div><br /><br />
 
-                    <!--  工單處理紀錄  -->
-                    <label>處理紀錄</label>
-                    <table class="table table-hover table-bordered ">
-                        <thead>
-                            <tr>
-                                <th>時間</th>
-                                <th>處理狀態</th>
-                                <th>處理人員</th>
-                                <th>出示意見</th>
-                                <th>審核結果</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                                @foreach (var item in Model.FormDetails.FormDetailsFormProcesses) { 
-                            <tr>
-                                <td>@item.Date</td>
-                                <td>@item.UserActivityIdDescription</td>
-                                <td>@item.EmployeeName</td>
-                                <td>@item.Remark</td>
-                                <td>@item.ResultDescription</td>
-                            </tr>
-                            }
-                          
-
-                        </tbody>
-                    </table>
+                        <!--  工單處理紀錄  -->
+                        <label>處理紀錄</label>
+                        <table class="table table-hover table-bordered ">
+                            <thead>
+                                <tr>
+                                    <th>時間</th>
+                                    <th>處理狀態</th>
+                                    <th>處理人員</th>
+                                    <th>出示意見</th>
+                                    <th>審核結果</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.FormDetails.FormDetailsFormProcesses)
+                                {
+                                    <tr>
+                                        <td>@item.Date</td>
+                                        <td>@item.UserActivityIdDescription</td>
+                                        <td>@item.EmployeeName</td>
+                                        <td>@item.Remark</td>
+                                        <td>@item.ResultDescription</td>
+                                    </tr>
+                                }
 
 
-                    <!-- /.row -->
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="item-name">需求內容</label>
+                            </tbody>
+                        </table>
+
+
+                        <!-- /.row -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="item-name">需求內容</label>
+                                </div>
+                                <textarea rows="8" cols="110" disabled> @Model.FormDetails.Content</textarea>
                             </div>
-                                <textarea rows="8" cols="110" disabled > @Model.FormDetails.Content</textarea>
+                            <!-- /.col -->
+                            <!-- /.col -->
                         </div>
-                        <!-- /.col -->
-                        <!-- /.col -->
-                    </div>
-                    <div class="row">
-                        <!-- /.form-group -->
-                        <div class="form-group">
-                            <label style="margin-right:5%">聯繫電話</label><input class=" form-control" style="width:25%" disabled value="@Model.FormDetails.Tel" >
-                        </div>
-
-                        <!-- /.form-group -->
-                        <div class="col-12 col-sm-6">
+                        <div class="row">
+                            <!-- /.form-group -->
+                            <div class="form-group">
+                                <label style="margin-right:5%">聯繫電話</label><input class=" form-control" style="width:25%" disabled value="@Model.FormDetails.Tel">
+                            </div>
 
                             <!-- /.form-group -->
-                        </div>
-                        <!-- /.col -->
-                        <div class="col-12 col-sm-7" style="display:flex">
+                            <div class="col-12 col-sm-6">
 
-
-                            <div class="form-group">
-                                <button class="button btn btn-primary" type="button"><i class="fa-solid fa-file-arrow-down"></i>  附件下載</button>
+                                <!-- /.form-group -->
                             </div>
-                            <!-- /.form-group -->
+                            <!-- /.col -->
+                            <div class="col-12 col-sm-7" style="display:flex">
+
+
+                                <div class="form-group">
+                                    <button id="btnDownload" class="button btn btn-primary" type="button"><i class="fa-solid fa-file-arrow-down"></i>  附件下載</button>
+                                </div>
+                                <!-- /.form-group -->
+                            </div>
+
+
+                            <!-- /.col -->
                         </div>
-
-
-                        <!-- /.col -->
+                        <!-- /.row -->
                     </div>
-                    <!-- /.row -->
+
                 </div>
-
+                <!-- /.row -->
             </div>
-            <!-- /.row -->
-        </div>
-        <!-- /.container-fluid -->
+            <!-- /.container-fluid -->
     </section>
     <!-- /.content -->
     <!-- /.content-wrapper -->
@@ -303,7 +309,7 @@
 
 @section Scripts
 {
-   
+
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
     <script>
 
@@ -337,6 +343,34 @@
             // form.attr("action", '@Url.Action("Invalid", "ModifyForm")');
             // // 提交表單
             // form.submit();
+
+        });
+
+        $("#btnDownload").click(function () {
+
+            let userConfirmed = confirm("是否下載?");
+            if (!userConfirmed) return;
+
+
+            let id = $("#FromDetails_FormId").val();
+
+            let formData = new FormData();
+            formData.append("id", id);
+
+            fetch('/FormDetails/Download',
+                {
+                    method: 'POST',
+                    body: formData,
+
+                }).then(response => {
+                    if (response.ok) {
+                        alert("下載成功");
+                    } else {
+                        alert("下載失敗");
+                    }
+                }
+
+                )
 
         });
     </script>
