@@ -32,7 +32,7 @@ namespace BPMPlus.Controllers
             User user = await GetAuthorizedUser();
 
             var formdata = _context.Form
-                  .Include(c => c.ProcessNode).ThenInclude(c => c.UserActivity)
+                  .Include(c => c.ProcessNode).ThenInclude(p => p.UserActivity)
                   .Include(c => c.FormRecord)
                   .Include(c => c.Project)
                   .Include(c => c.Category)
@@ -58,12 +58,12 @@ namespace BPMPlus.Controllers
                     FormIsActive=true,
                     FormDetailsProcessNodes = c.ProcessNode.Select(d => new FormDetailsProcessNodeViewModel
                     {
-                      ProcessNodeId=d.ProcessNodeId,
+                      ProcessNodeId=d.ProcessNodeId
                     }).ToList(),
                     FormDetailsFormProcesses = c.FormRecord.Select(d => new FormDetailsFormProcessViewModel
                     {
                       Date = d.Date.AddHours(8).ToString("yyyy-MM-dd HH:mm:ss"), //當地時間加8小時
-                        UserActivityIdDescription = d.UserActivity.UserActivityIdDescription,
+                      UserActivityIdDescription = d.UserActivity.UserActivityIdDescription,
                       EmployeeName = d.User.UserName,
                       Remark = d.Remark,
                       ResultDescription = d.Result.ResultDescription
@@ -71,7 +71,7 @@ namespace BPMPlus.Controllers
                   }).FirstOrDefault();
 
             //流程進度
-            var processNode = _context.ProcessNodes.Include(c=>c.UserActivity)
+            var processFlow = _context.ProcessNodes.Include(c=>c.UserActivity)
                  .Where(c=>c.FormId==formdata.FormId)
                  .AsNoTracking()
                  .AsSplitQuery()
@@ -87,17 +87,27 @@ namespace BPMPlus.Controllers
             if (formdata.UserId == user.UserId)
                 formdata.IsUser = true;
 
-
-
             //判斷流程節點位置
-            if (processNode.Any(c => c.ProcessNodeId == formdata.ProcessNodeId)) //Any適用判斷true/false
-                processNode.FirstOrDefault(c=>c.ProcessNodeId== formdata.ProcessNodeId).IsHightLight = true;
+            if (processFlow.Any(c => c.ProcessNodeId == formdata.ProcessNodeId)) //Any適用判斷true/false
+                processFlow.FirstOrDefault(c=>c.ProcessNodeId== formdata.ProcessNodeId).IsHightLight = true;
+
+            //抓取流程節點清單include功能
+            var ProcessNodes = _context.ProcessNodes.Include(c=>c.UserActivity)
+                        .Where(c=>c.FormId==formdata.FormId)
+                        .ToList();
+
+            //判斷功能是否申請人階段
+            if (ProcessNodes.FirstOrDefault(c=> c.ProcessNodeId==formdata.ProcessNodeId).UserActivityId=="01")
+                formdata.IsApply = true;
+
+
+
 
             //FormDetailsGroupViewModel
             var result = new FormDetailsGroupViewModel
             {
                 FormDetails = formdata,
-                FormDetailsProcesseFlows = processNode,
+                FormDetailsProcesseFlows = processFlow,
 
             };
 
@@ -143,6 +153,63 @@ namespace BPMPlus.Controllers
 
         }
 
+        //[HttpPost]
+        //public IActionResult Download(string id, string fileName)
+        //{
+        //    var folder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/upload", id);
+
+        //    List<string> files = new List<string>(Directory.GetFiles(folder));
+
+        //    foreach (var filePath in files) { 
+
+        //        try
+        //        {
+        //            // 專案的資料夾路徑
+        //            //folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/upload", id);
+
+        //            // 檔案的完整路徑
+        //            //var filePath = Path.Combine(folderPath, fileName);
+
+        //            // 檢查檔案是否存在
+        //            if (!System.IO.File.Exists(filePath))
+        //            {
+        //                return NotFound(new { success = false, message = "檔案不存在" });
+        //            }
+
+        //            // 取得檔案的內容類型 (MIME 類型)
+        //            var contentType = GetContentType(fileName);
+
+        //            // 讀取檔案的二進位數據
+        //            var fileBytes = System.IO.File.ReadAllBytes(filePath);
+
+        //            // 返回檔案下載結果
+        //            return File(fileBytes, contentType, fileName);
+        //        }
+        //        catch (Exception)
+        //        {
+        //            return Json(new { success = false, message = "下載失敗" });
+        //        }
+        //    }
+        //}
+
+        // 判斷檔案的MIME類型
+        private string GetContentType(string fileName)
+        {
+            var extension = Path.GetExtension(fileName).ToLowerInvariant();
+            return extension switch
+            {
+                ".pdf" => "application/pdf",
+                ".jpg" => "image/jpeg",
+                ".jpeg" => "image/jpeg",
+                ".png" => "image/png",
+                ".txt" => "text/plain",
+                ".doc" => "application/msword",
+                ".docx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                ".xls" => "application/vnd.ms-excel",
+                ".xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                _ => "application/octet-stream", // 預設二進位檔案類型
+            };
+        }
 
 
 

@@ -11,12 +11,12 @@ using System.Threading.Channels;
 
 namespace BPMPlus.Controllers
 {
-    public class ModifyFormController : Controller
+    public class ModifyFormController : BaseController
     {
 
         private readonly ApplicationDbContext _context;
 
-        public ModifyFormController(ApplicationDbContext context)
+        public ModifyFormController(ApplicationDbContext context) : base(context)
         {
             _context = context;
         }
@@ -85,46 +85,7 @@ namespace BPMPlus.Controllers
         }
 
 
-        [HttpPost]      
-        public async Task<IActionResult> Edit(string id, ModifyFormGroupViewModel model)
-        {
-
-            //確認傳入參數id是否有值
-            if (string.IsNullOrEmpty(id))
-            {
-                return BadRequest("ID cannot be null or empty.");
-            }
-
-            //找出要傳入的單筆紀錄和欄位
-            var editForm = _context.Form.FirstOrDefault(s => s.FormId == id);
-            editForm.Content = model.ModifyFrom.Content;
-            editForm.Tel = model.ModifyFrom.Tel;
-            editForm.ExpectedFinishedDay = Convert.ToDateTime(model.ModifyFrom.ExpectedFinishedDay);
-            
-
-            try
-            {
-                _context.Update(editForm); 
-                await _context.SaveChangesAsync();  
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!FormExists(model.ModifyFrom.FormId))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            
-
-            //返回頁面:工單細節
-            return RedirectToAction("Index","FormDetails",new { id = editForm.FormId });
-        }
-
+       
         [HttpPost]
         public async Task<IActionResult>Invalid(string id) 
         {
@@ -164,16 +125,32 @@ namespace BPMPlus.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Upload(UploadInputModel data)
+        public async Task<IActionResult> Edit(UploadInputModel data)
         {
 
             try
             {
+                /// <summary>
+                /// 表單修改
+                /// </summary>
                 var form = _context.Form.FirstOrDefault(x => x.FormId == data.Id);
 
-                form.Content = data.Content;
-                form.Tel = data.Tel;
-                form.ExpectedFinishedDay = data.Enddate;
+                form.Content = data.Content; //需求內容
+                form.Tel = data.Tel;   //連絡電話
+                form.ExpectedFinishedDay = data.Enddate;  //希望完成日期
+                form.UpdatedTime = DateTime.UtcNow; //更新時間
+                
+                //產生某筆工單的所有ProcessNode
+                List<ProcessNode> processNodes = await _context.ProcessNodes
+                    .Where(p => p.FormId == data.Id)
+                    .ToListAsync();
+
+                form.ProcessNodeId = processNodes[1].ProcessNodeId; //流程節點+1
+
+
+                /// <summary>
+                /// 上傳附件
+                /// </summary>
 
                 // 指定專案資料夾名稱
                 var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/upload", data.Id);
@@ -188,9 +165,9 @@ namespace BPMPlus.Controllers
                 if (data.Files != null && data.Files.Count > 0)
                 {
                     foreach (var file in data.Files)
-                    {  
+                    {
                         // 檔案存放的完整路徑
-                        var filePath = Path.Combine(folderPath, file.FileName);
+                        var filePath = Path.Combine(folderPath, DateTime.UtcNow.AddHours(8).ToString("yyyy-MM-dd-HHmmss-") + file.FileName);
 
                         // 保存檔案
                         using (var stream = new FileStream(filePath, FileMode.Create))
@@ -200,24 +177,57 @@ namespace BPMPlus.Controllers
                     }
                 }
 
-                //if (data.File != null)
-                //{
-                //    // 獲得文件檔案類型
-                //    string extension = Path.GetExtension(data.File.FileName);
 
-                //    // 設置路徑
-                //    string uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/UploadFiles", data.File.FileName);
+                /// <summary>
+                /// 新增工單紀錄
+                /// </summary>
 
-                //    // 確認目錄
-                //    Directory.CreateDirectory(Path.GetDirectoryName(uploadPath));
+                //修改工單者processNode對應責成人員
+                User userModifier = await _context.User
+                    .Include(c => c.Grade)
+                    .FirstOrDefaultAsync(u => u.UserId == processNodes[0].UserId);
 
-                //    // 保存文件 
-                //    using (var stream = new FileStream(uploadPath, FileMode.Create))
-                //    {
-                //        await data.File.CopyToAsync(stream);
-                //    }
-                //}
-                _context.SaveChanges();
+                //審核工單者processNode對應責成人員
+                User userReviewer = await _context.User
+                    .Include(c => c.Grade)
+                    .FirstOrDefaultAsync(u => u.UserId == processNodes[1].UserId);
+
+
+                List<string> formRecordIdList = await GetCreateFormRecordIdListAsync(2);
+                FormRecord modifyFormRecord = new FormRecord(), firstReviewFormRecord = new FormRecord();
+
+                modifyFormRecord.ProcessingRecordId = formRecordIdList[0];
+                modifyFormRecord.Remark = "";
+                modifyFormRecord.FormId = form.FormId;
+                modifyFormRecord.DepartmentId = form.DepartmentId;
+                modifyFormRecord.UserId = form.UserId;
+                modifyFormRecord.ResultId = "RS2";
+                modifyFormRecord.UserActivityId = processNodes[0].UserActivityId;
+                modifyFormRecord.GradeId = userModifier.GradeId; 
+                modifyFormRecord.Date = DateTime.UtcNow;
+                modifyFormRecord.UpdatedTime = DateTime.UtcNow;
+                modifyFormRecord.CreatedTime = DateTime.UtcNow;
+
+
+                firstReviewFormRecord.ProcessingRecordId = formRecordIdList[1];
+                firstReviewFormRecord.Remark = "";
+                firstReviewFormRecord.FormId = form.FormId;
+                firstReviewFormRecord.DepartmentId = form.DepartmentId;
+                firstReviewFormRecord.UserId = processNodes[1].UserId;
+                firstReviewFormRecord.ResultId = "RS4";
+                firstReviewFormRecord.UserActivityId = processNodes[1].UserActivityId;
+                firstReviewFormRecord.GradeId = userReviewer.GradeId;
+                firstReviewFormRecord.Date = DateTime.UtcNow;
+                firstReviewFormRecord.UpdatedTime = DateTime.UtcNow;
+                firstReviewFormRecord.CreatedTime = DateTime.UtcNow;
+
+
+                
+                await _context.FormRecord.AddAsync(modifyFormRecord);
+                await _context.FormRecord.AddAsync(firstReviewFormRecord);
+
+                //儲存變更
+                await _context.SaveChangesAsync();
                 return Json(new { success = true, message = "上傳成功" });
             }
             catch (Exception)
@@ -228,6 +238,7 @@ namespace BPMPlus.Controllers
 
             
         }
+
 
         private bool FormExists(string id)
         {

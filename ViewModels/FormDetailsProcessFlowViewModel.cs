@@ -9,5 +9,7 @@
         public string UserActivityIdDescription { get; set; }
 
         public bool IsHightLight { get; set; }
+
+     
     }
 }

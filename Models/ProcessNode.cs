@@ -32,7 +32,8 @@ namespace BPMPlus.Models
         [MaxLength(20)]
         [ForeignKey("Form")]
         public string? FormId { get; set; }
-        public virtual Form Form { get; set; } 
+        public virtual Form Form { get; set; }
+       
 
         [Column(TypeName = "datetime")]
         public DateTime CreatedTime { get; set; }
