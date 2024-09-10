@@ -1,24 +1,52 @@
-﻿@section Style
+﻿@model BPMPlus.ViewModels.FormReviewViewModel
+
+
+
+
+@section Style
 {
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/AdminLTE/plugins/fontawesome-free/css/all.min.css">
+    <!-- daterange picker -->
+    <link rel="stylesheet" href="~/AdminLTE/plugins/daterangepicker/daterangepicker.css">
+    <!-- iCheck for checkboxes and radio inputs -->
+    <link rel="stylesheet" href="~/AdminLTE/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- Bootstrap Color Picker -->
+    <link rel="stylesheet" href="~/AdminLTE/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css">
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="~/AdminLTE/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="~/AdminLTE/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="~/AdminLTE/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+    <!-- Bootstrap4 Duallistbox -->
+    <link rel="stylesheet" href="~/AdminLTE/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
+    <!-- BS Stepper -->
+    <link rel="stylesheet" href="~/AdminLTE/plugins/bs-stepper/css/bs-stepper.min.css">
+    <!-- dropzonejs -->
+    <link rel="stylesheet" href="~/AdminLTE/plugins/dropzone/min/dropzone.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/AdminLTE/dist/css/adminlte.min.css">
     <style>
 
-        #fullPage{
-            background-color: #DFF1FF; 
-            padding:10px;
+        #fullPage {
+            background-color: #DFF1FF;
+            padding: 10px;
         }
 
-        h4{
+        h4 {
             color: #3D60A5;
         }
 
-        #secondeBackground{
+        #secondeBackground {
             background-color: #D1DEFF;
-            margin-left:15px;
+            margin-left: 15px;
             margin-right: 15px;
             margin-bottom: 15px;
         }
 
-        .formBackground{
+        .formBackground {
             background-color: #D1DEFF;
             padding-left: 35px;
             padding-right: 35px;
@@ -27,36 +55,40 @@
         }
 
         #formArea {
-            padding-bottom:20px;
-            display:flex;
-        }
-        #formArea label {
-            background-color: #D8D7DB;
-            margin: auto;
-            width: 120px;
-            text-align: center;
-            border-radius: 5%;
-            margin-right:20px;
-        }
-        #formArea input {
-            width: 180px;
-            height:30px;
-            display: inline;
-        }
-        .process{
-            padding-bottom:20px;
-        }
-        .process label{
-            margin: auto;
-            height: 30px;
-            width: 120px;
-            text-align: center;
+            padding-bottom: 20px;
+            display: flex;
         }
 
-        .process button{
-            width:80px;
-            margin-right:10px;
+            #formArea label {
+                background-color: #D8D7DB;
+                margin: auto;
+                width: 120px;
+                text-align: center;
+                border-radius: 5%;
+                margin-right: 20px;
+            }
+
+            #formArea input {
+                width: 180px;
+                height: 30px;
+                display: inline;
+            }
+
+        .process {
+            padding-bottom: 20px;
         }
+
+            .process label {
+                margin: auto;
+                height: 30px;
+                width: 120px;
+                text-align: center;
+            }
+
+            .process button {
+                width: 80px;
+                margin-right: 10px;
+            }
 
         table {
             text-align: center;
@@ -65,40 +97,63 @@
         }
 
         .btnArea {
-            height:60px;
+            height: 60px;
             display: flex;
             align-items: center;
         }
 
         .btns {
-            width:auto;
-            margin:auto,0;
+            width: auto;
+            margin: auto,0;
         }
-        .result{
+
+        .result {
             padding-left: 30px;
-            padding-right:30px;
+            padding-right: 30px;
             padding-bottom: 20px
         }
 
-        .reviewResult{
-            margin-left:10px;
+        .reviewResult {
+            margin-left: 10px;
         }
 
-        .reviewResult label{
-         margin-right:20px;   
+            .reviewResult label {
+                margin-right: 20px;
+            }
+
+        .file {
+            padding-left: 50px;
         }
 
-        .file{
-            padding-left:50px;
-        }
-
-        .submit button{
+        .submit button {
             margin-right: 30px;
             width: 120px;
         }
-        .pd{
-            padding-left:50px;
+
+        .pd {
+            padding-left: 50px;
         }
+
+        .ManagerOpinion {
+            width: 100%;
+            height: 200px;
+        }
+
+        .textContent {
+            color: red;
+        }
+
+            .textContent[readonly] {
+                resize: none;
+                background-color: white;
+            }
+
+        input[type=text][readonly] {
+            color: black;
+            font-weight: bold;
+            background-color: white;
+        }
+
     </style>
 }
 
@@ -109,108 +164,124 @@
         <h4 class="m-3">審核工單</h4>
     </div>
 
-    <div id="secondeBackground">
+    <form id="formArea" asp-controller="FormReview" method="post" asp-action="CreateAndUpdate">
+        <div id="secondeBackground">
 
-        <!-- 工單區域 -->
-        <form id="formArea">
+            <!-- 工單區域 -->
             <div class="formBackground">
                 <div class="row" style="display:flex;">
                     <div class="col-6 mb-3 form-label">
-                        <label>工單編號</label><input type="text" class="form-control" />
+                        <input type="hidden" asp-for="@Model.UserId" />
+                        <input type="hidden" asp-for="@Model.ResultId" />
+                        <input type="hidden" asp-for="@Model.UserActivityId" />
+                        <input type="hidden" asp-for="@Model.ProcessNodeId" />
+                        <label>工單編號</label>
+                        <input asp-for="@Model.FormId" type="text" class="form-control" value="@Model.FormId" readonly />
                     </div>
                     <div class="col-6 mb-3 form-label">
-                        <label>建立日期</label><input type="text" class="form-control" />
+                        <label>建立日期</label>
+                        <input asp-for="@Model.Date" type="text" class="form-control" value="@Model.Date.ToString(" yyyy-MM-dd")" readonly />
                     </div>
                     <div class="col-6 mb-3 form-label">
-                        <label>需求類別</label><input type="text" class="form-control" />
+                        <label>需求類別</label>
+                        <input asp-for="@Model.CategoryId" type="text" class="form-control" value="@Model.CategoryId" readonly />
                     </div>
                     <div class="col-6 mb-3 form-label">
-                        <label>處理狀態</label><input type="text" class="form-control" />
+                        <label>處理狀態</label>
+                        <input asp-for="@Model.CurrentResults" type="text" class="form-control" value="@Model.CurrentResults" readonly />
                     </div>
                     <div class="col-6 mb-3 form-label">
-                        <label>需求部門</label><input type="text" class="form-control" />
+                        <label>需求部門</label>
+                        <input asp-for="@Model.DepartmentId" type="text" class="form-control" value="@Model.DepartmentId" readonly />
                     </div>
                     <div class="col-6 mb-3 form-label">
-                        <label>指派人員</label><input type="text" class="form-control" />
+                        <label>指派人員</label>
+                        <input asp-for="@Model.AssginEmployee" type="text" class="assignEmp form-control" value="@Model.AssginEmployee" readonly />
                     </div>
                     <div class="col-6 mb-3 form-label">
-                        <label>需求員工</label><input type="text" class="form-control" />
+                        <label>需求員工</label>
+                        <input asp-for="@Model.NeedEmployees" type="text" class="form-control" value="@Model.NeedEmployees" readonly />
                     </div>
                     <div class="col-6 mb-3 form-label">
-                        <label>希望完成日期</label><input type="text" class="form-control" />
+                        <label>希望完成日期</label>
+                        <input asp-for="@Model.HopeFinishDate" type="text" class="form-control" value="@Model.HopeFinishDate.ToLocalTime()" readonly />
                     </div>
                     <div class="col-6 mb-3 form-label">
-                        <label>所屬專案</label><input type="text" class="form-control" />
+                        <label>所屬專案</label>
+                        <input asp-for="@Model.BelongProjects" type="text" class="form-control" value="@Model.BelongProjects" readonly />
                     </div>
                     <div class="col-6 mb-3 form-label">
-                        <label>預估工時</label><input type="text" class="form-control" />
+                        <label>預估工時</label>
+                        <input asp-for="@Model.EstimatedTime" type="text" class="EstimatedTime form-control" value="@Model.EstimatedTime" readonly />
                     </div>
                 </div>
-
             </div>
-        </form>
 
-        <!-- 流程進度 -->
-        <div class="process">
+            <!--  流程節點進度  -->
             <label>流程進度</label>
             <br>
             <div class="formBackground btnArea">
+
                 <div>
-                    <button class="btn btn-sm btn-success btns">提單</button>
-                    <button class="btn btn-sm btn-danger btns">一級主管</button>
-                    <button class="btn btn-sm btn-primary btns">二級主管</button>
-                    <button class="btn btn-sm btn-primary btns">三級主管</button>
-                    <button class="btn btn-sm btn-primary btns">三級主管</button>
-                    <button class="btn btn-sm btn-primary btns">二級主管</button>
-                    <button class="btn btn-sm btn-primary btns">一級主管</button>
-                    <button class="btn btn-sm btn-primary btns">處理人員</button>
-                    <button class="btn btn-sm btn-primary btns">驗收</button>
+                    @foreach (var activity in Model.FormProcessFlow)
+                    {
+                        if (activity.IsHightLight)
+                        {
+
+                            <button type="button" class="btn btn-sm btn-danger btns">@activity.UserActivityIdDescription</button>
+                        }
+                        else
+                        {
+
+                            <button type="button" class="btn btn-sm btn-primary btns">@activity.UserActivityIdDescription</button>
+                        }
+
+                    }
+
+
                 </div>
-            </div>
-        </div>
-
-        <!--  工單處理紀錄  -->
-        <table class="table table-hover table-bordered">
-            <thead>
-                <tr>
-                    <th>時間</th>
-                    <th>處理狀態</th>
-                    <th>處理人員</th>
-                    <th>出示意見</th>
-                    <th>需求項目類別</th>
-                    <th>審核結果</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>2024-08-01 13:17</td>
-                    <td>部門主管審核</td>
-                    <td>張三</td>
-                    <td>因業務需求提出申請</td>
-                    <td>資訊需求單</td>
-                    <td>送出</td>
-                </tr>
-                <tr>
-                    <td>2024-08-02 08:23</td>
-                    <td>處理部門主管審核</td>
-                    <td>林香</td>
-                    <td>-</td>
-                    <td>資訊需求單</td>
-                    <td>審核中</td>
-                </tr>
-
-            </tbody>
-        </table>
+            </div><br /><br />
 
 
 
-        <!-- 需求內容/附件/出示意見 -->
-        <div>
+            <!--  工單處理紀錄  -->
+            <label>處理紀錄</label>
+            <table class="table table-hover table-bordered ">
+                <thead>
+                    <tr>
+                        <th>時間</th>
+                        <th>處理狀態</th>
+                        <th>處理人員</th>
+                        <th>出示意見</th>
+                        <th>審核結果</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.FormRecordList)
+                    {
+                        <tr>
+                            <td>@item.Date.ToLocalTime()</td>
+                            <td>@item.UserActivityDes</td>
+                            <td>@item.UserName</td>
+                            <td>@item.Remark</td>
+                            <td>@item.ResultDes</td>
+                        </tr>
+                    }
+
+
+                </tbody>
+            </table>
+
+
+
+            <!-- 需求內容/附件/出示意見 -->
             <!-- 需求內容 -->
             <div class="result">
-                <label>需求內容</label><br>
-                <textarea class="form-control"></textarea>
+                <label class="noteContent">需求內容</label><br>
+                <div asp-for="@Model.Content" class="textContent form-control" readonly>@Html.Raw(Model.Content)</div>
             </div>
+
+
 
             <!-- 附件上傳/下載 -->
             <div class="result file">
@@ -218,41 +289,551 @@
                 <button class="btn bg-info btn-sm">附件下載</button>
             </div>
 
-            <!-- 出示意見 -->
-        <div class="result">
-                <label>出示意見</label>
-                <div id="summernote"></div>
-
+            <div class="result">
+                <label class="control-label">出示意見</label><br />
+                <div class="txtInput">
+                    <div>
+                        @* <div id="summernote"></div> *@
+                        <textarea class="ManagerOpinion" asp-for="@Model.Remark">
+                            @Model.Remark
+                            </textarea>
+                    </div>
+                </div>
                 <div style="display:flex;">
                     <label>審核結果: </label>
                     <div class="reviewResult">
-                        <label for="arrow"><input name="result" id="arrow" type="radio" />核准</label>
-                        <label for="backoff"><input name="result" id="backoff" type="radio" />退回</label>
+                        <input name="reviewResult" type="radio" value="reject" />退回
+                        <input name="reviewResult" type="radio" value="approve" />核准
+                        <input type="submit" class="btn btn-success btns" value="送出" />
                     </div>
                 </div>
-
-        </div><!-- 需求內容/附件/出示意見 END -->
-
-        <!--  submit  -->
-        <div class="row result pd">
-            <div class="submit col-8">
-                <button class="btn btn-primary btns">處理流程</button>
-                <button class="btn btn-success btns">送出審核</button>
-                @* <button class="btn btn-danger btns">退回</button> *@
-            </div>
-        </div>
-
-    </div><!-- secondeBackground END -->
-
-</div>
+            </div><!-- 需求內容/附件/出示意見 END -->
+        </div><!-- secondeBackground END -->
+    </form>
 </div>
 
 @section Scripts
 {
+
+
     <script>
-        $(document).ready(function () {
-            $('#summernote').summernote();
+        // 一進到審核頁發請求詢問身分是否為接收方一級主管or 處理人員, 是的話移除唯讀, 提供輸入指派者 or 處理人員輸入預估工時
+        document.addEventListener('DOMContentLoaded', async function () {
+            let formId = '@Model.FormId';
+            fetch(`/FormReview/CheckEmp/?id=${formId}`, {
+                method: "GET"
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status == true && data.userPermit == "07") {
+                        let needEmp = document.querySelector(".assignEmp");
+                        needEmp.removeAttribute("readonly");
+                    }
+                    else if (data.status == true && data.userPermit == "08") {
+                        let CheckEstimatedTime = document.querySelector(".EstimatedTime");
+                        CheckEstimatedTime.removeAttribute("readonly");
+                        let needEmp = document.querySelector(".assignEmp");
+                        needEmp.setAttribute("value", "@Html.Raw(Model.UserName)");
+                    }
+                    else if (data.status == true && data.userPermit == "09") {
+
+                    }
+                })
+                .catch(err => {
+                    alert(JSON.stringify(err));
+                })
+        });
+
+            $(document).ready(function() {
+                // 當 Summernote 初始化或畫面渲染後，你可以選擇 note-editable class 並添加 ManagerOpinion 和 asp-for 屬性
+                $(".note-editable").addClass("ManagerOpinion");
+
+            // 這裡手動添加 asp-for 的作用
+            $(".note-editable").attr("asp-for", "@Model.Remark");
             });
-        var html = $('#summernote').summernote('code');
+
+        // // summernote
+        //     $(document).ready(function() {
+        //         $('#summernote').summernote();
+        // });
+        //     var html = $('#summernote').summernote('code');
+
+        // 渲染檔案列表
+        // function renderFileList() {
+        //     $('#fileList').empty(); // 清空列表
+
+        //     filesArray.forEach(function (file, index) {
+        //         $('#fileList').append(`
+        //                             <li>
+        //                                 <label>${file.name}</label>
+        //                                 <button type="button" onclick="deleteFile(${index})">Delete</button>
+        //                             </li>
+        //                         `);
+        //     });
+        // }
+        // $(document).ready(function () {
+        //     // 綁定按鈕點擊事件
+        //     $("#submitButton").on("click", function (e) {
+        //         e.preventDefault();  // 阻止默認的提交行為
+
+        //         // 獲取輸入欄位的值
+        //         var tel = $("#Tel").val();
+        //         var expectedFinishedDay = $("#ExpectedFinishedDay").val()
+        //         var departmentId = document.getElementById("DepartmentId").getAttribute("inside")
+        //         var pj = document.getElementById('projectId');
+        //         var projectId = pj.options[pj.selectedIndex].value;
+        //         var ct = document.getElementById("CategoryId")
+        //         var categoryId = ct.options[ct.selectedIndex].getAttribute("data-id");
+        //         var content = $('#summernote').summernote('code');
+        //         // 檢查是否有空值
+        //         if (!tel || !departmentId || !categoryId || !expectedFinishedDay || !content || content == "<p><br></p>") {
+        //             console.log("分機" + tel)
+        //             if (!tel) { window.alert("尚未填寫聯絡電話"); return; }
+        //             console.log("部門ID" + departmentId)
+        //             if (!departmentId) { window.alert("尚未填寫聯絡部門"); return; }
+        //             console.log("需求" + categoryId)
+        //             if (!categoryId) { window.alert("尚未選擇需求類別"); return; }
+        //             console.log("希望完成時間" + expectedFinishedDay)
+        //             if (!expectedFinishedDay) { window.alert("尚未填寫希望完成時間"); return; }
+        //             console.log("需求內容" + content)
+        //             if (!content || content == "<p><br></p>") { window.alert("尚未填寫需求內容"); return; }
+        //         }
+        //         var form = $('#__AjaxAntiForgeryForm');
+        //         var token = $('input[name="__RequestVerificationToken"]', form).val();
+        //         // 發送 Ajax 請求
+        //         var formData = new FormData();
+
+        //         // 將 filesArray 中的每個檔案加入 FormData
+        //         filesArray.forEach(function (file) {
+        //             formData.append("files", file);
+        //         });
+        //         let formId = "";
+        //         let createResponseErrorCode = 0;
+        //         $.ajax({
+        //             url: '/CreateForms/CreateNewForm',
+        //             type: 'POST',
+        //             contentType: 'application/json',
+        //             headers: {
+        //                 'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()  // 傳送驗證 token
+        //             },
+        //             data: JSON.stringify({
+        //                 CategoryId: categoryId,
+        //                 ProjectId: projectId,
+        //                 DepartmentId: departmentId,
+        //                 ExpectedFinishedDay: expectedFinishedDay,
+        //                 TEL: tel,
+        //                 Content: content
+        //             }),
+        //             success: function (response) {
+        //                 createResponseErrorCode = response['errorCode'];
+        //                 if (response['errorCode'] != null && response['errorCode'] == 200) {
+        //                     formId = response['formId']
+        //                     upload()
+        //                     window.alert(response['message']);
+        //                 }
+        //                 if (response['errorCode'] != null && response['errorCode'] == 400) {
+        //                     window.alert(response['message']);
+        //                 }
+        //                 // 成功後的操作
+        //             },
+        //             error: function (xhr, status, error) {
+
+        //                 // 錯誤時的操作
+        //             }
+        //         });
+        //         var uploadFileFormData = new FormData();
+        //         // 將 filesArray 中的每個檔案加入 FormData
+        //         function upload() {
+        //             if (createResponseErrorCode == 200) {
+
+        //                 filesArray.forEach(function (file) {
+        //                     uploadFileFormData.append("Files", file);
+        //                 });
+        //                 uploadFileFormData.append("DirectoryName", formId);
+        //                 $.ajax({
+        //                     headers: {
+        //                         'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()  // 傳送驗證 token
+        //                     },
+        //                     url: '/CreateForms/UploadFiles',  // 控制器的Action
+        //                     type: 'POST',
+        //                     data: uploadFileFormData,
+        //                     processData: false,
+        //                     contentType: false,
+        //                 });
+        //             }
+        //         }
+
+        //     });
+        // });
+
+        function loadScript(url, callback) {
+            var script = document.createElement('script');
+            script.src = url;
+            script.type = 'text/javascript';
+            script.onload = function () {
+                if (callback) {
+                    callback();
+                }
+            };
+            document.head.appendChild(script);
+        }
+        loadScript('/AdminLTE/plugins/summernote/summernote-bs4.js', function () {
+            $('#summernote').summernote('code');
+        }
+        );
+
+
     </script>
+    @*  <script>
+        function updateProjectId() {
+            var projectNameSelect = document.getElementById('projectName');
+            var projectIdSelect = document.getElementById('projectId');
+            var selectedProjectId = projectNameSelect.options[projectNameSelect.selectedIndex].getAttribute('data-id');
+
+            projectIdSelect.value = selectedProjectId || '';
+        }
+
+        function updateProjectName() {
+            var projectIdSelect = document.getElementById('projectId');
+            var projectNameSelect = document.getElementById('projectName');
+            var selectedProjectName = projectIdSelect.options[projectIdSelect.selectedIndex].getAttribute('data-id');
+
+            projectNameSelect.value = selectedProjectName || '';
+        }
+        function updateFormId() {
+            referenceId = document.getElementById('formDropdown').value;
+            var CategorySelect = document.getElementById('CategoryId');
+            var Content = document.getElementById('summernote');
+            $.ajax({
+                url: '/CreateForms/GetFormById',
+                type: 'GET',
+                data: { formId: referenceId },
+                success: function (data) {
+                    for (var i = 0; i < CategorySelect.options.length; i++) {
+                        var option = CategorySelect.options[i];
+
+                        if (option.getAttribute('data-id') == data['categoryId']) {
+                            CategorySelect.selectedIndex = i; // 設置選中的選項
+                            break;
+                        }
+                    }
+                    $('.summernote').each(function (index) {
+                        $(this).summernote('destroy');
+                    });
+                    $('#summernote').summernote('code', data['content']);
+
+                },
+                error: function (xhr, status, error) {
+                    if (status == 401) {
+                        window.location.href = "/Login/Index/";
+                    }
+                }
+            });
+        }
+        document.getElementById('filterInput').addEventListener('input', function () {
+            var filterValue = this.value.toLowerCase();
+            var dropdown = document.getElementById('formDropdown');
+            var options = dropdown.options;
+
+            for (var i = 0; i < options.length; i++) {
+                var option = options[i];
+                var text = option.text.toLowerCase();
+                option.style.display = text.includes(filterValue) ? '' : 'none';
+            }
+        });
+
+    </script> *@
+
+    <script src="~/AdminLTE/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/AdminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Select2 -->
+    <script src="~/AdminLTE/plugins/select2/js/select2.full.min.js"></script>
+    <!-- Bootstrap4 Duallistbox -->
+
+
+    <script src="~/AdminLTE/plugins/inputmask/jquery.inputmask.min.js"></script>
+    <!-- date-range-picker -->
+
+
+    <script src="~/AdminLTE/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+
+
+    <!-- AdminLTE for demo purposes -->
+    <script src="~/AdminLTE/dist/js/demo.js"></script>
+    <script>
+
+
+        $(function () {
+            //Initialize Select2 Elements
+            $('.select2').select2()
+
+            //Initialize Select2 Elements
+            $('.select2bs4').select2({
+                theme: 'bootstrap4'
+            })
+
+            //Datemask dd/mm/yyyy
+            $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+            //Datemask2 mm/dd/yyyy
+            $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+            //Money Euro
+            $('[data-mask]').inputmask()
+
+            //Date picker
+            $('#reservationdate').datetimepicker({
+                format: 'L'
+            });
+
+            //Date and time picker
+            $('#reservationdatetime').datetimepicker({ icons: { time: 'far fa-clock' } });
+
+            //Date range picker
+            $('#reservation').daterangepicker()
+            //Date range picker with time picker
+            $('#reservationtime').daterangepicker({
+                timePicker: true,
+                timePickerIncrement: 30,
+                locale: {
+                    format: 'MM/DD/YYYY hh:mm A'
+                }
+            })
+            //Date range as a button
+            $('#daterange-btn').daterangepicker(
+                {
+                    ranges: {
+                        'Today': [moment(), moment()],
+                        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                        'This Month': [moment().startOf('month'), moment().endOf('month')],
+                        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                    },
+                    startDate: moment().subtract(29, 'days'),
+                    endDate: moment()
+                },
+                function (start, end) {
+                    $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+                }
+            )
+
+            //Timepicker
+            $('#timepicker').datetimepicker({
+                format: 'LT'
+            })
+
+            //Bootstrap Duallistbox
+            $('.duallistbox').bootstrapDualListbox()
+
+            //Colorpicker
+            $('.my-colorpicker1').colorpicker()
+            //color picker with addon
+            $('.my-colorpicker2').colorpicker()
+
+            $('.my-colorpicker2').on('colorpickerChange', function (event) {
+                $('.my-colorpicker2 .fa-square').css('color', event.color.toString());
+            })
+
+            $("input[data-bootstrap-switch]").each(function () {
+                $(this).bootstrapSwitch('state', $(this).prop('checked'));
+            })
+
+        })
+        // BS-Stepper Init
+        document.addEventListener('DOMContentLoaded', function () {
+            window.stepper = new Stepper(document.querySelector('.bs-stepper'))
+        })
+
+        // DropzoneJS Demo Code Start
+        Dropzone.autoDiscover = false
+
+        // Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
+        var previewNode = document.querySelector("#template")
+        previewNode.id = ""
+        var previewTemplate = previewNode.parentNode.innerHTML
+        previewNode.parentNode.removeChild(previewNode)
+
+        var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
+            url: "/target-url", // Set the url
+            thumbnailWidth: 80,
+            thumbnailHeight: 80,
+            parallelUploads: 20,
+            previewTemplate: previewTemplate,
+            autoQueue: false, // Make sure the files aren't queued until manually added
+            previewsContainer: "#previews", // Define the container to display the previews
+            clickable: ".fileinput-button" // Define the element that should be used as click trigger to select files.
+        })
+
+        myDropzone.on("addedfile", function (file) {
+            // Hookup the start button
+            file.previewElement.querySelector(".start").onclick = function () { myDropzone.enqueueFile(file) }
+        })
+
+        // Update the total progress bar
+        myDropzone.on("totaluploadprogress", function (progress) {
+            document.querySelector("#total-progress .progress-bar").style.width = progress + "%"
+        })
+
+        myDropzone.on("sending", function (file) {
+            // Show the total progress bar when upload starts
+            document.querySelector("#total-progress").style.opacity = "1"
+            // And disable the start button
+            file.previewElement.querySelector(".start").setAttribute("disabled", "disabled")
+        })
+
+        // Hide the total progress bar when nothing's uploading anymore
+        myDropzone.on("queuecomplete", function (progress) {
+            document.querySelector("#total-progress").style.opacity = "0"
+        })
+
+        // Setup the buttons for all transfers
+        // The "add files" button doesn't need to be setup because the config
+        // `clickable` has already been specified.
+        document.querySelector("#actions .start").onclick = function () {
+            myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED))
+        }
+        document.querySelector("#actions .cancel").onclick = function () {
+            myDropzone.removeAllFiles(true)
+        }
+        // DropzoneJS Demo Code End
+
+
+        $(function () {
+            //Initialize Select2 Elements
+            $('.select2').select2()
+
+            //Initialize Select2 Elements
+            $('.select2bs4').select2({
+                theme: 'bootstrap4'
+            })
+
+            //Datemask dd/mm/yyyy
+            $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+            //Datemask2 mm/dd/yyyy
+            $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+            //Money Euro
+            $('[data-mask]').inputmask()
+
+            //Date picker
+            $('#reservationdate').datetimepicker({
+                format: 'L'
+            });
+
+            //Date and time picker
+            $('#reservationdatetime').datetimepicker({ icons: { time: 'far fa-clock' } });
+
+            //Date range picker
+            $('#reservation').daterangepicker()
+            //Date range picker with time picker
+            $('#reservationtime').daterangepicker({
+                timePicker: true,
+                timePickerIncrement: 30,
+                locale: {
+                    format: 'MM/DD/YYYY hh:mm A'
+                }
+            })
+            //Date range as a button
+            $('#daterange-btn').daterangepicker(
+                {
+                    ranges: {
+                        'Today': [moment(), moment()],
+                        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                        'This Month': [moment().startOf('month'), moment().endOf('month')],
+                        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                    },
+                    startDate: moment().subtract(29, 'days'),
+                    endDate: moment()
+                },
+                function (start, end) {
+                    $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+                }
+            )
+
+            //Timepicker
+            $('#timepicker').datetimepicker({
+                format: 'LT'
+            })
+
+            //Bootstrap Duallistbox
+            $('.duallistbox').bootstrapDualListbox()
+
+            //Colorpicker
+            $('.my-colorpicker1').colorpicker()
+            //color picker with addon
+            $('.my-colorpicker2').colorpicker()
+
+            $('.my-colorpicker2').on('colorpickerChange', function (event) {
+                $('.my-colorpicker2 .fa-square').css('color', event.color.toString());
+            })
+
+            $("input[data-bootstrap-switch]").each(function () {
+                $(this).bootstrapSwitch('state', $(this).prop('checked'));
+            })
+
+        })
+        // BS-Stepper Init
+        document.addEventListener('DOMContentLoaded', function () {
+            window.stepper = new Stepper(document.querySelector('.bs-stepper'))
+        })
+
+        // DropzoneJS Demo Code Start
+        Dropzone.autoDiscover = false
+
+        // Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
+        var previewNode = document.querySelector("#template")
+        previewNode.id = ""
+        var previewTemplate = previewNode.parentNode.innerHTML
+        previewNode.parentNode.removeChild(previewNode)
+
+        var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
+            url: "/target-url", // Set the url
+            thumbnailWidth: 80,
+            thumbnailHeight: 80,
+            parallelUploads: 20,
+            previewTemplate: previewTemplate,
+            autoQueue: false, // Make sure the files aren't queued until manually added
+            previewsContainer: "#previews", // Define the container to display the previews
+            clickable: ".fileinput-button" // Define the element that should be used as click trigger to select files.
+        })
+
+        myDropzone.on("addedfile", function (file) {
+            // Hookup the start button
+            file.previewElement.querySelector(".start").onclick = function () { myDropzone.enqueueFile(file) }
+        })
+
+        // Update the total progress bar
+        myDropzone.on("totaluploadprogress", function (progress) {
+            document.querySelector("#total-progress .progress-bar").style.width = progress + "%"
+        })
+
+        myDropzone.on("sending", function (file) {
+            // Show the total progress bar when upload starts
+            document.querySelector("#total-progress").style.opacity = "1"
+            // And disable the start button
+            file.previewElement.querySelector(".start").setAttribute("disabled", "disabled")
+        })
+
+        // Hide the total progress bar when nothing's uploading anymore
+        myDropzone.on("queuecomplete", function (progress) {
+            document.querySelector("#total-progress").style.opacity = "0"
+        })
+
+        // Setup the buttons for all transfers
+        // The "add files" button doesn't need to be setup because the config
+        // `clickable` has already been specified.
+        document.querySelector("#actions .start").onclick = function () {
+            myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED))
+        }
+        document.querySelector("#actions .cancel").onclick = function () {
+            myDropzone.removeAllFiles(true)
+        }
+        // DropzoneJS Demo Code End
+
+
+    </script>
+
 }
+
+
