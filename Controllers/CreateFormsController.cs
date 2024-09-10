@@ -151,7 +151,7 @@ namespace BPMPlus.Controllers
                         break;
                     }
                 }
-                if (noAvailableOwner)
+                if (noAvailableOwner && pt.UserActivityId != "10")
                 {
                     return Json(new { errorCode = 400, message = $"審核流程無法建立，因部門{pt.DepartmentId} 無人能執行功能{pt.UserActivityId}" });
                 }
