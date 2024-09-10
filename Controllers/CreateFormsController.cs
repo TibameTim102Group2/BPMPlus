@@ -180,7 +180,6 @@ namespace BPMPlus.Controllers
             newForm.DepartmentId = model.DepartmentId;
             newForm.Content = model.Content;
             newForm.ExpectedFinishedDay = ExpectedFinishedDayDateTimeUtc8.AddHours(-8);
-            newForm.HandleDepartmentId = "處理部門";
             newForm.Tel = model.TEL;
             newForm.ProcessNodeId = pNidList[1];
             newForm.FormIsActive = true;
