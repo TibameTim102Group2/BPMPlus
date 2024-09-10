@@ -11,6 +11,10 @@ namespace BPMPlus.ViewModels
 
         public bool IsUser { get; set; }
 
+        public string UserActivityId { get; set; }
+
+        public bool IsApply { get; set; }
+
         public IList<FormDetailsProcessNodeViewModel> FormDetailsProcessNodes {  get; set; } 
 
         public IList<FormDetailsFormProcessViewModel> FormDetailsFormProcesses {  get; set; }

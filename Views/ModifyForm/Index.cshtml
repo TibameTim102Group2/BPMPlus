@@ -97,6 +97,8 @@
         #attachment{
             width: 50px;
         }
+
+       
     </style>
 }
 
@@ -147,7 +149,7 @@
                                 </div>
                             </div>
                             <!-- /作廢 -->
-                            <div class="col-md-6">
+                            <div id="partRight" class="col-md-6">
                                 <form>
                                     <input type="hidden" name="id" value="@Model.ModifyFrom.Id" />
                                     <div style="display:flex">
@@ -197,6 +199,7 @@
                                 </div>
                                 <textarea asp-for="ModifyFrom.Content" rows="8" cols="110">@Model.ModifyFrom.Content</textarea>
                             </div>
+
                             <!-- /.col -->
                             <!-- /.col -->
                         </div>
@@ -348,7 +351,7 @@
             }
            
 
-            fetch('/ModifyForm/Upload',
+            fetch('/ModifyForm/Edit',
                 {
                     method: 'POST',
                     body: formData,
@@ -356,6 +359,7 @@
                 }).then(response => { 
                     if (response.ok) {
                         alert("送出成功");
+                         window.location.href = "/QueryForms/Index/";
                     } else { 
                         alert("送出失敗");
                     }
