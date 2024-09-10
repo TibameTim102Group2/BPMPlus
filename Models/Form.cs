@@ -42,11 +42,6 @@ namespace BPMPlus.Models
         public string Content { get; set; }
 
         public DateTime ExpectedFinishedDay { get; set; }
-
-
-        [Column(TypeName = "VARCHAR")]
-        [MaxLength(20)]
-        public string HandleDepartmentId { get; set; }
        
 
         [Column(TypeName = "VARCHAR")]
