@@ -160,66 +160,7 @@ namespace BPMPlus.Controllers
 
         }
 
-        //[HttpPost]
-        //public IActionResult Download(string id, string fileName)
-        //{
-        //    var folder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/upload", id);
-
-        //    List<string> files = new List<string>(Directory.GetFiles(folder));
-
-        //    foreach (var filePath in files)
-        //    {
-
-        //        try
-        //        {
-        //            // 專案的資料夾路徑
-        //            folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/upload", id);
-
-        //            // 檔案的完整路徑
-        //            var filePath = Path.Combine(folderPath, fileName);
-
-        //            // 檢查檔案是否存在
-        //            if (!System.IO.File.Exists(filePath))
-        //            {
-        //                return NotFound(new { success = false, message = "檔案不存在" });
-        //            }
-
-        //            // 取得檔案的內容類型 (MIME 類型)
-        //            var contentType = GetContentType(fileName);
-
-        //            // 讀取檔案的二進位數據
-        //            var fileBytes = System.IO.File.ReadAllBytes(filePath);
-
-        //            // 返回檔案下載結果
-        //            return File(fileBytes, contentType, fileName);
-        //        }
-        //        catch (Exception)
-        //        {
-        //            return Json(new { success = false, message = "下載失敗" });
-        //        }
-        //    }
-        //}
-
-        //[HttpPost]
-        //public IActionResult DownloadFile(string id)
-        //{
-        //    //讀取檔案
-        //    var filePath =Path.Combine(_webHostEnvironment.WebRootPath, id);
-
-
-        //    var zipFilePath = Path.Combine(_webHostEnvironment.WebRootPath,id);
-        //    using (var archive = ZipFile.Open(zipFilePath, ZipArchiveMode.Create))
-        //    {
-        //        foreach (var file in filePath)
-        //        {
-        //            archive.CreateEntryFromFile(file, Path.GetFileName(file));
-        //        }
-        //    }
-
-        //    var data = System.IO.File.ReadAllBytes(zipFilePath);
-
-        //    return File(data, "application/zip", Path.GetFileName(zipFilePath));
-        //}
+       
 
         [HttpPost]
         public IActionResult Download(string id)
@@ -244,26 +185,6 @@ namespace BPMPlus.Controllers
             
             return File(data, "application/zip", "test.zip");
 
-        }
-
-
-        // 判斷檔案的MIME類型
-        private string GetContentType(string fileName)
-        {
-            var extension = Path.GetExtension(fileName).ToLowerInvariant();
-            return extension switch
-            {
-                ".pdf" => "application/pdf",
-                ".jpg" => "image/jpeg",
-                ".jpeg" => "image/jpeg",
-                ".png" => "image/png",
-                ".txt" => "text/plain",
-                ".doc" => "application/msword",
-                ".docx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                ".xls" => "application/vnd.ms-excel",
-                ".xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                _ => "application/octet-stream", // 預設二進位檔案類型
-            };
         }
 
 
