@@ -21,10 +21,10 @@ namespace BPMPlus.Controllers
         {
             User user = await GetAuthorizedUser();
 
-            //篩資料的條件 工單的流程節點編號的責成人員 是此時使用者登入的人員 且他的功能編號不為1的
+            //篩資料的條件 工單的流程節點編號的責成人員 是此時使用者登入的人員 且他的功能編號不為1&10的
 
             var applicationDbContext = _context.Form.Include(f => f.Category)
-                .Include(f => f.ProcessNode).Where(f => f.ProcessNode.Any(pn => pn.ProcessNodeId == f.ProcessNodeId && pn.UserId == user.UserId && pn.UserActivityId != "01" && f.FormIsActive == true));
+                .Include(f => f.ProcessNode).Where(f => f.ProcessNode.Any(pn => pn.ProcessNodeId == f.ProcessNodeId && pn.UserId == user.UserId && pn.UserActivityId != "01" && pn.UserActivityId != "10" && f.FormIsActive == true));
 
             //把部門變數導入
 
