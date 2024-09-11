@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.SqlServer.Server;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BPMPlus.Controllers
 {
@@ -370,6 +371,34 @@ namespace BPMPlus.Controllers
                         // 保存更改
                         _context.Update(formToUpdate);
                         await _context.SaveChangesAsync();
+                    }
+                }
+                /// <summary>
+                /// 上傳附件
+                /// </summary>
+
+                // 指定專案資料夾名稱
+                var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/upload", fvm.FormId );
+
+                // 檢查資料夾是否存在，如果不存在則創建一個新資料夾
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+
+                // 檢查是否有上傳的檔案
+                if (fvm.Files != null && fvm.Files.Count > 0)
+                {
+                    foreach (var file in fvm.Files)
+                    {
+                        // 檔案存放的完整路徑
+                        var filePath = Path.Combine(folderPath, DateTime.UtcNow.AddHours(8).ToString("yyyy-MM-dd-HHmmss-") + file.FileName);
+
+                        // 保存檔案
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await file.CopyToAsync(stream);
+                        }
                     }
                 }
                 return RedirectToAction("Index", "ToDoList");
