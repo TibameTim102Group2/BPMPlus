@@ -254,9 +254,9 @@ namespace BPMPlus.Controllers
                         ResultId = "RS2",
                         UserActivityId = fvm.UserActivityId,
                         GradeId = currentDetails.crGrade,
-                        Date = DateTime.Now,
-                        CreatedTime = DateTime.Now,
-                        UpdatedTime = DateTime.Now,
+                        Date = DateTime.UtcNow,
+                        CreatedTime = DateTime.UtcNow,
+                        UpdatedTime = DateTime.UtcNow,
                     };
 
                     // 抓下一筆UserId,  UserActivity, DepartmentId
@@ -278,9 +278,9 @@ namespace BPMPlus.Controllers
                         ResultId = "RS4",
                         UserActivityId = nextDetails.UserActivityId,
                         GradeId = nextGradeId,
-                        Date = DateTime.Now,
-                        CreatedTime = DateTime.Now,
-                        UpdatedTime = DateTime.Now,
+                        Date = DateTime.UtcNow,
+                        CreatedTime = DateTime.UtcNow,
+                        UpdatedTime = DateTime.UtcNow,
                     };
 
                     _context.Add(addApprove);
@@ -323,9 +323,9 @@ namespace BPMPlus.Controllers
                         ResultId = "RS2",
                         UserActivityId = fvm.UserActivityId,
                         GradeId = currentDetails.crGrade,
-                        Date = DateTime.Now,
-                        CreatedTime = DateTime.Now,
-                        UpdatedTime = DateTime.Now,
+                        Date = DateTime.UtcNow,
+                        CreatedTime = DateTime.UtcNow,
+                        UpdatedTime = DateTime.UtcNow,
                     };
 
                     // 抓下一筆UserId,  UserActivity, DepartmentId
@@ -347,9 +347,9 @@ namespace BPMPlus.Controllers
                         ResultId = "RS3",
                         UserActivityId = nextDetails.UserActivityId,
                         GradeId = nextGradeId,
-                        Date = DateTime.Now,
-                        CreatedTime = DateTime.Now,
-                        UpdatedTime = DateTime.Now,
+                        Date = DateTime.UtcNow,
+                        CreatedTime = DateTime.UtcNow,
+                        UpdatedTime = DateTime.UtcNow,
                     };
 
                     _context.Add(addApprove);
@@ -402,9 +402,9 @@ namespace BPMPlus.Controllers
                         ResultId = "RS1",
                         UserActivityId = currentDetails.crUserActivityId,
                         GradeId = currentDetails.crGrade,
-                        Date = DateTime.Now,
-                        CreatedTime = DateTime.Now,
-                        UpdatedTime = DateTime.Now,
+                        Date = DateTime.UtcNow,
+                        CreatedTime = DateTime.UtcNow,
+                        UpdatedTime = DateTime.UtcNow,
                     };
 
                     // 抓上一筆UserId,  UserActivity, DepartmentId
@@ -426,9 +426,9 @@ namespace BPMPlus.Controllers
                         ResultId = "RS4",
                         UserActivityId = previousDetails.UserActivityId,
                         GradeId = previousGradeId,
-                        Date = DateTime.Now,
-                        CreatedTime = DateTime.Now,
-                        UpdatedTime = DateTime.Now,
+                        Date = DateTime.UtcNow,
+                        CreatedTime = DateTime.UtcNow,
+                        UpdatedTime = DateTime.UtcNow,
                     };
 
                     _context.Add(addReject);
@@ -560,42 +560,6 @@ namespace BPMPlus.Controllers
                 previousProcessNodeId = previousIndex.ProcessNodeId;
             }
             return (previousUserActivity, previousUserId, previousDepartmentId, previousProcessNodeId);
-        }
-
-
-        public string GetNextUserName(string formId, string user)
-        {
-
-            // 抓出該工單流程節點的總長度
-            var NodeLength = _context.ProcessNodes
-            .Where(f => f.FormId == formId)
-            .Select(c => new
-            {
-                c.UserId,
-            })
-            .ToList();
-
-            // 找出目前該工單的流程節點表
-            var currentDetails = _context.ProcessNodes.Where(f => f.FormId == formId && f.UserId == user)
-                .Select(pn => new
-                {
-                    pn.UserId,
-                })
-                .FirstOrDefault();
-
-            // 判定當前索引位置
-            var currentIndex = NodeLength.FindIndex(n =>
-                n.UserId == currentDetails.UserId
-            );
-
-            // 宣告變數對其index做+1
-            string nextUserId = null;
-            if (currentIndex >= 0 && currentIndex < NodeLength.Count() - 1)
-            {
-                var nextIndex = NodeLength[currentIndex + 1];
-                nextUserId = nextIndex.UserId;
-            }
-            return nextUserId;
         }
 
     }

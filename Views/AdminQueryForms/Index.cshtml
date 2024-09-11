@@ -1,0 +1,107 @@
+﻿@model IEnumerable<BPMPlus.Models.Form>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Project)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Department)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Content)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ExpectedFinishedDay)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProcessNodeId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FormIsActive)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ManDay)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedTime)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.UserId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.CategoryId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Project.ProjectId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Department.DepartmentId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Content)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ExpectedFinishedDay)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tel)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProcessNodeId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FormIsActive)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ManDay)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdatedTime)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.FormId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.FormId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.FormId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
