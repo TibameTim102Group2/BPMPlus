@@ -36,6 +36,7 @@ namespace BPMPlus.Controllers
                                                    resultId = c.ResultId,
                                                    userActivityId = c.UserActivityId,
                                                    userId = c.UserId,
+                                                   formId = c.FormId,
                                                })
                                                .FirstOrDefaultAsync();
 
@@ -49,21 +50,23 @@ namespace BPMPlus.Controllers
                                             .Where(pn => pn.FormId == id && pn.UserActivityId == latestStatus.userActivityId && pn.UserId == latestStatus.userId)
                                             .Select(pn => pn.UserId)
                                             .FirstOrDefaultAsync();
+            var pnUser = await _context.ProcessNodes.Where(pn => pn.FormId == id && pn.UserActivityId == "08").Select(pn => pn.UserId).FirstOrDefaultAsync();
+            var Handler = await _context.User.Where(u => u.UserId == pnUser).Select(u => u.UserName).FirstOrDefaultAsync();
 
             // 一進到審核頁發請求詢問身分是否為接收方一級主管or 處理人員 or 驗收方
             if (assignEmp != null)
             {
-                if (user.PermittedTo("07"))   //  && user.PermittedTo("08")
+                if (user.PermittedTo("07"))
                 {
-                    return Json(new { status = true, userPermit = "07" });
+                    return Json(new { status = true, userPermit = "07", handler = Handler });
                 }
                 else if (user.PermittedTo("08"))
                 {
-                    return Json(new { status = true, userPermit = "08" });
+                    return Json(new { status = true, userPermit = "08", handler = Handler });
                 }
                 else if (user.PermittedTo("09"))
                 {
-                    return Json(new { status = true, userPermit = "09" });
+                    return Json(new { status = true, userPermit = "09", handler = Handler });
                 }
             }
             else return Json(new { status = false });
@@ -558,5 +561,42 @@ namespace BPMPlus.Controllers
             }
             return (previousUserActivity, previousUserId, previousDepartmentId, previousProcessNodeId);
         }
+
+
+        public string GetNextUserName(string formId, string user)
+        {
+
+            // 抓出該工單流程節點的總長度
+            var NodeLength = _context.ProcessNodes
+            .Where(f => f.FormId == formId)
+            .Select(c => new
+            {
+                c.UserId,
+            })
+            .ToList();
+
+            // 找出目前該工單的流程節點表
+            var currentDetails = _context.ProcessNodes.Where(f => f.FormId == formId && f.UserId == user)
+                .Select(pn => new
+                {
+                    pn.UserId,
+                })
+                .FirstOrDefault();
+
+            // 判定當前索引位置
+            var currentIndex = NodeLength.FindIndex(n =>
+                n.UserId == currentDetails.UserId
+            );
+
+            // 宣告變數對其index做+1
+            string nextUserId = null;
+            if (currentIndex >= 0 && currentIndex < NodeLength.Count() - 1)
+            {
+                var nextIndex = NodeLength[currentIndex + 1];
+                nextUserId = nextIndex.UserId;
+            }
+            return nextUserId;
+        }
+
     }
 }
