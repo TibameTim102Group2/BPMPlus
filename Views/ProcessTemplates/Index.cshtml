@@ -1,59 +1,7 @@
-﻿@model IEnumerable<BPMPlus.Models.ProcessTemplate>
-
+﻿
 @{
     ViewData["Title"] = "Index";
 }
 
 <h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.DepartmentId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserActivity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UpdatedTime)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.DepartmentId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserActivity.UserActivityId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category.CategoryId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdatedTime)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ProcessTemplateId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ProcessTemplateId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ProcessTemplateId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>

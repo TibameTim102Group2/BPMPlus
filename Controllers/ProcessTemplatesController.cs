@@ -22,8 +22,8 @@ namespace BPMPlus.Controllers
         // GET: ProcessTemplates
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.ProcessTemplate.Include(p => p.Category).Include(p => p.UserActivity);
-            return View(await applicationDbContext.ToListAsync());
+            //var applicationDbContext = _context.ProcessTemplate.Include(p => p.Category).Include(p => p.UserActivity);
+            return View();
         }
 
         // GET: ProcessTemplates/Details/5
