@@ -21,6 +21,7 @@ namespace BPMPlus
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddScoped<EmailService>();
             builder.Services.AddScoped<AesEncryptionService>();
+            builder.Services.AddScoped<ResetPasswordService>();
 
             // 從appsettings.json讀取登入逾時設定
             //double LoginExpireMinute = builder.Configuration.GetValue<double>("LoginExpireMinute");
