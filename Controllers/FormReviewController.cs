@@ -53,7 +53,7 @@ namespace BPMPlus.Controllers
             // 一進到審核頁發請求詢問身分是否為接收方一級主管or 處理人員 or 驗收方
             if (assignEmp != null)
             {
-                if (user.PermittedTo("07"))
+                if (user.PermittedTo("07"))   //  && user.PermittedTo("08")
                 {
                     return Json(new { status = true, userPermit = "07" });
                 }
@@ -166,6 +166,7 @@ namespace BPMPlus.Controllers
                     .FirstOrDefaultAsync();
 
             //流程進度
+            // 該工單的流程節點全部
             var processNode = _context.ProcessNodes.Include(c => c.UserActivity)
                  .Where(c => c.FormId == formId)
                  .AsNoTracking()
@@ -179,10 +180,13 @@ namespace BPMPlus.Controllers
                  }).ToList();
 
             if (processNode.Any(c => c.ProcessNodeId == formVW.ProcessNodeId)) //Any適用判斷true/false
-                processNode.FirstOrDefault(c => c.ProcessNodeId == formVW.ProcessNodeId).IsHightLight = true;
             {
-                return formVW;
+                var node = processNode.FirstOrDefault(c => c.ProcessNodeId == formVW.ProcessNodeId);
+                node.IsHightLight = true;
             }
+            formVW.FormProcessFlow = processNode;
+
+            return formVW;
         }
 
 
@@ -251,18 +255,16 @@ namespace BPMPlus.Controllers
                         CreatedTime = DateTime.Now,
                         UpdatedTime = DateTime.Now,
                     };
-                    _context.Add(addApprove);
-                    _context.SaveChanges();
 
                     // 抓下一筆UserId,  UserActivity, DepartmentId
                     // 抓該UserId的職等
-                    var nextDetails = GetNextDetails(fvm, user.UserId);
+                    var nextDetails = GetNextDetails(fvm, user.UserId, currentDetails.crUserActivityId);
                     var nextGradeId = _context.User
                                                         .Where(u => u.UserId == nextDetails.UserId)
                                                         .Select(c => c.GradeId)
                                                         .FirstOrDefault();
 
-                    // 創建新的審核中 FormRecord, 分開儲存建立時間差
+                    // 創建新的審核中 FormRecord
                     var addNextReview = new FormRecord
                     {
                         ProcessingRecordId = formRecordIdList[1],
@@ -277,6 +279,8 @@ namespace BPMPlus.Controllers
                         CreatedTime = DateTime.Now,
                         UpdatedTime = DateTime.Now,
                     };
+
+                    _context.Add(addApprove);
                     _context.Add(addNextReview);
                     _context.SaveChanges();
 
@@ -303,25 +307,67 @@ namespace BPMPlus.Controllers
                 // 驗收階段
                 else
                 {
-                    List<string> formRecordIdList = await GetCreateFormRecordIdListAsync(1);
+                    List<string> formRecordIdList = await GetCreateFormRecordIdListAsync(2);
 
-                    // 創建結案FormRecord
-                    var addEndRecord = new FormRecord
+                    // 創建核準FormRecord
+                    var addApprove = new FormRecord
                     {
                         ProcessingRecordId = formRecordIdList[0],
                         Remark = fvm.Remark,
                         FormId = fvm.FormId,
                         DepartmentId = currentDetails.crDepartment,
                         UserId = currentDetails.crUserId,
-                        ResultId = "RS3",
+                        ResultId = "RS2",
                         UserActivityId = fvm.UserActivityId,
                         GradeId = currentDetails.crGrade,
                         Date = DateTime.Now,
                         CreatedTime = DateTime.Now,
                         UpdatedTime = DateTime.Now,
                     };
-                    _context.Add(addEndRecord);
+
+                    // 抓下一筆UserId,  UserActivity, DepartmentId
+                    // 抓該UserId的職等
+                    var nextDetails = GetNextDetails(fvm, user.UserId, currentDetails.crUserActivityId);
+                    var nextGradeId = _context.User
+                                                        .Where(u => u.UserId == nextDetails.UserId)
+                                                        .Select(c => c.GradeId)
+                                                        .FirstOrDefault();
+
+                    // 創建結案FormRecord
+                    var addEnd = new FormRecord
+                    {
+                        ProcessingRecordId = formRecordIdList[1],
+                        Remark = "",
+                        FormId = fvm.FormId,
+                        DepartmentId = nextDetails.DepartmentId,
+                        UserId = nextDetails.UserId,
+                        ResultId = "RS3",
+                        UserActivityId = nextDetails.UserActivityId,
+                        GradeId = nextGradeId,
+                        Date = DateTime.Now,
+                        CreatedTime = DateTime.Now,
+                        UpdatedTime = DateTime.Now,
+                    };
+
+                    _context.Add(addApprove);
+                    _context.Add(addEnd);
                     _context.SaveChanges();
+
+                    // 查詢該工單要更新的欄位
+                    var formToUpdate = await _context.Form
+                                    .Where(f => f.FormId == fvm.FormId)
+                                    .FirstOrDefaultAsync();
+
+                    if (formToUpdate != null)
+                    {
+                        // 更新該工單的 ProcessNodeId
+                        formToUpdate.ProcessNodeId = nextDetails.ProcessNodeId;
+                        formToUpdate.ManDay = fvm.EstimatedTime;
+
+                        // 保存更改
+                        _context.Update(formToUpdate);
+                        await _context.SaveChangesAsync();
+                    }
                 }
                 return RedirectToAction("Index", "ToDoList");
             }
@@ -357,18 +403,16 @@ namespace BPMPlus.Controllers
                         CreatedTime = DateTime.Now,
                         UpdatedTime = DateTime.Now,
                     };
-                    _context.Add(addReject);
-                    _context.SaveChanges();
 
                     // 抓上一筆UserId,  UserActivity, DepartmentId
                     // 抓該UserId的職等
-                    var previousDetails = GetBackDetails(fvm, user.UserId);
+                    var previousDetails = GetBackDetails(fvm, user.UserId, currentDetails.crUserActivityId);
                     var previousGradeId = _context.User
                                                         .Where(u => u.UserId == previousDetails.UserId)
                                                         .Select(c => c.GradeId)
                                                         .FirstOrDefault();
 
-                    // 創建新的審核中 FormRecord, 分開儲存建立時間差
+                    // 創建新的審核中 FormRecord
                     var addNextReview = new FormRecord
                     {
                         ProcessingRecordId = formRecordIdList[1],
@@ -383,6 +427,8 @@ namespace BPMPlus.Controllers
                         CreatedTime = DateTime.Now,
                         UpdatedTime = DateTime.Now,
                     };
+
+                    _context.Add(addReject);
                     _context.Add(addNextReview);
                     _context.SaveChanges();
 
@@ -410,7 +456,7 @@ namespace BPMPlus.Controllers
         /* ------------ 方法層 -------------*/
 
         // 查詢下一位UserId,  UserActivity, DepartmentId
-        public (string UserActivityId, string UserId, string DepartmentId, string ProcessNodeId) GetNextDetails(FormReviewViewModel fvm, string UserId)
+        public (string UserActivityId, string UserId, string DepartmentId, string ProcessNodeId) GetNextDetails(FormReviewViewModel fvm, string userId, string userActivityId)
         {
 
             // 抓出該工單流程節點的總長度
@@ -426,7 +472,7 @@ namespace BPMPlus.Controllers
             .ToList();
 
             // 找出目前該工單的流程節點表
-            var currentDetails = _context.ProcessNodes.Where(f => f.FormId == fvm.FormId && f.UserId == UserId)
+            var currentDetails = _context.ProcessNodes.Where(f => f.FormId == fvm.FormId && f.UserId == userId && f.UserActivityId == userActivityId)
                 .Select(pn => new
                 {
                     pn.UserActivityId,
@@ -463,7 +509,7 @@ namespace BPMPlus.Controllers
         }
 
 
-        public (string UserActivityId, string UserId, string DepartmentId, string ProcessNodeId) GetBackDetails(FormReviewViewModel fvm, string UserId)
+        public (string UserActivityId, string UserId, string DepartmentId, string ProcessNodeId) GetBackDetails(FormReviewViewModel fvm, string UserId, string userActivityId)
         {
 
             // 抓出該工單流程節點的總長度
@@ -479,7 +525,7 @@ namespace BPMPlus.Controllers
             .ToList();
 
             // 找出目前該工單的流程節點表
-            var currentDetails = _context.ProcessNodes.Where(f => f.FormId == fvm.FormId && f.UserId == UserId)
+            var currentDetails = _context.ProcessNodes.Where(f => f.FormId == fvm.FormId && f.UserId == UserId && f.UserActivityId == userActivityId)
                 .Select(pn => new
                 {
                     pn.UserActivityId,

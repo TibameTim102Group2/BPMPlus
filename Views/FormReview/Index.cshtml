@@ -140,7 +140,7 @@
         }
 
         .textContent {
-            color: red;
+            color: black;
         }
 
             .textContent[readonly] {
@@ -153,6 +153,11 @@
             font-weight: bold;
             background-color: white;
         }
+
+        /*         #formArea .reviewOptions label {
+                    margin-right : 0;
+                    background-color : orange;
+                } */
 
     </style>
 }
@@ -225,24 +230,18 @@
                 <div>
                     @foreach (var activity in Model.FormProcessFlow)
                     {
-                        if (activity.IsHightLight)
+                        if (activity.IsHightLight == true)
                         {
-
                             <button type="button" class="btn btn-sm btn-danger btns">@activity.UserActivityIdDescription</button>
                         }
                         else
                         {
-
                             <button type="button" class="btn btn-sm btn-primary btns">@activity.UserActivityIdDescription</button>
                         }
-
                     }
-
 
                 </div>
             </div><br /><br />
-
-
 
             <!--  工單處理紀錄  -->
             <label>處理紀錄</label>
@@ -267,12 +266,8 @@
                             <td>@item.ResultDes</td>
                         </tr>
                     }
-
-
                 </tbody>
             </table>
-
-
 
             <!-- 需求內容/附件/出示意見 -->
             <!-- 需求內容 -->
@@ -280,8 +275,6 @@
                 <label class="noteContent">需求內容</label><br>
                 <div asp-for="@Model.Content" class="textContent form-control" readonly>@Html.Raw(Model.Content)</div>
             </div>
-
-
 
             <!-- 附件上傳/下載 -->
             <div class="result file">
@@ -299,15 +292,20 @@
                             </textarea>
                     </div>
                 </div>
-                <div style="display:flex;">
-                    <label>審核結果: </label>
-                    <div class="reviewResult">
-                        <input name="reviewResult" type="radio" value="reject" />退回
-                        <input name="reviewResult" type="radio" value="approve" />核准
+                <div style="display:flex; justify-content: space-between; align-items: center;">
+                    <div class="reviewResult" style="flex: 1; text-align: left;">
+                        <label>審核結果: </label>
+                    </div>
+                    <div class="reviewOptions" style="flex: 1; text-align: center;">
+                        <label class="txtReject"><input name="reviewResult" type="radio" value="reject" /> 退回</label>
+                        <label class="txtApprove"><input name="reviewResult" type="radio" value="approve" /> 核准</label>
+                    </div>
+                    <div class="submitBtn" style="flex: 1; text-align: right;">
                         <input type="submit" class="btn btn-success btns" value="送出" />
                     </div>
                 </div>
-            </div><!-- 需求內容/附件/出示意見 END -->
+
+            </div>
         </div><!-- secondeBackground END -->
     </form>
 </div>
@@ -315,9 +313,8 @@
 @section Scripts
 {
 
-
     <script>
-        // 一進到審核頁發請求詢問身分是否為接收方一級主管or 處理人員, 是的話移除唯讀, 提供輸入指派者 or 處理人員輸入預估工時
+        // 一進到審核頁發請求詢問身分是否為接收方一級主管or 處理人員 or 驗收方, 是的話移除唯讀, 提供輸入指派者 or 處理人員輸入預估工時
         document.addEventListener('DOMContentLoaded', async function () {
             let formId = '@Model.FormId';
             fetch(`/FormReview/CheckEmp/?id=${formId}`, {
@@ -328,6 +325,8 @@
                     if (data.status == true && data.userPermit == "07") {
                         let needEmp = document.querySelector(".assignEmp");
                         needEmp.removeAttribute("readonly");
+                        let CheckEstimatedTime = document.querySelector(".EstimatedTime");
+                        CheckEstimatedTime.value = "";
                     }
                     else if (data.status == true && data.userPermit == "08") {
                         let CheckEstimatedTime = document.querySelector(".EstimatedTime");
@@ -336,7 +335,14 @@
                         needEmp.setAttribute("value", "@Html.Raw(Model.UserName)");
                     }
                     else if (data.status == true && data.userPermit == "09") {
-
+                        let needEmp = document.querySelector(".assignEmp");
+                        needEmp.setAttribute("value", "@Html.Raw(Model.UserName)");
+                        let CheckEstimatedTime = document.querySelector(".EstimatedTime");
+                        CheckEstimatedTime.setAttribute("value", "@Html.Raw(Model.EstimatedTime)");
+                    }
+                    else {
+                        let CheckEstimatedTime = document.querySelector(".EstimatedTime");
+                        CheckEstimatedTime.value = "";
                     }
                 })
                 .catch(err => {
@@ -344,13 +350,6 @@
                 })
         });
 
-            $(document).ready(function() {
-                // 當 Summernote 初始化或畫面渲染後，你可以選擇 note-editable class 並添加 ManagerOpinion 和 asp-for 屬性
-                $(".note-editable").addClass("ManagerOpinion");
-
-            // 這裡手動添加 asp-for 的作用
-            $(".note-editable").attr("asp-for", "@Model.Remark");
-            });
 
         // // summernote
         //     $(document).ready(function() {
