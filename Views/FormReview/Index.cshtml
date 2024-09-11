@@ -323,22 +323,29 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.status == true && data.userPermit == "07") {
+
                         let needEmp = document.querySelector(".assignEmp");
                         needEmp.removeAttribute("readonly");
                         let CheckEstimatedTime = document.querySelector(".EstimatedTime");
                         CheckEstimatedTime.value = "";
+                        if (data.handler) {
+                            needEmp.value = data.handler;
+                        };
                     }
                     else if (data.status == true && data.userPermit == "08") {
                         let CheckEstimatedTime = document.querySelector(".EstimatedTime");
                         CheckEstimatedTime.removeAttribute("readonly");
                         let needEmp = document.querySelector(".assignEmp");
-                        needEmp.setAttribute("value", "@Html.Raw(Model.UserName)");
+                        if (data.handler) {
+                            needEmp.value = data.handler;
+                        };
                     }
                     else if (data.status == true && data.userPermit == "09") {
                         let needEmp = document.querySelector(".assignEmp");
-                        needEmp.setAttribute("value", "@Html.Raw(Model.UserName)");
                         let CheckEstimatedTime = document.querySelector(".EstimatedTime");
-                        CheckEstimatedTime.setAttribute("value", "@Html.Raw(Model.EstimatedTime)");
+                        if (data.handler) {
+                            needEmp.value = data.handler;
+                        };
                     }
                     else {
                         let CheckEstimatedTime = document.querySelector(".EstimatedTime");
@@ -347,8 +354,24 @@
                 })
                 .catch(err => {
                     alert(JSON.stringify(err));
-                })
+                });
+
+            // 前端驗證有無選擇核准or退回
+            let formValid = document.getElementById("formArea");
+            formValid.addEventListener("submit", function (event) {
+                let rejectBtn = document.querySelector('input[name="reviewResult"][value="reject"]').checked;
+                let approveBtn = document.querySelector('input[name="reviewResult"][value="approve"]').checked;
+                if (!rejectBtn && !approveBtn) {
+                    event.preventDefault();
+                    alert("請選擇「核准」或「退回」再送出 ! ");
+                } else {
+                    if (!confirm("確定要送出嗎 ?")) {
+                        event.preventDefault();
+                    }
+                }
+            });
         });
+
 
 
         // // summernote
