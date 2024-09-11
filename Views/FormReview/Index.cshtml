@@ -169,7 +169,7 @@
         <h4 class="m-3">審核工單</h4>
     </div>
 
-    <form id="formArea" asp-controller="FormReview" method="post" asp-action="CreateAndUpdate">
+    <form id="formArea" asp-controller="FormReview" method="post" asp-action="CreateAndUpdate" enctype="multipart/form-data">
         <div id="secondeBackground">
 
             <!-- 工單區域 -->
@@ -277,9 +277,15 @@
             </div>
 
             <!-- 附件上傳/下載 -->
-            <div class="result file">
-                <input type="file" />
-                <button class="btn bg-info btn-sm">附件下載</button>
+            <div class="col-12 col-sm-7" style="display:flex">
+                <input type="hidden" name="id" value="@Model.FormId" />
+                    <div class="form-group">
+                        <label id="attachment">附件</label>
+                        <input asp-for="@Model.Files" type="file" class="form-control" multiple />
+                        <div>
+                            @ViewBag.Message
+                        </div>
+                    </div>
             </div>
 
             <div class="result">

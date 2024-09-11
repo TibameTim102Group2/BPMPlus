@@ -29,6 +29,12 @@ namespace BPMPlus.ViewModels
         public List<FormReviewFormProcessViewModel> FormRecordList { get; set; }
         public List<FormReviewProcessFlowViewModel> FormProcessFlow { get; set; }
 
+        public DateTime Enddate { get; set; } = DateTime.Now;
+
+        public string Id { get; set; }
+
+        public List<IFormFile> Files { get; set; } = null;
+
 
     }
 }
