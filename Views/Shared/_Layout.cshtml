@@ -48,11 +48,11 @@
                 <li class="nav-item d-none d-sm-inline-block">
                     <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">BPMPlus</a>
                 </li>
-
-
             </ul>
         </nav>
         <!-- /.navbar -->
+
+        
 
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
@@ -233,9 +233,9 @@
 
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-area="" asp-controller="Users" asp-action="Index">
+                                    <a class="nav-link" asp-area="" asp-controller="ProcessTemplates" asp-action="Index">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>人員新增</p>
+                                        <p>新增工單類別</p>
                                     </a>
 
                                 </li>
@@ -310,9 +310,6 @@
 @section Scripts
 {
     <script>
-        fetch('https://localhost:7129/Login/').then(response => { 
-            
-        }
-        );
+
     </script>
 }
