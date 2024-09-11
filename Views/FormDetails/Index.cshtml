@@ -370,9 +370,14 @@
                     } else {
                         alert("下載失敗");
                     }
-                }
+                    return response.blob()
+                        } )
+                .then( blob => {
+                    var file = window.URL.createObjectURL(blob);
+                    window.location.assign(file);
+                  });
 
-                )
+               
 
         });
     </script>

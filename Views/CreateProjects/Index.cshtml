@@ -1,0 +1,128 @@
+﻿@section Style {
+    <style>
+
+        .content-wrapper {
+            background-color: rgb(225, 239, 252);
+        }
+
+        .outside {
+            padding: 20px;
+            background-color: rgb(225, 239, 252);
+            height: 100%;
+        }
+
+        .title {
+            color: rgba(0, 81, 255, 0.884);
+            margin-top: 20px;
+            margin-bottom: 30px;
+            margin-left: 30px;
+            font-weight: bold;
+        }
+
+        .inside {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: rgb(225, 229, 252);
+            border: 0.5px solid gainsboro;
+        }
+
+      
+
+        .form-label {
+            padding-top: 5px;
+            display: flex;
+            width: 50%;
+            margin: 2%;
+        }
+
+        label {
+            margin: auto;
+            display: inline;
+            width: 100px;
+            margin-right: 20PX;
+            background-color: #458bfc;
+            text-align: center;
+            color: white;
+            text-decoration: double;
+            border-radius: 5%;
+        }
+
+        .inputField{
+            display:flex;
+        }
+
+        .form-keymessag {
+            display: flex;
+            width: 70%;
+        }
+
+
+    </style>
+}
+
+
+<!-- outside -->
+<div class="outside">
+ 
+
+    <h1 class="title">新建專案</h1>
+
+    <!-- inside -->
+    <div class="inside">
+        <form>
+            <div class="mb-3 inputField ">
+                <div class="mb-3 form-label">
+                    <label >部門</label>
+                    <input  class="form-control"  Disabled>
+                </div>
+                <div class="mb-3 form-label">
+                    <label >專案名稱</label>
+                    <input class="form-control"  placeholder="請輸入專案名稱" >
+                </div>
+            </div>
+            <div class="mb-3 inputField ">
+                <div class="mb-3 form-label">
+                    <label>員工編號</label>
+                    <input class="form-control" Disabled>
+                </div>
+                <div class="mb-3 form-label">
+                    <label>員工姓名</label>
+                    <input class="form-control" Disabled>
+                </div>
+            </div>
+            <div class="mb-3 inputField ">
+                <div class="mb-3 form-label">
+                    <label>專案期限</label>
+                    <input class="form-control" type="date">
+                </div>
+            </div>
+            <div class="mb-3 inputField ">
+                <div class="mb-3 form-label">
+                    <label>甘特圖</label>
+                    <input class="form-control" type="file">
+                </div>
+            </div>
+            <div class="mb-3 keymessage ">
+                <div class="mb-3 form-keymessage">
+                    <label>專案概要</label>
+                    <textarea rows="5" cols="80"></textarea>
+                </div>
+            </div>
+
+    
+            
+            <!-- 送出按鈕 -->
+         @*    <div class="submit-btn">
+                <button type="submit" id="submitButton" class="btn btn-primary">送出</button>
+            </div> *@
+        </form>
+    </div>
+</div>
+
+
+
+
+@section Scripts {
+
+
+}
