@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\images\userdata\" />
     <Folder Include="wwwroot\upload\NewFolder\" />
   </ItemGroup>
 
