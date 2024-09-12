@@ -1,4 +1,7 @@
 ﻿@section Style {
+
+    <link rel="stylesheet" href="~/font-awesome/css/all.css" />
+
     <style>
 
         .content-wrapper {
@@ -51,12 +54,20 @@
             display:flex;
         }
 
-        .form-keymessag {
-            display: flex;
-            width: 70%;
+        input {
+            width:100px;
         }
 
+        #btnSubmit{
+            height:40px;
+            margin-left:100px;
+            margin-top:70px;
+        }
 
+        .form-label{
+            width:40%;
+        }
+    
     </style>
 }
 
@@ -93,7 +104,7 @@
             <div class="mb-3 inputField ">
                 <div class="mb-3 form-label">
                     <label>專案期限</label>
-                    <input class="form-control" type="date">
+                    <input class="form-control float-right" type="date">
                 </div>
             </div>
             <div class="mb-3 inputField ">
@@ -102,19 +113,16 @@
                     <input class="form-control" type="file">
                 </div>
             </div>
-            <div class="mb-3 keymessage ">
-                <div class="mb-3 form-keymessage">
+            <div class="mb-3 inputField ">
+                <div class="mb-3 form-label">
                     <label>專案概要</label>
-                    <textarea rows="5" cols="80"></textarea>
+                    <textarea rows="5" cols="70"></textarea>
+                </div>
+                <div class="mb-3 form-label">
+                    <button type="submit" id="btnSubmit" class="btn btn-primary">送出</button>
                 </div>
             </div>
-
-    
-            
-            <!-- 送出按鈕 -->
-         @*    <div class="submit-btn">
-                <button type="submit" id="submitButton" class="btn btn-primary">送出</button>
-            </div> *@
+        
         </form>
     </div>
 </div>
