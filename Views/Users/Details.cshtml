@@ -1,0 +1,151 @@
+﻿@model BPMPlus.Models.User
+
+@{
+    ViewData["Title"] = "Details";
+}
+@section Style{
+    <style>
+        .title {
+            color: rgb(255, 215, 0);
+            margin-top: 20px;
+            margin-bottom: 30px;
+            margin-left: 30px;
+            font-weight: bold;
+        }
+
+        .backcolor {
+            background-color: rgb(255, 245, 238);
+        }
+
+        .item-name {
+            padding-right: 1%;
+            width: 28%;
+        }
+
+        .item-value {
+            width: 0%;
+        }
+
+        .button {
+            width: 12 %;
+        }
+
+        .btn-link {
+            color: white;
+        }
+
+        .button-icon {
+            width: 20%;
+        }
+
+        .process-node {
+            background-color: rgb(232, 244, 255);
+            height: 200px;
+        }
+
+        textarea {
+            resize: none;
+        }
+
+        .txt-box {
+            width: 50%;
+        }
+
+        .selection {
+            width: 50%;
+        }
+
+        .date {
+            width: 50%;
+        }
+
+        .content {
+            padding: 3%
+        }
+
+        .form-group {
+            display: flex;
+        }
+
+        table {
+            text-align: center;
+            line-height: 1.5;
+        }
+
+    </style>
+}
+<div class="wrapper backcolor">
+
+    <section class="content">
+        <div class="container-fluid">
+            <h3 class="title">
+                人員細節
+            </h3>
+            <div class="card card-default col-md-12">
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="item-name">人員編號</label><input class="form-control txt-box" disabled value="@Model.UserId">
+                            </div>
+                            <!-- /.form-group -->
+                            <div class="form-group">
+                                <label class="item-name">所屬部門</label><input class="form-control txt-box" disabled value="@Model.Department.DepartmentName">
+                            </div>
+                            <div class="form-group" style="display:flex">
+                                <label class="item-name">聯繫電話</label><input class="form-control txt-box" disabled value="@Model.TEL">
+                            </div>
+
+                            <div class="form-group" style="display:flex">
+                                <label class="item-name">建檔日期</label><input class="form-control txt-box" disabled value="@Model.CreatedTime.ToLocalTime()">
+                            </div>
+
+                            <!-- /.form-group -->
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-md-6">
+
+                            <div>
+                                <div class="form-group" style="display:flex">
+                                    <label class="item-name">人員姓名</label><input class="form-control txt-box" disabled value="@Model.UserName">
+
+                                </div>
+                                <div class="form-group">
+                                    <label class="item-name">職位</label><input class="form-control txt-box" disabled value="@Model.Grade.GradeName">
+                                </div>
+                                <div class="form-group">
+                                    <label class="item-name">Email</label><input class="form-control txt-box" disabled value="@Model.Email">
+                                </div>
+                                <div class="form-group">
+                                    <label class="item-name">是否在職</label><input class="form-control txt-box" disabled value="@ViewBag.UserIsActive" />
+                                    
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- /.row -->
+                    </div>
+                    <div>
+                        <label class="item-name">使用者權限</label>
+                        <div class=" txt-box"
+                                  >@foreach (var permission in ViewBag.userPermission)
+                            {
+                                <p class="txt-box form-control">@permission</p>
+                            }
+                        </div>
+                    </div>
+                    <div >
+
+                        <button class="btn btn-warning" style="margin-left:55vw"> <a asp-action="Index" style="color:black">返回</a></button>
+                    </div>
+
+
+                </div>
+                <!-- /.row -->
+            </div>
+            </div>
+    </section>
+
+</div>
+

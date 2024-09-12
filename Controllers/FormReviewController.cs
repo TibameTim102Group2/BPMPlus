@@ -2,20 +2,25 @@
 using BPMPlus.Models;
 using BPMPlus.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.SqlServer.Server;
+using System.IO.Compression;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BPMPlus.Controllers
 {
     public class FormReviewController : BaseController
     {
         ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public FormReviewController(ApplicationDbContext context) : base(context)
+        public FormReviewController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment) : base(context)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
 
@@ -205,260 +210,316 @@ namespace BPMPlus.Controllers
 
             User user = await GetAuthorizedUser();
 
-            // 查詢該筆工單的最新部門審核者部門Id, UserId
-            var currentDetails = await _context.FormRecord
-                                                .Where(fr => fr.FormId == fvm.FormId && user.UserId == fr.UserId)
-                                                .OrderByDescending(f => f.CreatedTime)
-                                                .Select(c => new
-                                                {
-                                                    crProcessingRecord = c.ProcessingRecordId,
-                                                    crDepartment = c.DepartmentId,
-                                                    crUserId = c.UserId,
-                                                    crGrade = c.GradeId,
-                                                    crUserActivityId = c.UserActivityId,
-                                                    crRemark = c.Remark,
-                                                })
-                                                .FirstOrDefaultAsync();
-
-            // 抓出UserActivtiy內的驗收id
-            var check = _context.UserActivity
-                                    .Where(c => c.UserActivityId == "09")
-                                    .Select(m => m.UserActivityId)
-                                    .FirstOrDefault();
-
-            var poster = _context.UserActivity
-                        .Where(c => c.UserActivityId == "01")
-                        .Select(m => m.UserActivityId)
-                        .FirstOrDefault();
-
-
-
-            /* ------------ 如果審核方核准送出 -------------*/
-
-            // 判斷如果審核方按下核准送出且目前功能編號不是驗收
-            if (reviewResult == "approve")
+            try
             {
-                // 如果user不等於提單方or 驗收方
-                if (fvm.UserActivityId != check && fvm.UserActivityId != poster)
+                // 查詢該筆工單的最新部門審核者部門Id, UserId
+                var currentDetails = await _context.FormRecord
+                                                    .Where(fr => fr.FormId == fvm.FormId && user.UserId == fr.UserId)
+                                                    .OrderByDescending(f => f.CreatedTime)
+                                                    .Select(c => new 
+                                                    {
+                                                        crProcessingRecord = c.ProcessingRecordId,
+                                                        crDepartment = c.DepartmentId,
+                                                        crUserId = c.UserId,
+                                                        crGrade = c.GradeId,
+                                                        crUserActivityId = c.UserActivityId,
+                                                        crRemark = c.Remark,
+                                                    })
+                                                    .FirstOrDefaultAsync();
+
+                // 抓出UserActivtiy內的驗收id
+                var check = _context.UserActivity
+                                        .Where(c => c.UserActivityId == "09")
+                                        .Select(m => m.UserActivityId)
+                                        .FirstOrDefault();
+
+                var poster = _context.UserActivity
+                            .Where(c => c.UserActivityId == "01")
+                            .Select(m => m.UserActivityId)
+                            .FirstOrDefault();
+
+
+
+                /* ------------ 如果審核方核准送出 -------------*/
+
+                // 判斷如果審核方按下核准送出且目前功能編號不是驗收
+                if (reviewResult == "approve")
                 {
-                    List<string> formRecordIdList = await GetCreateFormRecordIdListAsync(2);
-
-                    // 創建新的核准FormRecord
-                    var addApprove = new FormRecord
+                    // 如果user不等於提單方or 驗收方
+                    if (fvm.UserActivityId != check && fvm.UserActivityId != poster)
                     {
-                        ProcessingRecordId = formRecordIdList[0],
-                        Remark = fvm.Remark,
-                        FormId = fvm.FormId,
-                        DepartmentId = currentDetails.crDepartment,
-                        UserId = currentDetails.crUserId,
-                        ResultId = "RS2",
-                        UserActivityId = fvm.UserActivityId,
-                        GradeId = currentDetails.crGrade,
-                        Date = DateTime.Now,
-                        CreatedTime = DateTime.Now,
-                        UpdatedTime = DateTime.Now,
-                    };
+                        List<string> formRecordIdList = await GetCreateFormRecordIdListAsync(2);
 
-                    // 抓下一筆UserId,  UserActivity, DepartmentId
-                    // 抓該UserId的職等
-                    var nextDetails = GetNextDetails(fvm, user.UserId, currentDetails.crUserActivityId);
-                    var nextGradeId = _context.User
-                                                        .Where(u => u.UserId == nextDetails.UserId)
-                                                        .Select(c => c.GradeId)
-                                                        .FirstOrDefault();
+                        // 創建新的核准FormRecord
+                        var addApprove = new FormRecord
+                        {
+                            ProcessingRecordId = formRecordIdList[0],
+                            Remark = fvm.Remark,
+                            FormId = fvm.FormId,
+                            DepartmentId = currentDetails.crDepartment,
+                            UserId = currentDetails.crUserId,
+                            ResultId = "RS2",
+                            UserActivityId = fvm.UserActivityId,
+                            GradeId = currentDetails.crGrade,
+                            Date = DateTime.UtcNow,
+                            CreatedTime = DateTime.UtcNow,
+                            UpdatedTime = DateTime.UtcNow,
+                        };
 
-                    // 創建新的審核中 FormRecord
-                    var addNextReview = new FormRecord
-                    {
-                        ProcessingRecordId = formRecordIdList[1],
-                        Remark = "",
-                        FormId = fvm.FormId,
-                        DepartmentId = nextDetails.DepartmentId,
-                        UserId = nextDetails.UserId,
-                        ResultId = "RS4",
-                        UserActivityId = nextDetails.UserActivityId,
-                        GradeId = nextGradeId,
-                        Date = DateTime.Now,
-                        CreatedTime = DateTime.Now,
-                        UpdatedTime = DateTime.Now,
-                    };
+                        // 抓下一筆UserId,  UserActivity, DepartmentId
+                        // 抓該UserId的職等
+                        var nextDetails = GetNextDetails(fvm, user.UserId, currentDetails.crUserActivityId);
+                        var nextGradeId = _context.User
+                                                            .Where(u => u.UserId == nextDetails.UserId)
+                                                            .Select(c => c.GradeId)
+                                                            .FirstOrDefault();
 
-                    _context.Add(addApprove);
-                    _context.Add(addNextReview);
-                    _context.SaveChanges();
+                        // 創建新的審核中 FormRecord
+                        var addNextReview = new FormRecord
+                        {
+                            ProcessingRecordId = formRecordIdList[1],
+                            Remark = "",
+                            FormId = fvm.FormId,
+                            DepartmentId = nextDetails.DepartmentId,
+                            UserId = nextDetails.UserId,
+                            ResultId = "RS4",
+                            UserActivityId = nextDetails.UserActivityId,
+                            GradeId = nextGradeId,
+                            Date = DateTime.UtcNow,
+                            CreatedTime = DateTime.UtcNow,
+                            UpdatedTime = DateTime.UtcNow,
+                        };
 
-                    // 查詢該工單要更新的欄位
-                    var formToUpdate = await _context.Form
-                                    .Where(f => f.FormId == fvm.FormId)
-                                    .FirstOrDefaultAsync();
+                        _context.Add(addApprove);
+                        _context.Add(addNextReview);
+                        _context.SaveChanges();
+
+                        // 查詢該工單要更新的欄位
+                        var formToUpdate = await _context.Form
+                                        .Where(f => f.FormId == fvm.FormId)
+                                        .FirstOrDefaultAsync();
 
 
 
-                    if (formToUpdate != null)
-                    {
-                        // 更新該工單的 ProcessNodeId
-                        formToUpdate.ProcessNodeId = nextDetails.ProcessNodeId;
-                        formToUpdate.ManDay = fvm.EstimatedTime;
+                        if (formToUpdate != null)
+                        {
+                            // 更新該工單的 ProcessNodeId
+                            formToUpdate.ProcessNodeId = nextDetails.ProcessNodeId;
+                            formToUpdate.ManDay = fvm.EstimatedTime;
 
-                        // 保存更改
-                        _context.Update(formToUpdate);
-                        await _context.SaveChangesAsync();
+                            // 保存更改
+                            _context.Update(formToUpdate);
+                            await _context.SaveChangesAsync();
+                        }
+
                     }
 
-                }
-
-                // 驗收階段
-                else
-                {
-                    List<string> formRecordIdList = await GetCreateFormRecordIdListAsync(2);
-
-                    // 創建核準FormRecord
-                    var addApprove = new FormRecord
+                    // 驗收階段
+                    else
                     {
-                        ProcessingRecordId = formRecordIdList[0],
-                        Remark = fvm.Remark,
-                        FormId = fvm.FormId,
-                        DepartmentId = currentDetails.crDepartment,
-                        UserId = currentDetails.crUserId,
-                        ResultId = "RS2",
-                        UserActivityId = fvm.UserActivityId,
-                        GradeId = currentDetails.crGrade,
-                        Date = DateTime.Now,
-                        CreatedTime = DateTime.Now,
-                        UpdatedTime = DateTime.Now,
-                    };
+                        List<string> formRecordIdList = await GetCreateFormRecordIdListAsync(2);
 
-                    // 抓下一筆UserId,  UserActivity, DepartmentId
-                    // 抓該UserId的職等
-                    var nextDetails = GetNextDetails(fvm, user.UserId, currentDetails.crUserActivityId);
-                    var nextGradeId = _context.User
-                                                        .Where(u => u.UserId == nextDetails.UserId)
-                                                        .Select(c => c.GradeId)
-                                                        .FirstOrDefault();
+                        // 創建核準FormRecord
+                        var addApprove = new FormRecord
+                        {
+                            ProcessingRecordId = formRecordIdList[0],
+                            Remark = fvm.Remark,
+                            FormId = fvm.FormId,
+                            DepartmentId = currentDetails.crDepartment,
+                            UserId = currentDetails.crUserId,
+                            ResultId = "RS2",
+                            UserActivityId = fvm.UserActivityId,
+                            GradeId = currentDetails.crGrade,
+                            Date = DateTime.UtcNow,
+                            CreatedTime = DateTime.UtcNow,
+                            UpdatedTime = DateTime.UtcNow,
+                        };
 
-                    // 創建結案FormRecord
-                    var addEnd = new FormRecord
-                    {
-                        ProcessingRecordId = formRecordIdList[1],
-                        Remark = "",
-                        FormId = fvm.FormId,
-                        DepartmentId = nextDetails.DepartmentId,
-                        UserId = nextDetails.UserId,
-                        ResultId = "RS3",
-                        UserActivityId = nextDetails.UserActivityId,
-                        GradeId = nextGradeId,
-                        Date = DateTime.Now,
-                        CreatedTime = DateTime.Now,
-                        UpdatedTime = DateTime.Now,
-                    };
+                        // 抓下一筆UserId,  UserActivity, DepartmentId
+                        // 抓該UserId的職等
+                        var nextDetails = GetNextDetails(fvm, user.UserId, currentDetails.crUserActivityId);
+                        var nextGradeId = _context.User
+                                                            .Where(u => u.UserId == nextDetails.UserId)
+                                                            .Select(c => c.GradeId)
+                                                            .FirstOrDefault();
 
-                    _context.Add(addApprove);
-                    _context.Add(addEnd);
-                    _context.SaveChanges();
+                        // 創建結案FormRecord
+                        var addEnd = new FormRecord
+                        {
+                            ProcessingRecordId = formRecordIdList[1],
+                            Remark = "",
+                            FormId = fvm.FormId,
+                            DepartmentId = nextDetails.DepartmentId,
+                            UserId = nextDetails.UserId,
+                            ResultId = "RS3",
+                            UserActivityId = nextDetails.UserActivityId,
+                            GradeId = nextGradeId,
+                            Date = DateTime.UtcNow,
+                            CreatedTime = DateTime.UtcNow,
+                            UpdatedTime = DateTime.UtcNow,
+                        };
 
-                    // 查詢該工單要更新的欄位
-                    var formToUpdate = await _context.Form
-                                    .Where(f => f.FormId == fvm.FormId)
-                                    .FirstOrDefaultAsync();
+                        _context.Add(addApprove);
+                        _context.Add(addEnd);
+                        _context.SaveChanges();
 
-                    if (formToUpdate != null)
-                    {
-                        // 更新該工單的 ProcessNodeId
-                        formToUpdate.ProcessNodeId = nextDetails.ProcessNodeId;
-                        formToUpdate.ManDay = fvm.EstimatedTime;
+                        // 查詢該工單要更新的欄位
+                        var formToUpdate = await _context.Form
+                                        .Where(f => f.FormId == fvm.FormId)
+                                        .FirstOrDefaultAsync();
 
-                        // 保存更改
-                        _context.Update(formToUpdate);
-                        await _context.SaveChangesAsync();
+                        if (formToUpdate != null)
+                        {
+                            // 更新該工單的 ProcessNodeId
+                            formToUpdate.ProcessNodeId = nextDetails.ProcessNodeId;
+                            formToUpdate.ManDay = fvm.EstimatedTime;
+
+                            // 保存更改
+                            _context.Update(formToUpdate);
+                            await _context.SaveChangesAsync();
+                        }
                     }
-                }
-                return RedirectToAction("Index", "ToDoList");
-            }
 
-            /* ------------ 如果審核方退回送出 -------------*/
-
-            else
-            {
-                //抓出該筆工單流程節點的第一筆功能編號
-                var firstUserActivtyId = _context.ProcessNodes
-                    .Where(p => p.FormId == fvm.FormId)
-                    .OrderBy(ua => ua.UserActivityId)
-                    .Select(u => u.UserActivityId)
-                    .FirstOrDefault();
-
-                // 如果審核方按下退回且目前該筆工單的工單紀錄的功能編號不是第一筆時
-                if (currentDetails.crUserActivityId != firstUserActivtyId)
-                {
-                    List<string> formRecordIdList = await GetCreateFormRecordIdListAsync(2);
-
-                    // 創建新的退回FormRecord
-                    var addReject = new FormRecord
-                    {
-                        ProcessingRecordId = formRecordIdList[0],
-                        Remark = fvm.Remark,
-                        FormId = fvm.FormId,
-                        DepartmentId = currentDetails.crDepartment,
-                        UserId = currentDetails.crUserId,
-                        ResultId = "RS1",
-                        UserActivityId = currentDetails.crUserActivityId,
-                        GradeId = currentDetails.crGrade,
-                        Date = DateTime.Now,
-                        CreatedTime = DateTime.Now,
-                        UpdatedTime = DateTime.Now,
-                    };
-
-                    // 抓上一筆UserId,  UserActivity, DepartmentId
-                    // 抓該UserId的職等
-                    var previousDetails = GetBackDetails(fvm, user.UserId, currentDetails.crUserActivityId);
-                    var previousGradeId = _context.User
-                                                        .Where(u => u.UserId == previousDetails.UserId)
-                                                        .Select(c => c.GradeId)
-                                                        .FirstOrDefault();
-
-                    // 創建新的審核中 FormRecord
-                    var addNextReview = new FormRecord
-                    {
-                        ProcessingRecordId = formRecordIdList[1],
-                        Remark = "",
-                        FormId = fvm.FormId,
-                        DepartmentId = previousDetails.DepartmentId,
-                        UserId = previousDetails.UserId,
-                        ResultId = "RS4",
-                        UserActivityId = previousDetails.UserActivityId,
-                        GradeId = previousGradeId,
-                        Date = DateTime.Now,
-                        CreatedTime = DateTime.Now,
-                        UpdatedTime = DateTime.Now,
-                    };
-
-                    _context.Add(addReject);
-                    _context.Add(addNextReview);
-                    _context.SaveChanges();
-
-                    // 查詢該工單要更新的欄位
-                    var formToUpdate = await _context.Form
-                                    .Where(f => f.FormId == fvm.FormId)
-                                    .FirstOrDefaultAsync();
-
-                    if (formToUpdate != null)
-                    {
-                        // 更新該工單的 ProcessNodeId
-                        formToUpdate.ProcessNodeId = previousDetails.ProcessNodeId;
-
-                        // 保存更改
-                        _context.Update(formToUpdate);
-                        await _context.SaveChangesAsync();
-                    }
+                    await UploadFiles(fvm);
                     return RedirectToAction("Index", "ToDoList");
                 }
-                // 目前工單紀錄功能編號是第一筆時
-                return RedirectToAction("Index", "ToDoList");
+
+                /* ------------ 如果審核方退回送出 -------------*/
+
+                else
+                {
+                    //抓出該筆工單流程節點的第一筆功能編號
+                    var firstUserActivtyId = _context.ProcessNodes
+                        .Where(p => p.FormId == fvm.FormId)
+                        .OrderBy(ua => ua.UserActivityId)
+                        .Select(u => u.UserActivityId)
+                        .FirstOrDefault();
+
+                    // 如果審核方按下退回且目前該筆工單的工單紀錄的功能編號不是第一筆時
+                    if (currentDetails.crUserActivityId != firstUserActivtyId)
+                    {
+                        List<string> formRecordIdList = await GetCreateFormRecordIdListAsync(2);
+
+                        // 創建新的退回FormRecord
+                        var addReject = new FormRecord
+                        {
+                            ProcessingRecordId = formRecordIdList[0],
+                            Remark = fvm.Remark,
+                            FormId = fvm.FormId,
+                            DepartmentId = currentDetails.crDepartment,
+                            UserId = currentDetails.crUserId,
+                            ResultId = "RS1",
+                            UserActivityId = currentDetails.crUserActivityId,
+                            GradeId = currentDetails.crGrade,
+                            Date = DateTime.UtcNow,
+                            CreatedTime = DateTime.UtcNow,
+                            UpdatedTime = DateTime.UtcNow,
+                        };
+
+                        // 抓上一筆UserId,  UserActivity, DepartmentId
+                        // 抓該UserId的職等
+                        var previousDetails = GetBackDetails(fvm, user.UserId, currentDetails.crUserActivityId);
+                        var previousGradeId = _context.User
+                                                            .Where(u => u.UserId == previousDetails.UserId)
+                                                            .Select(c => c.GradeId)
+                                                            .FirstOrDefault();
+
+                        // 創建新的審核中 FormRecord
+                        var addNextReview = new FormRecord
+                        {
+                            ProcessingRecordId = formRecordIdList[1],
+                            Remark = "",
+                            FormId = fvm.FormId,
+                            DepartmentId = previousDetails.DepartmentId,
+                            UserId = previousDetails.UserId,
+                            ResultId = "RS4",
+                            UserActivityId = previousDetails.UserActivityId,
+                            GradeId = previousGradeId,
+                            Date = DateTime.UtcNow,
+                            CreatedTime = DateTime.UtcNow,
+                            UpdatedTime = DateTime.UtcNow,
+                        };
+
+                        _context.Add(addReject);
+                        _context.Add(addNextReview);
+                        _context.SaveChanges();
+
+                        // 查詢該工單要更新的欄位
+                        var formToUpdate = await _context.Form
+                                        .Where(f => f.FormId == fvm.FormId)
+                                        .FirstOrDefaultAsync();
+
+                        if (formToUpdate != null)
+                        {
+                            // 更新該工單的 ProcessNodeId
+                            formToUpdate.ProcessNodeId = previousDetails.ProcessNodeId;
+
+                            // 保存更改
+                            _context.Update(formToUpdate);
+                            await _context.SaveChangesAsync();
+                        }
+                    }
+                    await UploadFiles(fvm);
+                    // 目前工單紀錄功能編號是第一筆時
+                    return RedirectToAction("Index", "ToDoList");
+                }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest("請洽系統管理員");
+            }
+        }
+
+
+        [HttpPost]
+        public IActionResult Download(string id)
+        {
+            //讀取檔案
+            var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "upload");
+            filePath = Path.Combine(filePath, id);
+            byte[] data = null;
+            using (var memoryStream = new MemoryStream())
+            {
+                using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+                {
+                    string[] allFiles = Directory.GetFiles(filePath, "*", SearchOption.AllDirectories);
+                    foreach (var file in allFiles)
+                    {
+                        archive.CreateEntryFromFile(file, Path.GetFileName(file));
+                    }
+                }
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                data = memoryStream.ToArray();
+            }
+
+            return File(data, "application/zip", "test.zip");
+
+        }
+
+
+        // 判斷檔案的MIME類型
+        private string GetContentType(string fileName)
+        {
+            var extension = Path.GetExtension(fileName).ToLowerInvariant();
+            return extension switch
+            {
+                ".pdf" => "application/pdf",
+                ".jpg" => "image/jpeg",
+                ".jpeg" => "image/jpeg",
+                ".png" => "image/png",
+                ".txt" => "text/plain",
+                ".doc" => "application/msword",
+                ".docx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                ".xls" => "application/vnd.ms-excel",
+                ".xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                _ => "application/octet-stream", // 預設二進位檔案類型
+            };
         }
 
         /* ------------ 方法層 -------------*/
 
-        // 查詢下一位UserId,  UserActivity, DepartmentId
+        // 查詢下一位資料
         public (string UserActivityId, string UserId, string DepartmentId, string ProcessNodeId) GetNextDetails(FormReviewViewModel fvm, string userId, string userActivityId)
         {
 
@@ -511,7 +572,7 @@ namespace BPMPlus.Controllers
             return (nextUserActivity, nextUserId, nextDepartmentId, nextProcessNodeId);
         }
 
-
+        // 查詢上一位資料
         public (string UserActivityId, string UserId, string DepartmentId, string ProcessNodeId) GetBackDetails(FormReviewViewModel fvm, string UserId, string userActivityId)
         {
 
@@ -562,41 +623,63 @@ namespace BPMPlus.Controllers
             return (previousUserActivity, previousUserId, previousDepartmentId, previousProcessNodeId);
         }
 
-
-        public string GetNextUserName(string formId, string user)
+        // 檔案上傳
+        public async Task UploadFiles(FormReviewViewModel fvm)
         {
-
-            // 抓出該工單流程節點的總長度
-            var NodeLength = _context.ProcessNodes
-            .Where(f => f.FormId == formId)
-            .Select(c => new
+            try
             {
-                c.UserId,
-            })
-            .ToList();
+                var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/upload", fvm.FormId);
 
-            // 找出目前該工單的流程節點表
-            var currentDetails = _context.ProcessNodes.Where(f => f.FormId == formId && f.UserId == user)
-                .Select(pn => new
+                // 檢查資料夾是否存在，如果不存在則創建一個新資料夾
+                if (!Directory.Exists(folderPath))
                 {
-                    pn.UserId,
-                })
-                .FirstOrDefault();
+                    Directory.CreateDirectory(folderPath);
+                }
 
-            // 判定當前索引位置
-            var currentIndex = NodeLength.FindIndex(n =>
-                n.UserId == currentDetails.UserId
-            );
+                // 檢查是否有上傳的檔案
+                if (fvm.Files != null && fvm.Files.Count > 0)
+                {
+                    foreach (var file in fvm.Files)
+                    {
+                        // 檔案存放的完整路徑
+                        var filePath = Path.Combine(folderPath, DateTime.UtcNow.AddHours(8).ToString("yyyy-MM-dd-HHmmss-") + file.FileName);
 
-            // 宣告變數對其index做+1
-            string nextUserId = null;
-            if (currentIndex >= 0 && currentIndex < NodeLength.Count() - 1)
-            {
-                var nextIndex = NodeLength[currentIndex + 1];
-                nextUserId = nextIndex.UserId;
+                        // 保存檔案
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await file.CopyToAsync(stream);
+                        }
+                    }
+                }
             }
-            return nextUserId;
+            catch(Exception ex)
+            {
+                Console.WriteLine("檔案上傳失敗: " + ex.Message);
+            }
         }
+
+        // 新建工單
+        //public async Task CreateApproveFormRecord(FormReviewViewModel fvm, dynamic details, List<string> formRecordIdList)
+        //{
+        //    var formRecord = new FormRecord
+        //    {
+        //        ProcessingRecordId = formRecordIdList[0],
+        //        Remark = fvm.Remark,
+        //        FormId = fvm.FormId,
+        //        DepartmentId = details.DepartmentId,
+        //        UserId = details.UserId,
+        //        ResultId = "RS2",
+        //        UserActivityId = fvm.UserActivityId,
+        //        GradeId = details.
+        //        Date = DateTime.UtcNow,
+        //        CreatedTime = DateTime.UtcNow,
+        //        UpdatedTime = DateTime.UtcNow,
+        //    };
+
+        //    _context.Add(formRecord);
+        //    _context.SaveChanges();
+
+        //} 
 
     }
 }
