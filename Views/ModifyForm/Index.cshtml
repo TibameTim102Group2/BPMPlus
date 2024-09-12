@@ -197,7 +197,10 @@
                                 <div class="form-group">
                                     <label class="item-name">需求內容</label>
                                 </div>
-                                <textarea asp-for="ModifyFrom.Content" rows="8" cols="110">@Model.ModifyFrom.Content</textarea>
+                                @* <textarea asp-for="ModifyFrom.Content" rows="8" cols="110">@(Model.ModifyFrom.Content)</textarea> *@
+                                <div class="txtInput" id="txtInput">
+                                    <div id="summernote" >@Html.Raw(Model.ModifyFrom.Content)</div>
+                                </div>
                             </div>
 
                             <!-- /.col -->
@@ -256,9 +259,50 @@
 <!-- /.content-wrapper -->
 @section Scripts
 {
+     <!-- jQuery -->
+    <script src="~/AdminLTE/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/AdminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- Select2 -->
+    <script src="~/AdminLTE/plugins/select2/js/select2.full.min.js"></script>
+    <!-- Bootstrap4 Duallistbox -->
+
+
+    <script src="~/AdminLTE/plugins/inputmask/jquery.inputmask.min.js"></script>
+    <!-- date-range-picker -->
+
+
+    <script src="~/AdminLTE/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+
+
+    <!-- AdminLTE for demo purposes -->
+    <script src="~/AdminLTE/dist/js/demo.js"></script>
+
+
+
+
     <script src="~/AdminLTE/plugins/moment/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
     <script>
+        function loadScript(url, callback) {
+                var script = document.createElement('script');
+                script.src = url;
+                script.type = 'text/javascript';
+                script.onload = function () {
+                    if (callback) {
+                        callback();
+                    }
+                };
+                document.head.appendChild(script);
+            }
+            loadScript('/AdminLTE/plugins/summernote/summernote-bs4.js', function () {
+                            $('#summernote').summernote('code');
+                        }
+            ); 
+
+
+
+
 
         $("#btnInvalid").click(function () {
             let userConfirmed = confirm("是否作廢?");
@@ -313,12 +357,15 @@
             if (!userConfirmed) return;
 
             //檢查資料
-            let content = $("#ModifyFrom_Content").val();
+            // let content = $("#ModifyFrom_Content").val();
+            let content = $('#summernote').summernote('code');
             let tel = $("#ModifyFrom_Tel").val();
             let endDate = $("#endDatePicker").val();
             // let file = $("#file").get(0).files[0];
             let files = $("#file").get(0).files; //多檔案
             let id = $("#ModifyFrom_FormId").val();
+            let now = new Date(); //現在時間
+            let inputDate=new Date(endDate); //輸入時間
 
             if (tel == "") {
                 alert("電話不可為空");
@@ -331,6 +378,11 @@
 
             if (endDate == "") {
                 alert("希望完成日期不可為空");
+                return;
+            }
+
+            if (inputDate < now) {
+                alert("希望完成日期不可早於今日");
                 return;
             }
 
