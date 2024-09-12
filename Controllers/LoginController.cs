@@ -19,14 +19,14 @@ namespace BPMPlus.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly EmailService emailService;
-        private readonly AesEncryptionService aesService;
+        private readonly AesAndTimestampService aesAndTimestampService;
         private readonly ResetPasswordService resetPwService;
 
-        public LoginController(ApplicationDbContext context, EmailService emailService, AesEncryptionService aesService, ResetPasswordService resetPwService) : base(context)
+        public LoginController(ApplicationDbContext context, EmailService emailService, AesAndTimestampService aesAndTimestampService, ResetPasswordService resetPwService) : base(context)
         {
             _context = context;
             this.emailService = emailService;
-            this.aesService = aesService;
+            this.aesAndTimestampService = aesAndTimestampService;
             this.resetPwService = resetPwService;
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -99,8 +99,8 @@ namespace BPMPlus.Controllers
         {
             var request = await _context.User.FirstOrDefaultAsync(m => m.Email == Email == true);
             if (request == null)
-            {                
-                //ViewBag.errMsg = "Email輸入錯誤!";
+            {
+                ViewBag.errMsg = "Email輸入錯誤!";
                 return RedirectToAction("Index", "Home");
             }
 
@@ -192,7 +192,6 @@ namespace BPMPlus.Controllers
                 await _context.SaveChangesAsync();
                 TempData["SuccessMessage"] = "密碼變更成功!";
 
-                //await Logout();
                 return View("ResetPassWord", vm);
                 //return RedirectToAction("Index", "Home");
             }
@@ -209,5 +208,12 @@ namespace BPMPlus.Controllers
         {
             return View();
         }
+
+
+
+
+
+
+
     }
 }
