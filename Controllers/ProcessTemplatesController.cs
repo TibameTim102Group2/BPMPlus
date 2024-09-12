@@ -7,14 +7,16 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BPMPlus.Data;
 using BPMPlus.Models;
+using BPMPlus.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BPMPlus.Controllers
 {
-    public class ProcessTemplatesController : Controller
+    public class ProcessTemplatesController : BaseController
     {
         private readonly ApplicationDbContext _context;
 
-        public ProcessTemplatesController(ApplicationDbContext context)
+        public ProcessTemplatesController(ApplicationDbContext context):base(context)
         {
             _context = context;
         }
@@ -47,11 +49,22 @@ namespace BPMPlus.Controllers
         }
 
         // GET: ProcessTemplates/Create
-        public IActionResult Create()
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> Create([FromBody] CreateCategory model)
         {
-            ViewData["CategoryId"] = new SelectList(_context.Category, "CategoryId", "CategoryId");
-            ViewData["UserActivityId"] = new SelectList(_context.UserActivity, "UserActivityId", "UserActivityId");
-            return View();
+            User user = await GetAuthorizedUser();
+
+            //functionId:  13 -> 新增需求類別
+
+            if (!user.PermittedTo("13"))
+            {
+                throw new Exception("User is not permitted");
+            }
+            
+
+            return Json(new { errorCode = 200, message = $"新增需求類別成功!"});
         }
 
         // POST: ProcessTemplates/Create
