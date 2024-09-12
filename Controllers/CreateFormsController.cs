@@ -134,7 +134,7 @@ namespace BPMPlus.Controllers
             int ptIndex = 0;
             List<ProcessNode> processNodes = new List<ProcessNode>();
             foreach (var pt in pTemplates) {
-                string dId = (pt.DepartmentId == "requester" ? user.DepartmentId : pt.DepartmentId);
+                string dId = (pt.DepartmentId == "Requester" ? user.DepartmentId : pt.DepartmentId);
                 List<User> DepartmentUser = await _context.User
                     .Where(u => u.DepartmentId == dId)
                     .Include(u => u.PermissionGroups)
