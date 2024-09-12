@@ -10,6 +10,9 @@ using Microsoft.SqlServer.Server;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Hosting;
+using System.IO.Compression;
+using System.IO;
 
 namespace BPMPlus.Controllers
 {
@@ -17,11 +20,15 @@ namespace BPMPlus.Controllers
     public class FormDetailsController : BaseController
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public FormDetailsController(ApplicationDbContext context) : base(context)
+        public FormDetailsController(ApplicationDbContext context, IWebHostEnvironment WebHostEnvironment) : base(context)
         {
             _context = context;
+            _webHostEnvironment = WebHostEnvironment;
         }
+
+   
 
         [Authorize]
 
@@ -160,15 +167,16 @@ namespace BPMPlus.Controllers
 
         //    List<string> files = new List<string>(Directory.GetFiles(folder));
 
-        //    foreach (var filePath in files) { 
+        //    foreach (var filePath in files)
+        //    {
 
         //        try
         //        {
         //            // 專案的資料夾路徑
-        //            //folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/upload", id);
+        //            folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/upload", id);
 
         //            // 檔案的完整路徑
-        //            //var filePath = Path.Combine(folderPath, fileName);
+        //            var filePath = Path.Combine(folderPath, fileName);
 
         //            // 檢查檔案是否存在
         //            if (!System.IO.File.Exists(filePath))
@@ -191,6 +199,53 @@ namespace BPMPlus.Controllers
         //        }
         //    }
         //}
+
+        //[HttpPost]
+        //public IActionResult DownloadFile(string id)
+        //{
+        //    //讀取檔案
+        //    var filePath =Path.Combine(_webHostEnvironment.WebRootPath, id);
+
+
+        //    var zipFilePath = Path.Combine(_webHostEnvironment.WebRootPath,id);
+        //    using (var archive = ZipFile.Open(zipFilePath, ZipArchiveMode.Create))
+        //    {
+        //        foreach (var file in filePath)
+        //        {
+        //            archive.CreateEntryFromFile(file, Path.GetFileName(file));
+        //        }
+        //    }
+
+        //    var data = System.IO.File.ReadAllBytes(zipFilePath);
+
+        //    return File(data, "application/zip", Path.GetFileName(zipFilePath));
+        //}
+
+        [HttpPost]
+        public IActionResult Download(string id)
+        {
+            //讀取檔案
+            var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "upload");
+            filePath = Path.Combine(filePath,id);
+            byte[] data = null;
+            using (var memoryStream = new MemoryStream())
+            {
+                using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+                {
+                    string[] allFiles = Directory.GetFiles(filePath, "*", SearchOption.AllDirectories);
+                    foreach (var file in allFiles)
+                    {
+                        archive.CreateEntryFromFile(file, Path.GetFileName(file));
+                    }
+                }
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                data = memoryStream.ToArray();
+            } 
+            
+            return File(data, "application/zip", "test.zip");
+
+        }
+
 
         // 判斷檔案的MIME類型
         private string GetContentType(string fileName)

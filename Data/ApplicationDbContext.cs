@@ -22,6 +22,20 @@ namespace BPMPlus.Data
                     Config.GetConnectionString("DefaultConnection"));
             }
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.PermissionGroups)
+                .WithMany(pg => pg.Users)
+                .UsingEntity(j => j.ToTable("PermissionGroupUser"));
+
+            modelBuilder.Entity<PermissionGroup>()
+                .HasMany(u => u.UserActivities)
+                .WithMany(pg => pg.PermissionGroups)
+                .UsingEntity(j => j.ToTable("PermissionGroupUserActivity"));
+
+        }
         public DbSet<BPMPlus.Models.User> User { get; set; }
         public DbSet<BPMPlus.Models.Meeting> Meeting { get; set; }
         public DbSet<BPMPlus.Models.Form> Form { get; set; }

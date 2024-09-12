@@ -268,9 +268,9 @@
                                 <div style="border:1px solid grey; width:100%;margin-bottom:20px;">
                                     <div class="form-control''=" floatingTextarea">@Html.Raw(Model.FormDetails.Content)</div>
                                 </div>
-                            <!-- /.col -->
-                            <!-- /.col -->
                             </div>
+                            <!-- /.col -->
+                            <!-- /.col -->
                         </div>
                         <div class="row">
                             <!-- /.form-group -->
@@ -370,9 +370,14 @@
                     } else {
                         alert("下載失敗");
                     }
-                }
+                    return response.blob()
+                        } )
+                .then( blob => {
+                    var file = window.URL.createObjectURL(blob);
+                    window.location.assign(file);
+                  });
 
-                )
+               
 
         });
     </script>
