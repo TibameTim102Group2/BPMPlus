@@ -57,7 +57,7 @@ namespace BPMPlus.Controllers
 
             User user = await GetAuthorizedUser();
 
-            //functionId:  01 -> 需求方申請人送出
+            //functionId:  13 -> 新增需求類別
 
             if (!user.PermittedTo("13"))
             {
@@ -65,7 +65,7 @@ namespace BPMPlus.Controllers
             }
             
 
-            return Json(new { errorCode = 200, message = $"新增需求類別成功! 單號"});
+            return Json(new { errorCode = 200, message = $"新增需求類別成功!"});
         }
 
         // POST: ProcessTemplates/Create
