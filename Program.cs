@@ -41,6 +41,11 @@ namespace BPMPlus
                 // CSRF資安有關，這裡就加入全域驗證範圍Filter的話，待會Controller就不必再加上[AutoValidateAntiforgeryToken]屬性
                 //options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
             });
+            //讓JSON回傳中文字不是亂碼
+            builder.Services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Encoder = System.Text.Encodings.Web.JavaScriptEncoder.Create(System.Text.Unicode.UnicodeRanges.All);
+            });
 
             var app = builder.Build();
 
