@@ -6,7 +6,7 @@
 
         public string Content { get; set; }
 
-        public DateTime Enddate { get; set; } = DateTime.Now;
+        public DateTime Enddate { get; set; } 
 
         public string Id { get; set; }
 
