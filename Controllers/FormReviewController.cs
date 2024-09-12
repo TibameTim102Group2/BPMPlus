@@ -216,7 +216,7 @@ namespace BPMPlus.Controllers
                 var currentDetails = await _context.FormRecord
                                                     .Where(fr => fr.FormId == fvm.FormId && user.UserId == fr.UserId)
                                                     .OrderByDescending(f => f.CreatedTime)
-                                                    .Select(c => new 
+                                                    .Select(c => new
                                                     {
                                                         crProcessingRecord = c.ProcessingRecordId,
                                                         crDepartment = c.DepartmentId,
@@ -460,7 +460,6 @@ namespace BPMPlus.Controllers
                         }
                     }
                     await UploadFiles(fvm);
-                    // 目前工單紀錄功能編號是第一筆時
                     return RedirectToAction("Index", "ToDoList");
                 }
             }
@@ -652,7 +651,7 @@ namespace BPMPlus.Controllers
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine("檔案上傳失敗: " + ex.Message);
             }
