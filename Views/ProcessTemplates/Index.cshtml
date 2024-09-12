@@ -215,7 +215,96 @@
     <!-- AdminLTE for demo purposes -->
     <script src="~/AdminLTE/dist/js/demo.js"></script>
     <script>
+        $(document).ready(function() 
+            {
+            // 綁定按鈕點擊事件
+                $("#submitButton").on("click", function(e) 
+                {
+                    // e.preventDefault();  // 阻止默認的提交行為
 
+                    // // 獲取輸入欄位的值
+                    // var tel = $("#Tel").val();
+                    // var expectedFinishedDay = $("#ExpectedFinishedDay").val()
+                    // var departmentId =document.getElementById("DepartmentId").getAttribute("inside")
+                    // var pj = document.getElementById('projectId');
+                    // var projectId = pj.options[pj.selectedIndex].value;
+                    // var ct = document.getElementById("CategoryId")
+                    // var categoryId = ct.options[ct.selectedIndex].getAttribute("data-id");
+                    // var content = $('#summernote').summernote('code');
+                    // // 檢查是否有空值
+                    // if (!tel || !departmentId || !categoryId || !expectedFinishedDay || !content || content == "<p><br></p>") {
+                    //     console.log( "分機" + tel)
+                    //     if(!tel){window.alert("尚未填寫聯絡電話");return ;} 
+                    //     console.log( "部門ID" + departmentId)
+                    //     if(!departmentId){window.alert("尚未填寫聯絡部門");return ;} 
+                    //     console.log( "需求"  + categoryId)
+                    //     if(!categoryId){window.alert("尚未選擇需求類別");return ;} 
+                    //     console.log("希望完成時間" + expectedFinishedDay)
+                    //     if(!expectedFinishedDay){window.alert("尚未填寫希望完成時間");return ;} 
+                    //     console.log("需求內容" + content)
+                    //     if(!content || content == "<p><br></p>"){window.alert("尚未填寫需求內容");return ;} 
+                    // }
+                    // var form = $('#__AjaxAntiForgeryForm');
+                    // var token = $('input[name="__RequestVerificationToken"]', form).val();
+                    // // 發送 Ajax 請求
+                    // var formData = new FormData();
+
+                    // // 將 filesArray 中的每個檔案加入 FormData
+                    // filesArray.forEach(function(file) {
+                    //     formData.append("files", file);
+                    // });
+                    // let formId = "";
+                    // let createResponseErrorCode = 0;
+                    $.ajax({
+                        url: '/ProcessTemplates/Create',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        headers: {
+                            'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()  // 傳送驗證 token
+                        },
+                        data: JSON.stringify([
+                            {
+                                UserActivityId: "01",
+                                DepartmentId: "D001",
+                                CategoryId: departmentId
+                            },
+                            {
+                                UserActivityId: "08",
+                                DepartmentId: "D002",
+                                CategoryId: departmentId
+                            },
+
+                            {
+                                UserActivityId: "09",
+                                DepartmentId: projectId,
+                                CategoryId: departmentId
+                            },
+                            {
+                                UserActivityId: "10",
+                                DepartmentId: projectId,
+                                CategoryId: departmentId
+                            }
+                        ]),
+                        success: function(response) {
+                            createResponseErrorCode = response['errorCode'];
+                            if (response['errorCode'] != null && response['errorCode'] == 200) {
+                                formId = response['formId']
+                                upload()
+                                window.alert(response['message']);
+                            }
+                            if(response['errorCode'] != null && response['errorCode'] == 400)
+                            {
+                                window.alert(response['message']);
+                            }
+                            // 成功後的操作
+                        },
+                        error: function(xhr, status, error) {
+
+                            // 錯誤時的操作
+                        }
+                    });
+                });
+            });
         $(function () {
             //Initialize Select2 Elements
             $('.select2').select2()

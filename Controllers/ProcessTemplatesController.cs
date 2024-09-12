@@ -52,9 +52,8 @@ namespace BPMPlus.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<JsonResult> Create([FromBody] NewFormViewModel model)
+        public async Task<JsonResult> Create([FromBody] CreateCategory model)
         {
-
             User user = await GetAuthorizedUser();
 
             //functionId:  13 -> 新增需求類別
