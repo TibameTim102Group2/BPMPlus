@@ -418,6 +418,27 @@
                         event.preventDefault();
                     }
                 }
+
+                let form = document.getElementById("formArea");
+                let formData = new FormData(form);
+                
+                try {
+                    let response = await fetch(`/FormReview/CreateAndUpdate`, {
+                        method: "POST",
+                        body: formData,
+                    });
+
+                    if (response.ok) {
+                        window.location.href = result.redirectUrl;  // 進行頁面重導
+                    }
+                    else {
+                        alert("送出失敗");
+                    }
+                }
+                catch (err) {
+                    alert(JSON.stringify(err));
+                };
+
             });
         });
 
