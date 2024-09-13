@@ -3,6 +3,9 @@ using BPMPlus.Service;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System.Configuration;
+using static BPMPlus.Service.AesAndTimestampService;
 
 namespace BPMPlus
 {
@@ -16,12 +19,14 @@ namespace BPMPlus
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
+
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddScoped<EmailService>();
-            builder.Services.AddScoped<AesEncryptionService>();
+            builder.Services.AddScoped<AesAndTimestampService>();
             builder.Services.AddScoped<ResetPasswordService>();
+
 
             // 從appsettings.json讀取登入逾時設定
             //double LoginExpireMinute = builder.Configuration.GetValue<double>("LoginExpireMinute");
