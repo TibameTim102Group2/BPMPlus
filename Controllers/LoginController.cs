@@ -10,8 +10,6 @@ using Microsoft.AspNetCore.Authorization;
 using BPMPlus.Service;
 using BPMPlus.ViewModels.Login;
 using BCryptHelper = BCrypt.Net.BCrypt;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 
 namespace BPMPlus.Controllers
 {
@@ -79,7 +77,7 @@ namespace BPMPlus.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-       //登入
+       //登入page
         public IActionResult Index()
 		{
 			return View();
@@ -107,22 +105,102 @@ namespace BPMPlus.Controllers
             var UserName = request.UserName;
             emailService.SendEmail(Email, UserName);
             return RedirectToAction("Index", "Home");
-
         }
-       
-        //忘記密碼
+
+        //忘記密碼page
         public IActionResult ForgetPassword()
         {
             return View();
         }
 
 
-        //忘記密碼重設
-        public IActionResult ForgetPwResetPw()
+        /* 忘記密碼重設 */
+        [HttpPost]
+        public async Task<IActionResult> ForgetPwResetPw(ForgetPasswordVM vm)
         {
-            return View();
+            var _service = aesAndTimestampService;
+
+            //分割dataStr ";"
+            string[] splitStr = vm.dataStr.Split(new[] { ";" }, StringSplitOptions.None);
+            string ivKey = null;
+            string encryptStr = null;
+            if (splitStr.Length > 1)
+            {
+                ivKey = splitStr[0];
+                encryptStr = splitStr[1];
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            //解密encryptStr
+            var Key = _service.GenerateKey();
+            var decryptStr = _service.Decrypt(encryptStr, Key, ivKey);
+
+            //分割decryptStr "|"
+            string[] decryptStrSplit = decryptStr.Split("|", StringSplitOptions.None);
+            string stampTime = null;
+            string Email = null;
+            if (decryptStrSplit.Length > 1)
+            {
+                stampTime = decryptStrSplit[0];
+                Email = decryptStrSplit[1];
+            }
+
+            //確認user身分
+            var user = await _context.User.FirstOrDefaultAsync(m => m.Email == Email == true);
+
+            var resetPasswordService = new ResetPasswordService();
+            var result = resetPasswordService.ValidatePassword(vm.ResetPassword);
+
+            //現在時間 時間戳記
+            DateTimeOffset dateTimeOffset = new DateTimeOffset(DateTime.Now);
+            long nowStampTime = dateTimeOffset.ToUnixTimeSeconds();
+
+            //判斷現在時間是否超過驗證信有效時間(15分鐘=900秒)
+            if (nowStampTime > long.Parse(stampTime) + 900)
+            {
+                ViewBag.errMsg = "驗證信已超過有效時間!";
+                return View();
+            }
+            // 判斷user是誰, 重設密碼
+            if (user != null)
+            {
+                //判斷密碼是否符合規則
+                if (result.IsValid == false)
+                {
+                    ViewBag.errMsg = "密碼不符合密碼規則";
+                    return View("ForgetPwResetPw", vm); // 修改失敗導回頁面
+                }
+                else
+                {
+                    //判斷新密碼是否輸入正確
+                    if (vm.ResetPassword != vm.ConfirmPassword)
+                    {
+                        ViewBag.errMsg = "請確認密碼是否輸入一致";
+                        return View("ForgetPwResetPw", vm); // 修改失敗導回頁面
+                    }
+                }
+            }
+            //重設密碼加密後存入DB
+            string newPassword = BCryptHelper.HashPassword(vm.ResetPassword);
+            user.Password = newPassword;
+            await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "密碼變更成功!";
+
+            return View("ForgetPwResetPw", vm);
+
         }
 
+        //忘記密碼重設page
+        public IActionResult ForgetPwResetPw()
+        {
+            //取得驗證信url "data="後的內容
+            string dataStr = HttpContext.Request.Query["data"];
+            ViewBag.DataStr = dataStr;
+            return View();
+        }
 
         /* 測試修改密碼
         [HttpGet]
@@ -203,17 +281,10 @@ namespace BPMPlus.Controllers
         }
 
         [Authorize]
-        //修改密碼
+        //修改密碼page
         public IActionResult ResetPassWord()
         {
             return View();
         }
-
-
-
-
-
-
-
     }
 }

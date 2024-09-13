@@ -1,4 +1,6 @@
-﻿@section Style {
+﻿@using BPMPlus.ViewModels.Login
+@model ForgetPasswordVM
+@section Style {
     <style>
         .pdReset {
             font-size: 25px;
@@ -15,8 +17,9 @@
 <!-- Theme style -->
 <link rel="stylesheet" href="~/AdminLTE/dist/css/adminlte.min.css">
 
-
-<div class="login-page bg-light">
+@using (Html.BeginForm("ForgetPwResetPw", "Login", FormMethod.Post))
+{
+    <div class="login-page bg-light">
     <div class="login-box">
         <div class="login-logo">
             <img src="~/images/bpmplus.png" alt="" class="mb-3" style="width:20rem;">
@@ -25,34 +28,42 @@
         <div>
             <p class="pdReset login-box-msg text-bold">重新設定密碼</p>
             <div class="input-group mb-3">
-                <input type="password" class="form-control" placeholder="請輸入新密碼">
+            @Html.PasswordFor(p => p.ResetPassword, new { @class = "form-control", placeholder = "請輸入新密碼" })
                 <div class="input-group-append">
                     <div class="input-group">
                     </div>
                 </div>
             </div>
             <div class="input-group mb-3">
-                <input type="password" class="form-control" placeholder="再次確認密碼">
+                @Html.PasswordFor(p => p.ConfirmPassword, new { @class = "form-control", placeholder = "再次確認密碼" })
                 <div class="input-group-append">
                     <div class="input-group">
                     </div>
                 </div>
             </div>
                 <div class="row">
-                    <div class="col-8">
-                        <div class="icheck-primary">
-                            @Html.ActionLink("返回登入", "Index", "Home")
-                        </div>
-                    </div>
+                    <div class="col-4"></div>
                     <!-- /.col -->
                     <div class="col-4">
                         <button type="submit" class="btn btn-primary btn-block">送出修改</button>
                     </div>
+                    <!--顯示錯誤訊息 -->
+                        <div style="color:red;">
+                        @ViewBag.errMsg
+                        </div>
+                        <div hidden>
+                            @Html.PasswordFor(p => p.dataStr, new { @Value = ViewBag.DataStr })
+                        </div>
+
+                        
                     <!-- /.col -->
                 </div>
         </div>
     </div>
 </div>
+
+}
+
 
 <!-- jQuery -->
 <script src="~/AdminLTE/plugins/jquery/jquery.min.js"></script>

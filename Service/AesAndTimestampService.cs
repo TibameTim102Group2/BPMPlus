@@ -8,6 +8,7 @@ using System.Text;
 
 namespace BPMPlus.Service
 {
+
     public class AesAndTimestampService
     {
         ////時間戳記
@@ -25,8 +26,19 @@ namespace BPMPlus.Service
             return unixEpoch.AddSeconds(timestamp).ToLocalTime();
         }
 
+        //取得key
+        private readonly IConfiguration _configuration;
+        public AesAndTimestampService(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+        public string GenerateKey()
+        {
+            return _configuration["Secrets:GenerateKey"];
+        }
 
-        ////AES加解密
+        //AES加解密
+
         //AES key
         //public string GenerateKey()
         //{
