@@ -256,32 +256,33 @@
                     // let formId = "";
                     // let createResponseErrorCode = 0;
                     $.ajax({
-                        url: '/ProcessTemplates/Create',
+                        url: '/ProcessTemplates/CreateCategory',
                         type: 'POST',
                         contentType: 'application/json',
                         headers: {
                             'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()  // 傳送驗證 token
                         },
-                        data: JSON.stringify(
-                            "XX單",
-                            [
-                            {
-                                UserActivityId: "01",
-                                DepartmentId: "Requester"
-                            },
-                            {
-                                UserActivityId: "08",
-                                DepartmentId: "D002"
-                            },
-                            {
-                                UserActivityId: "09",
-                                DepartmentId: "Requester"
-                            },
-                            {
-                                UserActivityId: "10",
-                                DepartmentId: "Requester"
-                            }
-                        ]),
+                        data: JSON.stringify({
+                            CategoryName: "XX單",
+                            Nodes: [
+                                {
+                                    UserActivityId: "01",
+                                    DepartmentId: "Requester"
+                                },
+                                {
+                                    UserActivityId: "08",
+                                    DepartmentId: "D002"
+                                },
+                                {
+                                    UserActivityId: "09",
+                                    DepartmentId: "Requester"
+                                },
+                                {
+                                    UserActivityId: "10",
+                                    DepartmentId: "Requester"
+                                }
+                            ]
+                        }),
                         success: function(response) {
                             // createResponseErrorCode = response['errorCode'];
                             // if (response['errorCode'] != null && response['errorCode'] == 200) {
@@ -296,6 +297,7 @@
                             // // 成功後的操作
                         },
                         error: function(xhr, status, error) {
+                            
 
                             // 錯誤時的操作
                         }

@@ -12,6 +12,6 @@ namespace BPMPlus.ViewModels
     public class CreateCategory
     {
         public string CategoryName {  get; set; }
-        List<CategoryNode> Nodes { get; set; }
+        public List<CategoryNode> Nodes { get; set; }
     }
 }

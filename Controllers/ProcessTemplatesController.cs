@@ -52,7 +52,7 @@ namespace BPMPlus.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<JsonResult> Create([FromBody] CreateCategory model)
+        public async Task<JsonResult> CreateCategory([FromBody] CreateCategory model)
         {
             User user = await GetAuthorizedUser();
 
@@ -60,7 +60,7 @@ namespace BPMPlus.Controllers
 
             if (!user.PermittedTo("13"))
             {
-                throw new Exception("User is not permitted");
+                return Json(new { errorCode = 200, message = $"使用者無權新增工單類別" });
             }
             
 
