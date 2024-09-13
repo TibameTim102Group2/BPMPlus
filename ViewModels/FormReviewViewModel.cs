@@ -35,6 +35,12 @@ namespace BPMPlus.ViewModels
 
         public List<IFormFile> Files { get; set; } = null;
 
+        public string DepartmentName { get; set; }
+
+        public string CategoryDescription { get; set; }
+
+        public string CurrentResultsDescription { get; set; }
+
 
     }
 }

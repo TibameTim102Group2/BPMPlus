@@ -5,10 +5,13 @@
 
 @section Style
 {
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="~/AdminLTE/plugins/fontawesome-free/css/all.min.css">
+    @*  <link rel="stylesheet" href="~/AdminLTE/plugins/fontawesome-free/css/all.min.css"> *@
     <!-- daterange picker -->
     <link rel="stylesheet" href="~/AdminLTE/plugins/daterangepicker/daterangepicker.css">
     <!-- iCheck for checkboxes and radio inputs -->
@@ -150,7 +153,6 @@
 
         input[type=text][readonly] {
             color: black;
-            font-weight: bold;
             background-color: white;
         }
 
@@ -162,23 +164,21 @@
             padding-right: 30px;
         }
 
-        #btnDownload{
+        #btnDownload {
             font-size: 14px;
         }
 
         #inputReview label {
-            background-color:yellow;
-            font-size:14px;
-            justify-content:space-between;
-            align-items:center;
+            background-color: yellow;
+            font-size: 14px;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        #inputReview input{
-            width:20px;
-            height:20px;
+        #inputReview input {
+            width: 20px;
+            height: 20px;
         }
-
-
 
     </style>
 }
@@ -199,6 +199,7 @@
                     <div class="col-6 mb-3 form-label">
                         <input type="hidden" asp-for="@Model.UserId" />
                         <input type="hidden" asp-for="@Model.ResultId" />
+                        <input type="hidden" asp-for="@Model.DepartmentId" />
                         <input type="hidden" asp-for="@Model.UserActivityId" />
                         <input type="hidden" asp-for="@Model.ProcessNodeId" />
                         <label>工單編號</label>
@@ -206,23 +207,25 @@
                     </div>
                     <div class="col-6 mb-3 form-label">
                         <label>建立日期</label>
-                        <input asp-for="@Model.Date" type="text" class="form-control" value="@Model.Date.ToString(" yyyy-MM-dd")" readonly />
+                        <input asp-for="@Model.Date" type="text" class="form-control" value="@Model.Date.ToLocalTime().ToString(" yyyy-MM-dd")" readonly />
                     </div>
                     <div class="col-6 mb-3 form-label">
                         <label>需求類別</label>
-                        <input asp-for="@Model.CategoryId" type="text" class="form-control" value="@Model.CategoryId" readonly />
+                        <input asp-for="@Model.CategoryDescription" type="text" class="form-control" value="@Model.CategoryDescription" readonly />
                     </div>
                     <div class="col-6 mb-3 form-label">
                         <label>處理狀態</label>
-                        <input asp-for="@Model.CurrentResults" type="text" class="form-control" value="@Model.CurrentResults" readonly />
+                        <input asp-for="@Model.CurrentResultsDescription" type="text" class="form-control" value="@Model.CurrentResultsDescription" readonly />
                     </div>
                     <div class="col-6 mb-3 form-label">
                         <label>需求部門</label>
-                        <input asp-for="@Model.DepartmentId" type="text" class="form-control" value="@Model.DepartmentId" readonly />
+                        <input asp-for="@Model.DepartmentName" type="text" class="form-control" value="@Model.DepartmentName" readonly />
                     </div>
                     <div class="col-6 mb-3 form-label">
                         <label>指派人員</label>
                         <input asp-for="@Model.AssginEmployee" type="text" class="assignEmp form-control" value="@Model.AssginEmployee" readonly />
+                        @*                         <div class="checkIcon" hidden><i class="fa-solid fa-check" style="color:green;"></i></div>
+                        <div class="crossIcon" hidden><i class="fa-solid fa-xmark" style="color: red;"></i></div> *@
                     </div>
                     <div class="col-6 mb-3 form-label">
                         <label>需求員工</label>
@@ -230,7 +233,7 @@
                     </div>
                     <div class="col-6 mb-3 form-label">
                         <label>希望完成日期</label>
-                        <input asp-for="@Model.HopeFinishDate" type="text" class="form-control" value="@Model.HopeFinishDate.ToLocalTime()" readonly />
+                        <input asp-for="@Model.HopeFinishDate" type="text" class="form-control" value="@Model.HopeFinishDate.ToLocalTime().ToString(" yyyy-MM-dd")" readonly />
                     </div>
                     <div class="col-6 mb-3 form-label">
                         <label>所屬專案</label>
@@ -298,19 +301,19 @@
             </div>
 
             <!-- 附件上傳/下載 -->
-            <div >
+            <div>
                 <input type="hidden" name="id" value="@Model.FormId" />
-                    <div class="form-group">
-                        <div class="file">
-                            <div style="margin-right:600px;">
-                                <label id="attachment" >附件</label>
-                                <input asp-for="@Model.Files" type="file" class="form-control" multiple />
-                            </div>
-                            <button id="btnDownload" class="button btn btn-primary" type="button">
-                                <i class="fa-solid fa-file-arrow-down"></i>  附件下載
-                            </button>
+                <div class="form-group">
+                    <div class="file">
+                        <div style="margin-right:600px;">
+                            <label id="attachment">附件</label>
+                            <input asp-for="@Model.Files" type="file" class="form-control" multiple />
                         </div>
+                        <button id="btnDownload" class="button btn btn-primary" type="button">
+                            <i class="fa-solid fa-file-arrow-down"></i>  附件下載
+                        </button>
                     </div>
+                </div>
             </div>
 
             <div class="result">
@@ -328,10 +331,10 @@
                         <label>審核結果: </label>
                     </div>
                     <div class="reviewOptions" style="flex: 1; text-align: center;">
-                            <div id="inputReview">
+                        <div id="inputReview">
                             <label><input name="reviewResult" type="radio" value="reject" />退回</label>
                             <label><input name="reviewResult" type="radio" value="approve" /> 核准</label>
-                            </div>
+                        </div>
                     </div>
                     <div class="submitBtn" style="flex: 1; text-align: right;">
                         <input type="submit" class="btn btn-success btns" value="送出" />
@@ -366,81 +369,121 @@
         // 一進到審核頁發請求詢問身分是否為接收方一級主管or 處理人員 or 驗收方, 是的話移除唯讀, 提供輸入指派者 or 處理人員輸入預估工時
         document.addEventListener('DOMContentLoaded', async function () {
             let formId = '@Model.FormId';
+            let needEmp = document.querySelector(".assignEmp");
+            let formValid = document.getElementById("formArea");
+            let checkEstimatedTime = document.querySelector(".EstimatedTime");
+            let userPermit;
+
+            // 驗證員工的函數
+            async function validateEmp(empName) {
+                let response = await fetch(`/FormReview/AssignEmp?empName=${empName}`, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                let result = await response.json();
+                return result;
+            }
+
+            // 發送請求，根據權限設置是否為 readonly
             fetch(`/FormReview/CheckEmp/?id=${formId}`, {
                 method: "GET"
             })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.status == true && data.userPermit == "07") {
+                    userPermit = data.userPermit;
+                    if (data.status === true) {
+                        // 設置通用字段
+                        needEmp.value = data.handler || '';
 
-                        let needEmp = document.querySelector(".assignEmp");
-                        needEmp.removeAttribute("readonly");
-                        let CheckEstimatedTime = document.querySelector(".EstimatedTime");
-                        CheckEstimatedTime.value = "";
-                        if (data.handler) {
-                            needEmp.value = data.handler;
-                        };
-                    }
-                    else if (data.status == true && data.userPermit == "08") {
-                        let CheckEstimatedTime = document.querySelector(".EstimatedTime");
-                        CheckEstimatedTime.removeAttribute("readonly");
-                        let needEmp = document.querySelector(".assignEmp");
-                        if (data.handler) {
-                            needEmp.value = data.handler;
-                        };
-                    }
-                    else if (data.status == true && data.userPermit == "09") {
-                        let needEmp = document.querySelector(".assignEmp");
-                        let CheckEstimatedTime = document.querySelector(".EstimatedTime");
-                        if (data.handler) {
-                            needEmp.value = data.handler;
-                        };
-                    }
-                    else {
-                        let CheckEstimatedTime = document.querySelector(".EstimatedTime");
-                        CheckEstimatedTime.value = "";
+                        if (data.userPermit === "07") {
+                            needEmp.removeAttribute("readonly");
+                            checkEstimatedTime.setAttribute("readonly", "readonly");
+                            checkEstimatedTime.value = data.time || '';
+
+                            needEmp.addEventListener("input", function (event) {
+                                clearTimeout(this.inputTimer);
+                                let enterEmp = needEmp.value.trim();
+
+                                if (enterEmp.length > 0) {
+                                    this.inputTimer = setTimeout(async () => {
+                                        let result = await validateEmp(enterEmp);
+                                        if (result.status) {
+                                            alert("成功新增指派人員");
+                                        } else {
+                                            alert("請輸入同部門、權限之員工！");
+                                        }
+                                    }, 1000);
+                                }
+                            });
+                        } else if (data.userPermit === "08") {
+                            needEmp.setAttribute("readonly", "readonly");
+                            checkEstimatedTime.removeAttribute("readonly");
+
+                            // 如果存在之前填寫的預估工時，則顯示
+                            if (data.previousEstimatedTime) {
+                                checkEstimatedTime.value = data.previousEstimatedTime;
+                            } else {
+                                checkEstimatedTime.value = data.time || '';
+                            }
+                        } else {
+                            // 其他權限（01-06, 09）設為只讀
+                            needEmp.setAttribute("readonly", "readonly");
+                            checkEstimatedTime.setAttribute("readonly", "readonly");
+                            checkEstimatedTime.value = data.time || '';
+                        }
+
+                        // 為所有權限設置通用的表單提交驗證
+                        formValid.addEventListener("submit", async function (event) {
+                            event.preventDefault();
+                            let rejectBtn = document.querySelector('input[name="reviewResult"][value="reject"]').checked;
+                            let approveBtn = document.querySelector('input[name="reviewResult"][value="approve"]').checked;
+                            let enterEmp = needEmp.value.trim();
+
+                            let errorMessages = [];
+
+                            if (!rejectBtn && !approveBtn) {
+                                errorMessages.push("請選擇「核准」或「退回」");
+                            }
+
+                            if (data.userPermit === "07" && enterEmp === "") {
+                                errorMessages.push("請填寫指派人員");
+                            }
+
+                            if (errorMessages.length > 0) {
+                                alert(errorMessages.join("，並且"));
+                                return;
+                            }
+
+                            if (data.userPermit === "07" && enterEmp !== "") {
+                                let result = await validateEmp(enterEmp);
+                                if (!result.status) {
+                                    alert("請填寫正確的指派人員！");
+                                    return;
+                                }
+                            }
+
+                            if (confirm("確定要送出嗎？")) {
+                                this.submit();
+                            }
+                        });
+                    } else {
+                        // 處理沒有權限的情況
+                        needEmp.setAttribute("readonly", "readonly");
+                        checkEstimatedTime.setAttribute("readonly", "readonly");
+                        alert("您沒有權限進行此操作。");
                     }
                 })
                 .catch(err => {
-                    alert(JSON.stringify(err));
+                    alert("發生錯誤：" + JSON.stringify(err));
                 });
-
-            // 前端驗證有無選擇核准or退回
-            let formValid = document.getElementById("formArea");
-            formValid.addEventListener("submit", function (event) {
-                let rejectBtn = document.querySelector('input[name="reviewResult"][value="reject"]').checked;
-                let approveBtn = document.querySelector('input[name="reviewResult"][value="approve"]').checked;
-                if (!rejectBtn && !approveBtn) {
-                    event.preventDefault();
-                    alert("請選擇「核准」或「退回」再送出 ! ");
-                } else {
-                    if (!confirm("確定要送出嗎 ?")) {
-                        event.preventDefault();
-                    }
-                }
-
-                let form = document.getElementById("formArea");
-                let formData = new FormData(form);
-                
-                try {
-                    let response = await fetch(`/FormReview/CreateAndUpdate`, {
-                        method: "POST",
-                        body: formData,
-                    });
-
-                    if (response.ok) {
-                        window.location.href = result.redirectUrl;  // 進行頁面重導
-                    }
-                    else {
-                        alert("送出失敗");
-                    }
-                }
-                catch (err) {
-                    alert(JSON.stringify(err));
-                };
-
-            });
         });
+
+
+
+
+
 
 
 
@@ -472,294 +515,294 @@
                     window.location.assign(file);
                 });
         })
-    
 
-            // function loadScript(url, callback) {
-            //     var script = document.createElement('script');
-            //     script.src = url;
-            //     script.type = 'text/javascript';
-            //     script.onload = function () {
-            //         if (callback) {
-            //             callback();
-            //         }
-            //     };
-            //     document.head.appendChild(script);
-            // }
-            // loadScript('/AdminLTE/plugins/summernote/summernote-bs4.js', function () {
-            //     $('#summernote').summernote('code');
-            // }
-            // );
 
-    
-            $(function () {
-                //Initialize Select2 Elements
-                $('.select2').select2()
+        // function loadScript(url, callback) {
+        //     var script = document.createElement('script');
+        //     script.src = url;
+        //     script.type = 'text/javascript';
+        //     script.onload = function () {
+        //         if (callback) {
+        //             callback();
+        //         }
+        //     };
+        //     document.head.appendChild(script);
+        // }
+        // loadScript('/AdminLTE/plugins/summernote/summernote-bs4.js', function () {
+        //     $('#summernote').summernote('code');
+        // }
+        // );
 
-                //Initialize Select2 Elements
-                $('.select2bs4').select2({
-                    theme: 'bootstrap4'
-                })
 
-                //Datemask dd/mm/yyyy
-                $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
-                //Datemask2 mm/dd/yyyy
-                $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
-                //Money Euro
-                $('[data-mask]').inputmask()
+        $(function () {
+            //Initialize Select2 Elements
+            $('.select2').select2()
 
-                //Date picker
-                $('#reservationdate').datetimepicker({
-                    format: 'L'
-                });
+            //Initialize Select2 Elements
+            $('.select2bs4').select2({
+                theme: 'bootstrap4'
+            })
 
-                //Date and time picker
-                $('#reservationdatetime').datetimepicker({ icons: { time: 'far fa-clock' } });
+            //Datemask dd/mm/yyyy
+            $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+            //Datemask2 mm/dd/yyyy
+            $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+            //Money Euro
+            $('[data-mask]').inputmask()
 
-                //Date range picker
-                $('#reservation').daterangepicker()
-                //Date range picker with time picker
-                $('#reservationtime').daterangepicker({
-                    timePicker: true,
-                    timePickerIncrement: 30,
-                    locale: {
-                        format: 'MM/DD/YYYY hh:mm A'
-                    }
-                })
-                //Date range as a button
-                $('#daterange-btn').daterangepicker(
-                    {
-                        ranges: {
-                            'Today': [moment(), moment()],
-                            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                            'This Month': [moment().startOf('month'), moment().endOf('month')],
-                            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                        },
-                        startDate: moment().subtract(29, 'days'),
-                        endDate: moment()
+            //Date picker
+            $('#reservationdate').datetimepicker({
+                format: 'L'
+            });
+
+            //Date and time picker
+            $('#reservationdatetime').datetimepicker({ icons: { time: 'far fa-clock' } });
+
+            //Date range picker
+            $('#reservation').daterangepicker()
+            //Date range picker with time picker
+            $('#reservationtime').daterangepicker({
+                timePicker: true,
+                timePickerIncrement: 30,
+                locale: {
+                    format: 'MM/DD/YYYY hh:mm A'
+                }
+            })
+            //Date range as a button
+            $('#daterange-btn').daterangepicker(
+                {
+                    ranges: {
+                        'Today': [moment(), moment()],
+                        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                        'This Month': [moment().startOf('month'), moment().endOf('month')],
+                        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
                     },
-                    function (start, end) {
-                        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
-                    }
-                )
+                    startDate: moment().subtract(29, 'days'),
+                    endDate: moment()
+                },
+                function (start, end) {
+                    $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+                }
+            )
 
-                //Timepicker
-                $('#timepicker').datetimepicker({
-                    format: 'LT'
-                })
-
-                //Bootstrap Duallistbox
-                $('.duallistbox').bootstrapDualListbox()
-
-                //Colorpicker
-                $('.my-colorpicker1').colorpicker()
-                //color picker with addon
-                $('.my-colorpicker2').colorpicker()
-
-                $('.my-colorpicker2').on('colorpickerChange', function (event) {
-                    $('.my-colorpicker2 .fa-square').css('color', event.color.toString());
-                })
-
-                $("input[data-bootstrap-switch]").each(function () {
-                    $(this).bootstrapSwitch('state', $(this).prop('checked'));
-                })
-
-            })
-            // BS-Stepper Init
-            document.addEventListener('DOMContentLoaded', function () {
-                window.stepper = new Stepper(document.querySelector('.bs-stepper'))
+            //Timepicker
+            $('#timepicker').datetimepicker({
+                format: 'LT'
             })
 
-            // DropzoneJS Demo Code Start
-            Dropzone.autoDiscover = false
+            //Bootstrap Duallistbox
+            $('.duallistbox').bootstrapDualListbox()
 
-            // Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
-            var previewNode = document.querySelector("#template")
-            previewNode.id = ""
-            var previewTemplate = previewNode.parentNode.innerHTML
-            previewNode.parentNode.removeChild(previewNode)
+            //Colorpicker
+            $('.my-colorpicker1').colorpicker()
+            //color picker with addon
+            $('.my-colorpicker2').colorpicker()
 
-            var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
-                url: "/target-url", // Set the url
-                thumbnailWidth: 80,
-                thumbnailHeight: 80,
-                parallelUploads: 20,
-                previewTemplate: previewTemplate,
-                autoQueue: false, // Make sure the files aren't queued until manually added
-                previewsContainer: "#previews", // Define the container to display the previews
-                clickable: ".fileinput-button" // Define the element that should be used as click trigger to select files.
+            $('.my-colorpicker2').on('colorpickerChange', function (event) {
+                $('.my-colorpicker2 .fa-square').css('color', event.color.toString());
             })
 
-            myDropzone.on("addedfile", function (file) {
-                // Hookup the start button
-                file.previewElement.querySelector(".start").onclick = function () { myDropzone.enqueueFile(file) }
+            $("input[data-bootstrap-switch]").each(function () {
+                $(this).bootstrapSwitch('state', $(this).prop('checked'));
             })
 
-            // Update the total progress bar
-            myDropzone.on("totaluploadprogress", function (progress) {
-                document.querySelector("#total-progress .progress-bar").style.width = progress + "%"
+        })
+        // BS-Stepper Init
+        document.addEventListener('DOMContentLoaded', function () {
+            window.stepper = new Stepper(document.querySelector('.bs-stepper'))
+        })
+
+        // DropzoneJS Demo Code Start
+        Dropzone.autoDiscover = false
+
+        // Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
+        var previewNode = document.querySelector("#template")
+        previewNode.id = ""
+        var previewTemplate = previewNode.parentNode.innerHTML
+        previewNode.parentNode.removeChild(previewNode)
+
+        var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
+            url: "/target-url", // Set the url
+            thumbnailWidth: 80,
+            thumbnailHeight: 80,
+            parallelUploads: 20,
+            previewTemplate: previewTemplate,
+            autoQueue: false, // Make sure the files aren't queued until manually added
+            previewsContainer: "#previews", // Define the container to display the previews
+            clickable: ".fileinput-button" // Define the element that should be used as click trigger to select files.
+        })
+
+        myDropzone.on("addedfile", function (file) {
+            // Hookup the start button
+            file.previewElement.querySelector(".start").onclick = function () { myDropzone.enqueueFile(file) }
+        })
+
+        // Update the total progress bar
+        myDropzone.on("totaluploadprogress", function (progress) {
+            document.querySelector("#total-progress .progress-bar").style.width = progress + "%"
+        })
+
+        myDropzone.on("sending", function (file) {
+            // Show the total progress bar when upload starts
+            document.querySelector("#total-progress").style.opacity = "1"
+            // And disable the start button
+            file.previewElement.querySelector(".start").setAttribute("disabled", "disabled")
+        })
+
+        // Hide the total progress bar when nothing's uploading anymore
+        myDropzone.on("queuecomplete", function (progress) {
+            document.querySelector("#total-progress").style.opacity = "0"
+        })
+
+        // Setup the buttons for all transfers
+        // The "add files" button doesn't need to be setup because the config
+        // `clickable` has already been specified.
+        document.querySelector("#actions .start").onclick = function () {
+            myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED))
+        }
+        document.querySelector("#actions .cancel").onclick = function () {
+            myDropzone.removeAllFiles(true)
+        }
+        // DropzoneJS Demo Code End
+
+
+        $(function () {
+            //Initialize Select2 Elements
+            $('.select2').select2()
+
+            //Initialize Select2 Elements
+            $('.select2bs4').select2({
+                theme: 'bootstrap4'
             })
 
-            myDropzone.on("sending", function (file) {
-                // Show the total progress bar when upload starts
-                document.querySelector("#total-progress").style.opacity = "1"
-                // And disable the start button
-                file.previewElement.querySelector(".start").setAttribute("disabled", "disabled")
+            //Datemask dd/mm/yyyy
+            $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+            //Datemask2 mm/dd/yyyy
+            $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+            //Money Euro
+            $('[data-mask]').inputmask()
+
+            //Date picker
+            $('#reservationdate').datetimepicker({
+                format: 'L'
+            });
+
+            //Date and time picker
+            $('#reservationdatetime').datetimepicker({ icons: { time: 'far fa-clock' } });
+
+            //Date range picker
+            $('#reservation').daterangepicker()
+            //Date range picker with time picker
+            $('#reservationtime').daterangepicker({
+                timePicker: true,
+                timePickerIncrement: 30,
+                locale: {
+                    format: 'MM/DD/YYYY hh:mm A'
+                }
             })
-
-            // Hide the total progress bar when nothing's uploading anymore
-            myDropzone.on("queuecomplete", function (progress) {
-                document.querySelector("#total-progress").style.opacity = "0"
-            })
-
-            // Setup the buttons for all transfers
-            // The "add files" button doesn't need to be setup because the config
-            // `clickable` has already been specified.
-            document.querySelector("#actions .start").onclick = function () {
-                myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED))
-            }
-            document.querySelector("#actions .cancel").onclick = function () {
-                myDropzone.removeAllFiles(true)
-            }
-            // DropzoneJS Demo Code End
-
-
-            $(function () {
-                //Initialize Select2 Elements
-                $('.select2').select2()
-
-                //Initialize Select2 Elements
-                $('.select2bs4').select2({
-                    theme: 'bootstrap4'
-                })
-
-                //Datemask dd/mm/yyyy
-                $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
-                //Datemask2 mm/dd/yyyy
-                $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
-                //Money Euro
-                $('[data-mask]').inputmask()
-
-                //Date picker
-                $('#reservationdate').datetimepicker({
-                    format: 'L'
-                });
-
-                //Date and time picker
-                $('#reservationdatetime').datetimepicker({ icons: { time: 'far fa-clock' } });
-
-                //Date range picker
-                $('#reservation').daterangepicker()
-                //Date range picker with time picker
-                $('#reservationtime').daterangepicker({
-                    timePicker: true,
-                    timePickerIncrement: 30,
-                    locale: {
-                        format: 'MM/DD/YYYY hh:mm A'
-                    }
-                })
-                //Date range as a button
-                $('#daterange-btn').daterangepicker(
-                    {
-                        ranges: {
-                            'Today': [moment(), moment()],
-                            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                            'This Month': [moment().startOf('month'), moment().endOf('month')],
-                            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                        },
-                        startDate: moment().subtract(29, 'days'),
-                        endDate: moment()
+            //Date range as a button
+            $('#daterange-btn').daterangepicker(
+                {
+                    ranges: {
+                        'Today': [moment(), moment()],
+                        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                        'This Month': [moment().startOf('month'), moment().endOf('month')],
+                        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
                     },
-                    function (start, end) {
-                        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
-                    }
-                )
+                    startDate: moment().subtract(29, 'days'),
+                    endDate: moment()
+                },
+                function (start, end) {
+                    $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+                }
+            )
 
-                //Timepicker
-                $('#timepicker').datetimepicker({
-                    format: 'LT'
-                })
-
-                //Bootstrap Duallistbox
-                $('.duallistbox').bootstrapDualListbox()
-
-                //Colorpicker
-                $('.my-colorpicker1').colorpicker()
-                //color picker with addon
-                $('.my-colorpicker2').colorpicker()
-
-                $('.my-colorpicker2').on('colorpickerChange', function (event) {
-                    $('.my-colorpicker2 .fa-square').css('color', event.color.toString());
-                })
-
-                $("input[data-bootstrap-switch]").each(function () {
-                    $(this).bootstrapSwitch('state', $(this).prop('checked'));
-                })
-
-            })
-            // BS-Stepper Init
-            document.addEventListener('DOMContentLoaded', function () {
-                window.stepper = new Stepper(document.querySelector('.bs-stepper'))
+            //Timepicker
+            $('#timepicker').datetimepicker({
+                format: 'LT'
             })
 
-            // DropzoneJS Demo Code Start
-            Dropzone.autoDiscover = false
+            //Bootstrap Duallistbox
+            $('.duallistbox').bootstrapDualListbox()
 
-            // Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
-            var previewNode = document.querySelector("#template")
-            previewNode.id = ""
-            var previewTemplate = previewNode.parentNode.innerHTML
-            previewNode.parentNode.removeChild(previewNode)
+            //Colorpicker
+            $('.my-colorpicker1').colorpicker()
+            //color picker with addon
+            $('.my-colorpicker2').colorpicker()
 
-            var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
-                url: "/target-url", // Set the url
-                thumbnailWidth: 80,
-                thumbnailHeight: 80,
-                parallelUploads: 20,
-                previewTemplate: previewTemplate,
-                autoQueue: false, // Make sure the files aren't queued until manually added
-                previewsContainer: "#previews", // Define the container to display the previews
-                clickable: ".fileinput-button" // Define the element that should be used as click trigger to select files.
+            $('.my-colorpicker2').on('colorpickerChange', function (event) {
+                $('.my-colorpicker2 .fa-square').css('color', event.color.toString());
             })
 
-            myDropzone.on("addedfile", function (file) {
-                // Hookup the start button
-                file.previewElement.querySelector(".start").onclick = function () { myDropzone.enqueueFile(file) }
+            $("input[data-bootstrap-switch]").each(function () {
+                $(this).bootstrapSwitch('state', $(this).prop('checked'));
             })
 
-            // Update the total progress bar
-            myDropzone.on("totaluploadprogress", function (progress) {
-                document.querySelector("#total-progress .progress-bar").style.width = progress + "%"
-            })
+        })
+        // BS-Stepper Init
+        document.addEventListener('DOMContentLoaded', function () {
+            window.stepper = new Stepper(document.querySelector('.bs-stepper'))
+        })
 
-            myDropzone.on("sending", function (file) {
-                // Show the total progress bar when upload starts
-                document.querySelector("#total-progress").style.opacity = "1"
-                // And disable the start button
-                file.previewElement.querySelector(".start").setAttribute("disabled", "disabled")
-            })
+        // DropzoneJS Demo Code Start
+        Dropzone.autoDiscover = false
 
-            // Hide the total progress bar when nothing's uploading anymore
-            myDropzone.on("queuecomplete", function (progress) {
-                document.querySelector("#total-progress").style.opacity = "0"
-            })
+        // Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
+        var previewNode = document.querySelector("#template")
+        previewNode.id = ""
+        var previewTemplate = previewNode.parentNode.innerHTML
+        previewNode.parentNode.removeChild(previewNode)
 
-            // Setup the buttons for all transfers
-            // The "add files" button doesn't need to be setup because the config
-            // `clickable` has already been specified.
-            document.querySelector("#actions .start").onclick = function () {
-                myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED))
-            }
-            document.querySelector("#actions .cancel").onclick = function () {
-                myDropzone.removeAllFiles(true)
-            }
+        var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
+            url: "/target-url", // Set the url
+            thumbnailWidth: 80,
+            thumbnailHeight: 80,
+            parallelUploads: 20,
+            previewTemplate: previewTemplate,
+            autoQueue: false, // Make sure the files aren't queued until manually added
+            previewsContainer: "#previews", // Define the container to display the previews
+            clickable: ".fileinput-button" // Define the element that should be used as click trigger to select files.
+        })
+
+        myDropzone.on("addedfile", function (file) {
+            // Hookup the start button
+            file.previewElement.querySelector(".start").onclick = function () { myDropzone.enqueueFile(file) }
+        })
+
+        // Update the total progress bar
+        myDropzone.on("totaluploadprogress", function (progress) {
+            document.querySelector("#total-progress .progress-bar").style.width = progress + "%"
+        })
+
+        myDropzone.on("sending", function (file) {
+            // Show the total progress bar when upload starts
+            document.querySelector("#total-progress").style.opacity = "1"
+            // And disable the start button
+            file.previewElement.querySelector(".start").setAttribute("disabled", "disabled")
+        })
+
+        // Hide the total progress bar when nothing's uploading anymore
+        myDropzone.on("queuecomplete", function (progress) {
+            document.querySelector("#total-progress").style.opacity = "0"
+        })
+
+        // Setup the buttons for all transfers
+        // The "add files" button doesn't need to be setup because the config
+        // `clickable` has already been specified.
+        document.querySelector("#actions .start").onclick = function () {
+            myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED))
+        }
+        document.querySelector("#actions .cancel").onclick = function () {
+            myDropzone.removeAllFiles(true)
+        }
         // DropzoneJS Demo Code End
     </script>
 }
-    
+
 
 
 
