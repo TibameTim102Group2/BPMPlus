@@ -262,41 +262,38 @@
                         headers: {
                             'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()  // 傳送驗證 token
                         },
-                        data: JSON.stringify([
+                        data: JSON.stringify(
+                            "XX單",
+                            [
                             {
                                 UserActivityId: "01",
-                                DepartmentId: "D001",
-                                CategoryId: departmentId
+                                DepartmentId: "Requester"
                             },
                             {
                                 UserActivityId: "08",
-                                DepartmentId: "D002",
-                                CategoryId: departmentId
+                                DepartmentId: "D002"
                             },
-
                             {
                                 UserActivityId: "09",
-                                DepartmentId: projectId,
-                                CategoryId: departmentId
+                                DepartmentId: "Requester"
                             },
                             {
                                 UserActivityId: "10",
-                                DepartmentId: projectId,
-                                CategoryId: departmentId
+                                DepartmentId: "Requester"
                             }
                         ]),
                         success: function(response) {
-                            createResponseErrorCode = response['errorCode'];
-                            if (response['errorCode'] != null && response['errorCode'] == 200) {
-                                formId = response['formId']
-                                upload()
-                                window.alert(response['message']);
-                            }
-                            if(response['errorCode'] != null && response['errorCode'] == 400)
-                            {
-                                window.alert(response['message']);
-                            }
-                            // 成功後的操作
+                            // createResponseErrorCode = response['errorCode'];
+                            // if (response['errorCode'] != null && response['errorCode'] == 200) {
+                            //     formId = response['formId']
+                            //     upload()
+                            //     window.alert(response['message']);
+                            // }
+                            // if(response['errorCode'] != null && response['errorCode'] == 400)
+                            // {
+                            //     window.alert(response['message']);
+                            // }
+                            // // 成功後的操作
                         },
                         error: function(xhr, status, error) {
 

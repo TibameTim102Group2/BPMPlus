@@ -8,10 +8,10 @@ namespace BPMPlus.ViewModels
     {
         public string UserActivityId { get; set; }
         public string DepartmentId { get; set; }
-        public string CategoryId { get; set; }
     }
     public class CreateCategory
     {
+        public string CategoryName {  get; set; }
         List<CategoryNode> Nodes { get; set; }
     }
 }
