@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+<!DOCTYPE html>
 
 <html lang="en">
 
@@ -59,7 +61,7 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-            <a href="" class="brand-link">
+            <a class="brand-link" href="@Url.Action("Index","Home")">
                 <img src="~/images/bpmplus.png" class="elevation-3" style="width:13rem;" />
             </a>
             <!-- Sidebar -->
@@ -74,18 +76,19 @@
                             <a href="#" class="nav-link">
                                 <div class="user-panel mt-3 pb-3 mb-3 d-flex image">
                                     <div class="image">
-                                        <img src="~/images/237143-0147e.jpg" class="img-circle elevation-2" alt="User Image">
-                                        <p id="UserName">
-                                            UserName
-                                        </p>
+                                        <img src="~/images/237143-0147e.jpg" class="img-circle elevation-2" >
+                                        @{
+                                                var userName = HttpContextAccessor.HttpContext.Request.Cookies["UserName"];
+                                                <p style="margin-left:10px;">@userName</p>
+                                             }
                                     </div>
                                 </div>
                             </a>
                             <ul class="nav nav-treeview">
-                                <li class="nav-item">
+                                <li class="nav-item" style="margin-left:10%;">
                                     <a class="nav-link" href="@Url.Action("ResetPassWord","Login")">修改密碼</a>
                                 </li>
-                                <li class="nav-item">
+                                <li class="nav-item" style="margin-left:10%;">
                                     <a class="nav-link" href="@Url.Action("Logout","Login")">登出</a>
                                 </li>
                             </ul>
@@ -243,14 +246,6 @@
                             </ul>
                         </li>
 
-
-
-
-
-
-
-
-
                     </ul>
                 </nav>
                 <!-- /.sidebar-menu -->
@@ -268,6 +263,7 @@
             <!-- /.content -->
         </div>
     </div>
+
     <!-- /.content-wrapper -->
     <!-- jQuery -->
     <script src="~/AdminLTE/plugins/jquery/jquery.min.js"></script>
@@ -307,10 +303,3 @@
 </body>
 
 </html>
-
-@section Scripts
-{
-    <script>
-
-    </script>
-}
