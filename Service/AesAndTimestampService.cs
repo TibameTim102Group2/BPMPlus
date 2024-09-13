@@ -71,10 +71,10 @@ namespace BPMPlus.Service
                     using (CryptoStream cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write))
                     {
                         using (StreamWriter sw = new StreamWriter(cs)) 
-                            {
-                                sw.Write(PlainText);
-                            }
-                            encryptedData = ms.ToArray();
+                        {
+                            sw.Write(PlainText);
+                        }
+                        encryptedData = ms.ToArray();
                     }
                 }
                     return Convert.ToBase64String(encryptedData);
