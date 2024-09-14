@@ -133,5 +133,28 @@ namespace BPMPlus.Controllers
                 }
             }
         }
+
+        [Authorize]
+        public async Task<List<string>> CreateProjectIdListAsync(int count)
+        {
+            List<string> retList = new List<string>();
+            var LastForm = await _context.Project.OrderBy(f => f.ProjectId).LastAsync();
+            if (LastForm == null)
+            {
+                retList.Add("P001");
+                return retList;
+            }
+
+            string id = LastForm.ProjectId;
+            id = id[1..];//拿掉第一個 P
+            int idNum = Convert.ToInt32(id);
+            idNum++;
+            for (int i = 0; i < count; i++, idNum++)
+            {
+                retList.Add("P" + idNum.ToString().PadLeft(3, '0'));
+            }
+
+            return retList;
+        }
     }
 }
