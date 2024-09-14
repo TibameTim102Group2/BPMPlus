@@ -185,7 +185,7 @@
             <div class="mb-3 inputField ">
                 <div class="mb-3 form-label"style="width:50%">
                     <label for="xxx1">工單類別名稱</label>
-                    <input type="xxx1" class="form-control">
+                    <input type="xxx1" class="form-control" id="category">
                 </div>
             </div>
         </form>
@@ -228,7 +228,7 @@
                     // var departmentId =document.getElementById("DepartmentId").getAttribute("inside")
                     // var pj = document.getElementById('projectId');
                     // var projectId = pj.options[pj.selectedIndex].value;
-                    // var ct = document.getElementById("CategoryId")
+                    var ct = document.getElementById("category").value
                     // var categoryId = ct.options[ct.selectedIndex].getAttribute("data-id");
                     // var content = $('#summernote').summernote('code');
                     // // 檢查是否有空值
@@ -256,40 +256,38 @@
                     // let formId = "";
                     // let createResponseErrorCode = 0;
                     $.ajax({
-                        url: '/ProcessTemplates/Create',
+                        url: '/ProcessTemplates/CreateCategory',
                         type: 'POST',
                         contentType: 'application/json',
                         headers: {
                             'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()  // 傳送驗證 token
                         },
-                        data: JSON.stringify([
-                            {
-                                UserActivityId: "01",
-                                DepartmentId: "D001",
-                                CategoryId: departmentId
-                            },
-                            {
-                                UserActivityId: "08",
-                                DepartmentId: "D002",
-                                CategoryId: departmentId
-                            },
-
-                            {
-                                UserActivityId: "09",
-                                DepartmentId: projectId,
-                                CategoryId: departmentId
-                            },
-                            {
-                                UserActivityId: "10",
-                                DepartmentId: projectId,
-                                CategoryId: departmentId
-                            }
-                        ]),
+                        data: JSON.stringify({
+                            CategoryName: ct,
+                            Nodes: [
+                                {
+                                    UserActivityId: "01",
+                                    DepartmentId: "Requester"
+                                },
+                                {
+                                    UserActivityId: "08",
+                                    DepartmentId: "D002"
+                                },
+                                {
+                                    UserActivityId: "09",
+                                    DepartmentId: "Requester"
+                                },
+                                {
+                                    UserActivityId: "10",
+                                    DepartmentId: "Requester"
+                                }
+                            ]
+                        }),
                         success: function(response) {
                             createResponseErrorCode = response['errorCode'];
                             if (response['errorCode'] != null && response['errorCode'] == 200) {
-                                formId = response['formId']
-                                upload()
+                                // formId = response['formId']
+                                // upload()
                                 window.alert(response['message']);
                             }
                             if(response['errorCode'] != null && response['errorCode'] == 400)
@@ -299,6 +297,7 @@
                             // 成功後的操作
                         },
                         error: function(xhr, status, error) {
+                            
 
                             // 錯誤時的操作
                         }

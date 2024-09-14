@@ -2,14 +2,52 @@
 using BPMPlus.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 
 namespace BPMPlus.Controllers
 {
+    public class ThreadSafeList
+    {
+        private readonly List<string> _list = new List<string>();
+        private readonly object _lockObject = new object(); // 鎖定對象
+
+        // 添加項目到列表
+        public void Add(string item)
+        {
+            lock (_lockObject)
+            {
+                _list.Add(item);
+            }
+        }
+
+        // 移除列表中的項目
+        public bool Remove(string item)
+        {
+            lock (_lockObject)
+            {
+                return _list.Remove(item);
+            }
+        }
+
+        // 獲取列表的所有項目
+        public List<string> GetAllItems()
+        {
+            lock (_lockObject)
+            {
+                return new List<string>(_list); // 返回列表的副本
+            }
+        }
+    }
+
     public class BaseController : Controller
     {
         private readonly ApplicationDbContext _context;
+        public ThreadSafeList _safeCreateFormIdList = new ThreadSafeList();
+        public ThreadSafeList _safeCreateFormRecordIdList = new ThreadSafeList();
+        public ThreadSafeList _safeProcessNodeList = new ThreadSafeList();
+
 
         public BaseController(ApplicationDbContext context)
         {
@@ -19,70 +57,53 @@ namespace BPMPlus.Controllers
         [Authorize]
         public async Task<List<string>> GetCreateFormIdListAsync(int count)
         {
-            List<string> retList = new List<string>();
+            
             var LastForm = await _context.Form.OrderBy(f => f.FormId).LastAsync();
-            if (LastForm == null)
-            {
-                retList.Add("F00001");
-                return retList;
-            }
                 
-            string id = LastForm.FormId;
+            string id = LastForm == null?"F-1":LastForm.FormId;
             id = id[1..];//拿掉第一個 F
             int idNum = Convert.ToInt32(id);
             idNum++;
             for (int i = 0; i < count; i++, idNum++ )
             {
-                retList.Add("F" + idNum.ToString().PadLeft(5, '0'));
+                _safeCreateFormIdList.Add("F" + idNum.ToString().PadLeft(5, '0'));
             }
 
-            return retList;
+            return _safeCreateFormIdList.GetAllItems();
         }
 
         [Authorize]
         public async Task<List<string>> GetCreateFormRecordIdListAsync(int count)
         {
-            List<string> retList = new List<string>();
+            
             var LastFormRecord = await _context.FormRecord.OrderBy(f => f.ProcessingRecordId).LastAsync();
-            if (LastFormRecord == null)
-            {
-                retList.Add("PR00000001");
-                return retList;
-            }
-
-            string id = LastFormRecord.ProcessingRecordId;
+            string id = LastFormRecord == null ? "PR-1" : LastFormRecord.ProcessingRecordId;
             id = id[2..];//拿掉第一個 F
             int idNum = Convert.ToInt32(id);
             idNum++;
             for (int i = 0; i < count; i++, idNum++)
             {
-                retList.Add("PR" + idNum.ToString().PadLeft(8, '0'));
+                _safeProcessNodeList.Add("PR" + idNum.ToString().PadLeft(8, '0'));
             }
 
-            return retList;
+            return _safeProcessNodeList.GetAllItems();
         }
 
         [Authorize]
         public async Task<List<string>> GetProcessNodeIdListAsync(int count)
         {
-            List<string> retList = new List<string>();
+            
             var LastNode = await _context.ProcessNodes.OrderBy(f => f.ProcessNodeId).LastAsync();
-            if (LastNode == null)
-            {
-                retList.Add("PN000001");
-                return retList;
-            }
-
-            string id = LastNode.ProcessNodeId;
+            string id = LastNode == null ? "PN-1" : LastNode.ProcessNodeId;
             id = id[2..];//拿掉第一個 F
             int idNum = Convert.ToInt32(id);
             idNum++;
             for (int i = 0; i < count; i++, idNum++)
             {
-                retList.Add("PN" + idNum.ToString().PadLeft(6, '0'));
+                _safeCreateFormRecordIdList.Add("PN" + idNum.ToString().PadLeft(6, '0'));
             }
 
-            return retList;
+            return _safeCreateFormRecordIdList.GetAllItems();
             
         }
         [Authorize]
