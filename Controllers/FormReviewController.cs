@@ -124,7 +124,11 @@ namespace BPMPlus.Controllers
             var userWithGroups = await _context.User
             .Include(u => u.PermissionGroups).ThenInclude(pg => pg.Users).FirstOrDefaultAsync(u => u.UserName == empName);
 
-            var userActivityLit = userWithGroups.PermissionGroups.Where(u => u.PermissionGroupId == "G0008").SelectMany(u => u.Users).Select(u => u.UserName).ToList();
+            var userActivityLit = userWithGroups.PermissionGroups
+                .Where(u => u.PermissionGroupId == "G0001" || u.PermissionGroupId == "G0006" || u.PermissionGroupId == "G0008")
+                .SelectMany(u => u.Users)
+                .Select(u => u.UserName)
+                .ToList();
 
             if (assignEmp.userDepartmentId == user.DepartmentId && userActivityLit.Contains(empName))
             {
@@ -263,7 +267,7 @@ namespace BPMPlus.Controllers
         // 審核方輸入Remark 且點選核准or退回送出後觸發Action
         // 創建新的FormRecord來顯示目前審核過的紀錄
         // 同時創建新的FormRecord來顯示下一筆審核紀錄
-        // 並更新該工單上的ProcessNodeId
+        // 並更新該工單上的ProcessNodeId, or Manday
         [HttpPost]
         public async Task<IActionResult> CreateAndUpdate(FormReviewViewModel fvm, string reviewResult)
         {
@@ -294,6 +298,7 @@ namespace BPMPlus.Controllers
                                         .Select(m => m.UserActivityId)
                                         .FirstOrDefault();
 
+                // 抓出提單方 UserActivityId
                 var poster = _context.UserActivity
                             .Where(c => c.UserActivityId == "01")
                             .Select(m => m.UserActivityId)
@@ -345,9 +350,10 @@ namespace BPMPlus.Controllers
                         })
                             .FirstOrDefaultAsync();
 
+
+                            // 現在這張工單的流程節點要是07
                         if (nextDetails.UserId != fvm.AssginEmployee && fvm.UserActivityId == "07")
                         {
-                            // 現在這張工單的流程節點要是07
                             // 創建新的審核中 FormRecord
                             var addNewAssignEmpNextReview = new FormRecord
                             {
