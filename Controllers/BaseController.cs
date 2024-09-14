@@ -47,6 +47,7 @@ namespace BPMPlus.Controllers
         public ThreadSafeList _safeCreateFormIdList = new ThreadSafeList();
         public ThreadSafeList _safeCreateFormRecordIdList = new ThreadSafeList();
         public ThreadSafeList _safeProcessNodeList = new ThreadSafeList();
+        public ThreadSafeList _safeCreateProjectIdList = new ThreadSafeList();
 
 
         public BaseController(ApplicationDbContext context)
@@ -60,7 +61,7 @@ namespace BPMPlus.Controllers
             
             var LastForm = await _context.Form.OrderBy(f => f.FormId).LastAsync();
                 
-            string id = LastForm == null?"F-1":LastForm.FormId;
+            string id = LastForm == null?"F0":LastForm.FormId;
             id = id[1..];//拿掉第一個 F
             int idNum = Convert.ToInt32(id);
             idNum++;
@@ -77,7 +78,7 @@ namespace BPMPlus.Controllers
         {
             
             var LastFormRecord = await _context.FormRecord.OrderBy(f => f.ProcessingRecordId).LastAsync();
-            string id = LastFormRecord == null ? "PR-1" : LastFormRecord.ProcessingRecordId;
+            string id = LastFormRecord == null ? "PR0" : LastFormRecord.ProcessingRecordId;
             id = id[2..];//拿掉第一個 F
             int idNum = Convert.ToInt32(id);
             idNum++;
@@ -94,7 +95,7 @@ namespace BPMPlus.Controllers
         {
             
             var LastNode = await _context.ProcessNodes.OrderBy(f => f.ProcessNodeId).LastAsync();
-            string id = LastNode == null ? "PN-1" : LastNode.ProcessNodeId;
+            string id = LastNode == null ? "PN0" : LastNode.ProcessNodeId;
             id = id[2..];//拿掉第一個 F
             int idNum = Convert.ToInt32(id);
             idNum++;
@@ -158,24 +159,17 @@ namespace BPMPlus.Controllers
         [Authorize]
         public async Task<List<string>> CreateProjectIdListAsync(int count)
         {
-            List<string> retList = new List<string>();
-            var LastForm = await _context.Project.OrderBy(f => f.ProjectId).LastAsync();
-            if (LastForm == null)
-            {
-                retList.Add("P001");
-                return retList;
-            }
-
-            string id = LastForm.ProjectId;
-            id = id[1..];//拿掉第一個 P
+            var LastNode = await _context.Project.OrderBy(f => f.ProjectId).LastAsync();
+            string id = LastNode == null ? "P0" : LastNode.ProjectId;
+            id = id[2..];//拿掉第一個 F
             int idNum = Convert.ToInt32(id);
             idNum++;
             for (int i = 0; i < count; i++, idNum++)
             {
-                retList.Add("P" + idNum.ToString().PadLeft(3, '0'));
+                _safeCreateProjectIdList.Add("P" + idNum.ToString().PadLeft(3, '0'));
             }
 
-            return retList;
+            return _safeCreateProjectIdList.GetAllItems(); 
         }
     }
 }

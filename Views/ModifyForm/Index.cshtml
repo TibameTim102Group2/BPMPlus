@@ -384,6 +384,7 @@
             let files = $("#file").get(0).files; //多檔案
             let id = $("#ModifyFrom_FormId").val();
             let now = new Date(); //現在時間
+            now.setDate(now.getDate() -1);
             let inputDate=new Date(endDate); //輸入時間
 
             if (tel == "") {
@@ -401,7 +402,7 @@
             }
 
             if (inputDate < now) {
-                alert("希望完成日期不可早於或等於今日");
+                alert("希望完成日期不可早於今日");
                 return;
             }
 

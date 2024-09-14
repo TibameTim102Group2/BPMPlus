@@ -144,6 +144,7 @@
             let deadLine = $("#inputDeadline").val();
             let summary = $("#textSummary").val();
             let now = new Date(); //現在時間
+            now.setDate(now.getDate() -1);
             let inputDate = new Date(deadLine); //輸入時間
             
             //驗證
@@ -162,7 +163,7 @@
             }
 
             if (inputDate < now) {
-                alert("專案期限不可早於或等於今日");
+                alert("專案期限不可早於今日");
                 return;
             }
 
