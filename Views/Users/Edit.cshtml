@@ -1,74 +1,254 @@
 ﻿@model BPMPlus.Models.User
 
 @{
-    ViewData["Title"] = "Edit";
+	ViewData["Title"] = "Edit";
 }
+@section Style {
+	<style>
+		.title {
+			color: rgb(255, 215, 0);
+			margin-top: 20px;
+			margin-bottom: 30px;
+			margin-left: 30px;
+			font-weight: bold;
+		}
 
-<h1>Edit</h1>
+		.backcolor {
+			background-color: rgb(255, 245, 238);
+		}
 
-<h4>User</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="UserId" />
-            <div class="form-group">
-                <label asp-for="UserName" class="control-label"></label>
-                <input asp-for="UserName" class="form-control" />
-                <span asp-validation-for="UserName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DepartmentId" class="control-label"></label>
-                <select asp-for="DepartmentId" class="form-control" asp-items="ViewBag.DepartmentId"></select>
-                <span asp-validation-for="DepartmentId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="GradeId" class="control-label"></label>
-                <select asp-for="GradeId" class="form-control" asp-items="ViewBag.GradeId"></select>
-                <span asp-validation-for="GradeId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="UserIsActive" /> @Html.DisplayNameFor(model => model.UserIsActive)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedTime" class="control-label"></label>
-                <input asp-for="CreatedTime" class="form-control" />
-                <span asp-validation-for="CreatedTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UpdatedTime" class="control-label"></label>
-                <input asp-for="UpdatedTime" class="form-control" />
-                <span asp-validation-for="UpdatedTime" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TEL" class="control-label"></label>
-                <input asp-for="TEL" class="form-control" />
-                <span asp-validation-for="TEL" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+		.item-name {
+			padding-right: 1%;
+			width: 28%;
+		}
+
+		.item-value {
+			width: 0%;
+		}
+
+		.button {
+			width: 12 %;
+		}
+
+		.btn-link {
+			color: white;
+		}
+
+		.button-icon {
+			width: 20%;
+		}
+
+		.process-node {
+			background-color: rgb(232, 244, 255);
+			height: 200px;
+		}
+
+		textarea {
+			resize: none;
+		}
+
+		.txt-box {
+			width: 50%;
+		}
+
+		.selection {
+			width: 50%;
+		}
+
+		.date {
+			width: 50%;
+		}
+
+		.content {
+			padding: 3%
+		}
+
+		.form-group {
+			display: flex;
+		}
+
+		table {
+			text-align: center;
+			line-height: 1.5;
+		}
+
+	</style>
+}
+<div class="wrapper backcolor">
+
+	<section class="content" id="app">
+		<div class="container-fluid">
+			<h3 class="title">
+				人員修改
+			</h3>
+			<div class="card card-default col-md-12">
+
+				<div class="card-body">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="item-name">人員編號</label><input class="form-control txt-box" disabled v-model="formData.UserId">
+							</div>
+							<!-- /.form-group -->
+							<div class="form-group">
+								<label asp-for="DepartmentId" class="item-name">所屬部門</label>
+								<select class="form-control select1 selection" asp-items="@ViewBag.Department" asp-for="DepartmentId" v-model="formData.DepartmentId">
+								</select>
+							</div>
+							<div class="form-group" style="display:flex">
+								<label asp-for="TEL" class="item-name">聯繫電話</label><input class="form-control txt-box" v-model="formData.Tel">
+							</div>
+							<div class="form-group">
+								<label asp-for="UserIsActive" class="item-name">是否在職</label>
+								<select class="form-control select2 selection" asp-items=@(new SelectList(ViewBag.UserIsAction, "Value", "Text")) asp-for="UserIsActive" v-model="formData.UserIsActive">
+								</select>
+
+							</div>
+
+
+							<!-- /.form-group -->
+						</div>
+						<!-- /.col -->
+						<div class="col-md-6">
+
+							<div>
+								<div class="form-group" style="display:flex">
+									<label class="item-name">人員姓名</label><input class="form-control txt-box" v-model="formData.UserName">
+
+								</div>
+								<div class="form-group">
+									<label class="item-name">職位</label> <select class="form-control select3 selection" asp-items="@ViewBag.Grade" asp-for="GradeId" v-model="formData.GradeId">
+									</select>
+								</div>
+								<div class="form-group">
+									<label class="item-name">Email</label><input class="form-control txt-box" v-model="formData.Email">
+								</div>
+								<div class="form-group">
+									<label class="item-name">新增權限</label>
+									<select class="form-control txt-box" v-model="selectPermission">
+										<option v-for="permission in permissions" :value="permission.Value">
+											{{ permission.Text }}
+										</option>
+									</select>
+									<button class="btn btn-success" @@click="PermissionIncrease">新增</button>
+								</div>
+
+
+							</div>
+						</div>
+
+						<!-- /.row -->
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<label class="item-name">目前擁有的權限</label>
+							<div v-for="permission in addPermissions" style="display:flex">
+								<p class="txt-box form-control" style="width:100%">{{permission.Text}}</p>
+								<button class="btn btn-danger" style="width:9vw;height:80%" @@click="PermissionDelete(permission.Value)">刪除</button>
+							</div>
+						</div>
+						<div>
+							<button class="btn btn-success" @@click="formSubmit">送出修改</button>
+						</div>
+					</div>
+
+
+
+
+					<div>
+
+						<button class="btn btn-warning" style="margin-left:55vw"> <a asp-action="Index" style="color:black">返回</a></button>
+					</div>
+
+
+
+				</div>
+				<!-- /.row -->
+			</div>
+		</div>
+	</section>
+
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+	<script src="https://unpkg.com/vue@latest"></script>
+	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+	<script>
+
+		const vueApp = {
+			data() {
+				return {
+					baseAddress: "https://localhost:7129/Users",
+					selectPermission: '',
+					addPermissions: [],
+					formData: {
+						UserId:'@Html.Raw(Model.UserId)',
+						UserName:'@Html.Raw(Model.UserName)',
+						Tel:'@Html.Raw(Model.TEL)',
+						GradeId:'@Html.Raw(Model.GradeId)',
+						DepartmentId:'@Html.Raw(Model.DepartmentId)',
+						UserIsActive:'@Html.Raw(Model.UserIsActive)',
+						Email:'@Html.Raw(Model.Email)',
+						permissions: [],
+
+					}
+				};
+			},
+			methods: {
+				PermissionIncrease() {
+					// alert("新增權限")
+					let _this = this;
+					let selected = _this.permissions.find(p => p.Value === _this.selectPermission);
+					if (selected) {
+						let repeatPermission = _this.addPermissions.some(p => p.Value === selected.Value);
+						if (repeatPermission) {
+							alert("已經存在此權限");
+						}
+						else {
+							_this.addPermissions.push(selected);
+							_this.selectPermission = '';
+							alert("新增成功")
+						}
+
+					} else {
+						alert("請選擇一個權限");
+					}
+				},
+				PermissionDelete(e) {
+					let _this = this;
+					let selected = _this.addPermissions.findIndex(p => p.Value === e)
+					_this.addPermissions.splice(selected, 1);
+					alert("刪除成功")
+				},
+				formSubmit() {
+					let _this = this;
+					_this.formData.permissions = _this.addPermissions.map(p => p.Value);
+					console.log(JSON.stringify(_this.formData));
+					axios.post(`${this.baseAddress}/Edit`, JSON.stringify(_this.formData), {
+						headers: {
+							'Content-Type': 'application/json'
+						}
+					})
+						.then(response => {
+							this.items = response.data;
+							alert("修改成功");
+							window.location.href = `${_this.baseAddress}`;
+						})
+						.catch((error) => console.log(error));
+				},
+
+			},
+			mounted() {
+				let _this = this;
+				_this.permissions = JSON.parse('@Html.Raw(ViewBag.PermissionGroup)');
+				_this.addPermissions = JSON.parse('@Html.Raw(ViewBag.userPermission)')
+
+			},
+
+		}
+
+		var app = Vue.createApp(vueApp).mount('#app');
+
+	</script>
 }

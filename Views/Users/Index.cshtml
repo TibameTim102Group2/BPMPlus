@@ -15,15 +15,16 @@
 			color: white;
 			font-weight: bold;
 		}
+
 		.content {
 			/* 	background-color:#FFF8D7; */
 		}
 
-		.content .connectedSortable option {
-			background-color: white;
-			color: #458bfc;
-			font-weight: bold;
-		}
+			.content .connectedSortable option {
+				background-color: white;
+				color: #458bfc;
+				font-weight: bold;
+			}
 
 		.clearfix button {
 			background-color: #458bfc;
@@ -103,10 +104,10 @@
 					<div class="operation-wrapper">
 						<img src="@Url.Content("~/images/userdata/edit.png")"
 							 class="operation-icon"
-						@@click="editItem(item)" />
+							 @@click="editItem(item)" />
 						<img src="@Url.Content("~/images/userdata/delete.png")"
 							 class="operation-icon"
-						@@click="deleteItem(item)" />
+							 @@click="deleteItem(item)" />
 						<img src="@Url.Content("~/images/userdata/search.png")"
 							 class="operation-icon"
 							 @@click="detailItem(item)" />
@@ -156,10 +157,10 @@
 						})
 						.catch((error) => console.log(error));
 				},
-				deleteItem : function(item) {
-                  let _this = this;
-				  // alert(`${item.userId}`)
-				  // alert("點擊離職")
+				deleteItem: function (item) {
+					let _this = this;
+					// alert(`${item.userId}`)
+					// alert("點擊離職")
 					axios({
 						method: 'delete',
 						url: `${_this.baseAddress}/Invalid/${item.userId}`,
@@ -167,19 +168,19 @@
 						.then((response) => _this.fetchItems(), alert("更改在職狀態為離職")
 						).catch(error => alert("更改在職狀態失敗"));
 
-					
-                },
-                editItem : function(item) {
-                    alert(`edit:${item.player}`);
+
+				},
+				editItem: function (item) {
+					let _this = this;
 					window.location.href = `${_this.baseAddress}/Edit/${item.userId}`;
-                },
-				detailItem:function(item){
+				},
+				detailItem: function (item) {
 					let _this = this;
 					// alert(`${item.userId}`
 					window.location.href = `${_this.baseAddress}/Details/${item.userId}`;
-			
+
 				},
-				
+
 			},
 			mounted() {
 				let _this = this;
