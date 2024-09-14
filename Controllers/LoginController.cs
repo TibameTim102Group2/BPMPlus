@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using BPMPlus.Service;
 using BPMPlus.ViewModels.Login;
 using BCryptHelper = BCrypt.Net.BCrypt;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 
 namespace BPMPlus.Controllers
 {
@@ -50,9 +51,13 @@ namespace BPMPlus.Controllers
                 if (isTruePassword == true)
                 {
                     // 登入成功，建立驗證 cookie
-                    Claim[] claims = new[] { new Claim("UserId", login.UserId) };
+                    Claim[] claims = new[] { new Claim("UserId", login.UserId)};
                     ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+                    string userName = user.UserName;
+                    CookieOptions option = new CookieOptions();
+                    Response.Cookies.Append("UserName", userName, option);
 
                     // 呼叫 SignInAsync 以登入使用者
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal, new AuthenticationProperties()
