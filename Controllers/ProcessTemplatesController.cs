@@ -52,18 +52,34 @@ namespace BPMPlus.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<JsonResult> Create([FromBody] CreateCategory model)
+        public async Task<JsonResult> CreateCategory([FromBody] CreateCategory model)
         {
             User user = await GetAuthorizedUser();
 
             //functionId:  13 -> 新增需求類別
+            List<Category> processValidatorList = new List<Category>();
 
             if (!user.PermittedTo("13"))
             {
-                throw new Exception("User is not permitted");
+                return Json(new { errorCode = 400, message = $"您無權新增工單類別" });
             }
-            
-
+            if(model.CategoryName == null || model.CategoryName == "")
+            {
+                return Json(new { errorCode = 400, message = $"工單名稱不可為空" });
+            }
+            List<string> ExistingCategoryNames = await _context.Category.Select(c => c.CategoryDescription).Where(c => c == model.CategoryName).ToListAsync();
+            if(ExistingCategoryNames.Count()!=0)
+            {
+                return Json(new { errorCode = 400, message = $"工單類別已存在" });
+            }
+            if(model.Nodes.Count() == 0)
+            {
+                return Json(new { errorCode = 400, message = $"工單無流程" });
+            }
+            foreach(CategoryNode node in model.Nodes)
+            {
+                var x = node.DepartmentId;
+            }
             return Json(new { errorCode = 200, message = $"新增需求類別成功!"});
         }
 
