@@ -442,10 +442,13 @@
                 };
                 document.head.appendChild(script);
             }
-            loadScript('/AdminLTE/plugins/summernote/summernote-bs4.js', function () {
+            $(document).ready(function() 
+            {
+                loadScript('/AdminLTE/plugins/summernote/summernote-bs4.js', function () {
                             $('#summernote').summernote('code');
                         }
-            ); 
+            )
+            }); 
 
 
         </script>
