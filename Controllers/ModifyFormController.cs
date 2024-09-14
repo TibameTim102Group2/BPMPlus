@@ -1,6 +1,7 @@
 ﻿using BPMPlus.Data;
 using BPMPlus.Models;
 using BPMPlus.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,11 +21,8 @@ namespace BPMPlus.Controllers
         {
             _context = context;
         }
-        // GET: ModifyForm
-        //public ActionResult Index()
-        //{
-        //    return View();
-        //}
+
+        [Authorize]
 
         [HttpGet]
         public IActionResult Index(string id)

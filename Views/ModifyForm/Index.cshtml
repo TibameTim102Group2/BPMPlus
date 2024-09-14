@@ -259,7 +259,24 @@
 <!-- /.content-wrapper -->
 @section Scripts
 {
-     <!-- jQuery -->
+    <script src="~/AdminLTE/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/AdminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/AdminLTE/dist/js/adminlte.min.js"></script>
+    <!-- Summernote -->
+    <script src="~/AdminLTE/plugins/summernote/summernote-bs4.min.js"></script>
+    <!-- CodeMirror -->
+    <script src="~/AdminLTE/plugins/codemirror/codemirror.js"></script>
+    <script src="~/AdminLTE/plugins/codemirror/mode/css/css.js"></script>
+    <script src="~/AdminLTE/plugins/codemirror/mode/xml/xml.js"></script>
+    <script src="~/AdminLTE/plugins/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="~/AdminLTE/dist/js/demo.js"></script>
+    
+    
+    
+    <!-- jQuery -->
     <script src="~/AdminLTE/plugins/jquery/jquery.min.js"></script>
     <!-- Bootstrap 4 -->
     <script src="~/AdminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -277,6 +294,8 @@
 
     <!-- AdminLTE for demo purposes -->
     <script src="~/AdminLTE/dist/js/demo.js"></script>
+
+
 
 
 
@@ -302,7 +321,7 @@
 
 
 
-
+         //作廢按鈕
 
         $("#btnInvalid").click(function () {
             let userConfirmed = confirm("是否作廢?");
@@ -382,7 +401,7 @@
             }
 
             if (inputDate < now) {
-                alert("希望完成日期不可早於今日");
+                alert("希望完成日期不可早於或等於今日");
                 return;
             }
 
@@ -418,7 +437,6 @@
                 }
                 
                 )
-          
 
 
             // $.ajax({
@@ -435,19 +453,7 @@
             // })
         });
 
-        // $("#btnUpload").click(function (e) {
-        //     let file = $("#file").get(0).files[0];
-        //     $.ajax({
-        //         //設置Url
-        //         url: '@Url.Action("Upload", "ModifyForm")',
-        //         //方法
-        //         type: 'POST',
-        //         data: { file: file },
-        //         success: function (response) {
-        //             alert(json.stringify(response).message);
-        //         }
-        //     });
-        // });
+       
     </script>
 }
 
