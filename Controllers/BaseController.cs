@@ -171,5 +171,20 @@ namespace BPMPlus.Controllers
 
             return _safeCreateProjectIdList.GetAllItems(); 
         }
-    }
+		[Authorize]
+		public async Task<List<string>> CreateUserIdListAsync(int count)
+		{
+			var LastNode = await _context.User.OrderBy(f => f.UserId).LastAsync();
+			string id = LastNode == null ? "A0" : LastNode.UserId;
+			id = id[2..];//拿掉第一個 A
+			int idNum = Convert.ToInt32(id);
+			idNum++;
+			for (int i = 0; i < count; i++, idNum++)
+			{
+				_safeCreateProjectIdList.Add("A" + idNum.ToString().PadLeft(3, '0'));
+			}
+
+			return _safeCreateProjectIdList.GetAllItems();
+		}
+	}
 }
