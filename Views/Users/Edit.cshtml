@@ -81,89 +81,85 @@
 			<h3 class="title">
 				人員修改
 			</h3>
-			<div class="card card-default col-md-12">
 
-				<div class="card-body">
-					<div class="row">
-						<div class="col-md-6">
-							<div class="form-group">
-								<label class="item-name">人員編號</label><input class="form-control txt-box" disabled v-model="formData.UserId">
-							</div>
-							<!-- /.form-group -->
-							<div class="form-group">
-								<label asp-for="DepartmentId" class="item-name">所屬部門</label>
-								<select class="form-control select1 selection" asp-items="@ViewBag.Department" asp-for="DepartmentId" v-model="formData.DepartmentId">
-								</select>
-							</div>
-							<div class="form-group" style="display:flex">
-								<label asp-for="TEL" class="item-name">聯繫電話</label><input class="form-control txt-box" v-model="formData.Tel">
-							</div>
-							<div class="form-group">
-								<label asp-for="UserIsActive" class="item-name">是否在職</label>
-								<select class="form-control select2 selection" asp-items=@(new SelectList(ViewBag.UserIsAction, "Value", "Text")) asp-for="UserIsActive" v-model="formData.UserIsActive">
-								</select>
+			<div class="card card-default ">
+				<div style="margin-left:auto;">
 
-							</div>
-
-
-							<!-- /.form-group -->
-						</div>
-						<!-- /.col -->
-						<div class="col-md-6">
-
-							<div>
-								<div class="form-group" style="display:flex">
-									<label class="item-name">人員姓名</label><input class="form-control txt-box" v-model="formData.UserName">
-
-								</div>
-								<div class="form-group">
-									<label class="item-name">職位</label> <select class="form-control select3 selection" asp-items="@ViewBag.Grade" asp-for="GradeId" v-model="formData.GradeId">
-									</select>
-								</div>
-								<div class="form-group">
-									<label class="item-name">Email</label><input class="form-control txt-box" v-model="formData.Email">
-								</div>
-								<div class="form-group">
-									<label class="item-name">新增權限</label>
-									<select class="form-control txt-box" v-model="selectPermission">
-										<option v-for="permission in permissions" :value="permission.Value">
-											{{ permission.Text }}
-										</option>
-									</select>
-									<button class="btn btn-success" @@click="PermissionIncrease">新增</button>
-								</div>
-
-
-							</div>
-						</div>
-
-						<!-- /.row -->
-					</div>
-					<div class="row">
-						<div class="col-md-6">
-							<label class="item-name">目前擁有的權限</label>
-							<div v-for="permission in addPermissions" style="display:flex">
-								<p class="txt-box form-control" style="width:100%">{{permission.Text}}</p>
-								<button class="btn btn-danger" style="width:9vw;height:80%" @@click="PermissionDelete(permission.Value)">刪除</button>
-							</div>
-						</div>
-						<div>
-							<button class="btn btn-success" @@click="formSubmit">送出修改</button>
-						</div>
-					</div>
-
-
-
-
-					<div>
-
-						<button class="btn btn-warning" style="margin-left:55vw"> <a asp-action="Index" style="color:black">返回</a></button>
-					</div>
-
-
-
+					<button class="btn btn-warning"> <a asp-action="Index" style="color:black">返回</a></button>
 				</div>
-				<!-- /.row -->
+				<div class="col-md-12">
+					<div class="card-body">
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label class="item-name">人員編號</label><input class="form-control txt-box" disabled v-model="formData.UserId">
+								</div>
+								<!-- /.form-group -->
+								<div class="form-group">
+									<label asp-for="DepartmentId" class="item-name">所屬部門</label>
+									<select class="form-control select1 selection" asp-items="@ViewBag.Department" asp-for="DepartmentId" v-model="formData.DepartmentId">
+									</select>
+								</div>
+								<div class="form-group" style="display:flex">
+									<label asp-for="TEL" class="item-name">聯繫電話</label><input class="form-control txt-box" v-model="formData.Tel">
+								</div>
+								<div class="form-group">
+									<label asp-for="UserIsActive" class="item-name">是否在職</label>
+									<select class="form-control select2 selection" asp-items=@(new SelectList(ViewBag.UserIsAction, "Value", "Text")) asp-for="UserIsActive" v-model="formData.UserIsActive">
+									</select>
+
+								</div>
+
+
+								<!-- /.form-group -->
+							</div>
+							<!-- /.col -->
+							<div class="col-md-6">
+
+								<div>
+									<div class="form-group" style="display:flex">
+										<label class="item-name">人員姓名</label><input class="form-control txt-box" v-model="formData.UserName" @@change="checkname">
+
+									</div>
+									<div class="form-group">
+										<label class="item-name">職位</label> <select class="form-control select3 selection" asp-items="@ViewBag.Grade" asp-for="GradeId" v-model="formData.GradeId">
+										</select>
+									</div>
+									<div class="form-group">
+										<label class="item-name">Email</label><input class="form-control txt-box" v-model="formData.Email">
+									</div>
+									<div class="form-group">
+										<label class="item-name">新增權限</label>
+										<select class="form-control txt-box" v-model="selectPermission">
+											<option v-for="permission in permissions" :value="permission.Value">
+												{{ permission.Text }}
+											</option>
+										</select>
+										<button class="btn btn-success" @@click="PermissionIncrease">新增</button>
+									</div>
+
+
+								</div>
+							</div>
+
+							<!-- /.row -->
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<label class="item-name">目前擁有的權限</label>
+								<div v-for="permission in addPermissions" style="display:flex">
+									<p class="txt-box form-control" style="width:100%">{{permission.Text}}</p>
+									<button class="btn btn-danger" style="width:9vw;height:80%" @@click="PermissionDelete(permission.Value)">刪除</button>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+				<div style="margin:auto">
+					<button class="btn btn-success" @@click="formSubmit">送出修改</button>
+				</div>
+
 			</div>
 		</div>
 	</section>
@@ -237,6 +233,12 @@
 						})
 						.catch((error) => console.log(error));
 				},
+				checkname() { 
+					let _this = this;
+					if (_this.formData.UserName == "") {
+						alert("姓名欄位不可為空");
+					}
+				}
 
 			},
 			mounted() {

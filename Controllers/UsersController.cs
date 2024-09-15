@@ -11,7 +11,7 @@ using BPMPlus.ViewModels;
 using Newtonsoft.Json;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using NuGet.Protocol.Providers;
-
+using BCryptHelper = BCrypt.Net.BCrypt;
 namespace BPMPlus.Controllers
 {
 	public class UsersController : BaseController
@@ -70,7 +70,7 @@ namespace BPMPlus.Controllers
 			{
 				ViewBag.UserIsActive = "在職";
 			}
-			var userWithGroups = _context.User
+			var userWithGroups = _context.User.AsNoTracking()
 			.Include(u => u.PermissionGroups)
 			 .FirstOrDefault(u => u.UserId == id);
 
@@ -80,30 +80,69 @@ namespace BPMPlus.Controllers
 			return View(user);
 		}
 
+
+
+
 		// GET: Users/Create
-		public IActionResult Create()
+		[HttpGet]
+		public async Task<IActionResult> Create()
 		{
-			ViewData["DepartmentId"] = new SelectList(_context.Department, "DepartmentId", "DepartmentId");
-			ViewData["GradeId"] = new SelectList(_context.Grade, "GradeId", "GradeId");
+
+			List<string> userNewId = await CreateUserIdListAsync(1);
+			ViewBag.UserNewId = userNewId.FirstOrDefault();
+			var allPermission = _context.PermissionGroup.Select(p => new
+			{
+				Value = p.PermissionGroupId,
+				Text = p.PermissionGroupName,
+			}).ToList();
+			ViewBag.PermissionGroup = JsonConvert.SerializeObject(allPermission);
+
+			ViewBag.Department = new SelectList(_context.Department, "DepartmentId", "DepartmentName");
+			ViewBag.Grade = new SelectList(_context.Grade, "GradeId", "GradeName");
 			return View();
+
 		}
 
 		// POST: Users/Create
 		// To protect from overposting attacks, enable the specific properties you want to bind to.
 		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create([Bind("UserId,UserName,DepartmentId,GradeId,Email,Password,UserIsActive,CreatedTime,UpdatedTime,TEL")] User user)
+		public async Task<IActionResult> Create([FromBody] bKUserCreateViewModel userdata)
 		{
+
 			if (ModelState.IsValid)
 			{
-				_context.Add(user);
-				await _context.SaveChangesAsync();
-				return RedirectToAction(nameof(Index));
+				string defaultPassword = $"{userdata.UserId}@tim102";
+				string newPassword = BCryptHelper.HashPassword(defaultPassword);
+
+				var NewUser = new User();
+				NewUser.UserId = userdata.UserId;
+				NewUser.UserName = userdata.UserName;
+				NewUser.DepartmentId = userdata.DepartmentId;
+				NewUser.GradeId = userdata.GradeId;
+				NewUser.TEL=userdata.Tel;
+				NewUser.Email = userdata.Email;
+				NewUser.UserIsActive = true;
+				NewUser.CreatedTime = DateTime.UtcNow;
+				NewUser.UpdatedTime = DateTime.UtcNow;
+				NewUser.Password = newPassword;
+				await _context.User.AddAsync(NewUser);
 			}
-			ViewData["DepartmentId"] = new SelectList(_context.Department, "DepartmentId", "DepartmentId", user.DepartmentId);
-			ViewData["GradeId"] = new SelectList(_context.Grade, "GradeId", "GradeId", user.GradeId);
-			return View(user);
+			await _context.SaveChangesAsync();
+			var user = _context.User.Include(x => x.PermissionGroups).FirstOrDefault(x => x.UserId == userdata.UserId);
+			foreach (var item in userdata.Permissions)
+			{
+
+				//重新建關聯
+				var newPermissionGroup = _context.PermissionGroup.FirstOrDefault(pg => pg.PermissionGroupId == item);
+				if (newPermissionGroup != null)
+				{
+					user.PermissionGroups.Add(newPermissionGroup);
+					_context.SaveChanges();
+				}
+			}
+
+			return View("Index");
 		}
 
 		//編輯
@@ -215,8 +254,7 @@ namespace BPMPlus.Controllers
 
 
 					user.PermissionGroups.Where(n => n.PermissionGroupId == userData.UserId).ToList();
-					//user.PermissionGroups.Select(x => x.PermissionGroupId) = userData.Permissions;
-					//_context.Update(userData);
+
 					await _context.SaveChangesAsync();
 				}
 				catch (DbUpdateConcurrencyException)
