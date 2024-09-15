@@ -21,7 +21,7 @@
 
 
 <!--登入區塊-->
-@using (Html.BeginForm("Login", "Login", new { ReturnUrl = Context.Request.Query["ReturnUrl"] }, FormMethod.Post, true, new { name = "loginForm", autocomplete = "off" }))
+@using (Html.BeginForm("Login", "Login", FormMethod.Post))
 {
         <div class="login-page bg-light">
             <div class="login-box">

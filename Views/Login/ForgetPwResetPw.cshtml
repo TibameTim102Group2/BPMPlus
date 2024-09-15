@@ -42,18 +42,29 @@
                 </div>
             </div>
                 <div class="row">
-                    <div class="col-4"></div>
-                    <!-- /.col -->
-                    <div class="col-4">
-                        <button type="submit" class="btn btn-primary btn-block">送出修改</button>
-                    </div>
                     <!--顯示錯誤訊息 -->
-                        <div style="color:red;">
-                        @ViewBag.errMsg
+                    <div style="color:red;">
+                    @ViewBag.errMsg
+                    </div>
+
+                    <!-- 修改成功 -->
+                    <div style="color:blue;">
+                        <p>@TempData["SuccessMessage"]</p>
+                    </div>
+
+                    <!-- 隱藏的url data= 內容 -->
+                    <div hidden>
+                        @Html.PasswordFor(p => p.dataStr, new { @Value = ViewBag.DataStr })
+                    </div>
+
+                    <!-- submit -->
+                    <div class="row">
+                        <div class="col-4"></div>
+                        <div class="col-4">
+                            <button type="submit" class="btn btn-primary btn-block">送出修改</button>
                         </div>
-                        <div hidden>
-                            @Html.PasswordFor(p => p.dataStr, new { @Value = ViewBag.DataStr })
-                        </div>
+
+                    </div>
 
                         
                     <!-- /.col -->

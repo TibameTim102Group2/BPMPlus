@@ -1,0 +1,57 @@
+﻿@section Style {
+    <style>
+        .welcomeText {
+            font-size: 25px;
+        }
+        .mid{
+            margin: 0,auto;
+        }
+    </style>
+}
+@{
+    Layout = null;
+}
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="~/AdminLTE/plugins/fontawesome-free/css/all.min.css">
+<!-- Tempusdominus Bootstrap 4 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<!-- Theme style -->
+<link rel="stylesheet" href="~/AdminLTE/dist/css/adminlte.min.css">
+
+
+    <div class="login-page bg-light">
+        <div class="login-box">
+            <div class="login-logo">
+                <img src="~/images/bpmplus.png" alt="" class="mb-3" style="width:20rem;">
+            </div>
+            <!-- /.login-logo -->
+            <div>
+                <p class="welcomeText login-box-msg text-bold mid">驗證信已逾期</p>
+            <p class="login-box-msg mid ">
+                    @Html.ActionLink("回到首頁", "Index", "Login")
+                </p>
+             </div>
+
+        </div>
+    </div>
+
+
+<!-- jQuery -->
+<script src="~/AdminLTE/plugins/jquery/jquery.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="~/AdminLTE/plugins/jquery-ui/jquery-ui.min.js"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>$.widget.bridge('uibutton', $.ui.button)</script>
+<!-- Bootstrap 4 -->
+<script src="~/AdminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- jQuery Knob Chart -->
+<script src="~/AdminLTE/plugins/jquery-knob/jquery.knob.min.js"></script>
+<!-- Tempusdominus Bootstrap 4 -->
+<script src="~/AdminLTE/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+<!-- AdminLTE App -->
+<script src="~/AdminLTE/dist/js/adminlte.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="~/AdminLTE/dist/js/demo.js"></script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script src="~/AdminLTE/dist/js/pages/dashboard.js"></script>

@@ -10,7 +10,9 @@ using Microsoft.AspNetCore.Authorization;
 using BPMPlus.Service;
 using BPMPlus.ViewModels.Login;
 using BCryptHelper = BCrypt.Net.BCrypt;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
+using System.Web;
+using static System.Net.Mime.MediaTypeNames;
+using System.Data;
 
 namespace BPMPlus.Controllers
 {
@@ -125,22 +127,32 @@ namespace BPMPlus.Controllers
         {
             var _service = aesAndTimestampService;
 
+            //dataStr url解碼
+            var dataStrDecode = HttpUtility.UrlDecode(vm.dataStr);
+
+            //換回符號+/
+            dataStrDecode = dataStrDecode.Replace('-', '+').Replace('_', '/');
+
             //分割dataStr ";"
-            string[] splitStr = vm.dataStr.Split(new[] { ";" }, StringSplitOptions.None);
+            string[] dataStrSplit = dataStrDecode.Split(new[] { "|" }, StringSplitOptions.None);
+
             string ivKey = null;
             string encryptStr = null;
-            if (splitStr.Length > 1)
+            if (dataStrSplit.Length > 1)
             {
-                ivKey = splitStr[0];
-                encryptStr = splitStr[1];
+                ivKey = dataStrSplit[0];
+                encryptStr = dataStrSplit[1];
             }
             else
             {
                 return RedirectToAction("Index", "Home");
             }
+            ivKey = ivKey.Replace(" ", "");
+            encryptStr = encryptStr.Replace(" ", "");
 
             //解密encryptStr
-            var Key = _service.GenerateKey();
+            var Key = _service.GetKey();
+
             var decryptStr = _service.Decrypt(encryptStr, Key, ivKey);
 
             //分割decryptStr "|"
@@ -159,7 +171,7 @@ namespace BPMPlus.Controllers
             var resetPasswordService = new ResetPasswordService();
             var result = resetPasswordService.ValidatePassword(vm.ResetPassword);
 
-            //現在時間 時間戳記
+            //取得現在時間戳
             DateTimeOffset dateTimeOffset = new DateTimeOffset(DateTime.Now);
             long nowStampTime = dateTimeOffset.ToUnixTimeSeconds();
 
@@ -291,5 +303,11 @@ namespace BPMPlus.Controllers
         {
             return View();
         }
+
+        public IActionResult Erro()
+        {
+            return View();
+        }
+
     }
 }
