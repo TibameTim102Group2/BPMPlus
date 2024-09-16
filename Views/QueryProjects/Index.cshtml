@@ -3,9 +3,39 @@
 
 @section Style
 {
+    <link rel="stylesheet" href="~/font-awesome/css/all.css" />
+    <link href="~/lib/datatables/css/jquery.datatables.min.css" rel="stylesheet" asp-append-version="true" />
+    
     <style>
         .content-wrapper {
             background-color: rgb(225, 239, 252);
+        }
+
+        .inside{
+            padding:10px;
+           
+        }
+
+        label{
+            display: inline-block;
+            width:120px;
+            height:30px;
+            line-height:30px;
+            background-color : #458bfc;
+            color:white;
+            text-align-last: center; /* label的text-align要加last */
+        }
+
+        .groupInput{
+            margin:5px auto;
+        }
+
+        table{
+            text-align:center;
+        }
+
+        .projectArea{
+             margin:5px auto;
         }
 
     </style>
@@ -15,6 +45,61 @@
 
     <div class="inside">
 
+        <div class="row groupInput">
+            <div class="col-4">
+                <label>專案名稱</label> <input placeholder="請輸入專案名稱" />
+            </div>
+            <div class="col-4">
+                <label>專案編號</label> <input placeholder="請輸入專案編號" />
+            </div> 
+            <div class="col-4">
+                <button class="btn btn-warning">查詢專案</button>
+            </div>
+        </div>
+
+        <div class="row groupInput">
+            <div class="col-4">
+                <label>參與員工部門</label> <select><option>AAA</option></select>
+            </div>
+            <div class="col-4">
+                <label>參與員工編號</label> <select><option>AAA</option></select>
+            </div> 
+            <div class="col-4">
+                <label>參與員工姓名</label> <select><option>AAA</option></select>
+            </div>
+        </div>
+        <div class="row projectArea">
+            <div class="col-4">
+                <label>專案</label> 
+            </div>
+        </div>
+        <div>
+            <table class="table table-hover table-bordered">
+                <thead >
+                   <tr>
+                        <th>專案名稱</th>
+                        <th>專案編號</th>
+                        <th>專案概要</th>
+                        <th>專案期限</th>
+                      @*   <th>專案經理</th>
+                        <th></th> *@
+                   </tr>
+                </thead>
+               @*  <tbody>
+                    <tr>
+                        <td>AA</td>
+                        <td>AA</td>
+                        <td>AA</td>
+                        <td>AA</td>
+                        <td>AA</td>
+                        <td> 
+                            <button type="submit"><i class="fa-solid fa-pen-to-square"></i></button>   
+                             <button type="submit"><i class="fa-solid fa-trash"></i> </button>
+                        </td>
+                    </tr>
+                </tbody> *@
+            </table>
+        </div>
 
     </div>
 
@@ -27,5 +112,29 @@
 
 @section Scripts
 {
+    <script src="~/lib/datatables/js/jquery.datatables.min.js" asp-append-version="true"></script>
+    <script src="//cdn.datatables.net/fixedheader/3.3.2/js/dataTables.fixedHeader.min.js"></script>
 
+    <script>
+        $(document).ready(function(){
+            //alert("ready");
+            $("table").dataTable({
+                ajax: {
+                    type: "GET",
+                    url: "/QueryProjects/IndexJson",
+                    dataSrc: function (data) { 
+                        return data;
+                    },
+                },
+                columns:[
+                    { "data": "projectName", "width": "15%" },
+                    { "data": "projectId", "width": "15%" },
+                    { "data": "summary", "width": "15%" },
+                    { "data": "deadLine", "width": "15%" },
+                ],
+                fixedHeader:{},
+                language:{},
+            });
+        });
+    </script>
 }
