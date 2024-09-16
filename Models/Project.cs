@@ -13,6 +13,10 @@ namespace BPMPlus.Models
         [MaxLength(20)]
         public string ProjectId { get; set; }
 
+        [Column(TypeName = "VARCHAR")]
+        [MaxLength(20)]
+        public string ProjectManagerId { get; set; }
+
         [Column(TypeName = "NVARCHAR")]
         [MaxLength(64)]
         public string ProjectName { get; set; }
