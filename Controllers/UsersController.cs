@@ -12,20 +12,39 @@ using Newtonsoft.Json;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using NuGet.Protocol.Providers;
 using BCryptHelper = BCrypt.Net.BCrypt;
+using Microsoft.AspNetCore.Authorization;
 namespace BPMPlus.Controllers
 {
 	public class UsersController : BaseController
 	{
+
 		private readonly ApplicationDbContext _context;
 
 		public UsersController(ApplicationDbContext context) : base(context)
 		{
 			_context = context;
 		}
-		// GET: Users
-		public async Task<IActionResult> Index()
+        [Authorize]
+        // GET: Users
+        public async Task<IActionResult> Index()
 		{
-			return View();
+            User user = await GetAuthorizedUser();
+			//需要是人資部且是admin的人才有資格更進入人員管理
+			var humanPermitted = false;
+            foreach (var item in user.PermissionGroups)
+            {
+				if (item.PermissionGroupId == "G0001")
+				{
+					humanPermitted = true; break;
+				}
+                
+            }
+            if (!(user.DepartmentId=="D002"&& humanPermitted ))
+            {
+                ViewBag.NotPermittedToCreateForm = "您的權限無法進行人員管理";
+                return View("~/Views/Home/Index.cshtml");
+            }
+            return View();
 		}
 		// GET: Users
 		[HttpGet]
@@ -87,8 +106,24 @@ namespace BPMPlus.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Create()
 		{
+            User user = await GetAuthorizedUser();
+            //需要是人資部且是admin的人才有資格更進入人員管理
+            var humanPermitted = false;
+            foreach (var item in user.PermissionGroups)
+            {
+                if (item.PermissionGroupId == "G0001")
+                {
+                    humanPermitted = true; break;
+                }
 
-			List<string> userNewId = await CreateUserIdListAsync(1);
+            }
+            if (!(user.DepartmentId == "D002" && humanPermitted))
+            {
+                ViewBag.NotPermittedToCreateForm = "您的權限無法進行人員管理";
+                return View("~/Views/Home/Index.cshtml");
+            }
+
+            List<string> userNewId = await CreateUserIdListAsync(1);
 			ViewBag.UserNewId = userNewId.FirstOrDefault();
 			var allPermission = _context.PermissionGroup.Select(p => new
 			{
@@ -297,7 +332,8 @@ namespace BPMPlus.Controllers
 
 
 
-		private bool UserExists(string id)
+
+        private bool UserExists(string id)
 		{
 			return _context.User.Any(e => e.UserId == id);
 		}
