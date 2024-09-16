@@ -28,7 +28,7 @@
 		}
 
 		.button {
-			width: 12 %;
+			width:12%;
 		}
 
 		.btn-link {
@@ -109,7 +109,7 @@
 
 								<div>
 									<div class="form-group" style="display:flex">
-										<label class="item-name">人員姓名</label><input class="form-control txt-box" v-model="formData.UserName" @@change="checkname">
+										<label class="item-name">人員姓名</label><input class="form-control txt-box" v-model="formData.UserName">
 
 									</div>
 									<div class="form-group">
@@ -210,8 +210,17 @@
 				},
 				formSubmit() {
 					let _this = this;
+					if (_this.formData.UserName || _this.formData.Tel || _this.formData.GradeId || _this.formData.DepartmentId || _this.formData.Email  == "") {
+						if (_this.formData.UserName=='') { window.alert("姓名不可為空"); return; }
+						if (_this.formData.DepartmentId=='') { window.alert("尚未填選所屬部門"); return; }
+						if (_this.formData.Tel=='') { window.alert("尚未填寫連絡電話"); return; }
+						if (_this.formData.GradeId == '') { window.alert("尚未填選職位"); return; }
+					}
+					if (_this.addPermissions.length === 0) {
+						window.alert("尚未填選權限");
+						return;
+					}
 					_this.formData.permissions = _this.addPermissions.map(p => p.Value);
-					console.log(JSON.stringify(_this.formData));
 					axios.post(`${this.baseAddress}/Create`, JSON.stringify(_this.formData), {
 						headers: {
 							'Content-Type': 'application/json'
@@ -224,12 +233,7 @@
 						})
 						.catch((error) => console.log(error));
 				},
-				checkname() {
-					let _this = this;
-					if (_this.formData.UserName == "") {
-						alert("姓名欄位不可為空");
-					}
-				}
+
 
 			},
 			mounted() {
