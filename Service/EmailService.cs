@@ -2,6 +2,7 @@
 using System.Net;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.Web;
+using BPMPlus.ViewModels.Login;
 
 namespace BPMPlus.Service
 {
@@ -50,7 +51,7 @@ namespace BPMPlus.Service
             //改變符號-_, 避免轉換URL失敗
             var changeSymbolStr = (ivKey + "|" + encryptStr).Replace('+', '-').Replace('/', '_');
 
-            //編碼成URL適用字串
+            //URL編碼
             var strToUrl = HttpUtility.UrlEncode(changeSymbolStr);
 
             string dataStr = "https://localhost:7129/Login/ForgetPwResetPw?data=" + strToUrl;
