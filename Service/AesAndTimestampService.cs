@@ -8,7 +8,6 @@ using System.Text;
 
 namespace BPMPlus.Service
 {
-
     public class AesAndTimestampService
     {
         ////時間戳記
@@ -19,27 +18,20 @@ namespace BPMPlus.Service
             return (long)(dateTime.ToUniversalTime() - unixEpoch).TotalSeconds;
         }
 
-        // 將 Unix 時間戳轉換為 DateTime
-        public static DateTime FromUnixTimestamp(long timestamp)
-        {
-            var unixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            return unixEpoch.AddSeconds(timestamp).ToLocalTime();
-        }
 
-        //取得key
+        //取得key(存在appsettings內)
         private readonly IConfiguration _configuration;
         public AesAndTimestampService(IConfiguration configuration)
         {
             _configuration = configuration;
         }
-        public string GenerateKey()
+        public string GetKey()
         {
-            return _configuration["Secrets:GenerateKey"];
+            return _configuration["Secrets:Key"];
         }
 
-        //AES加解密
-
-        //AES key
+        /*AES加解密*/
+        //AES Getkey
         //public string GenerateKey()
         //{
         //    string keyBase64 = "";
@@ -108,6 +100,17 @@ namespace BPMPlus.Service
                 return PlainText;
             }
         }
+
+        //public byte[] ConvertToSafeBase64(string input)
+        //{
+        //    string base64 = input.Replace('-', '+').Replace('_', '/');
+        //    switch (base64.Length % 4)
+        //    {
+        //        case 2: base64 += "=="; break;
+        //        case 3: base64 += "="; break;
+        //    }
+        //    return Convert.FromBase64String(base64);
+        //}
 
     }
 }
