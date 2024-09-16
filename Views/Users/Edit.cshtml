@@ -27,7 +27,7 @@
 		}
 
 		.button {
-			width: 12 %;
+			width:12%;
 		}
 
 		.btn-link {
@@ -224,6 +224,7 @@
 						if (_this.formData.DepartmentId == '') { window.alert("尚未填選所屬部門"); return; }
 						if (_this.formData.Tel == '') { window.alert("尚未填寫連絡電話"); return; }
 						if (_this.formData.GradeId == '') { window.alert("尚未填選職位"); return; }
+						if(_this.formData.Email==''){window.alert("尚未填選信箱"); return; }
 					}
 					if (_this.addPermissions.length === 0) {
 						window.alert("尚未填選權限");
