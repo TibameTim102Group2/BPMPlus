@@ -1,4 +1,6 @@
-﻿@section Style {
+﻿@model BPMPlus.ViewModels.CreateProjectsViewModel
+
+@section Style {
 
     <link rel="stylesheet" href="~/font-awesome/css/all.css" />
 
@@ -60,12 +62,11 @@
 
         #btnSubmit{
             height:40px;
-            margin-left:100px;
             margin-top:70px;
         }
 
         .form-label{
-            width:40%;
+            width:45%;
         }
     
     </style>
@@ -84,42 +85,42 @@
             <div class="mb-3 inputField ">
                 <div class="mb-3 form-label">
                     <label >部門</label>
-                    <input  class="form-control"  Disabled>
+                    <input  class="form-control" value="@Model.DepartmentName"  Disabled>
                 </div>
                 <div class="mb-3 form-label">
                     <label >專案名稱</label>
-                    <input class="form-control"  placeholder="請輸入專案名稱" >
+                    <input id="inputProject" class="form-control"  placeholder="請輸入專案名稱" >
                 </div>
             </div>
             <div class="mb-3 inputField ">
                 <div class="mb-3 form-label">
                     <label>員工編號</label>
-                    <input class="form-control" Disabled>
+                    <input class="form-control" value="@Model.UserId" Disabled>
                 </div>
                 <div class="mb-3 form-label">
                     <label>員工姓名</label>
-                    <input class="form-control" Disabled>
+                    <input class="form-control" value="@Model.UserName" Disabled>
                 </div>
             </div>
             <div class="mb-3 inputField ">
                 <div class="mb-3 form-label">
                     <label>專案期限</label>
-                    <input class="form-control float-right" type="date">
+                    <input id="inputDeadline" class="form-control float-right" type="date">
                 </div>
             </div>
-            <div class="mb-3 inputField ">
+           @*  <div class="mb-3 inputField ">
                 <div class="mb-3 form-label">
                     <label>甘特圖</label>
                     <input class="form-control" type="file">
                 </div>
-            </div>
+            </div> *@
             <div class="mb-3 inputField ">
                 <div class="mb-3 form-label">
                     <label>專案概要</label>
-                    <textarea rows="5" cols="70"></textarea>
+                    <textarea id="textSummary" rows="5" cols="52"></textarea>
                 </div>
                 <div class="mb-3 form-label">
-                    <button type="submit" id="btnSubmit" class="btn btn-primary">送出</button>
+                    <button type="submit" id="btnSubmit" class="btn btn-warning">送出</button>
                 </div>
             </div>
         
@@ -131,6 +132,63 @@
 
 
 @section Scripts {
+     
+    <script>
+        $("#btnSubmit").click(function () {
+            let userConfirmed = confirm("是否送出?");
+            if (!userConfirmed) return;
 
+            //檢查資料
+
+            let projectName = $("#inputProject").val();
+            let deadLine = $("#inputDeadline").val();
+            let summary = $("#textSummary").val();
+            let now = new Date(); //現在時間
+            now.setDate(now.getDate() -1);
+            let inputDate = new Date(deadLine); //輸入時間
+            
+            //驗證
+            if (projectName == "") {
+                alert("專案名稱不可為空");
+                return;
+            }
+            if (deadLine == "") {
+                alert("專案期限不可為空");
+                return;
+            }
+
+            if (summary == "") {
+                alert("專案概要不可為空");
+                return;
+            }
+
+            if (inputDate < now) {
+                alert("專案期限不可早於今日");
+                return;
+            }
+
+            let formData = new FormData();
+            formData.append('projectName', projectName);
+            formData.append('deadLine', deadLine);
+            formData.append('summary', summary);
+
+            fetch('/CreateProjects/Create',
+                {
+                    method: 'POST',
+                    body: formData,
+
+                }).then(response => {
+                        response.json();
+                        alert("新增成功");
+                        window.location.href = "/Home/Index/";
+                    }
+                  )
+                // .then((json) => console.log(json))
+                .catch((error) => console.log("Error:", error))
+                // .then((response) => console.log("Success:", response));
+
+        });
+
+    </script>
 
 }

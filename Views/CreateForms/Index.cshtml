@@ -394,6 +394,7 @@
                             formId = response['formId']
                             upload()
                             window.alert(response['message']);
+                            window.location.replace("/QueryForms");
                         }
                         if(response['errorCode'] != null && response['errorCode'] == 400)
                         {
