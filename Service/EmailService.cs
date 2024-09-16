@@ -1,6 +1,8 @@
 ﻿using System.Net.Mail;
 using System.Net;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using System.Web;
+using BPMPlus.ViewModels.Login;
 
 namespace BPMPlus.Service
 {
@@ -38,15 +40,23 @@ namespace BPMPlus.Service
         public string GetUrl(string Email)
         {
             //當下時間轉時間戳記
-            var stampTime = ToUnixTimestamp(DateTime.Now);
+            var timeStamp = ToUnixTimestamp(DateTime.Now);
             // 時間戳記+userEamail
-            string str = stampTime + "|" + Email;
+            string str = timeStamp + "|" + Email;
 
-            var key = GenerateKey();
+            var key = GetKey();
             var ivKey = "";
             string encryptStr = Encrypt(str, key, out ivKey);
 
-            return "https://localhost:7129/Login/ForgetPwResetPw?data="+ ivKey + ";" + encryptStr;
+            //改變符號-_, 避免轉換URL失敗
+            var changeSymbolStr = (ivKey + "|" + encryptStr).Replace('+', '-').Replace('/', '_');
+
+            //URL編碼
+            var strToUrl = HttpUtility.UrlEncode(changeSymbolStr);
+
+            string dataStr = "https://localhost:7129/Login/ForgetPwResetPw?data=" + strToUrl;
+
+            return dataStr;
         }
 
     }
