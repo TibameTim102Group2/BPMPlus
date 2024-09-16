@@ -9,9 +9,27 @@ using BPMPlus.Data;
 using BPMPlus.Models;
 using BPMPlus.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Policy;
+
+
 
 namespace BPMPlus.Controllers
 {
+    public enum MatchType
+    {
+        ExactlyOne,
+        NoneOrMany
+    }
+    public class ProcessUserActivityRegx 
+    {
+        public MatchType Type { get; set; }
+        public List<string> CandidateUserActivities { get; set; }
+        public ProcessUserActivityRegx(MatchType t, List<string> c)
+        {
+            this.Type = t;
+            this.CandidateUserActivities = c;
+        }
+    }
     public class ProcessTemplatesController : BaseController
     {
         private readonly ApplicationDbContext _context;
@@ -20,11 +38,75 @@ namespace BPMPlus.Controllers
         {
             _context = context;
         }
+        public bool ProcessIsValid(List<CategoryNode> nodes, out string err)
+        {
+            if(nodes.Count == 0)
+            {
+                err = $"工單無流程";
+                return false;
+            }
+            List<ProcessUserActivityRegx> processUserActivityRegxList = new List<ProcessUserActivityRegx>();
+            processUserActivityRegxList.Add(new ProcessUserActivityRegx(
+                MatchType.ExactlyOne,
+                new List<string>() { "01"}
+            ));
+            processUserActivityRegxList.Add(new ProcessUserActivityRegx(
+                MatchType.NoneOrMany,
+                new List<string>() { "02", "03", "04", "05", "06" }
+            ));
+            processUserActivityRegxList.Add(new ProcessUserActivityRegx(
+                MatchType.ExactlyOne,
+                new List<string>() { "07"}
+            ));
+            processUserActivityRegxList.Add(new ProcessUserActivityRegx(
+                MatchType.ExactlyOne,
+                new List<string>() {"08" }
+            ));
+            processUserActivityRegxList.Add(new ProcessUserActivityRegx(
+                MatchType.ExactlyOne,
+                new List<string>() { "09" }
+            ));
+            processUserActivityRegxList.Add(new ProcessUserActivityRegx(
+                MatchType.ExactlyOne,
+                new List<string>() { "10" }
+            ));
 
+            int nodeIndex = 0;
+            int regxIndex = 0;
+
+            while(true)
+            {
+                if (processUserActivityRegxList[regxIndex].Type == MatchType.ExactlyOne)
+                {
+                    if (!processUserActivityRegxList[regxIndex].CandidateUserActivities.Contains(nodes[nodeIndex].UserActivityId))
+                    {
+                        var act = _context.UserActivity.FirstOrDefault(x => x.UserActivityId == nodes[nodeIndex].UserActivityId);
+                        err = $"您所新增的功能 {act.UserActivityIdDescription} 不應處於目前位置";
+                        return false;
+                    }
+                    nodeIndex++;
+                    regxIndex++;
+                }
+                if (processUserActivityRegxList[regxIndex].Type == MatchType.NoneOrMany)
+                {
+                    
+                }
+            }
+            err = "";
+            return true;
+        }
         // GET: ProcessTemplates
         public async Task<IActionResult> Index()
         {
-            //var applicationDbContext = _context.ProcessTemplate.Include(p => p.Category).Include(p => p.UserActivity);
+            User user = await GetAuthorizedUser();
+            //functionId:  01 -> 需求方申請人送出
+
+            if (!user.PermittedTo("13"))
+            {
+                ViewBag.NotPermittedToCreateForm = "您的權限無法新建需求類別";
+                return View("~/Views/Home/Index.cshtml");
+            }
+        //var applicationDbContext = _context.ProcessTemplate.Include(p => p.Category).Include(p => p.UserActivity);
             return View();
         }
 
@@ -55,7 +137,7 @@ namespace BPMPlus.Controllers
         public async Task<JsonResult> CreateCategory([FromBody] CreateCategory model)
         {
             User user = await GetAuthorizedUser();
-
+            
             //functionId:  13 -> 新增需求類別
             List<Category> processValidatorList = new List<Category>();
 
@@ -72,14 +154,12 @@ namespace BPMPlus.Controllers
             {
                 return Json(new { errorCode = 400, message = $"工單類別已存在" });
             }
-            if(model.Nodes.Count() == 0)
+            string err;
+            if(!ProcessIsValid(model.Nodes, out err))
             {
-                return Json(new { errorCode = 400, message = $"工單無流程" });
+                return Json(new { errorCode = 400, message = err });
             }
-            foreach(CategoryNode node in model.Nodes)
-            {
-                var x = node.DepartmentId;
-            }
+
             return Json(new { errorCode = 200, message = $"新增需求類別成功!"});
         }
 
