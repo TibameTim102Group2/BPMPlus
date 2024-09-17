@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
 using Newtonsoft.Json.Linq;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 
 
@@ -217,12 +218,58 @@ namespace BPMPlus.Controllers
                 return Json(new { errorCode = 400, message = err });
             }
 
+            Category cat = new Category();
+            cat.CategoryDescription = model.CategoryName;
+            cat.CategoryId = (await GetCategoryIdListAsync(1))[0];
+            cat.CreatedTime = DateTime.UtcNow;
+            cat.UpdatedTime = DateTime.UtcNow;
 
-            
-            
+            await _context.Category.AddAsync(cat);
+
+            List<string> pTidList = await GetProcessTemplateIdListAsync(model.Nodes.Count);
+            int pTidListIndex = 0;
+            foreach(var node in model.Nodes)
+            {
+                ProcessTemplate pt = new ProcessTemplate();
+                pt.ProcessTemplateId = pTidList[pTidListIndex];
+                pt.DepartmentId = node.DepartmentId;
+                pt.UserActivityId = node.UserActivityId;
+                pt.CategoryId = cat.CategoryId;
+                pt.CreatedTime = DateTime.UtcNow;
+                pt.UpdatedTime = DateTime.UtcNow;
+                pTidListIndex++;
+                await _context.ProcessTemplate.AddAsync(pt);
+            }
+            await _context.SaveChangesAsync();
             return Json(new { errorCode = 200, message = $"新增需求類別成功!"});
+        }
 
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> DeleteCategory([FromBody] DeleteCategory model)
+        {
+            User user = await GetAuthorizedUser();
 
+            //functionId:  13 -> 新增需求類別
+            List<Category> processValidatorList = new List<Category>();
+
+            if (!user.PermittedTo("13"))
+            {
+                return Json(new { errorCode = 400, message = $"您無權刪除工單類別" });
+            }
+            if (model.CategoryName == null || model.CategoryName == "")
+            {
+                return Json(new { errorCode = 400, message = $"工單名稱不可為空" });
+            }
+            Category ctToBeDeleted = await _context.Category.FirstOrDefaultAsync(c => c.CategoryDescription == model.CategoryName);
+            if (ctToBeDeleted == null)
+            {
+                return Json(new { errorCode = 400, message = $"工單類別不存在" });
+            }
+            
+            await _context.SaveChangesAsync();
+            return Json(new { errorCode = 200, message = $"刪除需求類別成功!" });
         }
 
         // POST: ProcessTemplates/Create

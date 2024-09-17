@@ -89,7 +89,40 @@ namespace BPMPlus.Controllers
 
             return _safeProcessNodeList.GetAllItems();
         }
+        [Authorize]
+        public async Task<List<string>> GetProcessTemplateIdListAsync(int count)
+        {
 
+            var LastNode = await _context.ProcessTemplate.OrderBy(f => f.ProcessTemplateId).LastAsync();
+            string id = LastNode == null ? "PT0" : LastNode.ProcessTemplateId;
+            id = id[2..];//
+            int idNum = Convert.ToInt32(id);
+            idNum++;
+            for (int i = 0; i < count; i++, idNum++)
+            {
+                _safeCreateFormRecordIdList.Add("PT" + idNum.ToString().PadLeft(2, '0'));
+            }
+
+            return _safeCreateFormRecordIdList.GetAllItems();
+
+        }
+        [Authorize]
+        public async Task<List<string>> GetCategoryIdListAsync(int count)
+        {
+
+            var LastCategory = await _context.Category.OrderBy(f => f.CategoryId).LastAsync();
+            string id = LastCategory == null ? "C0" : LastCategory.CategoryId;
+            id = id[1..];//
+            int idNum = Convert.ToInt32(id);
+            idNum++;
+            for (int i = 0; i < count; i++, idNum++)
+            {
+                _safeCreateFormRecordIdList.Add("C" + idNum.ToString());
+            }
+
+            return _safeCreateFormRecordIdList.GetAllItems();
+
+        }
         [Authorize]
         public async Task<List<string>> GetProcessNodeIdListAsync(int count)
         {

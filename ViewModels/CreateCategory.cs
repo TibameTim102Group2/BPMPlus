@@ -14,4 +14,8 @@ namespace BPMPlus.ViewModels
         public string CategoryName {  get; set; }
         public List<CategoryNode> Nodes { get; set; }
     }
+    public class DeleteCategory
+    {
+        public string CategoryName { get; set; }
+    }
 }
