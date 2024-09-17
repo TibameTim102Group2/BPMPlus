@@ -38,7 +38,7 @@ namespace BPMPlus.Controllers
 
         /* 登入 */
         [HttpPost]
-        public async Task<IActionResult> Login(LoginInput login)
+        public async Task<IActionResult> Login(LoginInputVM login)
         {
             //先判斷user是否存在
             var user = await _context.User
@@ -113,16 +113,18 @@ namespace BPMPlus.Controllers
         [HttpPost]
         public async Task<IActionResult> ForgetPasswordSendEmail(string Email)
         {
-            var request = await _context.User.FirstOrDefaultAsync(m => m.Email == Email == true);
+            var request = await _context.User.FirstOrDefaultAsync(m => m.Email == Email);
             if (request == null)
             {
                 ViewBag.errMsg = "Email輸入錯誤!";
                 return RedirectToAction("Index", "Home");
             }
-
-            var UserName = request.UserName;
-            emailService.SendEmail(Email, UserName);
-            return RedirectToAction("Index", "Home");
+            else
+            {
+                var UserName = request.UserName;
+                emailService.SendEmail(Email, UserName);
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         //忘記密碼page
@@ -137,98 +139,109 @@ namespace BPMPlus.Controllers
         public async Task<IActionResult> ForgetPwResetPw(ForgetPasswordVM vm)
         {
             var _service = aesAndTimestampService;
-            
-            //dataStr url解碼
-            var dataStrDecode = HttpUtility.UrlDecode(vm.dataStr);
-
-            //換回符號+/
-            dataStrDecode = dataStrDecode.Replace('-', '+').Replace('_', '/');
-
-            //分割dataStr ";"
-            string[] dataStrSplit = dataStrDecode.Split(new[] { "|" }, StringSplitOptions.None);
-
-            string ivKey = null;
-            string encryptStr = null;
-            if (dataStrSplit.Length > 1)
-            {
-                ivKey = dataStrSplit[0];
-                encryptStr = dataStrSplit[1];
-            }
-            else
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            ivKey = ivKey.Replace(" ", "");
-            encryptStr = encryptStr.Replace(" ", "");
-
-            //解密encryptStr
-            var Key = _service.GetKey();
-
-            var decryptStr = _service.Decrypt(encryptStr, Key, ivKey);
-
-            //分割decryptStr "|"
-            string[] decryptStrSplit = decryptStr.Split("|", StringSplitOptions.None);
-            string stampTime = null;
-            string Email = null;
-            if (decryptStrSplit.Length > 1)
-            {
-                stampTime = decryptStrSplit[0];
-                Email = decryptStrSplit[1];
-            }
 
             try
             {
+                //dataStr url解碼
+                var dataStrDecode = HttpUtility.UrlDecode(vm.dataStr);
+                //換回符號+/
+                dataStrDecode = dataStrDecode.Replace('-', '+').Replace('_', '/');
+                //分割dataStr ";"
+                string[] dataStrSplit = dataStrDecode.Split(new[] { "|" }, StringSplitOptions.None);
+                string ivKey = null;
+                string encryptStr = null;
+                if (dataStrSplit.Length > 1)
+                {
+                    ivKey = dataStrSplit[0];
+                    encryptStr = dataStrSplit[1];
+                }
+                //解密encryptStr
+                var Key = _service.GetKey();
+                var decryptStr = _service.Decrypt(encryptStr, Key, ivKey);
+                //分割decryptStr "|"
+                string[] decryptStrSplit = decryptStr.Split("|", StringSplitOptions.None);
+                string stampTime = null;
+                string Email = null;
+                if (decryptStrSplit.Length > 1)
+                {
+                    stampTime = decryptStrSplit[0];
+                    Email = decryptStrSplit[1];
+                }
+
                 //確認user身分
-                var user = await _context.User.FirstOrDefaultAsync(m => m.Email == Email == true);
-
-                var resetPasswordService = new ResetPasswordService();
-                var result = resetPasswordService.ValidatePassword(vm.ResetPassword);
-
+                var user = await _context.User.FirstOrDefaultAsync(m => m.Email == Email && m.UserIsActive == true);
                 //取得現在時間戳
                 DateTimeOffset dateTimeOffset = new DateTimeOffset(DateTime.Now);
                 long nowStampTime = dateTimeOffset.ToUnixTimeSeconds();
+                //Email驗證信queryString
+                string queryString = "?data=" + vm.dataStr;
 
-                //Email驗證信URL
-                string queryString = "?data="+ vm.dataStr;
-
-                //判斷現在時間是否超過驗證信有效時間(15分鐘=900秒)
+                //判斷現在時間是否超過驗證信有效時間
                 if (nowStampTime <= long.Parse(stampTime) + 900)
                 {
-                    // 判斷user是誰, 重設密碼
+                    // 判斷user是否存在
                     if (user != null)
                     {
-                        //判斷密碼是否符合規則
-                        if (result.IsValid == false)
+                        //判斷user是否在30分鐘內重設過密碼
+                        if (nowStampTime >= user.ModifyPasswordTime + 1800)
                         {
-                            ViewBag.errMsg = "密碼不符合密碼規則";
-                            return Redirect(Url.Action("ForgetPwResetPw", "Login")+ queryString); // 修改失敗導回重設密碼頁
-                        }
-                        else
-                        {
-                            //判斷新密碼是否輸入正確
-                            if (vm.ResetPassword != vm.ConfirmPassword)
+                            //判斷密碼是否符合規則
+                            var resetPasswordService = new ResetPasswordService();
+                            var result = resetPasswordService.ValidatePassword(vm.ResetPassword);
+                            if (result.IsValid == false)
                             {
-                                ViewBag.errMsg = "請確認密碼是否輸入一致";
+                                ViewBag.errMsg = "密碼不符合規則";
                                 return Redirect(Url.Action("ForgetPwResetPw", "Login") + queryString); // 修改失敗導回重設密碼頁
                             }
+                            else
+                            {
+                                //判斷新密碼是否輸入正確
+                                if (vm.ResetPassword != vm.ConfirmPassword)
+                                {
+                                    ViewBag.errMsg = "請確認密碼是否輸入一致";
+                                    return Redirect(Url.Action("ForgetPwResetPw", "Login") + queryString); // 修改失敗導回重設密碼頁
+                                }
+                                else
+                                {
+                                    //重設密碼加密後存入DB
+                                    string newPassword = BCryptHelper.HashPassword(vm.ResetPassword);
+                                    user.Password = newPassword;
+                                    await _context.SaveChangesAsync();
+                                    //取得儲存密碼時間戳
+                                    DateTimeOffset saveChangeTime = new DateTimeOffset(DateTime.Now);
+                                    user.ModifyPasswordTime = saveChangeTime.ToUnixTimeSeconds();
+                                    //儲存修改密碼時間戳
+                                    await _context.SaveChangesAsync();
+
+                                    TempData["SuccessMessage"] = "密碼變更成功!";
+                                }
+                            }
+                        }
+                        //30分鐘內已重設過密碼
+                        else
+                        {
+                            ViewBag.ErrorMessage = "30分鐘內已重設過密碼, 請稍後再嘗試或聯繫系統管理員!";
+                            return View("~/Views/Login/ErrorPage.cshtml");
                         }
                     }
-                    //重設密碼加密後存入DB
-                    string newPassword = BCryptHelper.HashPassword(vm.ResetPassword);
-                    user.Password = newPassword;
-                    await _context.SaveChangesAsync();
-                    TempData["SuccessMessage"] = "密碼變更成功!";
+                    else
+                    {
+                        ViewBag.ErrorMessage = "無效的使用者! 請聯繫系統管理員!";
+                        return View("~/Views/Login/ErrorPage.cshtml");
+                    }
                 }
+                //重設信件連結逾期
                 else
                 {
-                    // 15分鐘逾期跳轉至Error畫面
-                    return Redirect(Url.Action("Error", "Login") + queryString);
+                    ViewBag.ErrorMessage = "密碼重設信件逾期, 請重新寄送驗證信!";
+                    return View("~/Views/Login/ErrorPage.cshtml");
+
                 }
             }
             catch (Exception ex)
             {
-                ViewBag.errMsg = "無效的使用者!";
-                return RedirectToAction("Index", "Home");
+                ViewBag.ErrorMessage = "密碼重設錯誤,請重試或聯繫系統管理員!+"+ex;
+                return View("~/Views/Login/ErrorPage.cshtml");
             }
             return View("ForgetPwResetPw", vm);
         }
@@ -313,6 +326,11 @@ namespace BPMPlus.Controllers
                 user.Password = newPassword;
                 await _context.SaveChangesAsync();
                 TempData["SuccessMessage"] = "密碼變更成功!";
+                //取得儲存密碼時間戳
+                DateTimeOffset saveChangeTime = new DateTimeOffset(DateTime.Now);
+                user.ModifyPasswordTime = saveChangeTime.ToUnixTimeSeconds();
+                //儲存修改密碼時間戳
+                await _context.SaveChangesAsync();
 
                 return View("ResetPassWord", vm);
                 //return RedirectToAction("Index", "Home");
@@ -331,8 +349,8 @@ namespace BPMPlus.Controllers
             return View();
         }
 
-        //重設密碼信件連結失效
-        public IActionResult Erro()
+        //重設密碼失敗跳轉
+        public IActionResult ErrorPage()
         {
             return View();
         }

@@ -44,6 +44,7 @@ namespace BPMPlus.Models
         [Column(TypeName = "VARCHAR")]
         [MaxLength(20)]
         public string TEL { get; set; }
+        public long? ModifyPasswordTime { get; set; }
 
         public bool PermittedTo(string functionId)
         {

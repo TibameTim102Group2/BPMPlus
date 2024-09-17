@@ -1,4 +1,6 @@
-﻿@section Style {
+﻿@using BPMPlus.ViewModels.Login
+@model ForgetPasswordVM
+@section Style {
     <style>
         .welcomeText {
             font-size: 25px;
@@ -20,6 +22,8 @@
 <link rel="stylesheet" href="~/AdminLTE/dist/css/adminlte.min.css">
 <title>BPMPlus</title>
 
+@using (Html.BeginForm("ErrorPage", "login", FormMethod.Get))
+{
     <div class="login-page bg-light">
         <div class="login-box">
             <div class="login-logo">
@@ -27,7 +31,7 @@
             </div>
             <!-- /.login-logo -->
             <div>
-                <p class="welcomeText login-box-msg text-bold mid">驗證信已逾期</p>
+                <p class="welcomeText login-box-msg text-bold mid" style="color:red;">@ViewBag.ErrorMessage</p>
                 <p class="login-box-msg mid ">
                     @Html.ActionLink("回到首頁", "Index", "Login")
                 </p>
@@ -35,6 +39,7 @@
 
         </div>
     </div>
+}
 
 
 <!-- Bootstrap 4 -->
