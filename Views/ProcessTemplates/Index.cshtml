@@ -23,9 +23,15 @@
 <link rel="stylesheet" href="~/AdminLTE/plugins/dropzone/min/dropzone.min.css">
 <!-- Theme style -->
 <link rel="stylesheet" href="~/AdminLTE/dist/css/adminlte.min.css">
+<link rel="stylesheet" href="~/AdminLTE/plugins/fontawesome-free/css/all.min.css">
+<!-- Theme style -->
+<link rel="stylesheet" href="~/AdminLTE/dist/css/adminlte.min.css">
 @section Style {
     <style>
         /* 讓檔案列表出現在上傳 input 的下方 */
+        .card{
+            width: 20%;
+        }
         #fileList {
             margin-top: 1%; /* 與上傳 input 保持適當距離 */
             padding: 0;
@@ -194,7 +200,36 @@
             <button type="submit" id="submitButton" class="btn btn-primary">送出</button>
         </div>
     </div>
+    <div style="margin: 5%">
+        <div class="card card-primary">
+            <div class="card-header" style="display: block; text-align: center">
+                <h5 style="width: 100%; font-weight: bold">流程節點1</h5>
+            </div>
+            <!-- /.card-header -->
+            <div class="card-body">
+                <div class="form-group">
+                    <label style="display: block; align-self: center; width: 100%">部門</label>
+                    <select class="custom-select form-control-border" id="exampleSelectBorder">
+                        <option>Value 1</option>
+                        <option>Value 2</option>
+                        <option>Value 3</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label style ="display: block; align-self: center; width: 100%">功能</label>
+                    <select class="custom-select form-control-border border-width-2" id="exampleSelectBorderWidth2">
+                        <option>Value 1</option>
+                        <option>Value 2</option>
+                        <option>Value 3</option>
+                    </select>
+                </div>
+            </div>
+            <!-- /.card-body -->
+        </div>
+    </div>
+    
 </div>
+
 @section Scripts {
     <!-- jQuery -->
     <script src="~/AdminLTE/plugins/jquery/jquery.min.js"></script>
@@ -578,7 +613,17 @@
             myDropzone.removeAllFiles(true)
         }
         // DropzoneJS Demo Code End
+
     </script>
+    <script src="~/AdminLTE/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/AdminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- bs-custom-file-input -->
+    <script src="~/AdminLTE/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/AdminLTE/dist/js/adminlte.min.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="~/AdminLTE/dist/js/demo.js"></script>
 
 }
 

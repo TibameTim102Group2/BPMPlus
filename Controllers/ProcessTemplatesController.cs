@@ -149,6 +149,7 @@ namespace BPMPlus.Controllers
             return true;
         }
         // GET: ProcessTemplates
+
         public async Task<IActionResult> Index()
         {
             User user = await GetAuthorizedUser();

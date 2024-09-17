@@ -48,7 +48,8 @@ namespace BPMPlus.Controllers
         public ThreadSafeList _safeCreateFormRecordIdList = new ThreadSafeList();
         public ThreadSafeList _safeProcessNodeList = new ThreadSafeList();
         public ThreadSafeList _safeCreateProjectIdList = new ThreadSafeList();
-
+        public ThreadSafeList _safeCreateCategoryIdList = new ThreadSafeList();
+        public ThreadSafeList _safeCreateProcessTemplateIdList = new ThreadSafeList();
 
         public BaseController(ApplicationDbContext context)
         {
@@ -100,10 +101,10 @@ namespace BPMPlus.Controllers
             idNum++;
             for (int i = 0; i < count; i++, idNum++)
             {
-                _safeCreateFormRecordIdList.Add("PT" + idNum.ToString().PadLeft(2, '0'));
+                _safeCreateProcessTemplateIdList.Add("PT" + idNum.ToString().PadLeft(2, '0'));
             }
 
-            return _safeCreateFormRecordIdList.GetAllItems();
+            return _safeCreateProcessTemplateIdList.GetAllItems();
 
         }
         [Authorize]
@@ -117,10 +118,10 @@ namespace BPMPlus.Controllers
             idNum++;
             for (int i = 0; i < count; i++, idNum++)
             {
-                _safeCreateFormRecordIdList.Add("C" + idNum.ToString());
+                _safeCreateCategoryIdList.Add("C" + idNum.ToString());
             }
 
-            return _safeCreateFormRecordIdList.GetAllItems();
+            return _safeCreateCategoryIdList.GetAllItems();
 
         }
         [Authorize]
