@@ -10,6 +10,8 @@ using BPMPlus.Models;
 using BPMPlus.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
+using Newtonsoft.Json.Linq;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 
 
@@ -38,6 +40,36 @@ namespace BPMPlus.Controllers
         {
             _context = context;
         }
+        public bool DepartmentMatch(List<CategoryNode> nodes, out string err)
+        {
+            Dictionary<string, string> depGroup = new Dictionary<string, string>() { };
+            foreach(var cNode in nodes)
+            {
+                depGroup.Add(cNode.UserActivityId, cNode.DepartmentId);
+            }
+            if (
+                (depGroup.ContainsKey("02") && depGroup["01"] != depGroup["02"]) ||
+                (depGroup.ContainsKey("03") && depGroup["01"] != depGroup["03"]) ||
+                (depGroup.ContainsKey("04") && depGroup["01"] != depGroup["04"]) ||
+                (depGroup.ContainsKey("09") && depGroup["01"] != depGroup["09"]) ||
+                (depGroup.ContainsKey("10") && depGroup["01"] != depGroup["10"])
+               )
+            {
+                err = $"需求部門審核環節部門不一致";
+                return false;
+            }
+            if (
+                (depGroup.ContainsKey("05") && depGroup["07"] != depGroup["05"]) ||
+                (depGroup.ContainsKey("06") && depGroup["07"] != depGroup["06"]) ||
+                (depGroup.ContainsKey("08") && depGroup["07"] != depGroup["08"])
+               )
+            {
+                err = $"處理部門審核環節部門不一致";
+                return false;
+            }
+            err = "";
+            return true;
+        }
         public bool ProcessIsValid(List<CategoryNode> nodes, out string err)
         {
             if(nodes.Count == 0)
@@ -60,7 +92,7 @@ namespace BPMPlus.Controllers
             ));
             processUserActivityRegxList.Add(new ProcessUserActivityRegx(
                 MatchType.ExactlyOne,
-                new List<string>() {"08" }
+                new List<string>() {"08"}
             ));
             processUserActivityRegxList.Add(new ProcessUserActivityRegx(
                 MatchType.ExactlyOne,
@@ -72,25 +104,45 @@ namespace BPMPlus.Controllers
             ));
 
             int nodeIndex = 0;
-            int regxIndex = 0;
 
-            while(true)
-            {
-                if (processUserActivityRegxList[regxIndex].Type == MatchType.ExactlyOne)
+            foreach (var processUserActivityRegx in processUserActivityRegxList)
+            { 
+                if(processUserActivityRegx.Type == MatchType.ExactlyOne)
                 {
-                    if (!processUserActivityRegxList[regxIndex].CandidateUserActivities.Contains(nodes[nodeIndex].UserActivityId))
+                    if(nodeIndex >= nodes.Count)
+                    {
+                        var acts = _context.UserActivity
+                            .Where(d => processUserActivityRegx.CandidateUserActivities.Contains(d.UserActivityId))
+                            .Select(d => d.UserActivityIdDescription)
+                            .ToList();
+                        err = $"您所新增需求類別欠缺必要流程節點, 請往後加上以下任意一種功能 : \n{String.Join("\n", acts)}";
+                        return false;
+                    }
+                    if (!processUserActivityRegx.CandidateUserActivities.Contains(nodes[nodeIndex].UserActivityId))
                     {
                         var act = _context.UserActivity.FirstOrDefault(x => x.UserActivityId == nodes[nodeIndex].UserActivityId);
-                        err = $"您所新增的功能 {act.UserActivityIdDescription} 不應處於目前位置";
+                        err = $"您所新增的需求類別之功能 {act.UserActivityIdDescription} 不應處於目前位置";
                         return false;
                     }
                     nodeIndex++;
-                    regxIndex++;
                 }
-                if (processUserActivityRegxList[regxIndex].Type == MatchType.NoneOrMany)
+                if (processUserActivityRegx.Type == MatchType.NoneOrMany)
                 {
-                    
+                    if (nodeIndex >= nodes.Count)
+                    {
+                        continue;
+                    }
+                    while (processUserActivityRegx.CandidateUserActivities.Contains(nodes[nodeIndex].UserActivityId))
+                    {
+                        nodeIndex++;
+                    }
                 }
+            }
+            if(nodeIndex < nodes.Count)
+            {
+                var act = _context.UserActivity.FirstOrDefault(x => x.UserActivityId == nodes[nodeIndex].UserActivityId);
+                err = $"您所新增的需求類別之功能 {act.UserActivityIdDescription} 以及其後節點都是多餘的";
+                return false;
             }
             err = "";
             return true;
@@ -160,7 +212,17 @@ namespace BPMPlus.Controllers
                 return Json(new { errorCode = 400, message = err });
             }
 
+            if (!DepartmentMatch(model.Nodes, out err))
+            {
+                return Json(new { errorCode = 400, message = err });
+            }
+
+
+            
+            
             return Json(new { errorCode = 200, message = $"新增需求類別成功!"});
+
+
         }
 
         // POST: ProcessTemplates/Create
