@@ -3,12 +3,18 @@ using System.Net;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.Web;
 using BPMPlus.ViewModels.Login;
+using Microsoft.EntityFrameworkCore;
+using BPMPlus.Data;
+using BPMPlus.Models;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
+using NuGet.Protocol.Plugins;
 
 namespace BPMPlus.Service
 {
-    public class EmailService(IConfiguration configuration) : AesAndTimestampService(configuration)
+    public class EmailService(IConfiguration configuration, ApplicationDbContext context) : AesAndTimestampService(configuration)
     {
         private readonly IConfiguration _configuration = configuration;
+        private readonly ApplicationDbContext _context = context;
 
         public void SendEmail(string Email,string UserName)
         {
@@ -48,7 +54,7 @@ namespace BPMPlus.Service
             var ivKey = "";
             string encryptStr = Encrypt(str, key, out ivKey);
 
-            //改變符號-_, 避免轉換URL失敗
+            //改變符號-_, 避免URL編碼出錯
             var changeSymbolStr = (ivKey + "|" + encryptStr).Replace('+', '-').Replace('/', '_');
 
             //URL編碼
