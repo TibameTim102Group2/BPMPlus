@@ -42,7 +42,7 @@ namespace BPMPlus.Controllers
         {
             //先判斷user是否存在
             var user = await _context.User
-                 .FirstOrDefaultAsync(m => m.UserId == login.UserId && m.UserIsActive == true);
+                 .FirstOrDefaultAsync(m => EF.Functions.Collate(m.UserId, "Latin1_General_BIN") == login.UserId && m.UserIsActive == true);
             
             // user存在
             if (user != null)
