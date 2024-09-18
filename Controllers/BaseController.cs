@@ -48,7 +48,8 @@ namespace BPMPlus.Controllers
         public ThreadSafeList _safeCreateFormRecordIdList = new ThreadSafeList();
         public ThreadSafeList _safeProcessNodeList = new ThreadSafeList();
         public ThreadSafeList _safeCreateProjectIdList = new ThreadSafeList();
-
+        public ThreadSafeList _safeCreateCategoryIdList = new ThreadSafeList();
+        public ThreadSafeList _safeCreateProcessTemplateIdList = new ThreadSafeList();
 
         public BaseController(ApplicationDbContext context)
         {
@@ -89,7 +90,42 @@ namespace BPMPlus.Controllers
 
             return _safeProcessNodeList.GetAllItems();
         }
+        [Authorize]
+        public async Task<List<string>> GetProcessTemplateIdListAsync(int count)
+        {
+            var NodeList = await _context.ProcessTemplate.ToListAsync();
+            var maxId = NodeList.Max(n => Convert.ToInt32(n.ProcessTemplateId[2..]));
+            var LastNode = NodeList.FirstOrDefault(n => Convert.ToInt32(n.ProcessTemplateId[2..]) == maxId);
+            string id = NodeList == null ? "PT0" : LastNode.ProcessTemplateId;
+            id = id[2..];//
+            int idNum = Convert.ToInt32(id);
+            idNum++;
+            for (int i = 0; i < count; i++, idNum++)
+            {
+                _safeCreateProcessTemplateIdList.Add("PT" + idNum.ToString().PadLeft(2, '0'));
+            }
 
+            return _safeCreateProcessTemplateIdList.GetAllItems();
+
+        }
+        [Authorize]
+        public async Task<List<string>> GetCategoryIdListAsync(int count)
+        {
+            var CategoryList = await _context.Category.ToListAsync();
+            var maxId = CategoryList.Max(n => Convert.ToInt32(n.CategoryId[1..]));
+            var LastCategory = CategoryList.FirstOrDefault(n => Convert.ToInt32(n.CategoryId[1..]) == maxId);
+            string id = CategoryList == null ? "C0" : LastCategory.CategoryId;
+            id = id[1..];//
+            int idNum = Convert.ToInt32(id);
+            idNum++;
+            for (int i = 0; i < count; i++, idNum++)
+            {
+                _safeCreateCategoryIdList.Add("C" + idNum.ToString());
+            }
+
+            return _safeCreateCategoryIdList.GetAllItems();
+
+        }
         [Authorize]
         public async Task<List<string>> GetProcessNodeIdListAsync(int count)
         {
