@@ -98,7 +98,6 @@ namespace BPMPlus.Controllers
        //登入page
         public IActionResult Index()
 		{
-            ViewBag.errMsg = "";
             return View();
 		}
 
