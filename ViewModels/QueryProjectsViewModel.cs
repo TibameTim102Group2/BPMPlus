@@ -2,14 +2,12 @@
 {
     public class QueryProjectsViewModel
     {
-        public string ProjectId { get; set; }
 
-        public string ProjectName { get; set; }
 
-        public string Summary { get; set; }
+        public QueryProjectsSearchInputViewModel QueryProjectsSearchInput { get; set; }
 
-        public DateTime DeadLine { get; set; }
+        public QueryProjectsSearchListViewModel QueryProjectsSearchList { get; set; }
 
-        public string ProjectManager { get; set; }
+        public IList<QueryProjectsProjectContentViewModel> QueryProjectsProjectContents { get; set; }
     }
 }
