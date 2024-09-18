@@ -160,8 +160,37 @@ namespace BPMPlus.Controllers
                 ViewBag.NotPermittedToCreateForm = "您的權限無法新建需求類別";
                 return View("~/Views/Home/Index.cshtml");
             }
-        //var applicationDbContext = _context.ProcessTemplate.Include(p => p.Category).Include(p => p.UserActivity);
-            return View();
+            GetTemplateOfNodeTemplates DefaultNodes = new GetTemplateOfNodeTemplates(
+                new List<CategoryNode>()
+                {
+                    new CategoryNode("01", "Requester"),
+                    new CategoryNode("07", "D002"),
+                    new CategoryNode("08", "D002"),
+                    new CategoryNode("09", "Requester"),
+                    new CategoryNode("10", "Requester")
+                }
+            );
+            Dictionary<string, string> UserActivityDict = new Dictionary<string, string>() { };
+            foreach (var UserActivity in (await _context.UserActivity
+                .Where(u => (new List<string>() { "01", "02", "03", "04", "05", "06", "07", "08", "09", "10"}).Contains(u.UserActivityId))
+                .ToListAsync()))
+            { 
+                UserActivityDict[UserActivity.UserActivityId] = UserActivity.UserActivityIdDescription;
+            }
+            Dictionary<string, string> DepartmentDict = new Dictionary<string, string>() { };
+            foreach (var Department in (await _context.Department.ToListAsync()))
+            {
+                DepartmentDict[Department.DepartmentId] = Department.DepartmentName;
+            }
+            DepartmentDict["Requester"] = "送單部門";
+            //var applicationDbContext = _context.ProcessTemplate.Include(p => p.Category).Include(p => p.UserActivity);
+            return View(
+                new GetDataForCategoryCreate(
+                    DefaultNodes,
+                    UserActivityDict,
+                    DepartmentDict
+                )
+            );
         }
 
         // GET: ProcessTemplates/Details/5
@@ -245,33 +274,7 @@ namespace BPMPlus.Controllers
             return Json(new { errorCode = 200, message = $"新增需求類別成功!"});
         }
 
-        [Authorize]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<JsonResult> DeleteCategory([FromBody] DeleteCategory model)
-        {
-            User user = await GetAuthorizedUser();
-
-            //functionId:  13 -> 新增需求類別
-            List<Category> processValidatorList = new List<Category>();
-
-            if (!user.PermittedTo("13"))
-            {
-                return Json(new { errorCode = 400, message = $"您無權刪除工單類別" });
-            }
-            if (model.CategoryName == null || model.CategoryName == "")
-            {
-                return Json(new { errorCode = 400, message = $"工單名稱不可為空" });
-            }
-            Category ctToBeDeleted = await _context.Category.FirstOrDefaultAsync(c => c.CategoryDescription == model.CategoryName);
-            if (ctToBeDeleted == null)
-            {
-                return Json(new { errorCode = 400, message = $"工單類別不存在" });
-            }
-            
-            await _context.SaveChangesAsync();
-            return Json(new { errorCode = 200, message = $"刪除需求類別成功!" });
-        }
+       
 
         // POST: ProcessTemplates/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.

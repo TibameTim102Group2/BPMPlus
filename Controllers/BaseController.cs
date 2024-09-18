@@ -93,9 +93,10 @@ namespace BPMPlus.Controllers
         [Authorize]
         public async Task<List<string>> GetProcessTemplateIdListAsync(int count)
         {
-
-            var LastNode = await _context.ProcessTemplate.OrderBy(f => f.ProcessTemplateId).LastAsync();
-            string id = LastNode == null ? "PT0" : LastNode.ProcessTemplateId;
+            var NodeList = await _context.ProcessTemplate.ToListAsync();
+            var maxId = NodeList.Max(n => Convert.ToInt32(n.ProcessTemplateId[2..]));
+            var LastNode = NodeList.FirstOrDefault(n => Convert.ToInt32(n.ProcessTemplateId[2..]) == maxId);
+            string id = NodeList == null ? "PT0" : LastNode.ProcessTemplateId;
             id = id[2..];//
             int idNum = Convert.ToInt32(id);
             idNum++;
@@ -110,9 +111,10 @@ namespace BPMPlus.Controllers
         [Authorize]
         public async Task<List<string>> GetCategoryIdListAsync(int count)
         {
-
-            var LastCategory = await _context.Category.OrderBy(f => f.CategoryId).LastAsync();
-            string id = LastCategory == null ? "C0" : LastCategory.CategoryId;
+            var CategoryList = await _context.Category.ToListAsync();
+            var maxId = CategoryList.Max(n => Convert.ToInt32(n.CategoryId[1..]));
+            var LastCategory = CategoryList.FirstOrDefault(n => Convert.ToInt32(n.CategoryId[1..]) == maxId);
+            string id = CategoryList == null ? "C0" : LastCategory.CategoryId;
             id = id[1..];//
             int idNum = Convert.ToInt32(id);
             idNum++;

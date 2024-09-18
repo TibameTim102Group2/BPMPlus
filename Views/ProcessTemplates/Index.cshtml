@@ -1,4 +1,4 @@
-﻿@model BPMPlus.ViewModels.CreateFormViewModel
+﻿@model BPMPlus.ViewModels.GetDataForCategoryCreate
 
 <!-- Google Font: Source Sans Pro -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -64,7 +64,7 @@
         }
 
         .outside {
-            padding: 20px;
+            padding: 1%;
             background-color: #fffacd;
             height: 100%;
         }
@@ -79,7 +79,7 @@
 
         .inside {
             margin-top: 30px;
-            padding: 20px;
+            padding: 1%;
             background-color: #eee9bc;
             border: 0.5px solid gainsboro;
         }
@@ -117,7 +117,9 @@
             width: 50%;
             margin: 2%;
         }
-
+        #process-node{
+            margin:1%;
+        }
         label {
             margin: auto;
             display: inline;
@@ -195,39 +197,66 @@
                 </div>
             </div>
         </form>
+        
+        <div style="margin-top: 10%; background-color: rgb(200, 200, 200); display: flex; overflow-x: auto; width: 100%;" id="cardContainer">
+            @for (int nodeIndex = 0; nodeIndex < Model.TemplateOfNodeTemplates.Nodes.Count; ++nodeIndex)
+            {
+                <div class="card card-primary" id="process-node" style="min-width: 300px; max-width: 300px; margin-right: 10px;">
+                    <div class="card-header" style="display: block; text-align: center">
+                        <h5 style="width: 100%; font-weight: bold">流程節點</h5>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label style="display: block; align-self: center; width: 100%">部門</label>
+                            <select class="custom-select form-control-border" id="department" name="department" style="font-size: small">
+                                @foreach (var department in Model.DepartmentDict)
+                                {
+                                    @if (department.Key == Model.TemplateOfNodeTemplates.Nodes[nodeIndex].DepartmentId)
+                                    {
+                                        <option selected value="@department.Key" style="font-size: small">@department.Value</option>
+                                    }
+                                    @if (department.Key != Model.TemplateOfNodeTemplates.Nodes[nodeIndex].DepartmentId)
+                                    {
+                                        <option value="@department.Key" style="font-size: small">@department.Value</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label style="display: block; align-self: center; width: 100%">功能</label>
+                            <select class="custom-select form-control-border" id="userActivity" name="userActivity" style="font-size: smaller" disabled>
+                                @foreach (var activity in Model.UserActivityDict)
+                                {
+                                    @if (activity.Key == Model.TemplateOfNodeTemplates.Nodes[nodeIndex].UserActivityId)
+                                    {
+                                        <option selected value="@activity.Key" style="font-size: small">@activity.Value</option>
+                                    }
+                                    @if (activity.Key != Model.TemplateOfNodeTemplates.Nodes[nodeIndex].UserActivityId)
+                                    {
+                                        <option value="@activity.Key" style="font-size: small">@activity.Value</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+
+                @if (nodeIndex == 0)
+                {
+                    <button id="duplicateButton" style="margin: 1%" onclick="duplicateCard()">+</button>
+                }
+            }
+        </div>
+        
+        
+
         <!-- 送出按鈕 -->
         <div class="submit-btn" style="margin-top: 10%">
             <button type="submit" id="submitButton" class="btn btn-primary">送出</button>
         </div>
     </div>
-    <div style="margin: 5%">
-        <div class="card card-primary">
-            <div class="card-header" style="display: block; text-align: center">
-                <h5 style="width: 100%; font-weight: bold">流程節點1</h5>
-            </div>
-            <!-- /.card-header -->
-            <div class="card-body">
-                <div class="form-group">
-                    <label style="display: block; align-self: center; width: 100%">部門</label>
-                    <select class="custom-select form-control-border" id="exampleSelectBorder">
-                        <option>Value 1</option>
-                        <option>Value 2</option>
-                        <option>Value 3</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label style ="display: block; align-self: center; width: 100%">功能</label>
-                    <select class="custom-select form-control-border border-width-2" id="exampleSelectBorderWidth2">
-                        <option>Value 1</option>
-                        <option>Value 2</option>
-                        <option>Value 3</option>
-                    </select>
-                </div>
-            </div>
-            <!-- /.card-body -->
-        </div>
-    </div>
-    
 </div>
 
 @section Scripts {
@@ -250,9 +279,49 @@
     <!-- AdminLTE for demo purposes -->
     <script src="~/AdminLTE/dist/js/demo.js"></script>
     <script>
+        function duplicateCard() {
+            // 取得卡片容器
+            var cardContainer = document.getElementById("cardContainer");
+            // 取得第一個卡片
+            var firstCard = cardContainer.querySelector(".card");
+
+            // 複製第一張卡片
+            var newCard = firstCard.cloneNode(true);
+
+            // 移除複製卡片內所有 select 元素的 disabled 屬性
+            var selectElements = newCard.querySelectorAll("select");
+            selectElements.forEach(function (select) {
+                select.removeAttribute("disabled");
+            });
+
+            // 為新增卡片添加刪除按鈕
+            var deleteButton = document.createElement("button");
+            deleteButton.type = "button";
+            deleteButton.classList.add("btn", "btn-danger", "deleteButton");
+            deleteButton.style.marginTop = "10px";
+            deleteButton.innerText = "刪除";
+            deleteButton.onclick = function () {
+                deleteCard(this);
+            };
+
+            // 插入刪除按鈕到新卡片
+            newCard.querySelector(".card-body").appendChild(deleteButton);
+
+            // 插入到第一張卡片的右邊
+            cardContainer.insertBefore(newCard, firstCard.nextSibling);
+        }
+
+        function deleteCard(button) {
+            // 找到包含該按鈕的卡片
+            var card = button.closest(".card");
+            // 刪除該卡片
+            card.remove();
+        }
+    </script>
+    <script>
         $(document).ready(function() 
             {
-            // 綁定按鈕點擊事件
+                // 綁定按鈕點擊事件
                 $("#submitButton").on("click", function(e) 
                 {
                     // e.preventDefault();  // 阻止默認的提交行為
@@ -264,6 +333,20 @@
                     // var pj = document.getElementById('projectId');
                     // var projectId = pj.options[pj.selectedIndex].value;
                     var ct = document.getElementById("category").value
+                    var cards = document.querySelectorAll("#cardContainer .card");
+                    var nodes = [];
+
+                    // 遍歷每個卡片，提取 userActivityId 和 departmentId
+                    cards.forEach(function (card, index) {
+                        var departmentId = card.querySelector("#department").value;
+                        var userActivityId = card.querySelector("#userActivity").value;
+
+                        // 組織每個節點的資料
+                        nodes.push({
+                            UserActivityId: userActivityId,
+                            DepartmentId: departmentId
+                        });
+                    });
                     // var categoryId = ct.options[ct.selectedIndex].getAttribute("data-id");
                     // var content = $('#summernote').summernote('code');
                     // // 檢查是否有空值
@@ -290,6 +373,7 @@
                     // });
                     // let formId = "";
                     // let createResponseErrorCode = 0;
+                   
                     $.ajax({
                         url: '/ProcessTemplates/CreateCategory',
                         type: 'POST',
@@ -299,32 +383,7 @@
                         },
                         data: JSON.stringify({
                             CategoryName: ct,
-                            Nodes: [
-                                {
-                                    UserActivityId: "01",
-                                    DepartmentId: "Requester"
-                                },
-                                {
-                                    UserActivityId: "06",
-                                    DepartmentId: "D002"
-                                },
-                                {
-                                    UserActivityId: "07",
-                                    DepartmentId: "D002"
-                                },
-                                {
-                                    UserActivityId: "08",
-                                    DepartmentId: "D002"
-                                },
-                                {
-                                    UserActivityId: "09",
-                                    DepartmentId: "Requester"
-                                },
-                                {
-                                    UserActivityId: "10",
-                                    DepartmentId: "Requester"
-                                }
-                            ]
+                            Nodes: nodes
                         }),
                         success: function(response) {
                             createResponseErrorCode = response['errorCode'];
@@ -332,6 +391,7 @@
                                 // formId = response['formId']
                                 // upload()
                                 window.alert(response['message']);
+                            window.location.replace("/Home/Index");
                             }
                             if(response['errorCode'] != null && response['errorCode'] == 400)
                             {
