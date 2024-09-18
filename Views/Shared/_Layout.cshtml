@@ -146,18 +146,18 @@
                                         <p>查刪專案</p>
                                     </a>
                                 </li>
-                                <li class="nav-item" style="margin-left: 5%">
+                                @* <li class="nav-item" style="margin-left: 5%">
                                     <a href="~/AdminLTE/pages/UI/icons.html" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>投票統計</p>
                                     </a>
-                                </li>
-                                <li class="nav-item" style="margin-left: 5%">
+                                </li> *@
+                                @* <li class="nav-item" style="margin-left: 5%">
                                     <a href="~/AdminLTE/pages/UI/icons.html" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>人員管理</p>
                                     </a>
-                                </li>
+                                </li> *@
                             </ul>
                         </li>
                         <li class="nav-item">
@@ -170,33 +170,33 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item" style="margin-left: 5%">
-                                    <a href="~/AdminLTE/pages/UI/general.html" class="nav-link">
+                                    <a class="nav-link" asp-area="" asp-controller="CurrentMeetingRoom" asp-action="Index">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>目前會議室</p>
                                     </a>
                                 </li>
                                 <li class="nav-item" style="margin-left: 5%">
-                                    <a href="~/AdminLTE/pages/UI/icons.html" class="nav-link">
+                                    <a class="nav-link" asp-area="" asp-controller="CreateMeetingRoomReserve" asp-action="Index">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>新增預約</p>
                                     </a>
                                 </li>
                                 <li class="nav-item" style="margin-left: 5%">
-                                    <a href="~/AdminLTE/pages/UI/icons.html" class="nav-link">
+                                    <a class="nav-link" asp-area="" asp-controller="QueryMeetingRoom" asp-action="Index">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>查詢預約</p>
                                     </a>
                                 </li>
                             </ul>
                         </li>
-                        <li class="nav-item">
+                        @* <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon far fa-calendar-alt"></i>
                                 <p>
                                     當日概覽
                                 </p>
                             </a>
-                        </li>
+                        </li> *@
                         <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-book"></i>
