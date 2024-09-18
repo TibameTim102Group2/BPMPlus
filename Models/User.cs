@@ -15,7 +15,7 @@ namespace BPMPlus.Models
         
         [MaxLength(256)]
         public string UserName {  get; set; }
-        public virtual List<Project> Projects { get; } = [];
+        public virtual List<Project> Projects { get; set; } = [];
         public virtual  List<PermissionGroup> PermissionGroups { get; set; } = [];
         public virtual  List<Meeting> Meetings { get; } = [];
         [Column(TypeName = "VARCHAR")]
@@ -44,6 +44,7 @@ namespace BPMPlus.Models
         [Column(TypeName = "VARCHAR")]
         [MaxLength(20)]
         public string TEL { get; set; }
+        public long? ModifyPasswordTime { get; set; }
 
         public bool PermittedTo(string functionId)
         {

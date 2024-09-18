@@ -134,6 +134,7 @@
 @section Scripts {
      
     <script>
+        $(document).ready(function () { 
         $("#btnSubmit").click(function () {
             let userConfirmed = confirm("是否送出?");
             if (!userConfirmed) return;
@@ -187,6 +188,7 @@
                 .catch((error) => console.log("Error:", error))
                 // .then((response) => console.log("Success:", response));
 
+            })
         });
 
     </script>

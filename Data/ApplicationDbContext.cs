@@ -35,6 +35,11 @@ namespace BPMPlus.Data
                 .WithMany(pg => pg.PermissionGroups)
                 .UsingEntity(j => j.ToTable("PermissionGroupUserActivity"));
 
+            modelBuilder.Entity<User>()
+              .HasMany(u => u.Projects)
+              .WithMany(pg => pg.Users)
+              .UsingEntity(j => j.ToTable("ProjectUser"));
+
         }
         public DbSet<BPMPlus.Models.User> User { get; set; }
         public DbSet<BPMPlus.Models.Meeting> Meeting { get; set; }

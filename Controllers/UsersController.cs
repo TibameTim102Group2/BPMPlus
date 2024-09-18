@@ -13,6 +13,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using NuGet.Protocol.Providers;
 using BCryptHelper = BCrypt.Net.BCrypt;
 using Microsoft.AspNetCore.Authorization;
+using System.Text.Json;
 namespace BPMPlus.Controllers
 {
 	public class UsersController : BaseController
@@ -39,7 +40,7 @@ namespace BPMPlus.Controllers
 				}
                 
             }
-            if (!(user.DepartmentId=="D002"&& humanPermitted ))
+            if (!((user.DepartmentId=="D002" || user.DepartmentId=="D001") && humanPermitted ))
             {
                 ViewBag.NotPermittedToCreateForm = "您的權限無法進行人員管理";
                 return View("~/Views/Home/Index.cshtml");
@@ -184,10 +185,19 @@ namespace BPMPlus.Controllers
 		// GET: Users/Edit/5
 		public async Task<IActionResult> Edit(string id)
 		{
+
+			User userloginPermission = await GetAuthorizedUser();
+
+			var userDepartment = _context.User.Include(u=>u.Department).AsNoTracking().FirstOrDefault(u=>u.UserId== userloginPermission.UserId);
+			if (userDepartment.DepartmentId=="D001")
+			{
+				ViewBag.InformationDepartment = true;
+			}
 			if (id == null)
 			{
 				return NotFound();
 			}
+			
 
 			var user = await _context.User
 				.Include(u => u.Department)
@@ -305,8 +315,7 @@ namespace BPMPlus.Controllers
 				}
 				return RedirectToAction(nameof(Index));
 			}
-			//ViewData["DepartmentId"] = new SelectList(_context.Department, "DepartmentId", "DepartmentName", formData.DepartmentId);
-			//ViewData["GradeId"] = new SelectList(_context.Grade, "GradeId", "GradeName", formData.GradeId);
+			
 			return View(userData);
 		}
 
@@ -314,6 +323,18 @@ namespace BPMPlus.Controllers
 		[HttpDelete]
 		public async Task<IActionResult> Invalid(string id)
 		{
+			User userloginPermission = await GetAuthorizedUser();
+
+			var userDepartment = _context.User.Include(u => u.Department).AsNoTracking().FirstOrDefault(u => u.UserId == userloginPermission.UserId);
+			if (userDepartment.DepartmentId == "D001")
+			{
+				return Json(new { success = false, message = "您沒有更改在是否在職的權限" }, new JsonSerializerOptions());
+
+			}
+			if (id == null)
+			{
+				return NotFound();
+			}
 
 			//確認傳入參數userid是否有值
 			if (string.IsNullOrEmpty(id))
@@ -326,7 +347,7 @@ namespace BPMPlus.Controllers
 			_context.Update(invalidId);
 			await _context.SaveChangesAsync();
 			//返回查詢人員
-			return RedirectToAction("Index", "Users");
+			return Json(new { success = true });
 		}
 
 

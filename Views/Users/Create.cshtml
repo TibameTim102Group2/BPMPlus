@@ -119,7 +119,7 @@
 									<div class="form-group">
 										<label class="item-name">Email</label><input class="form-control txt-box" v-model="formData.Email">
 									</div>
-									<div class="form-group">
+									@* <div class="form-group">
 										<label class="item-name">新增權限</label>
 										<select class="form-control txt-box" v-model="selectPermission">
 											<option v-for="permission in permissions" :value="permission.Value">
@@ -127,7 +127,7 @@
 											</option>
 										</select>
 										<button class="btn btn-success" @@click="PermissionIncrease">新增</button>
-									</div>
+									</div> *@
 
 
 								</div>
@@ -140,7 +140,6 @@
 								<label class="item-name">目前擁有的權限</label>
 								<div v-for="permission in addPermissions" style="display:flex">
 									<p class="txt-box form-control" style="width:100%">{{permission.Text}}</p>
-									<button class="btn btn-danger" style="width:9vw;height:80%" @@click="PermissionDelete(permission.Value)">刪除</button>
 								</div>
 							</div>
 
@@ -169,7 +168,7 @@
 				return {
 					baseAddress: "https://localhost:7129/Users",
 					selectPermission: '',
-					addPermissions: [],
+					addPermissions: [{Value:"G0009",Text:"申請方基層人員"}],
 					formData: {
 						UserId: '@Html.Raw(ViewBag.UserNewId)',
 						UserName: '',
@@ -183,31 +182,6 @@
 				};
 			},
 			methods: {
-				PermissionIncrease() {
-					// alert("新增權限")
-					let _this = this;
-					let selected = _this.permissions.find(p => p.Value === _this.selectPermission);
-					if (selected) {
-						let repeatPermission = _this.addPermissions.some(p => p.Value === selected.Value);
-						if (repeatPermission) {
-							alert("已經存在此權限");
-						}
-						else {
-							_this.addPermissions.push(selected);
-							_this.selectPermission = '';
-							alert("新增成功")
-						}
-
-					} else {
-						alert("請選擇一個權限");
-					}
-				},
-				PermissionDelete(e) {
-					let _this = this;
-					let selected = _this.addPermissions.findIndex(p => p.Value === e)
-					_this.addPermissions.splice(selected, 1);
-					alert("刪除成功")
-				},
 				formSubmit() {
 					let _this = this;
 					if (_this.formData.UserName || _this.formData.Tel || _this.formData.GradeId || _this.formData.DepartmentId || _this.formData.Email  == "") {
@@ -215,11 +189,9 @@
 						if (_this.formData.DepartmentId=='') { window.alert("尚未填選所屬部門"); return; }
 						if (_this.formData.Tel=='') { window.alert("尚未填寫連絡電話"); return; }
 						if (_this.formData.GradeId == '') { window.alert("尚未填選職位"); return; }
+						if(_this.formData.Email==''){window.alert("尚未填選信箱"); return; }
 					}
-					if (_this.addPermissions.length === 0) {
-						window.alert("尚未填選權限");
-						return;
-					}
+
 					_this.formData.permissions = _this.addPermissions.map(p => p.Value);
 					axios.post(`${this.baseAddress}/Create`, JSON.stringify(_this.formData), {
 						headers: {

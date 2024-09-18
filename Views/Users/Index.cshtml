@@ -77,7 +77,6 @@
 </div>
 
 
-
 <div class="container-fluid">
 	<div class="row" id="app">
 		<section class="connectedSortable">
@@ -165,10 +164,17 @@
 						method: 'delete',
 						url: `${_this.baseAddress}/Invalid/${item.userId}`,
 					})
-						.then((response) => _this.fetchItems(), alert("更改在職狀態為離職")
-						).catch(error => alert("更改在職狀態失敗"));
-
-
+						.then((response) => {
+						if (response.data.success) {
+						 _this.fetchItems();
+						 alert("更改在職狀態成功")
+						 } else {
+					      alert(response.data.message); 
+						 }
+							})
+					.catch((error) => {
+					   alert("更改在職狀態失敗");
+						});
 				},
 				editItem: function (item) {
 					let _this = this;
@@ -190,7 +196,6 @@
 
 		var app = Vue.createApp(vueApp).mount('#app');
 	</script>
-
 
 }
 

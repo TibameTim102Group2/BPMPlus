@@ -1,83 +1,151 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using BPMPlus.Data;
+using BPMPlus.ViewModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BPMPlus.Controllers
 {
-    public class QueryProjectsController : Controller
+    public class QueryProjectsController : BaseController
     {
+        private readonly ApplicationDbContext _context;
+
+        public QueryProjectsController(ApplicationDbContext context) : base(context)
+        {
+            _context = context;
+        }
+
         // GET: QueryProjectsController
-        public ActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            //Project表格資訊
+            var tableData = await _context.Project
+                 .AsNoTracking()
+                 .AsSplitQuery()
+                 .Select(c => new QueryProjectsProjectContentViewModel
+                 {
+                     ProjectId = c.ProjectId,
+                     ProjectName = c.ProjectName,
+                     Summary = c.Summary,
+                     DeadLine = c.DeadLine,
+                     ProjectManager = _context.User.FirstOrDefault(n => n.UserId == c.ProjectManagerId).UserName
+                 }).ToListAsync();
+
+
+            //Input篩選項目
+            var projectData = await _context.Project
+                .AsNoTracking()
+                .AsSplitQuery()
+                .Select(c => new QueryProjectsSearchInputViewModel
+                {
+                    ProjectId = c.ProjectId,
+                    ProjectName = c.ProjectName
+                }).FirstOrDefaultAsync();
+
+            //Select選單
+            var userList = await _context.User
+                .Include(c => c.Projects)
+                .Include(c => c.Department)
+                .AsNoTracking()
+                .AsSplitQuery()
+                .Select(c => new QueryProjectsSearchListViewModel
+                {
+                    EmployeeId = c.UserId,
+                    EmployeeName = c.UserName,
+                    DepartmentName = c.Department.DepartmentName
+                }).FirstOrDefaultAsync();
+
+            //selectMany
+
+            var result = new QueryProjectsViewModel
+            {
+                QueryProjectsProjectContents = tableData,
+                QueryProjectsSearchInput = projectData,
+                QueryProjectsSearchList = new QueryProjectsSearchListViewModel()
+            };
+
+
+            return View(result);
         }
 
-        // GET: QueryProjectsController/Details/5
-        public ActionResult Details(int id)
+        //GET: QueryProjects/IndexJson
+        public async Task<JsonResult> IndexJson() 
         {
-            return View();
+
+            //Project表格資訊
+            var tableData = await _context.Project
+                 .AsNoTracking()
+                 .AsSplitQuery()
+                 .Select(c => new QueryProjectsProjectContentViewModel
+                 {
+                     ProjectId = c.ProjectId,
+                     ProjectName = c.ProjectName,
+                     Summary = c.Summary,
+                     DeadLine = c.DeadLine,
+                     ProjectManager = _context.User.FirstOrDefault(n => n.UserId == c.ProjectManagerId).UserName
+                 }).ToListAsync();
+
+
+
+
+            return Json(tableData);
         }
 
-        // GET: QueryProjectsController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: QueryProjectsController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<JsonResult> Filter(string projectId, string projectName, string employeeDepaetmentName, string employeeName, string employeeId)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
 
-        // GET: QueryProjectsController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
+            //Project表格資訊
+            var tableData = _context.Project
+                 .Include(c=>c.Users)
+                 .ThenInclude(c=>c.Department)
+                 .AsNoTracking()
+                 .AsSplitQuery();
 
-        // POST: QueryProjectsController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
+            if (!string.IsNullOrEmpty(projectId))
             {
-                return RedirectToAction(nameof(Index));
+                tableData = tableData.Where(c => c.ProjectId.Contains(projectId));
             }
-            catch
-            {
-                return View();
-            }
-        }
 
-        // GET: QueryProjectsController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+            if (!string.IsNullOrEmpty(projectName))
+            {
+                tableData = tableData.Where(c => c.ProjectName.Contains(projectName));
+            }
 
-        // POST: QueryProjectsController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
+            if (!string.IsNullOrEmpty(employeeDepaetmentName))
             {
-                return RedirectToAction(nameof(Index));
+                var projectIds = await _context.Department
+                    .Include(c => c.Users)
+                    .Where(c => c.DepartmentName == employeeDepaetmentName)
+                    .SelectMany(c => c.Users)
+                    .SelectMany(c => c.Projects)
+                    .Select(c => c.ProjectId)
+                    .ToListAsync();
+                tableData = tableData.Where(c => projectIds.Contains(c.ProjectId));
             }
-            catch
+
+            if (!string.IsNullOrEmpty(employeeId))
             {
-                return View();
+                var projectIds = await _context.User
+                    .Where(c => c.UserId == employeeId)
+                    .SelectMany(c => c.Projects)
+                    .Select(c => c.ProjectId)
+                    .ToListAsync();
+                tableData = tableData.Where(c => projectIds.Contains(c.ProjectId));
             }
+
+            var users = _context.User.ToList();
+
+            var result = tableData.Select(c => new QueryProjectsProjectContentViewModel
+            {
+                ProjectId = c.ProjectId,
+                ProjectName = c.ProjectName,
+                Summary = c.Summary,
+                DeadLine = c.DeadLine,
+                ProjectManager = users.FirstOrDefault(d => d.UserId == c.ProjectManagerId).UserName
+            }).ToList();
+
+            return Json(result);
         }
     }
 }
