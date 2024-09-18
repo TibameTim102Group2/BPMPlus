@@ -98,7 +98,8 @@ namespace BPMPlus.Controllers
        //登入page
         public IActionResult Index()
 		{
-			return View();
+            ViewBag.errMsg = "";
+            return View();
 		}
 
         /* 登出 */
@@ -113,18 +114,27 @@ namespace BPMPlus.Controllers
         [HttpPost]
         public async Task<IActionResult> ForgetPasswordSendEmail(string Email)
         {
-            var request = await _context.User.FirstOrDefaultAsync(m => m.Email == Email);
-            if (request == null)
+            if (Email != null)
             {
-                ViewBag.errMsg = "Email輸入錯誤!";
-                return RedirectToAction("Index", "Home");
+                var request = await _context.User.FirstOrDefaultAsync(m => m.Email == Email);
+                if (request == null)
+                {
+                    ViewBag.errMsg = "Email輸入錯誤!";
+                    return View("~/Views/Login/ForgetPassword.cshtml");
+                }
+                else
+                {
+                    var UserName = request.UserName;
+                    emailService.SendEmail(Email, UserName);
+                    return RedirectToAction("Index", "Home");
+                }
             }
             else
             {
-                var UserName = request.UserName;
-                emailService.SendEmail(Email, UserName);
-                return RedirectToAction("Index", "Home");
+                ViewBag.errMsg = "Email輸入錯誤!";
+                return View("~/Views/Login/ForgetPassword.cshtml");
             }
+
         }
 
         //忘記密碼page
@@ -287,41 +297,51 @@ namespace BPMPlus.Controllers
         public async Task<IActionResult> ResetPassWord(ChangePasswordVM vm)
         {
             var user = await GetAuthorizedUser();
-            var OldPassword = vm.OldPassword;
-            var NewPassword = vm.NewPassword;
-            var ConfirmPassword = vm.ConfirmPassword;
 
-            bool isTruePassword = BCryptHelper.Verify(OldPassword, user.Password);
-
-            if (isTruePassword == true)
+            //舊密碼不為空
+            if (vm.OldPassword != null)
             {
-                //判斷新舊密碼是否重複
-                if (NewPassword == OldPassword)
+                //判斷舊密碼是否輸入正確
+                bool isTruePassword = BCryptHelper.Verify(vm.OldPassword, user.Password);
+                if (isTruePassword == true)
                 {
-                    ViewBag.errMsg = "新舊密碼不得重複";
-                    return View("ResetPassWord", vm); // 修改失敗導回頁面
-                }
-                else
-                {
-                    //判斷密碼是否符合規則
-                    var resetPasswordService = new ResetPasswordService();
-                    var result = resetPasswordService.ValidatePassword(NewPassword);
-                    if (result.IsValid == false)
+                    //判斷新舊密碼是否重複
+                    if (vm.NewPassword == vm.OldPassword)
                     {
-                        ViewBag.errMsg = "新密碼不符合密碼規則";
+                        ViewBag.errMsg = "新舊密碼不得重複";
                         return View("ResetPassWord", vm); // 修改失敗導回頁面
                     }
                     else
                     {
-                        //判斷新密碼是否輸入正確
-                        if (NewPassword != ConfirmPassword)
+                        //判斷密碼是否符合規則
+                        var resetPasswordService = new ResetPasswordService();
+                        var result = resetPasswordService.ValidatePassword(vm.NewPassword);
+                        if (result.IsValid == false)
                         {
-                            ViewBag.errMsg = "請確認新密碼是否輸入一致";
+                            ViewBag.errMsg = "新密碼不符合密碼規則";
                             return View("ResetPassWord", vm); // 修改失敗導回頁面
+                        }
+                        else
+                        {
+                            //第二次輸入新密碼不為空
+                            if (vm.ConfirmPassword != null)
+                            {
+                                //判斷新密碼是否輸入正確
+                                if (vm.NewPassword != vm.ConfirmPassword)
+                                {
+                                    ViewBag.errMsg = "請確認新密碼是否輸入一致";
+                                    return View("ResetPassWord", vm); // 修改失敗導回頁面
+                                }
+                            }
                         }
                     }
                 }
-                string newPassword = BCryptHelper.HashPassword(NewPassword);
+                else
+                {
+                    ViewBag.errMsg = "舊密碼輸入錯誤";
+                    return View("ResetPassWord", vm); // 修改失敗導回頁面
+                }
+                string newPassword = BCryptHelper.HashPassword(vm.NewPassword);
 
                 user.Password = newPassword;
                 await _context.SaveChangesAsync();
@@ -331,15 +351,12 @@ namespace BPMPlus.Controllers
                 user.ModifyPasswordTime = saveChangeTime.ToUnixTimeSeconds();
                 //儲存修改密碼時間戳
                 await _context.SaveChangesAsync();
-
-                return View("ResetPassWord", vm);
-                //return RedirectToAction("Index", "Home");
             }
             else
             {
-                ViewBag.errMsg = "舊密碼輸入錯誤";
-                return View("ResetPassWord", vm); // 修改失敗導回頁面
+                ViewBag.errMsg = "舊密碼不得為空";
             }
+            return View("ResetPassWord", vm);
         }
 
         [Authorize]
