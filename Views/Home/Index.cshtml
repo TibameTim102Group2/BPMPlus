@@ -1,217 +1,179 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+	ViewData["Title"] = "Home Page";
 }
-
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @section Style {
-    <style>
-        .maincard{
-            border-color: white;
-        }
-        #mainpart{
-            padding: 30px 40px;
-        }
-        .selectbtn{
-            background-color: #458bfc;
-            color: white;
-            font-weight: bold;
-        }
-        .content .connectedSortable option{
-            background-color: white;
-            color: #458bfc;
-            font-weight: bold;
-        }
-        .clearfix button{
-            background-color: #458bfc;
-        }
-    </style>
-    <link rel="stylesheet" href="~/font-awesome/css/all.css" />
+	<style>
+		.maincard {
+			border-color: white;
+		}
+
+		#mainpart {
+			padding: 30px 40px;
+		}
+
+		.selectbtn {
+			background-color: #458bfc;
+			color: white;
+			font-weight: bold;
+		}
+
+		.content .connectedSortable option {
+			background-color: white;
+			color: #458bfc;
+			font-weight: bold;
+		}
+
+		.clearfix button {
+			background-color: #458bfc;
+		}
+		.dp{
+			text-align:center
+		}
+	</style>
+	<link rel="stylesheet" href="~/font-awesome/css/all.css" />
 }
 
 <div class="content-header">
-    <div style="color:red;">
-        <!--顯示無新建工單權限訊息 -->
-        @ViewBag.NotPermittedToCreateForm
-    </div>
-    <div>
-        
-    </div>
-    <div class="row">
-        <div class="col">
-            <div class="accordion" id="accordionExample">
-                <div class=" accordion-item">
-                    <h2 class="accordion-header" id="headingOne">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                            工程部需求
-                        </button>
-                    </h2>
-                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
-                        <div class="accordion-body">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">單號</th>
-                                        <th scope="col">部門</th>
-                                        <th scope="col">員工編號</th>
-                                        <th scope="col">姓名</th>
-                                        <th scope="col">需求項目類別</th>
-                                        <th scope="col">狀態</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <th scope="row"><a asp-area="" asp-controller="FormDetails" asp-action="Index">A001</a></th>
-                                        <td>DESIGN</td>
-                                        <td>Otto</td>
-                                        <td>LIN</td>
-                                        <td>環境整潔</td>
-                                        <td>Finish</td>
-                                        <td><a asp-area="" asp-controller="ModifyForm" asp-action="Index"><i class="fa-solid fa-pen-to-square"></i></a></td>
-                                        <td><i class="fa-solid fa-trash"></i> </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">A001</th>
-                                        <td>DESIGN</td>
-                                        <td>Otto</td>
-                                        <td>LIN</td>
-                                        <td>環境整潔</td>
-                                        <td>Finish</td>
-                                        <td><i class="fa-solid fa-pen-to-square"></i></td>
-                                        <td><i class="fa-solid fa-trash"></i> </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class=" accordion-item">
-                    <h2 class="accordion-header" id="headingTwo">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                            設計部需求
-                        </button>
-                    </h2>
-                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                        <div class="accordion-body">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">單號</th>
-                                        <th scope="col">部門</th>
-                                        <th scope="col">員工編號</th>
-                                        <th scope="col">姓名</th>
-                                        <th scope="col">需求項目類別</th>
-                                        <th scope="col">狀態</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <th scope="row">A001</th>
-                                        <td>DESIGN</td>
-                                        <td>Otto</td>
-                                        <td>LIN</td>
-                                        <td>環境整潔</td>
-                                        <td>Finish</td>
-                                        <td><i class="fa-solid fa-pen-to-square"></i></td>
-                                        <td><i class="fa-solid fa-trash"></i> </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">A001</th>
-                                        <td>DESIGN</td>
-                                        <td>Otto</td>
-                                        <td>LIN</td>
-                                        <td>環境整潔</td>
-                                        <td>Finish</td>
-                                        <td><i class="fa-solid fa-pen-to-square"></i></td>
-                                        <td><i class="fa-solid fa-trash"></i> </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingThree">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                            會計部需求
-                        </button>
-                    </h2>
-                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                        <div class="accordion-body">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">單號</th>
-                                        <th scope="col">部門</th>
-                                        <th scope="col">員工編號</th>
-                                        <th scope="col">姓名</th>
-                                        <th scope="col">需求項目類別</th>
-                                        <th scope="col">狀態</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <th scope="row">A001</th>
-                                        <td>DESIGN</td>
-                                        <td>Otto</td>
-                                        <td>LIN</td>
-                                        <td>環境整潔</td>
-                                        <td>Finish</td>
-                                        <td><i class="fa-solid fa-pen-to-square"></i></td>
-                                        <td><i class="fa-solid fa-trash"></i> </td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">A001</th>
-                                        <td>DESIGN</td>
-                                        <td>Otto</td>
-                                        <td>LIN</td>
-                                        <td>環境整潔</td>
-                                        <td>Finish</td>
-                                        <td><i class="fa-solid fa-pen-to-square"></i></td>
-                                        <td><i class="fa-solid fa-trash"></i> </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <br>
-    <!-- /.content-header -->
-    <!-- Main content -->
-    <section class="content">
-        <div class="">
-            <!-- Main row -->
-            <div class="row">
-                <!-- Left col -->
-                <section class="connectedSortable">
-                    <!-- TO DO List -->
-                    <div class="maincard card">
-                        <div class="accordion" id="accordionExample">
-                            <div id="mainpart">
-                                <br>
-                                <br>
-                                <br>
-                                <br>
-                                <br>
-                                <br>
-                                <br>
-                                <br>
-                                <br>
-                                <br>
-                                <br>
-                                <br>
-                                <br>
-                                <br>
-                                <br>
-                                <br>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-            <!-- /.row (main row) -->
-        </div><!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
+	<h1 style="color:blue; font-size:xx-large;text-align:center"><strong>BPM PLUS</strong></h1>
+	<div>
+		<button class="btn btn-primary" type="button">
+			系統訊息
+		</button>
+		<!-- TO DO List -->
+		<div class="maincard card">
+			<div class="accordion" id="accordionExample">
+				<div id="mainpart">
+					@{
+						var userName = HttpContextAccessor.HttpContext.Request.Cookies["UserName"];
+						<p>@userName 歡迎您回來<i class="fa-regular fa-face-smile"></i></p>
+					}
+
+					<div style="color:red;">
+						<!--顯示無新建工單權限訊息 -->
+						@ViewBag.NotPermittedToCreateForm
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+			<button class="btn btn-danger" type="button">
+				重要訊息
+			</button>
+			<div id="collapseOne" data-bs-parent="#accordionExample">
+				<div class="accordion-body">
+					<table class="table table-bordered">
+						<thead>
+							<tr style="text-align:center">
+								<th class="col-md-2">發布日期</th>
+								<th class="col-md-2">發布部門</th>
+								<th class="col-md-8">公告內容</th>
+
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>
+									<span class="begin-date-yy">2024年</span>
+									<span class="begin-date-mm">09月</span>
+									<span class="begin-date-dd">24日</span>
+								</td>
+								<td class="dp">資訊部</td>
+								<td>資訊部公告：9月30日中午12:00至13:00進行系統升級，請各位同仁注意系統暫時中斷。</td>
+							</tr>
+							<tr>
+								<td>
+									<span class="begin-date-yy">2024年</span>
+									<span class="begin-date-mm">09月</span>
+									<span class="begin-date-dd">22日</span>
+								</td>
+								<td class="dp">人資部</td>
+								<td>人資部通知：9月25日將舉辦員工關懷活動，歡迎各位同仁參加。</td>
+							</tr>
+							<tr>
+								<td>
+									<span class="begin-date-yy">2024年</span>
+									<span class="begin-date-mm">09月</span>
+									<span class="begin-date-dd">20日</span>
+								</td>
+								<td class="dp">行銷部</td>
+								<td>行銷部公告：9月28日將舉行新品推廣活動，行銷策略會議定於9月23日進行。</td>
+							</tr>
+							<tr>
+								<td>
+									<span class="begin-date-yy">2024年</span>
+									<span class="begin-date-mm">09月</span>
+									<span class="begin-date-dd">18日</span>
+								</td>
+								<td class="dp">財會部</td>
+								<td>財會部通知：第三季度財務審計將於9月25日開始，各部門請配合提供所需資料。</td>
+							</tr>
+							<tr>
+								<td>
+									<span class="begin-date-yy">2024年</span>
+									<span class="begin-date-mm">09月</span>
+									<span class="begin-date-dd">16日</span>
+								</td>
+								<td class="dp">採購部</td>
+								<td>採購部通知：9月22日為季度採購日，請提前提交各部門的採購需求。</td>
+							</tr>
+							<tr>
+								<td>
+									<span class="begin-date-yy">2024年</span>
+									<span class="begin-date-mm">09月</span>
+									<span class="begin-date-dd">14日</span>
+								</td>
+								<td class="dp">商品部</td>
+								<td>商品部公告：9月20日將進行商品盤點，請於前一天完成貨品整理。</td>
+							</tr>
+							<tr>
+								<td>
+									<span class="begin-date-yy">2024年</span>
+									<span class="begin-date-mm">09月</span>
+									<span class="begin-date-dd">12日</span>
+								</td>
+								<td class="dp">總務部</td>
+								<td>總務部通知：9月18日晚上將進行辦公室例行消毒，請各部門配合將重要物品收納。</td>
+							</tr>
+							<tr>
+								<td>
+									<span class="begin-date-yy">2024年</span>
+									<span class="begin-date-mm">09月</span>
+									<span class="begin-date-dd">10日</span>
+								</td>
+								<td class="dp">業務部</td>
+								<td>業務部公告：9月15日將進行月度業績考核，請提前準備報告。</td>
+							</tr>
+							<tr>
+								<td>
+									<span class="begin-date-yy">2024年</span>
+									<span class="begin-date-mm">09月</span>
+									<span class="begin-date-dd">08日</span>
+								</td>
+								<td class="dp">資訊部</td>
+								<td>資訊部通知：9月12日早上7:00至8:00進行網絡維護，期間網絡服務將暫時中斷。</td>
+							</tr>
+							<tr>
+								<td>
+									<span class="begin-date-yy">2024年</span>
+									<span class="begin-date-mm">09月</span>
+									<span class="begin-date-dd">05日</span>
+								</td>
+								<td class="dp">人資部</td>
+								<td>人資部通知：年度培訓計劃將於9月20日開始，請各位同仁提前報名。</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+	<br>
+	<!-- /.content-header -->
+	<!-- Main content -->
+	
+	<!-- /.content -->
 </div>
