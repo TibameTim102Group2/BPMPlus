@@ -46,7 +46,16 @@ namespace BPMPlus.Controllers
             Dictionary<string, string> depGroup = new Dictionary<string, string>() { };
             foreach(var cNode in nodes)
             {
-                depGroup.Add(cNode.UserActivityId, cNode.DepartmentId);
+                if (new List<string>() { "01", "02", "03", "04", "05", "06", "07", "08", "09", "10" }.Contains(cNode.UserActivityId))
+                {
+                    if (depGroup.ContainsKey(cNode.UserActivityId)) 
+                    {
+                        err = $"審核環節 : {_context.UserActivity.FirstOrDefault(c => c.UserActivityId == cNode.UserActivityId).UserActivityIdDescription}僅能存在一次";
+                        return false;
+                    }
+                    depGroup.Add(cNode.UserActivityId, cNode.DepartmentId);
+                }
+                    
             }
             if (
                 (depGroup.ContainsKey("02") && depGroup["01"] != depGroup["02"]) ||
