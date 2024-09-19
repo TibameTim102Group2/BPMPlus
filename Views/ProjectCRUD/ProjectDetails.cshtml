@@ -207,7 +207,10 @@
 
             </div>
             <h2 class="title" style="font-weight: 900">專案工單</h2>
-            @await Html.PartialAsync("_GetFormPartial", Model)
+            <div  class="note" style="margin-top:1%; padding:2%; width:120%">
+                @await Html.PartialAsync("_GetFormPartial", Model)
+            </div>
+            
             @* <div class="mb-3 inputField ">
                 <div class="mb-3 form-label">
                     <label for="xxx1">需求部門</label>
