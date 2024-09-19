@@ -18,6 +18,7 @@ namespace BPMPlus.Models
         [ForeignKey("MeetingRooms")]
         public string ?MeetingRoomId { get; set; }
         public virtual MeetingRooms? MeetingRooms { get; set; }
+        public string MeetingHost {  get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
         public string? Note { get; set; }

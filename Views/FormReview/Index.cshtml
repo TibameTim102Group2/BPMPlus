@@ -180,7 +180,49 @@
             height: 20px;
         }
 
-    </style>
+        .result {
+            padding: 20px 30px;
+        }
+
+        .result {
+            padding: 20px 30px;
+        }
+
+            .result .noteContent {
+                margin-bottom: 10px;
+                font-weight: bold;
+            }
+
+            .result .textContent {
+                width: 100%;
+                min-height: 300px;
+                overflow-y: visible; 
+                overflow-x: auto; 
+                padding: 10px;
+                background-color: white;
+                border: 1px solid #ced4da;
+                border-radius: 0.25rem;
+            }
+
+            .result .textContent table{
+                text-align:left;
+            }
+
+         /*        .result .textContent table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-bottom: 0;
+                }
+
+                    .result .textContent table th,
+                    .result .textContent table td {
+                        border: 1px solid #ddd;
+                        padding: 8px;
+                        text-align: left;
+                    }
+                    */
+
+        </style>
 }
 
 
@@ -224,8 +266,9 @@
                     <div class="col-6 mb-3 form-label">
                         <label>指派人員</label>
                         <input asp-for="@Model.AssginEmployee" type="text" class="assignEmp form-control" value="@Model.AssginEmployee" readonly />
-                        @*                         <div class="checkIcon" hidden><i class="fa-solid fa-check" style="color:green;"></i></div>
-                        <div class="crossIcon" hidden><i class="fa-solid fa-xmark" style="color: red;"></i></div> *@
+                        <i class="fa-solid fa-spinner fa-spin loadIcon" style="color:grey;" hidden></i>
+                        <i class="fa-solid fa-check checkIcon" style="color:green;" hidden></i>
+                        <i class="fa-solid fa-xmark falseIcon" style="color: red;" hidden></i>
                     </div>
                     <div class="col-6 mb-3 form-label">
                         <label>需求員工</label>
@@ -297,7 +340,7 @@
             <!-- 需求內容 -->
             <div class="result">
                 <label class="noteContent">需求內容</label><br>
-                <div asp-for="@Model.Content" class="textContent form-control" readonly>@Html.Raw(Model.Content)</div>
+                    <div asp-for="@Model.Content" class="textContent form-control" readonly>@Html.Raw(Model.Content)</div>
             </div>
 
             <!-- 附件上傳/下載 -->
@@ -332,8 +375,8 @@
                     </div>
                     <div class="reviewOptions" style="flex: 1; text-align: center;">
                         <div id="inputReview">
-                            <label><input name="reviewResult" type="radio" value="reject" />退回</label>
-                            <label><input name="reviewResult" type="radio" value="approve" /> 核准</label>
+                            <label><input name="reviewResult" type="radio" value="reject" class="rejectBtn"/>退回</label>
+                            <label><input name="reviewResult" type="radio" value="approve" class="approveBtn" /> 核准</label>
                         </div>
                     </div>
                     <div class="submitBtn" style="flex: 1; text-align: right;">
@@ -362,7 +405,7 @@
 
     <script src="~/AdminLTE/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
 
-
+    
     <!-- AdminLTE for demo purposes -->
     <script src="~/AdminLTE/dist/js/demo.js"></script>
     <script>
@@ -372,9 +415,12 @@
             let needEmp = document.querySelector(".assignEmp");
             let formValid = document.getElementById("formArea");
             let checkEstimatedTime = document.querySelector(".EstimatedTime");
+            let checkIcon = document.querySelector(".checkIcon");
+            let falseIcon = document.querySelector(".falseIcon");
+            let loadIcon = document.querySelector(".loadIcon");
             let userPermit;
 
-            // 驗證員工的函數
+            // Validate employee function
             async function validateEmp(empName) {
                 let response = await fetch(`/FormReview/AssignEmp?empName=${empName}`, {
                     method: "POST",
@@ -386,7 +432,7 @@
                 return result;
             }
 
-            // 發送請求，根據權限設置是否為 readonly
+            // Send request to check permissions
             fetch(`/FormReview/CheckEmp/?id=${formId}`, {
                 method: "GET"
             })
@@ -394,10 +440,32 @@
                 .then(data => {
                     userPermit = data.userPermit;
                     if (data.status === true) {
-                        // 設置通用字段
                         needEmp.value = data.handler || '';
 
                         if (data.userPermit === "07") {
+                            let rejectBtn = document.querySelector(".rejectBtn");
+                            let approveBtn = document.querySelector(".approveBtn");
+                            needEmp.value = "";
+
+                            function handleRejectClick() {
+                                needEmp.setAttribute("readonly", "readonly");
+                                needEmp.value = "退回時無需填寫人員";
+                                needEmp.style = "color:red;"
+                                checkIcon.setAttribute("hidden", "hidden");
+                                falseIcon.setAttribute("hidden", "hidden");
+                                loadIcon.setAttribute("hidden", "hidden");
+                            }
+
+                            function handleApproveClick() {
+                                needEmp.removeAttribute("readonly");
+                                if (needEmp.value === "退回時無需填寫人員"){
+                                    needEmp.value = "";
+                                }
+                            }
+
+                            rejectBtn.addEventListener("click", handleRejectClick);
+                            approveBtn.addEventListener("click", handleApproveClick);
+
                             needEmp.removeAttribute("readonly");
                             checkEstimatedTime.setAttribute("readonly", "readonly");
                             checkEstimatedTime.value = data.time || '';
@@ -407,34 +475,41 @@
                                 let enterEmp = needEmp.value.trim();
 
                                 if (enterEmp.length > 0) {
+                                        checkIcon.setAttribute("hidden", "hidden");
+                                        falseIcon.setAttribute("hidden", "hidden");
+                                        loadIcon.setAttribute("hidden", "hidden");
+                                        loadIcon.removeAttribute("hidden");
                                     this.inputTimer = setTimeout(async () => {
                                         let result = await validateEmp(enterEmp);
+                                        loadIcon.setAttribute("hidden", "hidden");
                                         if (result.status) {
-                                            alert("成功新增指派人員");
+                                            checkIcon.removeAttribute("hidden");
                                         } else {
-                                            alert("請輸入同部門、權限之員工！");
+                                            falseIcon.removeAttribute("hidden");
                                         }
                                     }, 1000);
+                                }else{
+                                    checkIcon.setAttribute("hidden", "hidden");
+                                    falseIcon.setAttribute("hidden", "hidden");
+                                    loadIcon.setAttribute("hidden", "hidden");
                                 }
                             });
                         } else if (data.userPermit === "08") {
                             needEmp.setAttribute("readonly", "readonly");
                             checkEstimatedTime.removeAttribute("readonly");
 
-                            // 如果存在之前填寫的預估工時，則顯示
                             if (data.previousEstimatedTime) {
                                 checkEstimatedTime.value = data.previousEstimatedTime;
                             } else {
                                 checkEstimatedTime.value = data.time || '';
                             }
                         } else {
-                            // 其他權限（01-06, 09）設為只讀
                             needEmp.setAttribute("readonly", "readonly");
                             checkEstimatedTime.setAttribute("readonly", "readonly");
                             checkEstimatedTime.value = data.time || '';
                         }
 
-                        // 為所有權限設置通用的表單提交驗證
+                        // Form submission validation
                         formValid.addEventListener("submit", async function (event) {
                             event.preventDefault();
                             let rejectBtn = document.querySelector('input[name="reviewResult"][value="reject"]').checked;
@@ -447,7 +522,7 @@
                                 errorMessages.push("請選擇「核准」或「退回」");
                             }
 
-                            if (data.userPermit === "07" && enterEmp === "") {
+                            if (data.userPermit === "07" && approveBtn && enterEmp === "") {
                                 errorMessages.push("請填寫指派人員");
                             }
 
@@ -456,7 +531,7 @@
                                 return;
                             }
 
-                            if (data.userPermit === "07" && enterEmp !== "") {
+                            if (data.userPermit === "07" && approveBtn && enterEmp !== "") {
                                 let result = await validateEmp(enterEmp);
                                 if (!result.status) {
                                     alert("請填寫正確的指派人員！");
@@ -469,7 +544,6 @@
                             }
                         });
                     } else {
-                        // 處理沒有權限的情況
                         needEmp.setAttribute("readonly", "readonly");
                         checkEstimatedTime.setAttribute("readonly", "readonly");
                         alert("您沒有權限進行此操作。");
