@@ -1,0 +1,59 @@
+﻿@model IEnumerable<BPMPlus.ViewModels.ProjectDetailsViewModel>
+
+@{
+    ViewData["Title"] = "_GetForm";
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                單號
+            </th>
+            <th>
+                部門
+            </th>
+            <th>
+                員工編號
+            </th>
+            <th>
+                姓名
+            </th>
+            <th>
+                需求項目類別
+            </th>
+            <th>
+                狀態
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FormId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Department)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.FormId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.FormId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.FormId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
