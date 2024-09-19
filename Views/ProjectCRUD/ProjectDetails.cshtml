@@ -190,6 +190,24 @@
                     <input type="xxx2" class="form-control" value="@ViewBag.ProjectId" Disabled>
                 </div>
             </div>
+            <div class="mb-3 inputField ">
+                <div class="mb-3 form-label">
+                    <label for="xxx1">截止期限</label>
+                    <input type="xxx1" class="form-control" value="@ViewBag.DeadLine" Disabled>
+                </div>
+                <div class="mb-3 form-label">
+                    <label for="xxx2"></label hidden>
+                    <input type="xxx2" class="form-control" value="@ViewBag.ProjectId" Disabled hidden>
+                </div>
+            </div>
+            <div class="note" style="margin-top:10%; padding:2%; width:200%">
+                <div class="noteContent">專案描述</div>
+                <textarea style="width: 40%; height: 150px">@ViewBag.Summary</textarea>
+            </div>
+            <div height: 40px>
+
+            </div>
+            <h2 class="title" style="font-weight: 900">專案工單</h2>
             @* <div class="mb-3 inputField ">
                 <div class="mb-3 form-label">
                     <label for="xxx1">需求部門</label>

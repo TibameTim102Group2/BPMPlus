@@ -41,6 +41,8 @@ namespace BPMPlus.Controllers
             }
             ViewBag.ProjectId = ProjectId;
             ViewBag.ProjectName = Project.ProjectName;
+            ViewBag.Summary = Project.Summary;
+            ViewBag.DeadLine = (Project.DeadLine.Date).ToString("yyyy.MM.dd");
 
 
 
