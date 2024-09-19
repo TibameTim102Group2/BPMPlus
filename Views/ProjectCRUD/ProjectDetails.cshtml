@@ -1,0 +1,316 @@
+﻿﻿
+@model IEnumerable<BPMPlus.ViewModels.ProjectDetailsViewModel>
+<!-- Google Font: Source Sans Pro -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="~/AdminLTE/plugins/fontawesome-free/css/all.min.css">
+<!-- daterange picker -->
+<link rel="stylesheet" href="~/AdminLTE/plugins/daterangepicker/daterangepicker.css">
+<!-- iCheck for checkboxes and radio inputs -->
+<link rel="stylesheet" href="~/AdminLTE/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+<!-- Bootstrap Color Picker -->
+<link rel="stylesheet" href="~/AdminLTE/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css">
+<!-- Tempusdominus Bootstrap 4 -->
+<link rel="stylesheet" href="~/AdminLTE/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+<!-- Select2 -->
+<link rel="stylesheet" href="~/AdminLTE/plugins/select2/css/select2.min.css">
+<link rel="stylesheet" href="~/AdminLTE/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+<!-- Bootstrap4 Duallistbox -->
+<link rel="stylesheet" href="~/AdminLTE/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
+<!-- BS Stepper -->
+<link rel="stylesheet" href="~/AdminLTE/plugins/bs-stepper/css/bs-stepper.min.css">
+<!-- dropzonejs -->
+<link rel="stylesheet" href="~/AdminLTE/plugins/dropzone/min/dropzone.min.css">
+<!-- Theme style -->
+<link rel="stylesheet" href="~/AdminLTE/dist/css/adminlte.min.css">
+@section Style {
+        <style>
+                    /* 讓檔案列表出現在上傳 input 的下方 */
+                #fileList {
+                    margin-top: 1%; /* 與上傳 input 保持適當距離 */
+                    padding: 0;
+                    list-style-type: none;
+                }
+                #fileListContainer {
+                    padding: 10px;
+                    margin-top: 10px;
+                    overflow-y: auto;
+                }
+                #fileList li {
+                    margin-bottom: 1%; /* 每個檔案的間距 */
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+
+                /* 刪除按鈕的樣式 */
+                #fileList button {
+                    background-color: red;
+                    color: white;
+                    height:50%:
+                    border: none;
+                    cursor: pointer;
+                }
+            .content-wrapper {
+                background-color: rgb(225, 239, 252);
+            }
+
+            .outside {
+                padding: 20px;
+                background-color: rgb(225, 239, 252);
+                height: 100%;
+            }
+
+            .title {
+                color: rgba(0, 81, 255, 0.884);
+                margin-top: 20px;
+                margin-bottom: 30px;
+                margin-left: 30px;
+                font-weight: bold;
+            }
+
+            .inside {
+                margin-top: 30px;
+                padding: 20px;
+                background-color: rgb(225, 229, 252);
+
+                border: 0.5px solid gainsboro;
+            }
+
+            .list {
+                display: flex;
+                justify-content: space-around;
+                list-style: none;
+            }
+
+            .bar {
+                display: flex;
+                align-items: center;
+                margin-bottom: 10px;
+                padding-left: 10px;
+            }
+
+            #BackToForm {
+                margin-left: auto;
+            }
+
+            #FormCategory {
+                margin-left: auto;
+            }
+
+
+            .inputField {
+                display: flex;
+                height: 40px;
+            }
+
+            .form-label {
+                padding-top: 20px;
+                display: flex;
+                width: 50%;
+                margin: 2%;
+            }
+
+            label {
+                margin: auto;
+                display: inline;
+                width: 150px;
+                margin-right: 20PX;
+                background-color: #458bfc;
+                text-align: center;
+                color: white;
+                text-decoration: double;
+                border-radius: 5%;
+            }
+
+            .form-file {
+                padding-top: 20px;
+                display: flex;
+                width: 50%;
+                margin: 2%;
+            }
+
+            .dropdown-container {
+                position: relative;
+                width:100%;
+            }
+            .form-date {
+                padding-top: 20px;
+                margin-left: 40px;
+                height: 58px;
+                display: flex;
+            }
+
+            .noteContent {
+                background-color: #458bfc;
+                color: white;
+                border-radius: 5%;
+                width: 100px;
+                text-align: center;
+            }
+
+            .txtInput {
+                width: 100%;
+                background-color: white;
+            }
+
+            .submit-btn {
+                display: flex;
+                justify-content: center;
+                margin-top: 20px;
+            }
+            .upload{
+                width:100%;
+            }
+
+        </style>
+}
+
+
+
+<!-- outside -->
+<div class="outside">
+    @Html.AntiForgeryToken()
+    <div style="color:red;">
+        @ViewBag.errMsg
+    </div>
+    <h1 class="title">專案細節</h1>
+
+    <!-- inside -->
+    <div class="inside">
+        <form>
+            <div class="mb-3 inputField ">
+                <div class="mb-3 form-label">
+                    <label for="xxx1">專案名稱</label>
+                    <input type="xxx1" class="form-control" value="@ViewBag.ProjectName" Disabled>
+                </div>
+                <div class="mb-3 form-label">
+                    <label for="xxx2">專案編號</label>
+                    <input type="xxx2" class="form-control" value="@ViewBag.ProjectId" Disabled>
+                </div>
+            </div>
+            <div class="mb-3 inputField ">
+                <div class="mb-3 form-label">
+                    <label for="xxx1">截止期限</label>
+                    <input type="xxx1" class="form-control" value="@ViewBag.DeadLine" Disabled>
+                </div>
+                <div class="mb-3 form-label">
+                    <label for="xxx2"></label hidden>
+                    <input type="xxx2" class="form-control" value="@ViewBag.ProjectId" Disabled hidden>
+                </div>
+            </div>
+            <div class="note" style="margin-top:10%; padding:2%; width:200%">
+                <div class="noteContent">專案描述</div>
+                <textarea style="width: 40%; height: 150px">@ViewBag.Summary</textarea>
+            </div>
+            <div height: 40px>
+
+            </div>
+            <h2 class="title" style="font-weight: 900">專案工單</h2>
+            @await Html.PartialAsync("_GetFormPartial", Model)
+            @* <div class="mb-3 inputField ">
+                <div class="mb-3 form-label">
+                    <label for="xxx1">需求部門</label>
+                    <input inside ="@ViewBag.DepartmentId" id="DepartmentId" type="xxx1" class="form-control" value="@ViewBag.DepartmentName" Disabled>
+                </div>
+                <div class="mb-3 form-label">
+                </div>
+            </div>
+            <div class="mb-3 inputField ">
+                <div class="mb-3 form-label">
+                    <label for="xxx1">聯繫電話</label>
+                    <input id="Tel" type="xxx1" class="form-control" value="@ViewBag.UserTEL" Disabled>
+                </div>
+                <div class="mb-3 form-label">
+                    <label for="xxx2">專案編號</label>
+                    <select id="projectId" name="ProjectId" class="form-control" onchange="updateProjectName()">
+                        <option value="">-- 請選擇專案編號 --</option>
+                        @foreach (var project in ViewBag.Projects)
+                        {
+                                <!option value="@project.ProjectId" data-id="@project.ProjectName" @(project.ProjectId == ViewBag.SelectProjectId ? "selected" : "")>@project.ProjectId</!option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="mb-3 inputField ">
+                <div class="mb-3 form-label">
+                    <label for="xxx2">希望完成日期</label>
+                    <div class="input-group date" id="reservationdate" data-target-input="nearest">
+                        <input id="ExpectedFinishedDay" type="text" class="form-control datetimepicker-input" data-target="#reservationdate" />
+                        <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 form-label">
+                    <label for="xxx2">專案名稱</label>
+                    <select id="projectName" name="ProjectName" class="form-control" onchange="updateProjectId()">
+                        <option value="">-- 請選擇專案名稱 --</option>
+                        @foreach (var project in ViewBag.Projects)
+                        {
+                                <!option value="@project.ProjectName" data-id="@project.ProjectId" @(project.ProjectName == ViewBag.SelectedProjectName ? "selected" : "")>@project.ProjectName</!option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="mb-3 inputField">
+                <div class="mb-3 form-label">
+                    <label for="xxx1">複製單號</label>
+                    <select id="formDropdown" class="form-control" onchange="updateFormId()">
+                        <option value="">-- 請選擇複製單號 --</option>
+                        @foreach (var form in ViewBag.Forms as List<Form>)
+                        {
+                                <option value="@form.FormId" data-id="@form.FormId">@form.FormId</option>
+                        }
+                    </select>
+
+
+                </div>
+                <div class="mb-3 form-label">
+                    <label for="xxx2"></label>
+                    <input type="xxx2" class="form-control" style="visibility:hidden">
+                </div>
+            </div>
+            <div class="mb-3 inputField" style="margin-top:10%;height: 100%">
+                <div class="mb-3 form-label">
+                    <label for="xxx1">檔案上傳</label>
+                    <form id="uploadForm">
+                        <input type="file" class="form-control" id="fileInput" name="files" multiple />
+                    </form>
+                    <br />
+                </div>
+                <div class="mb-3 form-label">
+                    <label for="xxx2"></label>
+                    <input type="xxx2" class="form-control" style="visibility:hidden">
+                </div>
+                
+
+            </div>
+            <div id="fileListContainer" style="width:30%">
+                    <ul id="fileList"></ul>
+            </div>
+                
+
+
+            <!-- 需求內容的位置 -->
+
+            <div class="note" style="margin-top:10%; padding:2%; width:100%">
+                <div class="noteContent">需求內容</div>
+                <div class="txtInput" id="txtInput">
+                    <div id="summernote"></div>
+
+                </div>
+
+            </div>
+            <!-- 送出按鈕 -->
+            <div class="submit-btn">
+                <button type="submit" id="submitButton"  class="btn btn-primary">送出</button>
+            </div> *@
+        </form>
+    </div>
+</div>
+@section Scripts {
+
+}
+
+}
