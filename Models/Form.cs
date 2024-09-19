@@ -38,7 +38,7 @@ namespace BPMPlus.Models
         public virtual Department? Department { get; set; }
 
         [Column(TypeName = "NVARCHAR")]
-        [MaxLength(200)]
+        [MaxLength]
         public string Content { get; set; }
 
         public DateTime ExpectedFinishedDay { get; set; }

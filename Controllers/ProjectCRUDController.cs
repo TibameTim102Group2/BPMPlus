@@ -1,5 +1,6 @@
 ﻿using BPMPlus.Data;
 using BPMPlus.Models;
+using BPMPlus.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -44,9 +45,14 @@ namespace BPMPlus.Controllers
             ViewBag.Summary = Project.Summary;
             ViewBag.DeadLine = (Project.DeadLine.Date).ToString("yyyy.MM.dd");
 
+            List<ProjectDetailsViewModel> projectDetailsViewModels = new List<ProjectDetailsViewModel>()
+            {
+                new ProjectDetailsViewModel("F00001", "人資部", "A001", "王曉明", "資訊需求單", "申請人送出")
+            };
 
+           
 
-            return View();
+            return View(projectDetailsViewModels);
         }
     }
 }
