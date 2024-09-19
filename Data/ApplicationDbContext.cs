@@ -44,6 +44,9 @@ namespace BPMPlus.Data
                 .HasMany(u => u.Meetings)
                 .WithMany(pg => pg.Users)
                 .UsingEntity(j => j.ToTable("MeetingMember"));
+            modelBuilder.Entity<Form>()
+                .Property(f => f.Content)
+                .HasColumnType("nvarchar(max)");  // 明確指定為 nvarchar(max)
 
         }
         public DbSet<BPMPlus.Models.User> User { get; set; }
