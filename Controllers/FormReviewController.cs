@@ -71,6 +71,7 @@ namespace BPMPlus.Controllers
             var rejectResult = await _context.FormRecord
                 .Where(fr => fr.FormId == id)
                 .OrderByDescending(d => d.Date)
+                .Skip(1)
                 .Select(fr => new
                 {
                     fr.UserId,
@@ -79,9 +80,9 @@ namespace BPMPlus.Controllers
                     fr.ResultId
                 }).FirstOrDefaultAsync();
 
-            bool isRejectedTo07 = rejectResult.ResultId == "RS1" && rejectResult.UserActivityId == "07";
+			bool isRejectedTo07 = rejectResult.ResultId == "RS1" && rejectResult.UserActivityId == "07";
 
-            if (isRejectedTo07 || (int.Parse(rejectResult.UserActivityId) <= 7 && rejectResult.ResultId != "RS1"))
+            if (isRejectedTo07 || (int.Parse(rejectResult.UserActivityId) <= 6 && rejectResult.ResultId != "RS1"))
             {
                 if (user.PermittedTo("01") || user.PermittedTo("02") || user.PermittedTo("03") ||
                     user.PermittedTo("04") || user.PermittedTo("05") || user.PermittedTo("06") ||
@@ -90,15 +91,15 @@ namespace BPMPlus.Controllers
                     return Json(new { status = true, userPermit = rejectResult.UserActivityId, handler = Handler, time = HandlerTime, previousEstimatedTime });
                 }
             }
-            if (user.PermittedTo("07") && rejectResult.UserActivityId != "09")
+            if (user.PermittedTo("07") && latestStatus.userActivityId != "09")
             {
                 return Json(new { status = true, userPermit = "07", handler = Handler, previousEstimatedTime });
             }
-            else if (user.PermittedTo("08") && rejectResult.UserActivityId != "07" && rejectResult.UserActivityId != "09")
+            else if (user.PermittedTo("08") && latestStatus.userActivityId != "07" && latestStatus.userActivityId!= "09")
             {
                 return Json(new { status = true, userPermit = "08", handler = Handler, previousEstimatedTime });
             }
-            else if (user.PermittedTo("09") && rejectResult.UserActivityId != "07")
+            else if (user.PermittedTo("09") && latestStatus.userActivityId != "07")
             {
                 return Json(new { status = true, userPermit = "09", handler = Handler, time = HandlerTime, previousEstimatedTime });
             }
@@ -162,6 +163,7 @@ namespace BPMPlus.Controllers
             if (user.UserId == todoReview)
             {
                 var formVW = await GetFormReviewViewModel(id, user.UserId);
+                //ViewBag.UserPermit = user.PermissionGroups.Any(pg => pg.PermissionGroupId == "G0006") ? "07" : "";
                 return View(formVW);         // 審核方點進待辦清單=>點選單號=>回傳頁面
             }
             return RedirectToAction("Index", "ToDoList");
@@ -416,8 +418,9 @@ namespace BPMPlus.Controllers
 
                         if (formToUpdate != null)
                         {
-                            // 更新該工單的 ProcessNodeId
+                            // 更新該工單的 ProcessNodeId, 更新時間
                             formToUpdate.ProcessNodeId = nextDetails.ProcessNodeId;
+                            formToUpdate.UpdatedTime = DateTime.UtcNow;
                             if (user.UserId == assignEmp.userId)
                             {
                                 formToUpdate.ManDay = fvm.EstimatedTime;
@@ -487,6 +490,7 @@ namespace BPMPlus.Controllers
                         {
                             // 更新該工單的 ProcessNodeId
                             formToUpdate.ProcessNodeId = nextDetails.ProcessNodeId;
+                            formToUpdate.UpdatedTime = DateTime.UtcNow;
                             formToUpdate.ManDay = fvm.EstimatedTime;
 
                             // 保存更改
@@ -542,7 +546,8 @@ namespace BPMPlus.Controllers
                             {
                                 // 更新該工單的Manday
                                 formToUpdate.ManDay = fvm.EstimatedTime;
-                                _context.Update(formToUpdate);
+								formToUpdate.UpdatedTime = DateTime.UtcNow;
+								_context.Update(formToUpdate);
                             }
                         }
 
@@ -579,7 +584,7 @@ namespace BPMPlus.Controllers
                         {
                             // 更新該工單的 ProcessNodeId
                             formToUpdate.ProcessNodeId = previousDetails.ProcessNodeId;
-
+                            formToUpdate.UpdatedTime = DateTime.UtcNow;
                             // 保存更改
                             _context.Update(formToUpdate);
                             await _context.SaveChangesAsync();
@@ -596,7 +601,9 @@ namespace BPMPlus.Controllers
             }
         }
 
+        /* ------------ 方法層 -------------*/
 
+        // 下載檔案
         [HttpPost]
         public IActionResult Download(string id)
         {
@@ -642,7 +649,6 @@ namespace BPMPlus.Controllers
             };
         }
 
-        /* ------------ 方法層 -------------*/
 
         // 查詢下一位資料
         public (string UserActivityId, string UserId, string DepartmentId, string ProcessNodeId) GetNextDetails(FormReviewViewModel fvm, string userId, string userActivityId)
