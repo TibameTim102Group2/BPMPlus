@@ -128,6 +128,11 @@ namespace BPMPlus.Controllers
                 string msg = "資料缺漏，無法新建工單";
                 return Json(new { errorCode=400 , message = msg });
             }
+            if(model.Content.Length > 10000)
+            {
+                string msg = "需求內容不得超過一萬字元";
+                return Json(new { errorCode = 400, message = msg });
+            }
             List<ProcessTemplate> pTemplates = await _context.ProcessTemplate.Where(p => p.CategoryId == model.CategoryId).ToListAsync();
             List<string> fIdList = await GetCreateFormIdListAsync(1);
             List<string> pNidList = await GetProcessNodeIdListAsync(pTemplates.Count);
