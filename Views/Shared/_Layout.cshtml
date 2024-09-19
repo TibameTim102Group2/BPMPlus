@@ -9,7 +9,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>BPMPLUS</title>
-
+    <link rel="icon" type="image/x-icon" href="~/images/favicon.ico">
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
@@ -35,6 +35,57 @@
     <link rel="stylesheet" href="~/AdminLTE/plugins/summernote/summernote-bs4.min.css">
     <!-- SweetAlert -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <style>
+          .brand-link {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          text-decoration: none;
+          padding: 0.8rem 0.5rem;
+          white-space: nowrap;
+          transition: width 0.3s ease-in-out;
+        }
+
+        .wrapper .bpm-image {
+          width: 50px;
+          height: 50px;
+          /* max-height: 50px; */
+        }
+
+        .brand-text {
+          font-family: 'Arial', sans-serif;
+          font-weight: bold;
+          font-style: italic;
+          font-size: 30px;
+          color: white;
+        }
+
+        .nav-sidebar .img-circle{
+          width: 30px;
+          height: 30px;
+          margin-right: 5px;
+        }
+
+        @@media (min-width: 992px) {
+           .main-sidebar:hover .brand-link {
+            width: 250px;
+            transition: width 0.3s ease-in-out;
+          }
+
+           .main-sidebar:hover .brand-text {
+            display: inline;
+          }
+
+           .main-sidebar .brand-link {
+            /* width: 4.6rem; */
+            overflow: hidden;
+          }
+
+          .sidebar-mini.sidebar-collapse .main-sidebar .brand-text {
+            display: none;
+          }
+        }
+    </style>
     @await RenderSectionAsync("Style", required: false)
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -64,7 +115,8 @@
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a class="brand-link" href="@Url.Action("Index","Home")">
-                <img src="~/images/bpmplus.png" class="elevation-3" style="width:13rem;" />
+                <img src="~/images/sidebar-logo.png" alt="Logo" class="bpm-image img-circle">
+                <span class="brand-text">BPMPlus</span>
             </a>
             <!-- Sidebar -->
             <div class="sidebar">
@@ -76,15 +128,12 @@
                         <!-- User -->
                         <li class="nav-item">
                             <a href="#" class="nav-link">
-                                <div class="user-panel mt-3 pb-3 mb-3 d-flex image">
-                                    <div class="image">
-                                        <img src="~/images/237143-0147e.jpg" class="img-circle elevation-2" >
-                                        @{
-                                                var userName = HttpContextAccessor.HttpContext.Request.Cookies["UserName"];
-                                                <p style="margin-left:10px;">@userName</p>
-                                             }
-                                    </div>
-                                </div>
+                                <img src="~/images/237143-0147e.jpg" class="img-circle">
+                                @{
+                                    var userName = HttpContextAccessor.HttpContext.Request.Cookies["UserName"];
+                                    <p style="margin-left:10px;">@userName</p>
+                                }
+                                <div class="user-panel pb-3 mb-3 d-flex image"></div>
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item" style="margin-left:10%;">
