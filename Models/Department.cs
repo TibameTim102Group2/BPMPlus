@@ -12,6 +12,8 @@ namespace BPMPlus.Models
         [MaxLength(20)]
         public string DepartmentId { get; set; }
 
+        public virtual List<User> Users { get; set; }
+
         [Column(TypeName = "nvarchar")]
         [MaxLength(20)]
         public string DepartmentName { get; set; }

@@ -53,7 +53,7 @@
                 <label class="groupLabel">專案編號</label> <input placeholder="請輸入專案編號" />
             </div> 
             <div class="col-4">
-                <button class="btn btn-primary">查詢專案</button>
+                <button class="btn btn-primary" id="btnQuery">查詢專案</button>
             </div>
         </div>
 
@@ -82,22 +82,21 @@
                         <th>專案概要</th>
                         <th>專案期限</th>
                         <th>專案經理</th>
-                        <th></th>
+                  
                    </tr>
                 </thead>
                 <tbody>
-                   @*  <tr>
-                     
-                        <td>AA</td>
-                        <td>AA</td>
-                        <td>AA</td>
-                        <td>AA</td>
-                        <td>AA</td>
-                        <td> 
-                            <button type="submit"><i class="fa-solid fa-pen-to-square"></i></button>   
-                             <button type="submit"><i class="fa-solid fa-trash"></i> </button>
-                        </td>
-                    </tr> *@
+                      @foreach (var project in Model.QueryProjectsProjectContents)
+                      { 
+                    <tr>
+                       
+                        <td>@project.ProjectName</td>
+                        <td>@project.ProjectId</td>
+                        <td>@project.Summary</td>
+                        <td>@project.DeadLine</td>
+                        <td>@project.ProjectManager</td>
+                    </tr>
+                    }
                 </tbody>
             </table>
         </div>
@@ -117,22 +116,24 @@
     <script src="//cdn.datatables.net/fixedheader/3.3.2/js/dataTables.fixedHeader.min.js"></script>
 
     <script>
-        $(document).ready(function(){
+        $("#btnQuery").click(function(){
             // alert("ready");
             $("table").dataTable({
+                "searching": false,
                 ajax: {
-                    type: "GET",
-                    url: "/QueryProjects/IndexJson",
+                    type: "POST",
+                    url: "/QueryProjects/Filter",
                     dataSrc: function (data) { 
                         return data;
                     },
                 },
                 columns:[
-                    { "data": "projectName", "width": "20%" },
-                    { "data": "projectId", "width": "20%" },
-                    { "data": "summary", "width": "20%" },
-                    { "data": "deadLine", "width": "20%" },
-                    { "data": "ProjectManager", "width": "20%" },
+                    { "data": "projectName"},
+                    { "data": "projectId" },
+                    { "data": "summary"},
+                    { "data": "deadLine"},
+                    { "data": "projectManager" },
+                 
                 ],
                 fixedHeader:{
                     header:true
@@ -142,5 +143,7 @@
                 },
             });
         });
+
+
     </script>
 }

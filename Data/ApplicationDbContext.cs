@@ -40,6 +40,11 @@ namespace BPMPlus.Data
               .WithMany(pg => pg.Users)
               .UsingEntity(j => j.ToTable("ProjectUser"));
 
+            modelBuilder.Entity<User>()
+                .HasMany(u => u.Meetings)
+                .WithMany(pg => pg.Users)
+                .UsingEntity(j => j.ToTable("MeetingMember"));
+
         }
         public DbSet<BPMPlus.Models.User> User { get; set; }
         public DbSet<BPMPlus.Models.Meeting> Meeting { get; set; }

@@ -1,0 +1,141 @@
+﻿@model MeetingRooms
+@section Style
+{
+    <style>
+        .outside {
+            padding: 20px;
+            background-color: rgb(225, 239, 252);
+            height: 100%;
+        }
+
+        .title {
+            color: rgba(0, 81, 255, 0.884);
+            margin-top: 20px;
+            margin-bottom: 30px;
+            margin-left: 30px;
+            font-weight: bold;
+        }
+
+        .inside {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: rgb(225, 229, 252);
+            border: 0.5px solid gainsboro;
+            justify-content: space-between;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        label {
+            margin: auto;
+            display: inline;
+            width: 200px;
+            margin-right: 20PX;
+            background-color: #458bfc;
+            text-align: center;
+            color: white;
+            text-decoration: double;
+            border-radius: 5%;
+        }
+
+        .btn-center{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .submit-btn {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+    </style>
+}
+
+
+<!-- outside -->
+<div class="outside">
+    <h1 class="title">新增預約</h1>
+
+    <!-- inside -->
+    <div class="inside row">
+        <div class="col-6">
+            <table>
+                預留table位子
+            </table>
+        </div>
+
+        <div class="col-6" >
+            <div class="form-group">
+                <label>選擇會議室</label>
+                <select class="form-control">
+
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="">可容納人數</label>
+                <input class="form-control" value="" readonly />
+            </div>
+
+            <div class="form-group">
+                <label for="">開始預約時間</label>
+                <input type="datetime-local" class="text text-primary form-control" style="outline:none;"/>
+            </div>
+
+            <div class="form-group">
+                <label for="">結束預約時間</label>
+                <input type="datetime-local" class="text text-primary form-control" style="outline:none;" />
+            </div>
+
+            <div class="form-group">
+                <label for="">預約人</label>
+                <input type="text" class="form-control" value="" Disabled />
+            </div>
+
+            <div class="form-group">
+                <label for="">部門</label>
+                <input type="text" class="form-control" value="" Disabled />
+            </div>
+
+            <div class="form-group">
+                <label for="">會議參與者</label>
+                <input type="text" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="">備註</label>
+                <input type="text" class="form-control">
+            </div>
+
+            <div class="btn-center">
+                <button type="submit" id="submitButton" class="btn btn-success">送出</button>
+            </div>
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+
+
+@section Scripts
+{
+    <script>
+
+
+
+
+
+    </script>
+}
