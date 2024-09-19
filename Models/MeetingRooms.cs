@@ -12,7 +12,7 @@ namespace BPMPlus.Models
         [MaxLength(20)]
         [Key]
         public string MeetingRoomId { get; set; }
-        public int Accomodation { get; set; }
+        public int Accommodation { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime CreatedTime { get; set; }
         [Column(TypeName = "datetime")]
