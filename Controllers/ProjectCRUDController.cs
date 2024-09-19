@@ -21,7 +21,6 @@ namespace BPMPlus.Controllers
         {
             User user = await GetAuthorizedUser();
             //functionId:  01 -> 需求方申請人送出
-            var g = user.PermittedTo("11");
             if (!user.PermittedTo("11"))
             {
                 ViewBag.NotPermittedToCreateForm = "您的權限無法檢視專案細節";
@@ -29,8 +28,22 @@ namespace BPMPlus.Controllers
             }
 
             var Project= await _context.Project
-                 .FirstOrDefaultAsync(d => d.ProjectId == ProjectId);
-            
+                .Include(x => x.Users)
+                .FirstOrDefaultAsync(d => d.ProjectId == ProjectId);
+            if (Project == null) {
+				ViewBag.NotPermittedToCreateForm = "專案編號無效";
+				return View("~/Views/Home/Index.cshtml");
+			}
+            if(!Project.Users.Contains(user))
+            {
+                ViewBag.NotPermittedToCreateForm = "您不屬於這個專案";
+                return View("~/Views/Home/Index.cshtml");
+            }
+            ViewBag.ProjectId = ProjectId;
+            ViewBag.ProjectName = Project.ProjectName;
+
+
+
             return View();
         }
     }
