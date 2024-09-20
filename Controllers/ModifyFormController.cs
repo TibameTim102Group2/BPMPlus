@@ -131,10 +131,25 @@ namespace BPMPlus.Controllers
                 /// <summary>
                 /// 表單修改
                 /// </summary>
-                var form = _context.Form.FirstOrDefault(x => x.FormId == data.Id);
+               
 
+                if (data.Content == null)
+                {
+                    return Json(new { success = false, message = "需求內容不可為空" });
+                }
+
+                if (data.Content.Length > 10000)
+                {
+                    return Json(new { success = false, message = "需求內容不得超過一萬字元" });
+                }
+
+                if (data.Enddate == null || data.Enddate< (DateTime.UtcNow.AddDays(-1)))
+                {
+                    return Json(new { success = false, message = "完成日期不可為空或早於今日" });
+                }
+
+                var form = _context.Form.FirstOrDefault(x => x.FormId == data.Id);
                 form.Content = data.Content; //需求內容
-                form.Tel = data.Tel;   //連絡電話
                 form.ExpectedFinishedDay = data.Enddate;  //希望完成日期
                 form.UpdatedTime = DateTime.UtcNow; //更新時間
                 
@@ -226,11 +241,11 @@ namespace BPMPlus.Controllers
 
                 //儲存變更
                 await _context.SaveChangesAsync();
-                return Json(new { success = true, message = "上傳成功" });
+                return Json(new { success = true, message = "修改成功" });
             }
             catch (Exception)
             {
-                return Json(new { success = false, message = "上傳失敗" });
+                return Json(new { success = false, message = "修改失敗" });
             }
 
 
