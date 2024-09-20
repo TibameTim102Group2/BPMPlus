@@ -11,8 +11,16 @@
             background-color: rgb(225, 239, 252);
         }
 
+        .title {
+            color: rgba(0, 81, 255, 0.884);
+            margin-left: 30px;
+            padding-top:10px;
+            font-weight: bold;
+        }
+
         .inside {
-            padding: 10px;
+            padding: 5px;
+            margin-top:10px;
         }
 
         .groupLabel {
@@ -37,10 +45,17 @@
             margin: 5px auto;
         }
 
+        #btnQuery {
+            font-weight: 600;
+        }
+
     </style>
 }
 
 <div class="outside">
+
+
+    <h1 class="title">查詢專案</h1>
 
     <div class="inside">
 
@@ -56,12 +71,12 @@
 
         <div class="row groupInput">
             <div class="col-6">
-                <label class="groupLabel">參與員工姓名</label>
+                <label class="groupLabel">參與員工</label>
                 <select id="employeeId">
                     <option>請選擇員工</option>
                     @foreach (var employee in Model.QueryProjectsSearchEmployees)
                     {
-                        <option value="@employee.EmployeeId">@employee.EmployeeName</option>
+                        <option value="@employee.EmployeeId">@employee.EmployeeId @employee.EmployeeName</option>
                     }
                 </select>
             </div>
@@ -83,6 +98,8 @@
 
                     </tr>
                 </thead>
+
+            
                 @*  <tbody>
                 @foreach (var project in Model.QueryProjectsProjectContents)
                 {
@@ -172,7 +189,9 @@
                 contentType: 'application/json',
                 data: JSON.stringify(projectData),
                 success: function (response) {
-                    if (response.data) {
+
+
+                    if (response.data && response.data.length > 0) {
                         let model = response.data;
 
                         // 若有初始化要先銷毀
@@ -206,7 +225,8 @@
                             }
                         });
                     } else {
-                        alert(response.message);
+                        alert("查無資料");
+                       
                     }
                 },
                 error: function (response) {

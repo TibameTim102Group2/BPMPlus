@@ -39,7 +39,14 @@ namespace BPMPlus.Controllers
             ViewBag.ProjectId = new SelectList(_context.Project, "ProjectId", "ProjectName") ;
             
             //把申請者變成選項
-            ViewBag.UserId = new SelectList(_context.User.AsNoTracking().Where(f => f.DepartmentId == user.DepartmentId), "UserId", "UserName");
+            ViewBag.UserId = new SelectList(_context.User.AsNoTracking()
+                .Where(f => f.DepartmentId == user.DepartmentId)
+                .Select(f => new {
+                    UserId = f.UserId,
+                    DisplayText = f.UserId + " - " + f.UserName
+                }),
+                "UserId",
+                "DisplayText");
             var applicationDbContext = alllist.Include(f => f.Category).Include(f => f.ProcessNode);
             //把部門變數導入
             var departments = await _context.Department.AsNoTracking().ToDictionaryAsync(d => d.DepartmentId, d => d.DepartmentName);

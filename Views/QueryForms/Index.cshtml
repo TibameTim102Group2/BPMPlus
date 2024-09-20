@@ -63,12 +63,12 @@
                         <div class="col-2 d-flex justify-content-center">
                             <input type="text" class="btn btn-primary fID" style="outline:none ;width:80%" placeholder="請填工單編號" />
                         </div>
-                        <div class="col-2 d-flex justify-content-center">
+                        <div class="col-3 d-flex justify-content-center">
                             <select class="form-select selectbtn selectUserName" asp-items="ViewBag.UserId">
                                 <option value="" disabled selected>申請者</option>
                             </select>
                         </div>
-                        <div class="col-2 d-flex justify-content-center">
+                        <div class="col-3 d-flex justify-content-center">
                             <select class="form-select selectbtn selectCategoryId" asp-items="ViewBag.CategoryId">
                                 <option value="" disabled selected>需求類別</option>
                             </select>
@@ -178,8 +178,10 @@
         $(document).ready(function () {
             $('table').DataTable({
                 paging: true,
-                ordering: true
-
+                ordering: true,
+                "language": {
+                    "url": '//cdn.datatables.net/plug-ins/2.1.6/i18n/zh-HANT.json'
+                }
             });
         });
         //透過表單編號篩選
@@ -190,13 +192,14 @@
                 url: '@Url.Action("SearchByFormId", "QueryForms")',
                 type: 'GET',
                 data: { formId: inputId },
-                success: function (response) {
+                success: function (response ) {
                     if (response.data) {
                         var item = response.data;
                         console.log(item);
-
+                        $('table').DataTable().destroy();
                         //重新加入新的標籤
-                        $("tbody").empty();
+                        // $("tbody").empty();
+                         $("tbody").empty();
                         var newRow = `<tr>
                                                     <td>
                                                         <a href="/FormDetails/Index/${item.formId}">
@@ -211,7 +214,13 @@
                                                     <td>${item.createdTime}</td>
                                                 </tr>`;
                         $("tbody").append(newRow);
-
+                        $('table').DataTable({
+                            paging: true,
+                            ordering: true,
+                            "language": {
+                                "url": '//cdn.datatables.net/plug-ins/2.1.6/i18n/zh-HANT.json'
+                            }
+                        });
 
                     } else {
                         alert(response.message || "連接失敗，請重新輸入");
@@ -229,6 +238,7 @@
                 success: function (response) {
                     if (response.success) {
                         let model = response.data;
+                        $('table').DataTable().destroy();
                         $("tbody").empty();
                         model.findForm.forEach(function (item) {
                             var newRow = `<tr>
@@ -245,8 +255,15 @@
                                                         <td>${item.createdTime}</td>
                                                     </tr>`;
                             $("tbody").append(newRow);
-                        });
 
+                        });
+                        $('table').DataTable({
+                            paging: true,
+                            ordering: true,
+                            "language": {
+                                "url": '//cdn.datatables.net/plug-ins/2.1.6/i18n/zh-HANT.json'
+                            }
+                        });
 
                     } else {
                         alert(response.message);
@@ -269,6 +286,7 @@
                 success: function (response) {
                     if (response.success) {
                         let model = response.data;
+                        $('table').DataTable().destroy();
                         $("tbody").empty();
                         model.findForm.forEach(function (item) {
                             var newRow = `<tr>
@@ -285,6 +303,14 @@
                                                                 <td>${item.createdTime}</td>
                                                             </tr>`;
                             $("tbody").append(newRow);
+
+                        });
+                        $('table').DataTable({
+                            paging: true,
+                            ordering: true,
+                            "language": {
+                                "url": '//cdn.datatables.net/plug-ins/2.1.6/i18n/zh-HANT.json'
+                            }
                         });
                     } else {
                         alert(response.message);
@@ -307,6 +333,7 @@
                 success: function (response) {
                     if (response.success) {
                         let model = response.data;
+                        $('table').DataTable().destroy();
                         $("tbody").empty();
                         model.findForm.forEach(function (item) {
                             var newRow = `<tr>
@@ -323,6 +350,14 @@
                                                                         <td>${item.createdTime}</td>
                                                                     </tr>`;
                             $("tbody").append(newRow);
+
+                        });
+                        $('table').DataTable({
+                            paging: true,
+                            ordering: true,
+                            "language": {
+                                "url": '//cdn.datatables.net/plug-ins/2.1.6/i18n/zh-HANT.json'
+                            }
                         });
 
                     } else {
@@ -347,6 +382,7 @@
                 success: function (response) {
                     if (response.data) {
                         var model = response.data;
+                        $('table').DataTable().destroy();
                         $("tbody").empty();
                         model.findForm.forEach(function (item) {
                             var newRow = `<tr>
@@ -364,6 +400,14 @@
                                                                             </tr>`;
                             $("tbody").append(newRow);
                             $(".createddate").val("");
+
+                        });
+                        $('table').DataTable({
+                            paging: true,
+                            ordering: true,
+                            "language": {
+                                "url": '//cdn.datatables.net/plug-ins/2.1.6/i18n/zh-HANT.json'
+                            }
                         });
                     } else {
                         alert(response.message || "連接失敗，請重新輸入");
