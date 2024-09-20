@@ -190,7 +190,7 @@
                 url: '@Url.Action("SearchByFormId", "QueryForms")',
                 type: 'GET',
                 data: { formId: inputId },
-                success: function (response) {
+                success: function (response ) {
                     if (response.data) {
                         var item = response.data;
                         console.log(item);

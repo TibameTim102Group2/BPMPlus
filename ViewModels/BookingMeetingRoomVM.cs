@@ -2,11 +2,11 @@
 {
     public class BookingMeetingRoomVM
     {
-        public string MeetingId { get; set; }
-        public string MeetingRoomId { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
+        public string Room { get; set; }
+        public string BookingDate { get; set; }
+        public string StartTime { get; set; }
+        public string EndTime { get; set; }
         public string Note { get; set; }
-
+        public List<string> Members { get; set; }
     }
 }
