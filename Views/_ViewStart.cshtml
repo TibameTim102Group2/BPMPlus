@@ -1,3 +1,13 @@
-﻿@{
-    Layout = "_Layout";
+﻿@* 判斷是否為Admin, 套用相應layout *@
+
+@{
+    bool isAdmin = Context.Session.GetString("IsAdmin") == "true";
+    if (isAdmin)
+    {
+        Layout = "~/Views/Shared/_Layout(AdminUser).cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
 }
