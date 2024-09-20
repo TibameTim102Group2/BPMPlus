@@ -17,6 +17,8 @@ namespace BPMPlus.Controllers
             _context = context;
         }
         // GET: ProjectCRUDController
+        
+        [HttpGet("{projectId}")]
         [Authorize]
         public async Task<ActionResult> ProjectDetails(string ProjectId)
         {
