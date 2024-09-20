@@ -167,7 +167,7 @@
 
             <div class="form-group">
                 <label for="">預約日期</label>
-                <input type="date" min="@ViewBag.StartDate" class="form-control bookingDate" style="outline:none;" />
+                <input type="date" min="@ViewBag.bookingDate" class="form-control bookingDate" style="outline:none;" />
             </div>
 
             <div class="form-group">
@@ -212,6 +212,8 @@
             <div class="btn-center">
                 <button id="submitButton" class="btn btn-success">送出</button>
             </div>
+
+
         </div>
 
     </div>
@@ -227,10 +229,10 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
 
     <script>
-        // 加入與會者
-        $(document).ready(function () {
-            var colleagues = @Html.Raw(ViewBag.Employees);
+        $(document).ready(function() {
 
+            //加入與會者
+            var colleagues = @Html.Raw(ViewBag.Employees);
             let selectedItems = [];
             let isDropdownOpen = false;
 
@@ -325,22 +327,39 @@
             });
 
             renderDropdown();
-        });
 
-        $(document).ready(function() {
-            //選擇會議室後自動帶入可容納人數
+
+
             $(".selectRoom").change(function(){
                 let meetingRoomId =this.value;
+
+                //選擇會議室後自動帶入可容納人數
                 $.ajax({
                     url: '@Url.Action("GetMeetingRoomInfo", "BookingMeetingRoom")',
                     type: 'GET',
                     data: { id: meetingRoomId },
-                    success: function(response) {
+                    success: function (response) {
                         var accommdation = response.data;
                         $(".accommodation").val(accommdation);
                     }
-                })
+                });
+
+                //選擇會議室後確認會議室狀況
+                $.ajax({
+                    url: '@Url.Action("CheakMeetingRooms", "BookingMeetingRoom")',
+                    type: 'GET',
+                    data: JSON.stringify({
+                            room: meetingRoomId,
+                            BookingDate: bookingDate
+                    }),
+                    success: function (response) {
+                        alert('response');
+                    },
+
+                });
+
             });
+
 
             // timepickerSetting
             $('.startTime, .endTime').timepicker({

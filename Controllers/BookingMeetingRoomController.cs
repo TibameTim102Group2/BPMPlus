@@ -25,19 +25,19 @@ namespace BPMPlus.Controllers
         {
             User user = await GetAuthorizedUser();
 
-            //設定
+            //預約人部門
             var Department = await _context.Department
                  .FirstOrDefaultAsync(d => d.DepartmentId == user.DepartmentId);
             
             //抓今天日期 (設定預約日期不可早於今天)
-            var startDate = DateTime.Now.ToString("yyyy-MM-dd");
+            var bookingDate = DateTime.Now.ToString("yyyy-MM-dd");
 
             //User字典
             var departments = _context.User
                 .Include(u => u.Department)
-                .GroupBy(u => u.Department.DepartmentName)   // 使用 Department 作為字典的鍵
-                .ToDictionary(g => g.Key,     // 部門名稱作為鍵
-                    g => g.Select(u => new{ u.UserId, u.UserName}).ToList()); // 員工名單作為值
+                .GroupBy(u => u.Department.DepartmentName)
+                .ToDictionary(g => g.Key,
+                    g => g.Select(u => new{ u.UserId, u.UserName}).ToList());
 
             // 將字典轉換成 JSON 格式
             string employees = JsonSerializer.Serialize(departments);
@@ -46,8 +46,7 @@ namespace BPMPlus.Controllers
             ViewBag.MeetingRooms = new SelectList(_context.MeetingRooms, "MeetingRoomId", "MeetingRoomId");
             ViewBag.MeetingHost = user.UserName;
             ViewBag.DepartmentName = Department.DepartmentName;
-            ViewBag.StartDate = startDate;
-
+            ViewBag.StartDate = bookingDate;
 
             return View();
         }
@@ -59,6 +58,15 @@ namespace BPMPlus.Controllers
             var accommdation = _context.MeetingRooms.Where(n => n.MeetingRoomId == id).Select(n => n.Accommodation);
 
             return Json(new { success=true, data=accommdation });
+        }
+
+        //確認會議室狀況
+        public async Task<IActionResult> CheakMeetingRooms(BookingMeetingRoomVM vm)
+        {
+            User user = await GetAuthorizedUser();
+
+
+            return View();
         }
 
 
