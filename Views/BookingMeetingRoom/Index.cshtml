@@ -58,7 +58,7 @@
         }
 
 
-        /* ~ */
+
         .multiselect-container {
             width: 380px;
             position: relative;
@@ -137,9 +137,6 @@
             border-radius: 4px;
         }
 
-
-
-
     </style>
 }
 
@@ -210,17 +207,14 @@
                     </div>
                 </div>
             </div>
-            <div class="selected-items" style="margin-bottom:10px;"></div>
-
+            <div id="members" class="selected-items" style="margin-bottom:10px;"></div>
 
             <div class="btn-center">
-                <button type="submit" id="submitButton" class="btn btn-success">送出</button>
+                <button id="submitButton" class="btn btn-success">送出</button>
             </div>
         </div>
 
-
     </div>
-
 
 </div>
 
@@ -247,10 +241,10 @@
                     $dropdown.append($('<div>').addClass('multiselect-item department').text(department));
                     $.each(employees, function (index, employee) {
                         // 假設 employee 是一個包含 name 和 id 的對象
-                        if (!selectedItems.some(item => item.id === employee.id)) {
+                        if (!selectedItems.some(item => item.UserId === employee.UserId)) {
                             $('<div>')
                                 .addClass('multiselect-item name')
-                                .html(`${employee.name} - <span class="employee-id">${employee.id}</span>`)
+                                .html(`${employee.UserId} <span class="employee-UserId">${employee.UserName}</span>`)
                                 .on('click', function (e) {
                                     e.stopPropagation();
                                     selectItem(employee);
@@ -269,7 +263,7 @@
             }
 
             function removeItem(employee) {
-                selectedItems = selectedItems.filter(item => item.id !== employee.id);
+                selectedItems = selectedItems.filter(item => item.UserId !== employee.UserId);
                 renderSelectedItems();
                 renderDropdown();
             }
@@ -280,7 +274,7 @@
                 selectedItems.forEach(employee => {
                     $('<div>')
                         .addClass('selected-item')
-                        .html(`${employee.name} - ${employee.id} <span class="remove-item">✕</span>`)
+                        .html(`${employee.UserId} ${employee.UserName} <span class="remove-item">✕</span>`)
                         .find('.remove-item')
                         .on('click', function (e) {
                             e.stopPropagation();
@@ -333,7 +327,6 @@
             renderDropdown();
         });
 
-
         $(document).ready(function() {
             //選擇會議室後自動帶入可容納人數
             $(".selectRoom").change(function(){
@@ -349,7 +342,7 @@
                 })
             });
 
-            //開始結束時間
+            // timepickerSetting
             $('.startTime, .endTime').timepicker({
                 timeFormat: 'h:mm p',
                 interval: 60,
@@ -362,6 +355,7 @@
                 scrollbar: true
             });
 
+            // submit
             $("#submitButton").click(function () {
 
                 let room = $(".selectRoom").val();
@@ -369,46 +363,62 @@
                 let startTime = $(".startTime").val();
                 let endTime = $(".endTime").val();
                 let note = $(".note").val();
-                let members = $(".members").val();
+                let members = [];
+
+                $('#members .selected-item').each(function () {
+                    // 取得中間的文字部分 (排除 <span>)
+                    var text = $(this).contents().filter(function () {
+                        return this.nodeType === 3; // 只選擇內文
+                    }).text().trim();
+
+                    // 取得前 4 個字符
+                    var firstFourChars = text.substring(0, 4);
+
+                    // 將前 4 個字符存入陣列
+                    members.push(firstFourChars);
+                });
 
                 //檢查內容 不可為空
-                if (Room == "") {
+                if (room == "") {
                     alert('會議室不可為空!');
                     retuen;
                 }
-                if (BookingDate == "") {
+                if (bookingDate == "") {
                     alert('預約日期不可為空!');
                     return;
                 }
-                if (StartTime == "") {
+                if (startTime == "") {
                     alert('開始時間不可為空!');
                     return;
                 }
-                if (EndTime == "") {
+                if (endTime == "") {
                     alert('結束時間不可為空!');
                     return;
                 }
-                if (Members == "") {
+                if (members == "") {
                     alert('與會者不可為空!');
                     return;
                 }
-            });
+                $.ajax({
+                    url: '@Url.Action("SubmitBooking", "BookingMeetingRoom")',
+                    type:'post',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        Room: room,
+                        BookingDate: bookingDate,
+                        StartTime: startTime,
+                        EndTime: endTime,
+                        Note: note,
+                        Members: members
+                    }),
+                    success: function (response) { 
+                        alert('預約成功');
+                    },
+                    error: function () { 
+                        alert('error');
+                    }
+                });
 
-            $.ajax({
-                url: '@Url.Action("SubmitBooking", "BookingMeetingRoom")',
-                type:'post',
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    Room: room,
-                    BookingDate: bookingDate,
-                    StartTime: startTime,
-                    EndTime: endTime,
-                    Note: note,
-                    Members: members
-                }),
-                success: function (response) { 
-                    alert('預約成功');
-                }
 
             })
 

@@ -63,10 +63,12 @@ namespace BPMPlus.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> SubmitBooking()
+        public async Task<IActionResult> SubmitBooking([FromBody] BookingMeetingRoomVM vm)
         {
+            
 
-            return View();
+
+            return RedirectToAction("Index", "CurrentMeetingRoom");
         }
 
     }
