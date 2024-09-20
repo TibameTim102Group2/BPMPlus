@@ -37,6 +37,9 @@
                 <thead>
                     <tr>
                         <th>
+                            身分別
+                        </th>
+                        <th>
                             人員姓名
                         </th>
                         <th>
@@ -48,15 +51,15 @@
                         <th>
                             職稱
                         </th>
-                        <th>
-                            專案組長
-                        </th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in Model.projectUsersViewModels)
                     {
                         <tr style="padding-top: 5px">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IsPm)
+                            </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.UserName)
                             </td>
@@ -68,10 +71,11 @@
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Grade)
-                            </td>                            
+                            </td>
+                            
                             <td>
                                 <button asp-action="Details" class="button btn btn-primary" style="margin-top: -4px;margin-bottom: -4px" asp-route-id="@item.UserId"><i class="fas fa-search"></i> 細節</button>
-                                <button asp-action="Delete" class="button btn btn-danger" style="margin-top: -4px;margin-bottom: -4px" asp-route-id="@item.UserId"><i class="fa-solid fa-trash"></i> 移除</button>
+                                <button asp-action="Delete" class="button btn btn-danger" style="margin-top: -4px;margin-bottom: -4px" asp-route-id="@item.UserId"><i class="fa-solid fa-square-minus"></i> 移除</button>
                             </td>
                         </tr>
                     }

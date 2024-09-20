@@ -91,8 +91,33 @@ namespace BPMPlus.Controllers
                 return View("Index", login); // 登入失敗導回頁面
             }
 
-            // 成功登入導至隱私頁面
-            return RedirectToAction("Index", "Home");
+            // 抓第一筆符合的User資料
+            var userWithGroups = await _context.User
+                .Include(u => u.PermissionGroups)
+                .ThenInclude(pg => pg.Users)
+                .FirstOrDefaultAsync(u => u.UserId == login.UserId && u.UserId == user.UserId);
+
+            // 抓Admin群組的所有userId
+            var userActivityList = userWithGroups.PermissionGroups
+                .Where(u => u.PermissionGroupId == "G0001")
+                .SelectMany(u => u.Users)
+                .Select(u => u.UserId)
+                .ToList();
+
+            // 判斷當前userId 是否包含在Admin群組內
+            bool isAdminUser = userActivityList.Contains(login.UserId);
+
+            // 套用相應layout, 使用TempData因為redirect完會導致ViewBag失效, TempData可存活一次
+            if (isAdminUser)
+            {
+                TempData["IsAdmin"] = true;
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                TempData["IsAdmin"] = false;
+                return RedirectToAction("Index", "Home");
+            }
         }
 
        //登入page

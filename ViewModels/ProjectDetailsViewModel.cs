@@ -54,5 +54,9 @@
     {
         public List<ProjectUsersViewModels> projectUsersViewModels { get; set; }
         public List<ProjectFormsViewModels> projectFormsViewModels { get; set; }
+        public ProjectDetailsViewModel(List<ProjectUsersViewModels> pu, List<ProjectFormsViewModels> pf) { 
+            this.projectUsersViewModels = pu;
+            this.projectFormsViewModels = pf;
+        }
     }
 }

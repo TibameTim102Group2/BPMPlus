@@ -1,5 +1,5 @@
 ﻿﻿
-@model IEnumerable<BPMPlus.ViewModels.ProjectDetailsViewModel>
+@model BPMPlus.ViewModels.ProjectDetailsViewModel
 <!-- Google Font: Source Sans Pro -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 <!-- Font Awesome -->
@@ -71,9 +71,8 @@
 
             .inside {
                 margin-top: 30px;
-                padding: 20px;
+                padding: 0;
                 background-color: rgb(225, 229, 252);
-
                 border: 0.5px solid gainsboro;
             }
 
@@ -179,6 +178,7 @@
     <!-- inside -->
     <div class="inside">
         <form>
+            <h2 class="title" style="margin-top: 5%;font-weight: 900">專案資料</h2>
             <div class="mb-3 inputField ">
                 <div class="mb-3 form-label">
                     <label for="xxx1">專案名稱</label>
@@ -206,9 +206,14 @@
             <div height: 40px>
 
             </div>
-            <h2 class="title" style="margin-top: 10%;font-weight: 900">專案工單</h2>
+            <h2 class="title" style="margin-top: 5%;font-weight: 900">專案工單</h2>
             <div  class="note" style="padding:2%; width:100%">
                 @await Html.PartialAsync("_GetFormPartial", Model)
+            </div>
+
+            <h2 class="title" style="margin-top: 5%;font-weight: 900">專案成員</h2>
+            <div  class="note" style="padding:2%; width:100%">
+                @await Html.PartialAsync("_GetUserPartial", Model)
             </div>
             
             @* <div class="mb-3 inputField ">
