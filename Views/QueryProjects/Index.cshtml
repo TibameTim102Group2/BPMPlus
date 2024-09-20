@@ -5,37 +5,36 @@
 {
     <link rel="stylesheet" href="~/font-awesome/css/all.css" />
     <link href="~/lib/datatables/css/jquery.datatables.min.css" rel="stylesheet" asp-append-version="true" />
-    
+
     <style>
         .content-wrapper {
             background-color: rgb(225, 239, 252);
         }
 
-        .inside{
-            padding:10px;
-           
+        .inside {
+            padding: 10px;
         }
 
         .groupLabel {
             display: inline-block;
-            width:100px;
-            height:30px;
-            line-height:30px;
-            background-color : #458bfc;
-            color:white;
+            width: 100px;
+            height: 30px;
+            line-height: 30px;
+            background-color: #458bfc;
+            color: white;
             text-align-last: center; /* label的text-align要加last */
         }
 
-        .groupInput{
-            margin:5px auto;
+        .groupInput {
+            margin: 5px auto;
         }
 
-        table{
-            text-align:center;
+        table {
+            text-align: center;
         }
 
-        .projectArea{
-             margin:5px auto;
+        .projectArea {
+            margin: 5px auto;
         }
 
     </style>
@@ -46,58 +45,57 @@
     <div class="inside">
 
         <div class="row groupInput">
-            <div class="col-4">
-                <label class="groupLabel">專案名稱</label> <input placeholder="請輸入專案名稱" />
+            <div class="col-6">
+                <label class="groupLabel">專案名稱</label> <input id="projectName" placeholder="請輸入專案名稱" />
             </div>
-            <div class="col-4">
-                <label class="groupLabel">專案編號</label> <input placeholder="請輸入專案編號" />
-            </div> 
-            <div class="col-4">
+            <div class="col-6">
+                <label class="groupLabel">專案編號</label> <input id="projectId" placeholder="請輸入專案編號" />
+            </div>
+          
+        </div>
+
+        <div class="row groupInput">
+            <div class="col-6">
+                <label class="groupLabel">參與員工姓名</label>
+                <select id="employeeId">
+                    <option>請選擇員工</option>
+                    @foreach (var employee in Model.QueryProjectsSearchEmployees)
+                    {
+                        <option value="@employee.EmployeeId">@employee.EmployeeName</option>
+                    }
+                </select>
+            </div>
+            <div class="col-6">
                 <button class="btn btn-primary" id="btnQuery">查詢專案</button>
             </div>
         </div>
 
-        <div class="row groupInput">
-            <div class="col-4">
-                <label class="groupLabel">參與員工部門</label> <select><option>AAA</option></select>
-            </div>
-            <div class="col-4">
-                <label class="groupLabel">參與員工編號</label> <select><option>AAA</option></select>
-            </div> 
-            <div class="col-4">
-                <label class="groupLabel">參與員工姓名</label> <select><option>AAA</option></select>
-            </div>
-        </div>
-      @*   <div class="row projectArea">
-            <div class="col-4">
-                <label>專案</label> 
-            </div>
-        </div> *@
+
         <div>
             <table class="table table-hover table-bordered">
-                <thead >
-                   <tr>
+                <thead>
+                    <tr>
                         <th>專案名稱</th>
                         <th>專案編號</th>
                         <th>專案概要</th>
                         <th>專案期限</th>
                         <th>專案經理</th>
-                  
-                   </tr>
-                </thead>
-                <tbody>
-                      @foreach (var project in Model.QueryProjectsProjectContents)
-                      { 
-                    <tr>
-                       
-                        <td>@project.ProjectName</td>
-                        <td>@project.ProjectId</td>
-                        <td>@project.Summary</td>
-                        <td>@project.DeadLine</td>
-                        <td>@project.ProjectManager</td>
+
                     </tr>
-                    }
-                </tbody>
+                </thead>
+                @*  <tbody>
+                @foreach (var project in Model.QueryProjectsProjectContents)
+                {
+                <tr>
+
+                <td>@project.ProjectName</td>
+                <td>@project.ProjectId</td>
+                <td>@project.Summary</td>
+                <td>@project.DeadLine</td>
+                <td>@project.ProjectManager</td>
+                </tr>
+                }
+                </tbody> *@
             </table>
         </div>
 
@@ -116,34 +114,97 @@
     <script src="//cdn.datatables.net/fixedheader/3.3.2/js/dataTables.fixedHeader.min.js"></script>
 
     <script>
-        $("#btnQuery").click(function(){
+
+        $(document).ready(function () {
             // alert("ready");
             $("table").dataTable({
                 "searching": false,
                 ajax: {
-                    type: "POST",
-                    url: "/QueryProjects/Filter",
-                    dataSrc: function (data) { 
+                    type: "GET",
+                    url: "/QueryProjects/IndexJson",
+                    dataSrc: function (data) {
                         return data;
                     },
                 },
-                columns:[
-                    { "data": "projectName"},
+                columns: [
+                    { "data": "projectName" },
                     { "data": "projectId" },
-                    { "data": "summary"},
-                    { "data": "deadLine"},
+                    { "data": "summary" },
+                    { "data": "deadLine" },
                     { "data": "projectManager" },
-                 
+
                 ],
-                fixedHeader:{
-                    header:true
+                fixedHeader: {
+                    header: true
                 },
-                language:{
-                        url: '//cdn.datatables.net/plug-ins/2.1.6/i18n/zh-HANT.json',
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/2.1.6/i18n/zh-HANT.json',
                 },
             });
         });
 
+      
 
+
+        $("#btnQuery").click(function () {
+
+            let projectId = $("#projectId").val();
+            let projectName = $("#projectName").val();
+            let employeeDepartmentName = $("#employeeDepartmentName").val();
+            let employeeId = $("#employeeId").val();
+
+            let projectData = {
+                "ProjectId": projectId,
+                "ProjectName": projectName,
+                "EmployeeDepartmentName": employeeDepartmentName,
+                "EmployeeId": employeeId
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/QueryProjects/Filter",
+                contentType: 'application/json',
+                data: JSON.stringify(projectData),
+                success: function (response) {
+                    if (response.data) {
+                        let model = response.data;
+
+                        // 若有初始化要先銷毀
+                        if ($.fn.dataTable.isDataTable('table')) {
+                            $("table").DataTable().clear().destroy();
+                        }
+
+                        // 初始化或重新加載 DataTable
+                        $("table").DataTable({
+                            "searching": false,
+                            "processing": true,  // 顯示加載
+                            "data": model,  // 前面返回的model
+                            "columns": [
+                                { "data": "projectName" },
+                                { "data": "projectId" },
+                                { "data": "summary" },
+                                { "data": "deadLine" },
+                                { "data": "projectManager" }
+                            ],
+                            "fixedHeader": {
+                                "header": true
+                            },
+                            "language": {
+                                "url": '//cdn.datatables.net/plug-ins/2.1.6/i18n/zh-HANT.json'
+                            }
+                        });
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function (response) {
+                    alert("搜尋失敗");
+                }
+            });
+        });
+
+ 
+        
+    
     </script>
 }
