@@ -89,7 +89,7 @@
 
     <!-- inside -->
     <div class="inside">
-        <form>
+       
             <div class="mb-3 inputField ">
                 <div class="mb-3 form-label">
                     <label >部門</label>
@@ -132,7 +132,7 @@
                 </div>
             </div>
         
-        </form>
+       
     </div>
 </div>
 
@@ -157,24 +157,24 @@
             let inputDate = new Date(deadLine); //輸入時間
             
             //驗證
-            if (projectName == "") {
-                alert("專案名稱不可為空");
-                return;
-            }
-            if (deadLine == "") {
-                alert("專案期限不可為空");
-                return;
-            }
+            // if (projectName == "") {
+            //     alert("專案名稱不可為空");
+            //     return;
+            // }
+            // if (deadLine == "") {
+            //     alert("專案期限不可為空");
+            //     return;
+            // }
 
-            if (summary == "") {
-                alert("專案概要不可為空");
-                return;
-            }
+            // if (summary == "") {
+            //     alert("專案概要不可為空");
+            //     return;
+            // }
 
-            if (inputDate < now) {
-                alert("專案期限不可早於今日");
-                return;
-            }
+            // if (inputDate < now) {
+            //     alert("專案期限不可早於今日");
+            //     return;
+            // }
 
             let formData = new FormData();
             formData.append('projectName', projectName);
@@ -197,8 +197,8 @@
                 .then(data => {
                     // 成功的情況下顯示返回的 message 並跳轉
                     window.alert(data.message); // 假設 message 在返回的 JSON 中
-                    if (data.message == "修改成功") {
-                        window.location.href = "/QueryForms/Index/";
+                    if (data.message == "送出成功") {
+                        window.location.href = "/QueryProjects/Index/";
                     }
                  
                 })
