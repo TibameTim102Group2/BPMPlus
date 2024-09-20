@@ -1,7 +1,8 @@
 ﻿@* 判斷是否為Admin, 套用相應layout *@
 
 @{
-    if (TempData["IsAdmin"] as bool ? == true)
+    bool isAdmin = Context.Session.GetString("IsAdmin") == "true";
+    if (isAdmin)
     {
         Layout = "~/Views/Shared/_Layout(AdminUser).cshtml";
     }

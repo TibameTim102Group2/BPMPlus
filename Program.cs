@@ -52,6 +52,17 @@ namespace BPMPlus
                 options.JsonSerializerOptions.Encoder = System.Text.Encodings.Web.JavaScriptEncoder.Create(System.Text.Unicode.UnicodeRanges.All);
             });
 
+            //// 使用記憶體作為 Session 存儲
+            //// 過期時間, cookie透過https連線
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(60);
+                options.Cookie.IsEssential = true;
+                options.Cookie.HttpOnly = true; 
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -73,6 +84,8 @@ namespace BPMPlus
             app.UseAuthentication();
             app.UseAuthorization();
 
+            // 使用session
+            app.UseSession();
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
