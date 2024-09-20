@@ -194,9 +194,10 @@
                     if (response.data) {
                         var item = response.data;
                         console.log(item);
-
+                        $('table').DataTable().destroy();
                         //重新加入新的標籤
-                        $("tbody").empty();
+                        // $("tbody").empty();
+                         $("tbody").empty();
                         var newRow = `<tr>
                                                     <td>
                                                         <a href="/FormDetails/Index/${item.formId}">
@@ -211,7 +212,10 @@
                                                     <td>${item.createdTime}</td>
                                                 </tr>`;
                         $("tbody").append(newRow);
-
+                        $('table').DataTable({
+                            paging: true,
+                            ordering: true,
+                        });
 
                     } else {
                         alert(response.message || "連接失敗，請重新輸入");
@@ -229,6 +233,7 @@
                 success: function (response) {
                     if (response.success) {
                         let model = response.data;
+                        $('table').DataTable().destroy();
                         $("tbody").empty();
                         model.findForm.forEach(function (item) {
                             var newRow = `<tr>
@@ -245,8 +250,12 @@
                                                         <td>${item.createdTime}</td>
                                                     </tr>`;
                             $("tbody").append(newRow);
-                        });
 
+                        });
+                        $('table').DataTable({
+                            paging: true,
+                            ordering: true,
+                        });
 
                     } else {
                         alert(response.message);
@@ -269,6 +278,7 @@
                 success: function (response) {
                     if (response.success) {
                         let model = response.data;
+                        $('table').DataTable().destroy();
                         $("tbody").empty();
                         model.findForm.forEach(function (item) {
                             var newRow = `<tr>
@@ -285,6 +295,11 @@
                                                                 <td>${item.createdTime}</td>
                                                             </tr>`;
                             $("tbody").append(newRow);
+
+                        });
+                        $('table').DataTable({
+                            paging: true,
+                            ordering: true,
                         });
                     } else {
                         alert(response.message);
@@ -307,6 +322,7 @@
                 success: function (response) {
                     if (response.success) {
                         let model = response.data;
+                        $('table').DataTable().destroy();
                         $("tbody").empty();
                         model.findForm.forEach(function (item) {
                             var newRow = `<tr>
@@ -323,6 +339,11 @@
                                                                         <td>${item.createdTime}</td>
                                                                     </tr>`;
                             $("tbody").append(newRow);
+
+                        });
+                        $('table').DataTable({
+                            paging: true,
+                            ordering: true,
                         });
 
                     } else {
@@ -347,6 +368,7 @@
                 success: function (response) {
                     if (response.data) {
                         var model = response.data;
+                        $('table').DataTable().destroy();
                         $("tbody").empty();
                         model.findForm.forEach(function (item) {
                             var newRow = `<tr>
@@ -364,6 +386,11 @@
                                                                             </tr>`;
                             $("tbody").append(newRow);
                             $(".createddate").val("");
+
+                        });
+                        $('table').DataTable({
+                            paging: true,
+                            ordering: true,
                         });
                     } else {
                         alert(response.message || "連接失敗，請重新輸入");

@@ -1,0 +1,11 @@
+diff a/Views/QueryForms/Index.cshtml b/Views/QueryForms/Index.cshtml	(rejected hunks)
+@@ -178,8 +178,7 @@
+         $(document).ready(function () {
+             $('table').DataTable({
+                 paging: true,
+-                ordering: true
+-
++                ordering: true,
+             });
+         });
+         //透過表單編號篩選
