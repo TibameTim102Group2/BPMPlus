@@ -1,6 +1,7 @@
 ﻿@model BPMPlus.ViewModels.ProjectDetailsViewModel
+
 @{
-    ViewData["Title"] = "_GetForm";
+    ViewData["Title"] = "_GetUser";
 }
 @section Style {
     <!-- Google Font: Source Sans Pro -->
@@ -36,50 +37,41 @@
                 <thead>
                     <tr>
                         <th>
-                            單號
-                        </th>
-                        <th>
-                            部門
+                            人員姓名
                         </th>
                         <th>
                             員工編號
                         </th>
                         <th>
-                            姓名
+                            部門
                         </th>
                         <th>
-                            需求項目類別
+                            職稱
                         </th>
                         <th>
-                            狀態
+                            專案組長
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model.projectFormsViewModels)
+                    @foreach (var item in Model.projectUsersViewModels)
                     {
                         <tr style="padding-top: 5px">
                             <td>
-                                @Html.DisplayFor(modelItem => item.FormId)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Department)
+                                @Html.DisplayFor(modelItem => item.UserName)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.UserId)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.UserName)
+                                @Html.DisplayFor(modelItem => item.Department)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Category)
-                            </td>
+                                @Html.DisplayFor(modelItem => item.Grade)
+                            </td>                            
                             <td>
-                                @Html.DisplayFor(modelItem => item.Status)
-                            </td>
-                            <td>
-                                <button asp-action="Details" class="button btn btn-primary" style="margin-top: -4px;margin-bottom: -4px" asp-route-id="@item.FormId"><i class="fas fa-search"></i> 細節</button>
-                                <button asp-action="Delete" class="button btn btn-danger" style="margin-top: -4px;margin-bottom: -4px" asp-route-id="@item.FormId"><i class="fa-solid fa-trash"></i> 移除</button>
+                                <button asp-action="Details" class="button btn btn-primary" style="margin-top: -4px;margin-bottom: -4px" asp-route-id="@item.UserId"><i class="fas fa-search"></i> 細節</button>
+                                <button asp-action="Delete" class="button btn btn-danger" style="margin-top: -4px;margin-bottom: -4px" asp-route-id="@item.UserId"><i class="fa-solid fa-trash"></i> 移除</button>
                             </td>
                         </tr>
                     }

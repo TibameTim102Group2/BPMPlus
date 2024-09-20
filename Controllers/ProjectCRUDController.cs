@@ -45,14 +45,18 @@ namespace BPMPlus.Controllers
             ViewBag.Summary = Project.Summary;
             ViewBag.DeadLine = (Project.DeadLine.Date).ToString("yyyy.MM.dd");
 
-            List<ProjectDetailsViewModel> projectDetailsViewModels = new List<ProjectDetailsViewModel>()
+            List<ProjectUsersViewModels> projectUsersViewModels = new List<ProjectUsersViewModels>()
             {
-                new ProjectDetailsViewModel("F00001", "人資部", "A001", "王曉明", "資訊需求單", "申請人送出")
+                new ProjectUsersViewModels("王曉明", "A001", "人資部", "工程師", "V")
+            };
+            List<ProjectFormsViewModels> projectFormsViewModels = new List<ProjectFormsViewModels>()
+            {
+                new ProjectFormsViewModels("F00001", "人資部", "A001", "王曉明", "資訊需求單", "申請人送出")
             };
 
-           
 
-            return View(projectDetailsViewModels);
+            var tupleModel = new Tuple<List<ProjectUsersViewModels>, List<ProjectFormsViewModels>>(projectUsersViewModels, projectFormsViewModels);
+            return View(tupleModel);
         }
     }
 }
