@@ -107,15 +107,16 @@ namespace BPMPlus.Controllers
             // 判斷當前userId 是否包含在Admin群組內
             bool isAdminUser = userActivityList.Contains(login.UserId);
 
-            // 套用相應layout, 使用TempData因為redirect完會導致ViewBag失效, TempData可存活一次
+            // 套用相應layout, 使用session
             if (isAdminUser)
             {
-                TempData["IsAdmin"] = true;
+                
+                HttpContext.Session.SetString("IsAdmin", "true");
                 return RedirectToAction("Index", "Home");
             }
             else
             {
-                TempData["IsAdmin"] = false;
+                HttpContext.Session.SetString("IsAdmin", "false");
                 return RedirectToAction("Index", "Home");
             }
         }
