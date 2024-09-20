@@ -178,8 +178,10 @@
         $(document).ready(function () {
             $('table').DataTable({
                 paging: true,
-                ordering: true
-
+                ordering: true,
+                "language": {
+                    "url": '//cdn.datatables.net/plug-ins/2.1.6/i18n/zh-HANT.json'
+                }
             });
         });
         //透過表單編號篩選
@@ -215,6 +217,9 @@
                         $('table').DataTable({
                             paging: true,
                             ordering: true,
+                            "language": {
+                                "url": '//cdn.datatables.net/plug-ins/2.1.6/i18n/zh-HANT.json'
+                            }
                         });
 
                     } else {
@@ -255,6 +260,9 @@
                         $('table').DataTable({
                             paging: true,
                             ordering: true,
+                            "language": {
+                                "url": '//cdn.datatables.net/plug-ins/2.1.6/i18n/zh-HANT.json'
+                            }
                         });
 
                     } else {
@@ -300,6 +308,9 @@
                         $('table').DataTable({
                             paging: true,
                             ordering: true,
+                            "language": {
+                                "url": '//cdn.datatables.net/plug-ins/2.1.6/i18n/zh-HANT.json'
+                            }
                         });
                     } else {
                         alert(response.message);
@@ -344,6 +355,9 @@
                         $('table').DataTable({
                             paging: true,
                             ordering: true,
+                            "language": {
+                                "url": '//cdn.datatables.net/plug-ins/2.1.6/i18n/zh-HANT.json'
+                            }
                         });
 
                     } else {
@@ -391,6 +405,9 @@
                         $('table').DataTable({
                             paging: true,
                             ordering: true,
+                            "language": {
+                                "url": '//cdn.datatables.net/plug-ins/2.1.6/i18n/zh-HANT.json'
+                            }
                         });
                     } else {
                         alert(response.message || "連接失敗，請重新輸入");
