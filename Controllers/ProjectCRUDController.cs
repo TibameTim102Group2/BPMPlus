@@ -91,11 +91,12 @@ namespace BPMPlus.Controllers
                     (form.PN.UserActivity.UserActivityIdDescription)
                 ));
             }
-            var tupleModel = new Tuple<List<ProjectUsersViewModels>, List<ProjectFormsViewModels>>(projectUsersViewModels, projectFormsViewModels);
+            ProjectChartViewModel projectChartViewModel = new ProjectChartViewModel();  
             return View(
                 new ProjectDetailsViewModel(
                     projectUsersViewModels,
-                    projectFormsViewModels
+                    projectFormsViewModels,
+                    projectChartViewModel
                 )                
             );
         }

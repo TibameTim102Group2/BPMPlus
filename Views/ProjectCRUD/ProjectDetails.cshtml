@@ -47,7 +47,7 @@
                 #fileList button {
                     background-color: red;
                     color: white;
-                    height:50%:
+                    height:50%;
                     border: none;
                     cursor: pointer;
                 }
@@ -208,12 +208,17 @@
             </div>
             <h2 class="title" style="margin-top: 5%;font-weight: 900">專案工單</h2>
             <div  class="note" style="padding:2%; width:100%">
-                @await Html.PartialAsync("_GetFormPartial", Model.projectFormsViewModels)
+                @await Html.PartialAsync("_GetFormPartial", Model.ProjectFormsViewModels)
             </div>
 
             <h2 class="title" style="margin-top: 5%;font-weight: 900">專案成員</h2>
             <div  class="note" style="padding:2%; width:100%">
-                @await Html.PartialAsync("_GetUserPartial", Model.projectUsersViewModels)
+                @await Html.PartialAsync("_GetUserPartial", Model.ProjectUsersViewModels)
+            </div>
+
+            <h2 class="title" style="margin-top: 5%;font-weight: 900">資料圖表</h2>
+            <div  class="note" style="padding:2%; width:100%">
+                @await Html.PartialAsync("_GetChartPartial", Model.ProjectChartViewModel)
             </div>
             
             @* <div class="mb-3 inputField ">
@@ -318,7 +323,5 @@
     </div>
 </div>
 @section Scripts {
-
-}
 
 }

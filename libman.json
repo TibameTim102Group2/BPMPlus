@@ -9,6 +9,10 @@
     {
       "library": "Chart.js@4.4.1",
       "destination": "wwwroot/Chart.js/"
+    },
+    {
+      "library": "chartjs-adapter-moment@1.0.1",
+      "destination": "wwwroot/chartjs-adapter-moment/"
     }
   ]
 }
