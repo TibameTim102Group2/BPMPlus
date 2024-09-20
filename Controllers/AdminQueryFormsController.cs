@@ -24,12 +24,14 @@ namespace BPMPlus.Controllers
         }
 
         [Authorize]
-        // GET: AdminQueryForms
+        // GET: AdminQueryForms/Index
         public async Task<IActionResult> Index()
         {
+            // 判斷當前USER
             User user = await GetAuthorizedUser();
 
 
+            // 查詢表一覽
             var allList = _context.Form
                 .Include(c => c.User)
                 .Include(d => d.Department)
@@ -55,11 +57,12 @@ namespace BPMPlus.Controllers
                     FormActive = c.FormIsActive ? "存活" : "作廢",
                 }).ToList();
 
+            // 設置前端下拉選單
             ViewBag.Department = new SelectList(_context.Department, "DepartmentId", "DepartmentName");
             ViewBag.Category = new SelectList(_context.Category, "CategoryId", "CategoryDescription");
             ViewBag.Project = new SelectList(_context.Project, "ProjectId", "ProjectName");
-            
 
+            // 設置前端下拉選單, 替換相對文字
             ViewBag.FormActive = new SelectList(new List<SelectListItem>
             {
                 new SelectListItem { Text = "存活", Value = "True" },
@@ -71,7 +74,9 @@ namespace BPMPlus.Controllers
         }
 
         [HttpGet]
-      public async Task<IActionResult> SearchFormId(string id)
+        // GET: AdminQueryForms/SearchFormId/id
+        // 工單搜尋篩選
+        public async Task<IActionResult> SearchFormId(string id)
         
         {
             var query = _context.Form
@@ -104,6 +109,8 @@ namespace BPMPlus.Controllers
         }
 
         [HttpGet]
+        // GET: AdminQueryForms/SearchDepartmentId/id
+        // 部門搜尋篩選
         public async Task<IActionResult> SearchDepartmentId(string id)
 
         {
@@ -145,6 +152,8 @@ namespace BPMPlus.Controllers
         }
 
         [HttpGet]
+        // GET: AdminQueryForms/SearchCategoryId/id
+        // 需求搜尋篩選
         public async Task<IActionResult> SearchCategoryId(string id)
 
         {
@@ -187,6 +196,8 @@ namespace BPMPlus.Controllers
         }
 
         [HttpGet]
+        // GET: AdminQueryForms/SearchProjectId/id
+        // 專案搜尋篩選
         public async Task<IActionResult> SearchProjectId(string id)
 
         {
@@ -229,6 +240,8 @@ namespace BPMPlus.Controllers
         }
 
         [HttpGet]
+        // GET: AdminQueryForms/SearchFormIsActive/id
+        // 工單狀態搜尋篩選
         public async Task<IActionResult> SearchFormIsActive(string id)
 
         {
@@ -266,6 +279,8 @@ namespace BPMPlus.Controllers
         }
 
         [HttpGet]
+        // GET: AdminQueryForms/SearchDate/id
+        // 日期搜尋篩選
         public async Task<IActionResult> SearchDate(string id)
 
         {
@@ -303,6 +318,8 @@ namespace BPMPlus.Controllers
         }
 
         [HttpGet]
+        // GET: AdminQueryForms/GetAll
+        // 全部工單搜尋使用
         public async Task<IActionResult> GetAll()
 
         {
@@ -334,9 +351,9 @@ namespace BPMPlus.Controllers
             return Json(query);
         }
 
-
-        // 單筆刪除
         [HttpPost]
+        // POST: AdminQueryForms/DeleteSingle/formId
+        // 單筆刪除
         public async Task<IActionResult> DeleteSingle( string formId)
         {
             //  抓有關該工單的表
@@ -358,9 +375,9 @@ namespace BPMPlus.Controllers
             return Json(new { success = true });
         }
 
-
-        // 批次刪除
         [HttpPost]
+        // POST: AdminQueryForms/DeleteMany/formIds
+        // 批次刪除
         public async Task<IActionResult> DeleteMany(List<string> formIds)
         {
             
@@ -386,8 +403,9 @@ namespace BPMPlus.Controllers
             return Json(new { success = true });
         }
 
-        // 單筆復原
         [HttpPost]
+        // POST: AdminQueryForms/RecoverySingle/formId
+        // 單筆復原
         public async Task<IActionResult> RecoverySingle(string formId)
         {
             //  抓該工單
@@ -408,8 +426,9 @@ namespace BPMPlus.Controllers
             return Json(new { success = true });
         }
 
-        // 批次復原
         [HttpPost]
+        // POST: AdminQueryForms/RecoveryMany/formIds
+        // 批次復原
         public async Task<IActionResult> RecoveryMany(List<string> formIds)
         {
 
