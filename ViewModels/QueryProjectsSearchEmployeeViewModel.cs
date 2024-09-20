@@ -1,9 +1,7 @@
 ﻿namespace BPMPlus.ViewModels
 {
-    public class QueryProjectsSearchListViewModel
+    public class QueryProjectsSearchEmployeeViewModel
     {
-
-        public string DepartmentName { get; set; }
 
         public string EmployeeId { get; set; }
 

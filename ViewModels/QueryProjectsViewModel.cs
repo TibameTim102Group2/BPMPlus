@@ -6,7 +6,9 @@
 
         public QueryProjectsSearchInputViewModel QueryProjectsSearchInput { get; set; }
 
-        public QueryProjectsSearchListViewModel QueryProjectsSearchList { get; set; }
+        public IList<QueryProjectsSearchDepartmentViewModel> QueryProjectsSearchDepartments { get; set; }
+
+        public IList<QueryProjectsSearchEmployeeViewModel> QueryProjectsSearchEmployees { get; set; }
 
         public IList<QueryProjectsProjectContentViewModel> QueryProjectsProjectContents { get; set; }
     }

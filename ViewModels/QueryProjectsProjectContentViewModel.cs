@@ -8,7 +8,7 @@
 
         public string Summary { get; set; }
 
-        public DateTime DeadLine { get; set; }
+        public string DeadLine { get; set; }
 
         public string ProjectManager { get; set; }
     }

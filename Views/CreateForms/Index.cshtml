@@ -563,10 +563,14 @@
         $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
         //Money Euro
         $('[data-mask]').inputmask()
-
+            var today = new Date();
+            var formattedDate = today.getFullYear() + '-' +
+                String(today.getMonth() + 1).padStart(2, '0') + '-' +
+                String(today.getDate()).padStart(2, '0');
         //Date picker
         $('#reservationdate').datetimepicker({
-            format: 'L'
+            format: 'L',
+            minDate: formattedDate
         });
 
         //Date and time picker
@@ -697,10 +701,14 @@
             $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
             //Money Euro
             $('[data-mask]').inputmask()
-
+            var today = new Date();
+            var formattedDate = today.getFullYear() + '-' +
+                String(today.getMonth() + 1).padStart(2, '0') + '-' +
+                String(today.getDate()).padStart(2, '0');
             //Date picker
             $('#reservationdate').datetimepicker({
-                format: 'L'
+                format: 'L',
+                minDate: formattedDate
             });
 
             //Date and time picker
