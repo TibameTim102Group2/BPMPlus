@@ -150,6 +150,7 @@
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script>
         $(document).ready(function () {
+            // 設定datatable排版
             var table = $("#formsTable").DataTable({
                 "dom": `<'row'<'col-sm-12 col-md-3'><'col-sm-12 col-md-3'f><'col-sm-12 col-md-3'l>>
                     <'row'<'col-sm-12'tr>>
@@ -167,6 +168,7 @@
                         "last": "最後一頁"
                     }
                 },
+                // 自定義data實際需要欄列資料
                 "columnDefs": [
                     {
                         "data": null,
@@ -199,7 +201,7 @@
                 }
             });
 
-            // 新增函數：檢查並更新按鈕狀態
+            // 檢查並更新按鈕狀態
             function updateButtonStatus() {
                 table.rows().every(function (rowIdx, tableLoop, rowLoop) {
                     var data = this.data();
@@ -217,7 +219,7 @@
             }
             updateButtonStatus();
 
-            // 新增函數：更新批次復原按鈕狀態
+            // 更新批次復原按鈕狀態
             function updateBatchRecoveryButtonStatus() {
                 var $batchRecoveryButton = $('#recoverySelected');
                 var hasActiveChecked = false;
@@ -232,10 +234,6 @@
 
                 $batchRecoveryButton.prop('disabled', hasActiveChecked);
             }
-
-            // table.on('draw', function () {
-            //     updateButtonStatus();
-            // });
 
             // 當checkbox狀態改變時更新批次復原按鈕
             table.on('change', 'input[type="checkbox"]', function () {
