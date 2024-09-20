@@ -29,6 +29,11 @@ namespace BPMPlus.Data
                 .HasMany(u => u.PermissionGroups)
                 .WithMany(pg => pg.Users)
                 .UsingEntity(j => j.ToTable("PermissionGroupUser"));
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Department)
+                .WithMany(d => d.Users)
+                .HasForeignKey(u => u.DepartmentId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<PermissionGroup>()
                 .HasMany(u => u.UserActivities)

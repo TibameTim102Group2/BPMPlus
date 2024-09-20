@@ -21,8 +21,9 @@ namespace BPMPlus.Models
         [Column(TypeName = "VARCHAR")]
         [MaxLength(20)]
         [ForeignKey("Department")]
-        public string? DepartmentId { get; set; }
-        public virtual Department? Department { get; set; }
+        [Required]
+        public string DepartmentId { get; set; }
+        public virtual Department Department { get; set; }
 
 
         [Column(TypeName = "VARCHAR")]
