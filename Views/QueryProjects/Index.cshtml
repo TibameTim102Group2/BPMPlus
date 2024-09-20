@@ -75,8 +75,8 @@
             <table class="table table-hover table-bordered">
                 <thead>
                     <tr>
-                        <th>專案名稱</th>
                         <th>專案編號</th>
+                        <th>專案名稱</th>
                         <th>專案概要</th>
                         <th>專案期限</th>
                         <th>專案經理</th>
@@ -127,8 +127,14 @@
                     },
                 },
                 columns: [
+                    {
+                        "data": "projectId",
+                        "render": function (data, type, row, meta) {
+                            // 將 projectId 動態放入鏈接中
+                            return `<a href='/ProjectCRUD/ProjectDetails/${row.projectId}' target='_blank'>${row.projectId}</a>`;
+                        }
+                    },
                     { "data": "projectName" },
-                    { "data": "projectId" },
                     { "data": "summary" },
                     { "data": "deadLine" },
                     { "data": "projectManager" },
@@ -180,8 +186,14 @@
                             "processing": true,  // 顯示加載
                             "data": model,  // 前面返回的model
                             "columns": [
+                                {
+                                    "data": "projectId",
+                                    "render": function (data, type, row, meta) {
+                                        // 將 projectId 動態放入鏈接中
+                                        return `<a href='/ProjectCRUD/ProjectDetails/${row.projectId}' target='_blank'>${row.projectId}</a>`;
+                                    }
+                                },
                                 { "data": "projectName" },
-                                { "data": "projectId" },
                                 { "data": "summary" },
                                 { "data": "deadLine" },
                                 { "data": "projectManager" }
