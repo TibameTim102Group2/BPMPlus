@@ -1,4 +1,4 @@
-﻿@model BPMPlus.ViewModels.ProjectDetailsViewModel
+﻿@model IEnumerable<BPMPlus.ViewModels.ProjectUsersViewModels>
 
 @{
     ViewData["Title"] = "_GetUser";
@@ -54,7 +54,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model.projectUsersViewModels)
+                    @foreach (var item in Model)
                     {
                         <tr style="padding-top: 5px">
                             <td>

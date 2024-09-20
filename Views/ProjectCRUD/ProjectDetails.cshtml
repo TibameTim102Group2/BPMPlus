@@ -208,12 +208,12 @@
             </div>
             <h2 class="title" style="margin-top: 5%;font-weight: 900">專案工單</h2>
             <div  class="note" style="padding:2%; width:100%">
-                @await Html.PartialAsync("_GetFormPartial", Model)
+                @await Html.PartialAsync("_GetFormPartial", Model.projectFormsViewModels)
             </div>
 
             <h2 class="title" style="margin-top: 5%;font-weight: 900">專案成員</h2>
             <div  class="note" style="padding:2%; width:100%">
-                @await Html.PartialAsync("_GetUserPartial", Model)
+                @await Html.PartialAsync("_GetUserPartial", Model.projectUsersViewModels)
             </div>
             
             @* <div class="mb-3 inputField ">

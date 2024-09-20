@@ -59,4 +59,9 @@
             this.projectFormsViewModels = pf;
         }
     }
+
+    public class ProjectChartViewModel
+    {
+
+    }
 }
