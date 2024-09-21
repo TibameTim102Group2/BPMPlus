@@ -174,14 +174,14 @@
 
             <div class="form-group">
                 <label for="">開始時間</label>
-                <input id="timepicker" class="form-control startTime" style="outline:none;" placeholder ="-- 請選擇開始時間 --"/>
-                
+                <select id="startTimeSelect" class="form-control timeSelect_startTime" style="outline:none;">
+                </select>
             </div>
 
             <div class="form-group">
                 <label for="">結束時間</label>
-                <input id="timepicker" class="form-control endTime" style="outline:none;" placeholder="-- 請選擇結束時間 --" />
-                
+                <select id="endTimeSelect" class="form-control timeSelect_endTime" style="outline:none;">
+                </select>
             </div>
 
             <div class="form-group">
@@ -337,7 +337,6 @@
             //選擇會議室帶入可容納人數
             $(".selectRoom").change(function(){
                 let meetingRoomId = this.value;
-
                 $.ajax({
                     url: '@Url.Action("GetMeetingRoomInfo", "BookingMeetingRoom")',
                     type: 'GET',
@@ -365,13 +364,52 @@
                         // alert('response');
                         cheaking = response.data;
 
+                        if (cheaking == "") {
+                            let StartTimeSelect = $("#startTimeSelect");
+                            let EndTimeSelect = $("#endTimeSelect")
 
-                        for (i = 0; i < cheaking.length; i++) {
-                            cheaking[i].startTime;
-                            cheaking[i].endTime;
+                            // 生成時間選項的函數
+                            function generateTimeOptions(startHour, endHour, interval) {
+                                StartTimeSelect.empty(); // 清空現有選項
+
+                                // 添加預設選項
+                                StartTimeSelect.append($('<option>', {
+                                    value: '',
+                                    text: '-- 請選擇開始時間 --'
+                                }));
+
+                                // 生成時間選項
+                                for (var hour = startHour; hour <= endHour; hour++) {
+                                    for (var minute = 0; minute < 60; minute += interval) {
+                                        var time = padZero(hour) + ':' + padZero(minute);
+                                        StartTimeSelect.append($('<option>', {
+                                            value: time,
+                                            text: time
+                                        }));
+                                    }
+                                }
+                            }
+
+                            // 補零函數
+                            function padZero(num) {
+                                return (num < 10 ? '0' : '') + num;
+                            }
+
+                            // 初始化時間選項（8:00 到 22:00，每小時一個選項）
+                            generateTimeOptions(8, 22, 60);
 
                         }
-                        return cheaking;
+                        else {
+                        // for (i = 0; i < cheaking.length; i++) {
+                        //     var start = cheaking[i].startTime;
+                        //     var end = cheaking[i].endTime;
+                            
+                        // }
+                        // return cheaking;
+
+
+                        }
+
                     }
                 });
 
@@ -389,25 +427,7 @@
 
             //結束時間不可早於開始時間
             $(".endTime").change(function () {
-                var endTime = this.value;
-                var startTime = $(".startTime").val();
-                if (endTime <= startTime) {
-                    alert("結束時間不可早於開始時間!");
-                    startTime = "";
-                }
-            });
-
-
-            // timepickerSetting
-            $('.startTime, .endTime').timepicker({
-                timeFormat: 'HH:mm',
-                interval: 60,
-                minTime: '08:00am',
-                maxTime: '10:00pm',
-                startTime: '',
-                dynamic: false,
-                dropdown: true,
-                scrollbar: true
+                
             });
 
             // submit
