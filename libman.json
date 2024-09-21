@@ -13,6 +13,10 @@
     {
       "library": "chartjs-adapter-moment@1.0.1",
       "destination": "wwwroot/chartjs-adapter-moment/"
+    },
+    {
+      "library": "jQuery.Gantt@1.1.0",
+      "destination": "wwwroot/jQuery.Gantt/"
     }
   ]
 }
