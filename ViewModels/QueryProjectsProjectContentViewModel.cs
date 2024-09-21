@@ -1,4 +1,6 @@
-﻿namespace BPMPlus.ViewModels
+﻿using System.ComponentModel.DataAnnotations;
+namespace BPMPlus.ViewModels
+
 {
     public class QueryProjectsProjectContentViewModel
     {
