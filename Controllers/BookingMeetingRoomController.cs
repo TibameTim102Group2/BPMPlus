@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using NuGet.Protocol;
 using System.Linq;
 using System.Text.Json;
 
@@ -46,7 +47,7 @@ namespace BPMPlus.Controllers
             ViewBag.MeetingRooms = new SelectList(_context.MeetingRooms, "MeetingRoomId", "MeetingRoomId");
             ViewBag.MeetingHost = user.UserName;
             ViewBag.DepartmentName = Department.DepartmentName;
-            ViewBag.StartDate = bookingDate;
+            ViewBag.MinDate = bookingDate;
 
             return View();
         }
@@ -55,26 +56,45 @@ namespace BPMPlus.Controllers
         public async Task<IActionResult> GetMeetingRoomInfo(string id)
         {
             User user = await GetAuthorizedUser();
-            var accommdation = _context.MeetingRooms.Where(n => n.MeetingRoomId == id).Select(n => n.Accommodation);
+            var accommdation = _context.MeetingRooms
+                .Where(n => n.MeetingRoomId == id)
+                .Select(n => n.Accommodation);
 
             return Json(new { success=true, data=accommdation });
         }
 
-        //確認會議室狀況
-        public async Task<IActionResult> CheakMeetingRooms(BookingMeetingRoomVM vm)
+        //確認預約狀況
+        public async Task<IActionResult> CheakMeetingRooms(string RoomId, string BookingDate)
         {
             User user = await GetAuthorizedUser();
 
+            var cheaking = await _context.Meeting
+                .Where(b=>b.MeetingRoomId == RoomId && b.StartTime.Date == DateTime.Parse(BookingDate).Date)
+                .Select(b=>new {
+                    StartTime=b.StartTime.AddHours(8).ToString("HH"),
+                    EndTime=b.EndTime.AddHours(8).ToString("HH")
+                })
+                .ToListAsync();
 
-            return View();
+            return Json(new { success = true, data = cheaking });
         }
 
 
         [HttpPost]
         public async Task<IActionResult> SubmitBooking([FromBody] BookingMeetingRoomVM vm)
         {
-            
+            //if (ModelState.IsValid)
+            //{
+            //    Meeting meeting = new Meeting();
+            //    meeting.MeetingId = "";
+            //    meeting.MeetingRoomId = vm.Room;
+            //    meeting.StartTime = DateTime.Parse(vm.StartTime);
+            //    meeting.EndTime = DateTime.Parse(vm.EndTime);
+            //    meeting.Note = vm.Note;
+            //    await _context.Meeting.AddAsync(meeting);
+            //    await _context.SaveChangesAsync();
 
+            //}
 
             return RedirectToAction("Index", "CurrentMeetingRoom");
         }
