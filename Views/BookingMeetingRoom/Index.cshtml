@@ -1,4 +1,6 @@
-﻿@model MeetingRooms
+﻿@using System.Text.Json
+@using static BPMPlus.Controllers.BookingMeetingRoomController
+@model MeetingRooms
 @section Style
 {
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
@@ -167,17 +169,19 @@
 
             <div class="form-group">
                 <label for="">預約日期</label>
-                <input type="date" min="@ViewBag.StartDate" class="form-control bookingDate" style="outline:none;" />
+                <input type="date" min="@ViewBag.MinDate" class="form-control bookingDate" style="outline:none;" />
             </div>
 
             <div class="form-group">
                 <label for="">開始時間</label>
                 <input id="timepicker" class="form-control startTime" style="outline:none;" placeholder ="-- 請選擇開始時間 --"/>
+                
             </div>
 
             <div class="form-group">
                 <label for="">結束時間</label>
                 <input id="timepicker" class="form-control endTime" style="outline:none;" placeholder="-- 請選擇結束時間 --" />
+                
             </div>
 
             <div class="form-group">
@@ -212,6 +216,8 @@
             <div class="btn-center">
                 <button id="submitButton" class="btn btn-success">送出</button>
             </div>
+
+
         </div>
 
     </div>
@@ -227,10 +233,10 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
 
     <script>
-        // 加入與會者
-        $(document).ready(function () {
-            var colleagues = @Html.Raw(ViewBag.Employees);
+        $(document).ready(function() {
 
+            //加入與會者
+            var colleagues = @Html.Raw(ViewBag.Employees);
             let selectedItems = [];
             let isDropdownOpen = false;
 
@@ -325,30 +331,79 @@
             });
 
             renderDropdown();
-        });
 
-        $(document).ready(function() {
-            //選擇會議室後自動帶入可容納人數
+            /* --------------------------------------------------------------------------------------------------------------------------- */
+
+            //選擇會議室帶入可容納人數
             $(".selectRoom").change(function(){
-                let meetingRoomId =this.value;
+                let meetingRoomId = this.value;
+
                 $.ajax({
                     url: '@Url.Action("GetMeetingRoomInfo", "BookingMeetingRoom")',
                     type: 'GET',
                     data: { id: meetingRoomId },
-                    success: function(response) {
+                    success: function (response) {
                         var accommdation = response.data;
                         $(".accommodation").val(accommdation);
                     }
-                })
+                });
             });
+
+            //選擇預約日期確認預約狀況
+            $(".bookingDate").change(function () {
+                let meetingRoomId = $(".selectRoom").val();
+                let bookingDate = this.value;
+
+                $.ajax({
+                    url: '@Url.Action("CheakMeetingRooms", "BookingMeetingRoom")',
+                    type: 'GET',
+                    data: {
+                        RoomId: meetingRoomId,
+                        BookingDate: bookingDate
+                    },
+                    success: function (response) {
+                        // alert('response');
+                        cheaking = response.data;
+
+
+                        for (i = 0; i < cheaking.length; i++) {
+                            cheaking[i].startTime;
+                            cheaking[i].endTime;
+
+                        }
+                        return cheaking;
+                    }
+                });
+
+
+            });
+
+
+            //點選開始時間後
+            $(".startTime").change(function () {
+                var startTime = this.value;
+
+
+            });
+
+
+            //結束時間不可早於開始時間
+            $(".endTime").change(function () {
+                var endTime = this.value;
+                var startTime = $(".startTime").val();
+                if (endTime <= startTime) {
+                    alert("結束時間不可早於開始時間!");
+                    startTime = "";
+                }
+            });
+
 
             // timepickerSetting
             $('.startTime, .endTime').timepicker({
-                timeFormat: 'h:mm p',
+                timeFormat: 'HH:mm',
                 interval: 60,
                 minTime: '08:00am',
                 maxTime: '10:00pm',
-                // defaultTime: '08',
                 startTime: '',
                 dynamic: false,
                 dropdown: true,
@@ -371,10 +426,8 @@
                         return this.nodeType === 3; // 只選擇內文
                     }).text().trim();
 
-                    // 取得前 4 個字符
+                    // 取得UserId
                     var firstFourChars = text.substring(0, 4);
-
-                    // 將前 4 個字符存入陣列
                     members.push(firstFourChars);
                 });
 
@@ -419,11 +472,9 @@
                     }
                 });
 
-
             })
 
+
         });
-
-
     </script>
 }
