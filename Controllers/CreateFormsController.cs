@@ -239,7 +239,7 @@ namespace BPMPlus.Controllers
                 .Select(e => e.UserId)
                 .FirstOrDefaultAsync();
             var recieveEmp = await _context.User.Where(u => u.UserId == currentEmailEmp).Select(c => c).FirstOrDefaultAsync();
-            emailService.SendFormReviewEmail(recieveEmp.Email, recieveEmp.UserName, createFormRecord.FormId);
+            emailService.SendFormReviewEmail(recieveEmp, createFormRecord.FormId);
 
             return Json(new { errorCode = 200, message = $"新增工單成功! 單號 : {newForm.FormId}" , formId = newForm.FormId});
         }
