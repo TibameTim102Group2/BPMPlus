@@ -64,7 +64,7 @@ namespace BPMPlus.Controllers
             );
 
 
-
+            ViewBag.MinDate = DateTime.Now.AddHours(8);
             ViewBag.DepartmentName = Department.DepartmentName;
             ViewBag.DepartmentId = Department.DepartmentId;
             ViewBag.UserId = user.UserId;

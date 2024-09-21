@@ -1,4 +1,5 @@
 ﻿using BPMPlus.Data;
+using BPMPlus.Models;
 using BPMPlus.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +28,7 @@ namespace BPMPlus.Controllers
                      ProjectId = c.ProjectId,
                      ProjectName = c.ProjectName,
                      Summary = c.Summary,
-                     DeadLine = c.DeadLine,
+                     DeadLine = c.DeadLine.ToString("yyyy-MM-dd"),
                      ProjectManager = _context.User.FirstOrDefault(n => n.UserId == c.ProjectManagerId).UserName
                  }).ToListAsync();
 
@@ -42,26 +43,39 @@ namespace BPMPlus.Controllers
                     ProjectName = c.ProjectName
                 }).FirstOrDefaultAsync();
 
-            //Select選單
-            var userList = await _context.User
-                .Include(c => c.Projects)
+            //SelectDepartment選單
+            var departmentList = await _context.User
                 .Include(c => c.Department)
                 .AsNoTracking()
                 .AsSplitQuery()
-                .Select(c => new QueryProjectsSearchListViewModel
+                .Select(c => new QueryProjectsSearchDepartmentViewModel
                 {
-                    EmployeeId = c.UserId,
-                    EmployeeName = c.UserName,
-                    DepartmentName = c.Department.DepartmentName
-                }).FirstOrDefaultAsync();
+                    DepartmentName = c.Department.DepartmentName,
+                    DepartmentId=c.DepartmentId
+                })
+                .Distinct()
+                .ToListAsync();
 
-            //selectMany
+            //SelectEmployee選單
+            var employeeList = await _context.User
+                .AsNoTracking()
+                .AsSplitQuery()
+                .Select(c => new QueryProjectsSearchEmployeeViewModel
+                {
+                   EmployeeId=c.UserId,
+                   EmployeeName=c.UserName
+                })
+                .Distinct()
+                .ToListAsync();
+
+
 
             var result = new QueryProjectsViewModel
             {
                 QueryProjectsProjectContents = tableData,
                 QueryProjectsSearchInput = projectData,
-                QueryProjectsSearchList = new QueryProjectsSearchListViewModel()
+                QueryProjectsSearchDepartments = departmentList,
+                QueryProjectsSearchEmployees= employeeList
             };
 
 
@@ -81,7 +95,7 @@ namespace BPMPlus.Controllers
                      ProjectId = c.ProjectId,
                      ProjectName = c.ProjectName,
                      Summary = c.Summary,
-                     DeadLine = c.DeadLine,
+                     DeadLine = c.DeadLine.ToString("yyyy-MM-dd"),
                      ProjectManager = _context.User.FirstOrDefault(n => n.UserId == c.ProjectManagerId).UserName
                  }).ToListAsync();
 
@@ -92,7 +106,7 @@ namespace BPMPlus.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> Filter(string projectId, string projectName, string employeeDepaetmentName, string employeeName, string employeeId)
+        public async Task<JsonResult> Filter([FromBody]  QueryProjectInputModel data)
         {
 
             //Project表格資訊
@@ -102,36 +116,40 @@ namespace BPMPlus.Controllers
                  .AsNoTracking()
                  .AsSplitQuery();
 
-            if (!string.IsNullOrEmpty(projectId))
+            if (data != null) 
             {
-                tableData = tableData.Where(c => c.ProjectId.Contains(projectId));
-            }
+                if (!string.IsNullOrEmpty(data.ProjectId))
+                {
+                    tableData = tableData.Where(c => c.ProjectId.Contains(data.ProjectId));
+                }
 
-            if (!string.IsNullOrEmpty(projectName))
-            {
-                tableData = tableData.Where(c => c.ProjectName.Contains(projectName));
-            }
+                if (!string.IsNullOrEmpty(data.ProjectName))
+                {
+                    tableData = tableData.Where(c => c.ProjectName.Contains(data.ProjectName));
+                }
 
-            if (!string.IsNullOrEmpty(employeeDepaetmentName))
-            {
-                var projectIds = await _context.Department
-                    .Include(c => c.Users)
-                    .Where(c => c.DepartmentName == employeeDepaetmentName)
-                    .SelectMany(c => c.Users)
-                    .SelectMany(c => c.Projects)
-                    .Select(c => c.ProjectId)
-                    .ToListAsync();
-                tableData = tableData.Where(c => projectIds.Contains(c.ProjectId));
-            }
+                if (!(string.IsNullOrEmpty(data.EmployeeDepartmentName) || data.EmployeeDepartmentName== "請選擇部門"))
+                {
+                    var projectIds = await _context.Department
+                        .Include(c => c.Users)
+                        .Where(c => c.DepartmentId == data.EmployeeDepartmentName)
+                        .SelectMany(c => c.Users)
+                        .SelectMany(c => c.Projects)
+                        .Select(c => c.ProjectId)
+                        .ToListAsync();
+                    tableData = tableData.Where(c => projectIds.Contains(c.ProjectId));
+                }
 
-            if (!string.IsNullOrEmpty(employeeId))
-            {
-                var projectIds = await _context.User
-                    .Where(c => c.UserId == employeeId)
-                    .SelectMany(c => c.Projects)
-                    .Select(c => c.ProjectId)
-                    .ToListAsync();
-                tableData = tableData.Where(c => projectIds.Contains(c.ProjectId));
+                if (!string.IsNullOrEmpty(data.EmployeeId) && data.EmployeeId != "請選擇員工")
+                {
+                    var projectIds = await _context.User
+                        .Where(c => c.UserId == data.EmployeeId)
+                        .SelectMany(c => c.Projects)
+                        .Select(c => c.ProjectId)
+                        .ToListAsync();
+                    tableData = tableData.Where(c => projectIds.Contains(c.ProjectId));
+                }
+
             }
 
             var users = _context.User.ToList();
@@ -141,11 +159,12 @@ namespace BPMPlus.Controllers
                 ProjectId = c.ProjectId,
                 ProjectName = c.ProjectName,
                 Summary = c.Summary,
-                DeadLine = c.DeadLine,
-                ProjectManager = users.FirstOrDefault(d => d.UserId == c.ProjectManagerId).UserName
-            }).ToList();
+                DeadLine = c.DeadLine.ToString("yyyy-MM-dd"),
+                ProjectManager = _context.User.FirstOrDefault(n => n.UserId == c.ProjectManagerId).UserName /*users.FirstOrDefault(d => d.UserId == c.ProjectManagerId).UserName*/
 
-            return Json(result);
+            }).ToList();
+     
+            return Json(new {success=true,data=result});
         }
     }
 }

@@ -427,17 +427,26 @@
                 {
                     method: 'POST',
                     body: formData,
-              
-                }).then(response => { 
+
+                }).then(response => {
                     if (response.ok) {
-                        alert("送出成功");
-                         window.location.href = "/QueryForms/Index/";
-                    } else { 
-                        alert("送出失敗");
+                        return response.json(); // 將回應解析為 JSON
+                    } else {
+                        throw new Error('送出失敗'); // 拋出錯誤以進行錯誤處理
                     }
-                }
-                
-                )
+                })
+                .then(data => {
+                    // 成功的情況下顯示返回的 message 並跳轉
+                    window.alert(data.message); // 假設 message 在返回的 JSON 中
+                    if (data.message == "修改成功") {
+                        window.location.href = "/QueryForms/Index/";
+                    }
+                 
+                })
+                .catch(error => {
+                    // 處理錯誤情況
+                    window.alert(error.message || '送出失敗');
+                });
 
 
             // $.ajax({

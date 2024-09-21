@@ -11,21 +11,21 @@
         }
 
         .outside {
-            padding: 20px;
+            padding: 10px;
             background-color: rgb(225, 239, 252);
             height: 100%;
         }
 
         .title {
             color: rgba(0, 81, 255, 0.884);
-            margin-top: 20px;
-            margin-bottom: 30px;
+            margin-top: 10px;
             margin-left: 30px;
+            padding-top: 10px;
             font-weight: bold;
         }
 
         .inside {
-            margin-top: 30px;
+            margin-top: 10px;
             padding: 20px;
             background-color: rgb(225, 229, 252);
             border: 0.5px solid gainsboro;
@@ -67,7 +67,15 @@
 
         .form-label{
             width:45%;
+        
         }
+
+        #btnSubmit {
+            font-weight:1000;
+          
+        }
+
+      
     
     </style>
 }
@@ -81,7 +89,7 @@
 
     <!-- inside -->
     <div class="inside">
-        <form>
+       
             <div class="mb-3 inputField ">
                 <div class="mb-3 form-label">
                     <label >部門</label>
@@ -105,7 +113,7 @@
             <div class="mb-3 inputField ">
                 <div class="mb-3 form-label">
                     <label>專案期限</label>
-                    <input id="inputDeadline" class="form-control float-right" type="date">
+                    <input id="inputDeadline" class="form-control" type="date">
                 </div>
             </div>
            @*  <div class="mb-3 inputField ">
@@ -115,16 +123,16 @@
                 </div>
             </div> *@
             <div class="mb-3 inputField ">
-                <div class="mb-3 form-label">
+                <div class="mb-3 form-label summaryarea">
                     <label>專案概要</label>
-                    <textarea id="textSummary" rows="5" cols="52"></textarea>
+                    <textarea id="textSummary" rows="5" cols="52" class="form-control"></textarea>
                 </div>
                 <div class="mb-3 form-label">
                     <button type="submit" id="btnSubmit" class="btn btn-warning">送出</button>
                 </div>
             </div>
         
-        </form>
+       
     </div>
 </div>
 
@@ -149,24 +157,24 @@
             let inputDate = new Date(deadLine); //輸入時間
             
             //驗證
-            if (projectName == "") {
-                alert("專案名稱不可為空");
-                return;
-            }
-            if (deadLine == "") {
-                alert("專案期限不可為空");
-                return;
-            }
+            // if (projectName == "") {
+            //     alert("專案名稱不可為空");
+            //     return;
+            // }
+            // if (deadLine == "") {
+            //     alert("專案期限不可為空");
+            //     return;
+            // }
 
-            if (summary == "") {
-                alert("專案概要不可為空");
-                return;
-            }
+            // if (summary == "") {
+            //     alert("專案概要不可為空");
+            //     return;
+            // }
 
-            if (inputDate < now) {
-                alert("專案期限不可早於今日");
-                return;
-            }
+            // if (inputDate < now) {
+            //     alert("專案期限不可早於今日");
+            //     return;
+            // }
 
             let formData = new FormData();
             formData.append('projectName', projectName);
@@ -179,11 +187,21 @@
                     body: formData,
 
                 }).then(response => {
-                        response.json();
-                        alert("新增成功");
-                        window.location.href = "/Home/Index/";
+                        if (response.ok) {
+                           // alert(response.json());
+                        return response.json(); // 將回應解析為 JSON
+                    } else {
+                        throw new Error('送出失敗'); // 拋出錯誤以進行錯誤處理
                     }
-                  )
+                })
+                .then(data => {
+                    // 成功的情況下顯示返回的 message 並跳轉
+                    window.alert(data.message); // 假設 message 在返回的 JSON 中
+                    if (data.message == "送出成功") {
+                        window.location.href = "/QueryProjects/Index/";
+                    }
+                 
+                })
                 // .then((json) => console.log(json))
                 .catch((error) => console.log("Error:", error))
                 // .then((response) => console.log("Success:", response));

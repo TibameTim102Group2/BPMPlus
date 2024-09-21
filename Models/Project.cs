@@ -7,7 +7,7 @@ namespace BPMPlus.Models
     [Table("Project")]
     public class Project
     {
-        public List<User> Users{ get; } = [];
+        public List<User> Users{ get; set; } = [];
         [Key]
         [Column(TypeName = "VARCHAR")]
         [MaxLength(20)]
