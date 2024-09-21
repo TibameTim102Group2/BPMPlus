@@ -89,6 +89,13 @@ namespace BPMPlus.Controllers
 
                 List<string> pIdList = await CreateProjectIdListAsync(1);
 
+                var addUser = await _context.Project
+                    .Include(c => c.Users)
+                    .SelectMany(c=>c.Users)
+                    .FirstOrDefaultAsync(c => c.UserId == user.UserId);
+
+               
+
                 Project insert = new Project()
                 {
                     ProjectId = pIdList[0],
@@ -98,7 +105,10 @@ namespace BPMPlus.Controllers
                     DeadLine = project.DeadLine,
                     CreatedTime = DateTime.UtcNow,
                     UpdatedTime = DateTime.UtcNow,
+                    Users = new List<User>() { addUser }
                 };
+                
+
 
                 await _context.Project.AddAsync(insert);
                 await _context.SaveChangesAsync();
