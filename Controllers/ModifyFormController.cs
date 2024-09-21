@@ -17,10 +17,12 @@ namespace BPMPlus.Controllers
     {
 
         private readonly ApplicationDbContext _context;
+        private readonly EmailService emailService;
 
-        public ModifyFormController(ApplicationDbContext context) : base(context)
+        public ModifyFormController(ApplicationDbContext context, EmailService emailService) : base(context)
         {
             _context = context;
+            this.emailService = emailService;
         }
 
         [Authorize]
@@ -242,6 +244,14 @@ namespace BPMPlus.Controllers
 
                 //儲存變更
                 await _context.SaveChangesAsync();
+
+                var currentEmailEmp = await _context.FormRecord
+                    .Where(u => u.FormId == firstReviewFormRecord.FormId)
+                    .OrderByDescending(d => d.ProcessingRecordId)
+                    .Select(e => e.UserId)
+                    .FirstOrDefaultAsync();
+                var recieveEmp = await _context.User.Where(u => u.UserId == currentEmailEmp).Select(c => c).FirstOrDefaultAsync();
+                emailService.SendFormReviewEmail(recieveEmp.Email, recieveEmp.UserName, firstReviewFormRecord.FormId);
                 return Json(new { success = true, message = "修改成功" });
             }
             catch (Exception)
