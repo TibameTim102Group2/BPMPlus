@@ -50,18 +50,21 @@
         }
 
     }
-    public class ProjectDetailsViewModel
-    {
-        public List<ProjectUsersViewModels> projectUsersViewModels { get; set; }
-        public List<ProjectFormsViewModels> projectFormsViewModels { get; set; }
-        public ProjectDetailsViewModel(List<ProjectUsersViewModels> pu, List<ProjectFormsViewModels> pf) { 
-            this.projectUsersViewModels = pu;
-            this.projectFormsViewModels = pf;
-        }
-    }
-
     public class ProjectChartViewModel
     {
 
     }
+    public class ProjectDetailsViewModel
+    {
+        public List<ProjectUsersViewModels> ProjectUsersViewModels { get; set; }
+        public List<ProjectFormsViewModels> ProjectFormsViewModels { get; set; }
+        public ProjectChartViewModel ProjectChartViewModel { get; set; }
+        public ProjectDetailsViewModel(List<ProjectUsersViewModels> pu, List<ProjectFormsViewModels> pf, ProjectChartViewModel pc) { 
+            this.ProjectUsersViewModels = pu;
+            this.ProjectFormsViewModels = pf;
+            this.ProjectChartViewModel = pc;
+        }
+    }
+
+    
 }
