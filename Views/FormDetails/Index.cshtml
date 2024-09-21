@@ -167,11 +167,11 @@
                                     <div class="form-group">
                                         @if (Model.FormDetails.IsUser && Model.FormDetails.IsApply)
                                         {
-                                            <button id="btnInvalid" class="button btn btn-danger" type="submit"><i class="fa-solid fa-trash"></i> 作廢</button>
+                                            <button id="btnInvalid" class="button btn btn-danger" type="button"><i class="fa-solid fa-trash"></i> 作廢</button>
                                         }
                                         else
                                         {
-                                            <button id="btnInvalid" class="button btn btn-danger" type="submit" disabled><i class="fa-solid fa-trash"></i> 作廢</button>
+                                            <button id="btnInvalid" class="button btn btn-danger" type="button" disabled><i class="fa-solid fa-trash"></i> 作廢</button>
                                         }
 
                                     </div>
@@ -315,9 +315,12 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
     <script>
 
+      
         $("#btnInvalid").click(function () {
 
             let userConfirmed = confirm("是否作廢?");
+            console.log(userConfirmed);
+
             if (!userConfirmed) return;
 
             let id = $("#FromDetails_FormId").val();
@@ -339,14 +342,8 @@
                 alert("作廢失敗，請重新嘗試或洽管理員!")
             })
 
-            // // 找到表單
-            // var form = $(this).closest("form");
-            // // 設置表單的 action
-            // form.attr("action", '@Url.Action("Invalid", "ModifyForm")');
-            // // 提交表單
-            // form.submit();
-
         });
+        
 
         $("#btnDownload").click(function () {
 

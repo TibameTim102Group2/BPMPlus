@@ -82,10 +82,10 @@
                 <div class="card-body" style="background-color:white;margin-top:2vw; border-color:black">
                     <p style="font-size:large">選取日期: {{ selectedDate }}</p>
                     <h4>會議資訊</h4>
-                    <p class="pContent"><i class="fa-solid fa-arrow-right"></i> 會議室:{{bookedDetails.meetingRoomId||無}}</p>
-                    <p class="pContent"><i class="fa-regular fa-user "></i> 主持人:{{bookedDetails.meetingHost||無}}</p>
-                    <p class="pContent"><i class="fa-regular fa-clock "></i> 預約時間:{{bookedDetails.startTime||00}}-{{bookedDetails.endTime||00}} </p>
-                    <p class="pContent"><i class="fa-regular fa-comment "></i> 備註:{{bookedDetails.note||無}}</p>
+                    <p class="pContent"><i class="fa-solid fa-arrow-right"></i> 會議室:{{bookedDetails.meetingRoomId}}</p>
+                    <p class="pContent"><i class="fa-regular fa-user "></i> 主持人:{{bookedDetails.meetingHost}}</p>
+                <p class="pContent"><i class="fa-regular fa-clock "></i> 預約時間:{{formatTime(bookedDetails.startTime)}}-{{formatTime(bookedDetails.endTime)}} </p>
+                    <p class="pContent"><i class="fa-regular fa-comment "></i> 備註:{{bookedDetails.note}}</p>
                 </div>
 
 
@@ -109,15 +109,18 @@
                 baseAddress: "https://localhost:7129/CurrentMeetingRoom",
                 selectedDate: '',
                 rooms: [], 
-                times: ['08.00','09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00','19.00','20.00','21.00','22.00'], // Time slots
+                times: ['08:00','09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00','19:00','20:00','21:00','22:00'], 
                 bookings:[],
                 bookedSlots:{},
                 bookedDetails:{}
             },
             methods: {
-                fetchBookings() {
-                    var _this = this;
-                    if (!_this.selectedDate) return;
+                formatTime(hour) {
+                    if (!(hour === undefined)) {
+                        const formattedHour = String(hour).padStart(2, '0');
+                        return `${formattedHour}:00`;
+                    }
+                    return "00:00"
                 },
                 isBooked(room, time) {
                     const hour = parseInt(time.split(':')[0], 10);
@@ -145,13 +148,13 @@
                     //先清空內容
                     this.bookedDetails = {};
                     const clickTime = parseInt(time.split(':')[0], 10);
-                    const findBooking = this.bookings.find(booking => {
-                        const startTime = new Date(booking.startTime).getHours;
-                        const endTime=new Date(booking.endTime).getHours;
-                        return booking.meetingRoomId===room 
+                    const findBooking = this.bookings.filter(booking => {
+                        return booking.meetingRoomId === room&&
+                            clickTime >= booking.startTime &&
+                            clickTime <= booking.endTime;
                     });
                     if(findBooking){
-                        this.bookedDetails = findBooking;
+                        this.bookedDetails = findBooking[0];
                     }
                     else{
                         console.log("notfind")
@@ -167,7 +170,8 @@
                     onChange: (selectedDates, dateStr) => {
                         let _this = this;
                         _this.selectedDate = dateStr;
-
+                        _this.bookedDetails = {};
+                        _this.bookedSlots={};
                         axios.get(`${_this.baseAddress}/getMeetingBook/${_this.selectedDate}`)
                             .then(response => { 
                                 if (response.data && Array.isArray(response.data.data)) {

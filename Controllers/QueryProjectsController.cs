@@ -128,19 +128,19 @@ namespace BPMPlus.Controllers
                     tableData = tableData.Where(c => c.ProjectName.Contains(data.ProjectName));
                 }
 
-                if (!(string.IsNullOrEmpty(data.EmployeeDepartmentName) || data.EmployeeDepartmentName== "請選擇部門"))
-                {
-                    var projectIds = await _context.Department
-                        .Include(c => c.Users)
-                        .Where(c => c.DepartmentId == data.EmployeeDepartmentName)
-                        .SelectMany(c => c.Users)
-                        .SelectMany(c => c.Projects)
-                        .Select(c => c.ProjectId)
-                        .ToListAsync();
-                    tableData = tableData.Where(c => projectIds.Contains(c.ProjectId));
-                }
+                //if (!(string.IsNullOrEmpty(data.EmployeeDepartmentName) || data.EmployeeDepartmentName== "請選擇部門"))
+                //{
+                //    var projectIds = await _context.Department
+                //        .Include(c => c.Users)
+                //        .Where(c => c.DepartmentId == data.EmployeeDepartmentName)
+                //        .SelectMany(c => c.Users)
+                //        .SelectMany(c => c.Projects)
+                //        .Select(c => c.ProjectId)
+                //        .ToListAsync();
+                //    tableData = tableData.Where(c => projectIds.Contains(c.ProjectId));
+                //}
 
-                if (!string.IsNullOrEmpty(data.EmployeeId) && data.EmployeeId != "請選擇員工")
+                if (!string.IsNullOrEmpty(data.EmployeeId) && data.EmployeeId != "--請選擇員工--")
                 {
                     var projectIds = await _context.User
                         .Where(c => c.UserId == data.EmployeeId)
