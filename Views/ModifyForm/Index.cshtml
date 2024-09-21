@@ -115,7 +115,7 @@
             </h3>
 
             <!-- SELECT2 EXAMPLE -->
-            <form>
+           
                 <input type="hidden" name="id" value="@Model.ModifyFrom.Id" />
                 <div class="card card-default col-md-12">
                     <div class="card-body">
@@ -144,13 +144,13 @@
                                     <div class="input-group date">
                                         <div class="input-group-prepend">
                                         </div>
-                                        <input asp-for="ModifyFrom.ExpectedFinishedDay" type="date" class="form-control float-right" id="endDatePicker" value="@Model.ModifyFrom.ExpectedFinishedDay">
+                                        <input asp-for="ModifyFrom.ExpectedFinishedDay" type="date" class="form-control float-right" id="endDatePicker" value="@Model.ModifyFrom.ExpectedFinishedDay" min="">
                                     </div>
                                 </div>
                             </div>
                             <!-- /作廢 -->
                             <div id="partRight" class="col-md-6">
-                                <form>
+                               
                                     <input type="hidden" name="id" value="@Model.ModifyFrom.Id" />
                                     <div style="display:flex">
                                         <div style="width:60%"></div>
@@ -158,7 +158,7 @@
                                             <button id="btnInvalid" class="button btn btn-danger" type="button"><i class="fa-solid fa-trash"></i>作廢</button>
                                         </div>
                                     </div>
-                                </form>
+                              
                                 <br />
                                 <br />
                                 <div>
@@ -219,7 +219,7 @@
                             </div>
                             <!-- /.col -->
                             <div class="col-12 col-sm-7" style="display:flex">
-                                <form>
+                            
                                     <input type="hidden" name="id" value="@Model.ModifyFrom.Id" />
                                     <div class="form-group">
                                         <label id="attachment">附件</label>
@@ -229,7 +229,7 @@
                                             @ViewBag.Message
                                         </div>
                                     </div>
-                                </form>
+                                
                                 <div style="width:10%"></div>
                                 <!-- /.form-group 送出修改-->
                             </div>
@@ -250,7 +250,7 @@
 
                 </div>
                 <!-- /.row -->
-            </form>
+           
         </div>
         <!-- /.container-fluid -->
     </section>
@@ -303,6 +303,7 @@
     <script src="~/AdminLTE/plugins/moment/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
     <script>
+
         function loadScript(url, callback) {
                 var script = document.createElement('script');
                 script.src = url;
@@ -324,8 +325,10 @@
          //作廢按鈕
 
         $("#btnInvalid").click(function () {
+
             let userConfirmed = confirm("是否作廢?");
             if (!userConfirmed) return;
+
 
             let id = $("#ModifyFrom_FormId").val();
 
@@ -463,7 +466,21 @@
             // })
         });
 
-       
+
+        //min日期
+        let today = new Date();
+        let year = today.getFullYear();
+        let month = String(today.getMonth() + 1).padStart(2, '0'); // 月份從0開始，需+1，padStart補0
+        let day = String(today.getDate()).padStart(2, '0'); // 補0
+
+        // 格式化日期為 YYYY-MM-DD
+        let formattedDate = `${year}-${month}-${day}`;
+
+        // 將 min 設定為今天的日期
+        document.getElementById("endDatePicker").setAttribute("min", formattedDate);
+
+
+
     </script>
 }
 

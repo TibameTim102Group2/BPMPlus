@@ -49,6 +49,11 @@
             font-weight: 600;
         }
 
+        #employeeId{
+           padding-left:5px
+        }
+
+
     </style>
 }
 
@@ -72,8 +77,8 @@
         <div class="row groupInput">
             <div class="col-6">
                 <label class="groupLabel">參與員工</label>
-                <select id="employeeId">
-                    <option>請選擇員工</option>
+                <select id="employeeId" >
+                    <option>--請選擇員工--</option>
                     @foreach (var employee in Model.QueryProjectsSearchEmployees)
                     {
                         <option value="@employee.EmployeeId">@employee.EmployeeId @employee.EmployeeName</option>
@@ -98,7 +103,7 @@
 
                     </tr>
                 </thead>
-
+               
             
                 @*  <tbody>
                 @foreach (var project in Model.QueryProjectsProjectContents)
@@ -191,7 +196,7 @@
                 success: function (response) {
 
 
-                    if (response.data && response.data.length > 0) {
+                    if (response.data) {
                         let model = response.data;
 
                         // 若有初始化要先銷毀
@@ -226,6 +231,7 @@
                         });
                     } else {
                         alert("查無資料");
+                        
                        
                     }
                 },
