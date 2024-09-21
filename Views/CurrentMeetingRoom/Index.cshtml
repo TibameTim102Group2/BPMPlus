@@ -122,10 +122,6 @@
                     }
                     return "00:00"
                 },
-                fetchBookings() {
-                    var _this = this;
-                    if (!_this.selectedDate) return;
-                },
                 isBooked(room, time) {
                     const hour = parseInt(time.split(':')[0], 10);
                     return this.bookedSlots[room] && this.bookedSlots[room].includes(hour);
