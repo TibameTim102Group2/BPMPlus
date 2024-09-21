@@ -9,6 +9,7 @@ using BPMPlus.Data;
 using BPMPlus.Models;
 using Microsoft.AspNetCore.Authorization;
 using BPMPlus.ViewModels;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BPMPlus.Controllers
 {
@@ -65,7 +66,35 @@ namespace BPMPlus.Controllers
             try 
             {
 
+                if (project.ProjectName == null)
+                {
+                    return Json(new { success = false, message = "專案名稱不可為空" });
+                }
+
+                if (project.DeadLine == null || project.DeadLine < (DateTime.UtcNow.AddDays(-1)))
+                {
+                    return Json(new { success = false, message = "專案期限不可為空或早於今日" });
+                }
+
+                if (project.Summary == null)
+                {
+                    return Json(new { success = false, message = "專案概要不可為空" });
+                }
+
+                if (project.Summary.Length > 300)
+                {
+                    return Json(new { success = false, message = "專案概要不可超過300字元" });
+                }
+
+
                 List<string> pIdList = await CreateProjectIdListAsync(1);
+
+                var addUser = await _context.Project
+                    .Include(c => c.Users)
+                    .SelectMany(c=>c.Users)
+                    .FirstOrDefaultAsync(c => c.UserId == user.UserId);
+
+               
 
                 Project insert = new Project()
                 {
@@ -76,16 +105,19 @@ namespace BPMPlus.Controllers
                     DeadLine = project.DeadLine,
                     CreatedTime = DateTime.UtcNow,
                     UpdatedTime = DateTime.UtcNow,
+                    Users = new List<User>() { addUser }
                 };
+                
+
 
                 await _context.Project.AddAsync(insert);
                 await _context.SaveChangesAsync();
 
-                return Json(new { success = true, message = "成功" });
+                return Json(new { success = true, message = "送出成功" });
             }
             catch (Exception)
             {
-                return Json(new { success = false, message = "失敗" });
+                return Json(new { success = false, message = "送出失敗" });
             }
             
 

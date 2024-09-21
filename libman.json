@@ -9,6 +9,18 @@
     {
       "library": "Chart.js@4.4.1",
       "destination": "wwwroot/Chart.js/"
+    },
+    {
+      "library": "chartjs-adapter-moment@1.0.1",
+      "destination": "wwwroot/chartjs-adapter-moment/"
+    },
+    {
+      "library": "moment.js@2.30.1",
+      "destination": "wwwroot/moment.js/"
+    },
+    {
+      "library": "jQuery.Gantt@1.1.0",
+      "destination": "wwwroot/jQuery.Gantt/"
     }
   ]
 }

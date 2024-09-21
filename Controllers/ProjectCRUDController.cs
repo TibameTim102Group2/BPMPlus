@@ -17,6 +17,8 @@ namespace BPMPlus.Controllers
             _context = context;
         }
         // GET: ProjectCRUDController
+
+        [HttpGet("ProjectCRUD/ProjectDetails/{projectId}")]
         [Authorize]
         public async Task<ActionResult> ProjectDetails(string ProjectId)
         {
@@ -72,7 +74,7 @@ namespace BPMPlus.Controllers
             {
                 if(u.UserId == Project.ProjectManagerId)
                 {
-                    projectUsersViewModels.Insert(0, new ProjectUsersViewModels(u.UserName, u.UserId, u.Department.DepartmentName, u.Grade.GradeName, "組長"));
+                    projectUsersViewModels.Insert(0, new ProjectUsersViewModels(u.UserName, u.UserId, u.Department.DepartmentName, u.Grade.GradeName, "專案經理"));
                 }
                 if(u.UserId != Project.ProjectManagerId)
                     projectUsersViewModels.Add(new ProjectUsersViewModels(u.UserName, u.UserId, u.Department.DepartmentName, u.Grade.GradeName, "組員"));
@@ -89,11 +91,12 @@ namespace BPMPlus.Controllers
                     (form.PN.UserActivity.UserActivityIdDescription)
                 ));
             }
-            var tupleModel = new Tuple<List<ProjectUsersViewModels>, List<ProjectFormsViewModels>>(projectUsersViewModels, projectFormsViewModels);
+            ProjectChartViewModel projectChartViewModel = new ProjectChartViewModel();  
             return View(
                 new ProjectDetailsViewModel(
                     projectUsersViewModels,
-                    projectFormsViewModels
+                    projectFormsViewModels,
+                    projectChartViewModel
                 )                
             );
         }

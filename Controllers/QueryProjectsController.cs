@@ -74,7 +74,6 @@ namespace BPMPlus.Controllers
             {
                 QueryProjectsProjectContents = tableData,
                 QueryProjectsSearchInput = projectData,
-                //QueryProjectsSearchDepartments = new QueryProjectsSearchDepartmentViewModel()
                 QueryProjectsSearchDepartments = departmentList,
                 QueryProjectsSearchEmployees= employeeList
             };
@@ -162,6 +161,7 @@ namespace BPMPlus.Controllers
                 Summary = c.Summary,
                 DeadLine = c.DeadLine.ToString("yyyy-MM-dd"),
                 ProjectManager = _context.User.FirstOrDefault(n => n.UserId == c.ProjectManagerId).UserName /*users.FirstOrDefault(d => d.UserId == c.ProjectManagerId).UserName*/
+
             }).ToList();
      
             return Json(new {success=true,data=result});
