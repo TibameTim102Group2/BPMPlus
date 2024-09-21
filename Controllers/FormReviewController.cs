@@ -413,15 +413,6 @@ namespace BPMPlus.Controllers
                             _context.Update(formToUpdate);
                             await _context.SaveChangesAsync();
                         }
-
-                        // 找出formrecord更新完的userId找出其資料
-                        var currentEmailEmp = await _context.FormRecord
-                            .Where(u => u.FormId == fvm.FormId)
-                            .OrderByDescending(d => d.ProcessingRecordId)
-                            .Select(e => e.UserId)
-                            .FirstOrDefaultAsync();
-                        var recieveEmp = await _context.User.Where(u => u.UserId == currentEmailEmp).Select(c => c).FirstOrDefaultAsync();
-                        emailService.SendFormReviewEmail(recieveEmp.Email, recieveEmp.UserName, fvm.FormId);
                     }
 
                     await UploadFiles(fvm);
