@@ -1,5 +1,6 @@
 ﻿using BPMPlus.Data;
 using BPMPlus.Models;
+using BPMPlus.Service;
 using BPMPlus.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -18,10 +19,12 @@ namespace BPMPlus.Controllers
     {
 
         private readonly ApplicationDbContext _context;
+        private readonly EmailService emailService;
 
-        public CreateFormsController(ApplicationDbContext context):base(context)
+        public CreateFormsController(ApplicationDbContext context, EmailService emailService) :base(context)
         {
             _context = context;
+            this.emailService = emailService;
         }
         // GET: CreateForms
         [Authorize]
@@ -228,7 +231,16 @@ namespace BPMPlus.Controllers
             await _context.FormRecord.AddAsync(createFormRecord);
             await _context.FormRecord.AddAsync(firstReviewFormRecord);
             await _context.SaveChangesAsync();
-            
+
+            // 找出formrecord更新完的userId找出其資料
+            var currentEmailEmp = await _context.FormRecord
+                .Where(u => u.FormId == createFormRecord.FormId)
+                .OrderByDescending(d => d.ProcessingRecordId)
+                .Select(e => e.UserId)
+                .FirstOrDefaultAsync();
+            var recieveEmp = await _context.User.Where(u => u.UserId == currentEmailEmp).Select(c => c).FirstOrDefaultAsync();
+            emailService.SendFormReviewEmail(recieveEmp.Email, recieveEmp.UserName, createFormRecord.FormId);
+
             return Json(new { errorCode = 200, message = $"新增工單成功! 單號 : {newForm.FormId}" , formId = newForm.FormId});
         }
 
