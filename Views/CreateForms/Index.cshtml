@@ -164,6 +164,7 @@
                 width:100%;
             }
 
+
         </style>
 }
 
@@ -179,7 +180,6 @@
 
     <!-- inside -->
     <div class="inside">
-        <form>
             <div class="mb-3 inputField ">
                 <div class="mb-3 form-label">
                     <label for="xxx1">員工編號</label>
@@ -244,13 +244,13 @@
             <div class="mb-3 inputField">
                 <div class="mb-3 form-label">
                     <label for="xxx1">複製單號</label>
-                    <select id="formDropdown" class="form-control" onchange="updateFormId()">
-                        <option value="">-- 請選擇複製單號 --</option>
+                <input list="formDropdown" class="form-control" onchange="updateFormId()" id="Input" name="ice-cream-choice"/>
+                <datalist id="formDropdown">
                         @foreach (var form in ViewBag.Forms as List<Form>)
                         {
                                 <option value="@form.FormId" data-id="@form.FormId">@form.FormId</option>
                         }
-                    </select>
+                    </datalist>
 
 
                 </div>
@@ -292,9 +292,8 @@
             </div>
             <!-- 送出按鈕 -->
             <div class="submit-btn">
-                <button type="submit" id="submitButton"  class="btn btn-primary">送出</button>
+                <button id="submitButton"  class="btn btn-primary">送出</button>
             </div>
-        </form>
     </div>
 </div>
 @section Scripts {
@@ -824,4 +823,5 @@
         // DropzoneJS Demo Code End
     </script>
 
+    
 }
