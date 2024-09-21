@@ -1,5 +1,6 @@
 ﻿using BPMPlus.Data;
 using BPMPlus.Models;
+using BPMPlus.Service;
 using BPMPlus.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.SqlServer.Server;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.IO.Compression;
 using System.Linq;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -17,11 +19,13 @@ namespace BPMPlus.Controllers
     {
         ApplicationDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly EmailService emailService;
 
-        public FormReviewController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment) : base(context)
+        public FormReviewController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment, EmailService emailService) : base(context)
         {
             _context = context;
             _webHostEnvironment = webHostEnvironment;
+            this.emailService = emailService;
         }
 
 
@@ -33,42 +37,41 @@ namespace BPMPlus.Controllers
             // 是的話抓取其UserId
             User user = await GetAuthorizedUser();
 
-            var latestStatus = await _context.FormRecord
+            var latestDetails = await _context.FormRecord
                                                .AsNoTracking()
                                                .Where(c => c.FormId == id && user.UserId == c.UserId)
-                                               .OrderByDescending(t => t.CreatedTime)
+                                               .OrderByDescending(t => t.ProcessingRecordId)
                                                .Select(c => new
                                                {
-                                                   resultId = c.ResultId,
-                                                   userActivityId = c.UserActivityId,
-                                                   userId = c.UserId,
-                                                   formId = c.FormId,
+                                                   c.ResultId,
+                                                   c.UserActivityId,
+                                                   c.UserId,
+                                                   c.FormId,
                                                })
                                                .FirstOrDefaultAsync();
 
-            if (latestStatus == null)
+            if (latestDetails == null)
             {
                 return Json(new { status = false });
             }
 
-            var assignEmp = await _context.ProcessNodes
-                                            .AsNoTracking()
-                                            .Where(pn => pn.FormId == id && pn.UserActivityId == latestStatus.userActivityId && pn.UserId == latestStatus.userId)
-                                            .Select(pn => pn.UserId)
-                                            .FirstOrDefaultAsync();
-
+            // 撈出這張工單08的userId
             var pnUser = await _context.ProcessNodes.Where(pn => pn.FormId == id && pn.UserActivityId == "08").Select(pn => pn.UserId).FirstOrDefaultAsync();
-            var Handler = await _context.User.Where(u => u.UserId == pnUser).Select(u => u.UserName).FirstOrDefaultAsync();
-            var HandlerTime = _context.Form.Where(f => f.FormId == id).Select(f => f.ManDay).Max().ToString();
 
+            // 撈出其userId, manday
+            var Handler = await _context.User.Where(u => u.UserId == pnUser).Select(u => u.UserName).FirstOrDefaultAsync();
+
+            // 撈出其manday
+            var handlerTime = _context.Form.Where(f => f.FormId == id).Select(f => f.ManDay).Max().ToString();
+
+            // 撈出manday
             var previousEstimatedTime = await _context.Form
                .Where(fr => fr.FormId == id)
-               .OrderByDescending(fr => fr.CreatedTime)
                .Select(fr => fr.ManDay)
                .FirstOrDefaultAsync();
 
-            //抓最新退回的工單紀錄且是退的
-            var rejectResult = await _context.FormRecord
+            //抓最新的工單紀錄跳過一筆
+            var skipOneFormRecord = await _context.FormRecord
                 .Where(fr => fr.FormId == id)
                 .OrderByDescending(d => d.Date)
                 .Skip(1)
@@ -80,33 +83,37 @@ namespace BPMPlus.Controllers
                     fr.ResultId
                 }).FirstOrDefaultAsync();
 
-			bool isRejectedTo07 = rejectResult.ResultId == "RS1" && rejectResult.UserActivityId == "07";
+            // 檢查這筆工單紀錄是退回且功能是指派方07
+			bool isRejectedTo07 = skipOneFormRecord.ResultId == "RS1" && skipOneFormRecord.UserActivityId == "07";
 
-            if (isRejectedTo07 || (int.Parse(rejectResult.UserActivityId) <= 6 && rejectResult.ResultId != "RS1"))
+            // 
+            if (isRejectedTo07 || (int.Parse(skipOneFormRecord.UserActivityId) <= 6 && skipOneFormRecord.ResultId != "RS1"))
             {
                 if (user.PermittedTo("01") || user.PermittedTo("02") || user.PermittedTo("03") ||
                     user.PermittedTo("04") || user.PermittedTo("05") || user.PermittedTo("06") ||
                     user.PermittedTo("07"))
                 {
-                    return Json(new { status = true, userPermit = rejectResult.UserActivityId, handler = Handler, time = HandlerTime, previousEstimatedTime });
+                    return Json(new { status = true, userPermit = skipOneFormRecord.UserActivityId, handler = Handler, time = handlerTime, previousEstimatedTime });
                 }
             }
-            if (user.PermittedTo("07") && latestStatus.userActivityId != "09")
+            // User 有 08 功能且 現在流程節點上的 08 userId是現在登入的userId 且最新的工單紀錄上要是08 且不等於 其他
+            if (user.PermittedTo("07") && latestDetails.UserActivityId != "09")
             {
                 return Json(new { status = true, userPermit = "07", handler = Handler, previousEstimatedTime });
             }
-            else if (user.PermittedTo("08") && latestStatus.userActivityId != "07" && latestStatus.userActivityId!= "09")
+            else if (user.PermittedTo("08") && latestDetails.UserActivityId != "07" && latestDetails.UserActivityId != "09")
             {
                 return Json(new { status = true, userPermit = "08", handler = Handler, previousEstimatedTime });
             }
-            else if (user.PermittedTo("09") && latestStatus.userActivityId != "07")
+            else if (user.PermittedTo("09") && latestDetails.UserActivityId != "07")
             {
-                return Json(new { status = true, userPermit = "09", handler = Handler, time = HandlerTime, previousEstimatedTime });
+                return Json(new { status = true, userPermit = "09", handler = Handler, time = handlerTime, previousEstimatedTime });
             }
             return Json(new { status = false });
 
         }
 
+        // 指派方輸入人員時會檢查是否與指派方同部門以及有權限處理者
         [HttpPost]
         public async Task<JsonResult> AssignEmp(string empName)
         {
@@ -125,13 +132,13 @@ namespace BPMPlus.Controllers
             var userWithGroups = await _context.User
             .Include(u => u.PermissionGroups).ThenInclude(pg => pg.Users).FirstOrDefaultAsync(u => u.UserName == empName);
 
-            var userActivityLit = userWithGroups.PermissionGroups
+            var userActivityList = userWithGroups.PermissionGroups
                 .Where(u => u.PermissionGroupId == "G0001" || u.PermissionGroupId == "G0006" || u.PermissionGroupId == "G0008")
                 .SelectMany(u => u.Users)
                 .Select(u => u.UserName)
                 .ToList();
 
-            if (assignEmp.userDepartmentId == user.DepartmentId && userActivityLit.Contains(empName))
+            if (assignEmp.userDepartmentId == user.DepartmentId && userActivityList.Contains(empName))
             {
                 return Json(new { status = true, user = assignEmp.userName });
             }
@@ -154,117 +161,26 @@ namespace BPMPlus.Controllers
                 return RedirectToAction("Index", "ToDoList");
             }
 
+            // 確認最新一筆工單紀錄是不是待審RS4 & user是否相同
             var todoReview = await _context.FormRecord
                                             .AsNoTracking()
                                             .Where(fr => fr.UserId == user.UserId && fr.ResultId == "RS4")
+                                            .OrderByDescending(d=>d.ProcessingRecordId)
                                             .Select(fr => fr.UserId)
                                             .FirstOrDefaultAsync();
 
-            if (user.UserId == todoReview)
+            bool lastestToDoReview = todoReview != null;
+
+            if (lastestToDoReview)
             {
-                var formVW = await GetFormReviewViewModel(id, user.UserId);
-                //ViewBag.UserPermit = user.PermissionGroups.Any(pg => pg.PermissionGroupId == "G0006") ? "07" : "";
-                return View(formVW);         // 審核方點進待辦清單=>點選單號=>回傳頁面
+                // 審核方點進待辦清單=>點選單號=>回傳頁面
+                var formViewModel = await GetFormReviewViewModel(id, user.UserId);
+                return View(formViewModel);        
             }
             return RedirectToAction("Index", "ToDoList");
         }
 
-        private async Task<FormReviewViewModel> GetFormReviewViewModel(string formId, string userId)
-        {
-            User user = await GetAuthorizedUser();
-            // 目前進度
-            var latestStatus = await _context.FormRecord
-                .AsNoTracking()
-                .Where(c => c.FormId == formId && userId == c.UserId)
-                .OrderByDescending(t => t.CreatedTime)
-                .Select(c => new
-                {
-                    resultId = c.ResultId,
-                    userActivityId = c.UserActivityId,
-                    userId = c.UserId,
-                    userName = user.UserName,
-                })
-                .FirstOrDefaultAsync();
-
-
-            //顯示在View 欄位的畫面
-            var formVW = await _context.Form
-                .AsNoTracking()
-                .Where(c => c.FormId == formId)
-                .Select(m => new FormReviewViewModel
-                {
-                    FormId = m.FormId,
-                    UserName = latestStatus.userName,
-                    UserId = userId,
-                    Date = m.Date,
-                    CategoryId = m.CategoryId,
-                    CategoryDescription = m.Category.CategoryDescription,
-                    DepartmentId = m.DepartmentId,
-                    DepartmentName = m.Department.DepartmentName,
-                    CurrentResults = latestStatus.resultId ?? "Unknown",
-                    CurrentResultsDescription = _context.Result
-                        .Where(r => r.ResultId == latestStatus.resultId)
-                        .Select(r => r.ResultDescription)
-                        .FirstOrDefault(),
-                    NeedEmployees = _context.User
-                        .Where(u => u.UserId == m.UserId)
-                        .Select(u => u.UserName)
-                        .FirstOrDefault(),
-                    HopeFinishDate = m.ExpectedFinishedDay,
-                    BelongProjects = m.Project.ProjectName,
-                    EstimatedTime = m.ManDay.HasValue ? (int)m.ManDay : 0,
-                    Content = m.Content,
-                    UserActivityId = latestStatus.userActivityId,
-                    ProcessNodeId = m.ProcessNodeId,
-                    FormProcessFlow = _context.ProcessNodes.Include(c => c.UserActivity)
-                     .Where(c => c.FormId == formId)
-                     .AsNoTracking()
-                     .AsSplitQuery()
-                     .Select(c => new FormReviewProcessFlowViewModel
-                     {
-                         ProcessNodeId = c.ProcessNodeId,
-                         UserActivityId = c.UserActivityId,
-                         UserActivityIdDescription = c.UserActivity.UserActivityIdDescription
-
-                     }).ToList(),
-                    FormRecordList = _context.FormRecord.Where(fr => fr.FormId == formId)
-                        .Select(fr => new FormReviewFormProcessViewModel
-                        {
-                            Date = fr.Date,
-                            UserActivityDes = fr.UserActivity.UserActivityIdDescription,
-                            UserName = fr.User.UserName,
-                            Remark = fr.Remark,
-                            ResultDes = fr.Result.ResultDescription,
-                        }).ToList(),
-                })
-                    .FirstOrDefaultAsync();
-
-            //流程進度
-            // 該工單的流程節點全部
-            var processNode = _context.ProcessNodes.Include(c => c.UserActivity)
-                 .Where(c => c.FormId == formId)
-                 .AsNoTracking()
-                 .AsSplitQuery()
-                 .Select(c => new FormReviewProcessFlowViewModel
-                 {
-                     ProcessNodeId = c.ProcessNodeId,
-                     UserActivityId = c.UserActivityId,
-                     UserActivityIdDescription = c.UserActivity.UserActivityIdDescription
-
-                 }).ToList();
-
-            if (processNode.Any(c => c.ProcessNodeId == formVW.ProcessNodeId)) //Any適用判斷true/false
-            {
-                var node = processNode.FirstOrDefault(c => c.ProcessNodeId == formVW.ProcessNodeId);
-                node.IsHightLight = true;
-            }
-            formVW.FormProcessFlow = processNode;
-
-            return formVW;
-        }
-
-
-        // POST :  FormReview/Create/1
+        // POST :  FormReview/CreateAndUpdate/
 
         // 審核方輸入Remark 且點選核准or退回送出後觸發Action
         // 創建新的FormRecord來顯示目前審核過的紀錄
@@ -279,34 +195,26 @@ namespace BPMPlus.Controllers
             try
             {
                 // 查詢該筆工單的最新部門審核者部門Id, UserId
-                var currentDetails = await _context.FormRecord
+                var latestDetails = await _context.FormRecord
                                                     .AsNoTracking()
                                                     .Where(fr => fr.FormId == fvm.FormId && user.UserId == fr.UserId)
-                                                    .OrderByDescending(f => f.CreatedTime)
-                                                    .Select(c => new
+                                                    .OrderByDescending(f => f.ProcessingRecordId)
+                                                    .Select(c => new 
                                                     {
-                                                        crProcessingRecord = c.ProcessingRecordId,
-                                                        crDepartment = c.DepartmentId,
-                                                        crUserId = c.UserId,
-                                                        crGrade = c.GradeId,
-                                                        crUserActivityId = c.UserActivityId,
-                                                        crRemark = c.Remark,
+                                                        c.ProcessingRecordId,
+                                                        c.DepartmentId,
+                                                        c.UserId,
+                                                        c.GradeId,
+                                                        c.UserActivityId,
+                                                        c.Remark,
                                                     })
                                                     .FirstOrDefaultAsync();
 
-                // 抓出UserActivtiy內的驗收id
-                var check = _context.UserActivity
-                                        .Where(c => c.UserActivityId == "09")
-                                        .Select(m => m.UserActivityId)
-                                        .FirstOrDefault();
-
-                // 抓出提單方 UserActivityId
-                var poster = _context.UserActivity
-                            .Where(c => c.UserActivityId == "01")
-                            .Select(m => m.UserActivityId)
-                            .FirstOrDefault();
-
-
+                // 抓出提單及驗收方 UserActivityId
+                var activityId = _context.UserActivity
+                          .Where(c => c.UserActivityId == "09" || c.UserActivityId == "01")
+                          .Select(m => m.UserActivityId)
+                          .ToList();
 
                 /* ------------ 如果審核方核准送出 -------------*/
 
@@ -314,8 +222,9 @@ namespace BPMPlus.Controllers
                 if (reviewResult == "approve")
                 {
                     // 如果user不等於提單方or 驗收方
-                    if (fvm.UserActivityId != check && fvm.UserActivityId != poster)
+                    if ( !activityId.Contains(fvm.UserActivityId ))
                     {
+                        // 呼叫創建ProcessingRecordId方法
                         List<string> formRecordIdList = await GetCreateFormRecordIdListAsync(2);
 
                         // 創建新的核准FormRecord
@@ -324,11 +233,11 @@ namespace BPMPlus.Controllers
                             ProcessingRecordId = formRecordIdList[0],
                             Remark = fvm.Remark,
                             FormId = fvm.FormId,
-                            DepartmentId = currentDetails.crDepartment,
-                            UserId = currentDetails.crUserId,
+                            DepartmentId = latestDetails.DepartmentId,
+                            UserId = latestDetails.UserId,
                             ResultId = "RS2",
                             UserActivityId = fvm.UserActivityId,
-                            GradeId = currentDetails.crGrade,
+                            GradeId = latestDetails.GradeId,
                             Date = DateTime.UtcNow,
                             CreatedTime = DateTime.UtcNow,
                             UpdatedTime = DateTime.UtcNow,
@@ -337,7 +246,7 @@ namespace BPMPlus.Controllers
 
                         // 抓下一筆UserId,  UserActivity, DepartmentId
                         // 抓該UserId的職等
-                        var nextDetails = GetNextDetails(fvm, user.UserId, currentDetails.crUserActivityId);
+                        var nextDetails = GetNextDetails(fvm, user.UserId, latestDetails.UserActivityId);
                         var nextGradeId = _context.User
                                                             .Where(u => u.UserId == nextDetails.UserId)
                                                             .Select(c => c.GradeId)
@@ -429,7 +338,14 @@ namespace BPMPlus.Controllers
                             _context.Update(formToUpdate);
                             await _context.SaveChangesAsync();
                         }
-
+                        // 找出formrecord更新完的userId找出其資料
+                        var currentEmailEmp = await _context.FormRecord
+                            .Where(u => u.FormId == fvm.FormId)
+                            .OrderByDescending(d => d.ProcessingRecordId)
+                            .Select(e => e.UserId)
+                            .FirstOrDefaultAsync();
+                        var recieveEmp = await _context.User.Where(u => u.UserId == currentEmailEmp).Select(c => c).FirstOrDefaultAsync();
+                        emailService.SendFormReviewEmail(recieveEmp.Email, recieveEmp.UserName, fvm.FormId);
                     }
 
                     // 驗收階段
@@ -443,11 +359,11 @@ namespace BPMPlus.Controllers
                             ProcessingRecordId = formRecordIdList[0],
                             Remark = fvm.Remark,
                             FormId = fvm.FormId,
-                            DepartmentId = currentDetails.crDepartment,
-                            UserId = currentDetails.crUserId,
+                            DepartmentId = latestDetails.DepartmentId,
+                            UserId = latestDetails.UserId,
                             ResultId = "RS2",
                             UserActivityId = fvm.UserActivityId,
-                            GradeId = currentDetails.crGrade,
+                            GradeId = latestDetails.GradeId,
                             Date = DateTime.UtcNow,
                             CreatedTime = DateTime.UtcNow,
                             UpdatedTime = DateTime.UtcNow,
@@ -455,7 +371,7 @@ namespace BPMPlus.Controllers
 
                         // 抓下一筆UserId,  UserActivity, DepartmentId
                         // 抓該UserId的職等
-                        var nextDetails = GetNextDetails(fvm, user.UserId, currentDetails.crUserActivityId);
+                        var nextDetails = GetNextDetails(fvm, user.UserId, latestDetails.UserActivityId);
                         var nextGradeId = _context.User
                                                             .Where(u => u.UserId == nextDetails.UserId)
                                                             .Select(c => c.GradeId)
@@ -497,6 +413,15 @@ namespace BPMPlus.Controllers
                             _context.Update(formToUpdate);
                             await _context.SaveChangesAsync();
                         }
+
+                        // 找出formrecord更新完的userId找出其資料
+                        var currentEmailEmp = await _context.FormRecord
+                            .Where(u => u.FormId == fvm.FormId)
+                            .OrderByDescending(d => d.ProcessingRecordId)
+                            .Select(e => e.UserId)
+                            .FirstOrDefaultAsync();
+                        var recieveEmp = await _context.User.Where(u => u.UserId == currentEmailEmp).Select(c => c).FirstOrDefaultAsync();
+                        emailService.SendFormReviewEmail(recieveEmp.Email, recieveEmp.UserName, fvm.FormId);
                     }
 
                     await UploadFiles(fvm);
@@ -515,7 +440,7 @@ namespace BPMPlus.Controllers
                         .FirstOrDefault();
 
                     // 如果審核方按下退回且目前該筆工單的工單紀錄的功能編號不是第一筆時
-                    if (currentDetails.crUserActivityId != firstUserActivtyId)
+                    if (latestDetails.UserActivityId != firstUserActivtyId)
                     {
                         // 查詢該工單要更新的欄位
                         var formToUpdate = await _context.Form
@@ -530,17 +455,17 @@ namespace BPMPlus.Controllers
                             ProcessingRecordId = formRecordIdList[0],
                             Remark = fvm.Remark,
                             FormId = fvm.FormId,
-                            DepartmentId = currentDetails.crDepartment,
-                            UserId = currentDetails.crUserId,
+                            DepartmentId = latestDetails.DepartmentId,
+                            UserId = latestDetails.UserId,
                             ResultId = "RS1",
-                            UserActivityId = currentDetails.crUserActivityId,
-                            GradeId = currentDetails.crGrade,
+                            UserActivityId = latestDetails.UserActivityId,
+                            GradeId = latestDetails.GradeId,
                             Date = DateTime.UtcNow,
                             CreatedTime = DateTime.UtcNow,
                             UpdatedTime = DateTime.UtcNow,
                         };
 
-                        if (currentDetails.crUserId == user.UserId && fvm.UserActivityId == "08")
+                        if (latestDetails.UserId == user.UserId && fvm.UserActivityId == "08")
                         {
                             if (formToUpdate != null)
                             {
@@ -554,7 +479,7 @@ namespace BPMPlus.Controllers
 
                         // 抓上一筆UserId,  UserActivity, DepartmentId
                         // 抓該UserId的職等
-                        var previousDetails = GetBackDetails(fvm, user.UserId, currentDetails.crUserActivityId);
+                        var previousDetails = GetBackDetails(fvm, user.UserId, latestDetails.UserActivityId);
                         var previousGradeId = _context.User
                                                             .Where(u => u.UserId == previousDetails.UserId)
                                                             .Select(c => c.GradeId)
@@ -589,6 +514,14 @@ namespace BPMPlus.Controllers
                             _context.Update(formToUpdate);
                             await _context.SaveChangesAsync();
                         }
+                        // 找出formrecord更新完的userId找出其資料
+                        var currentEmailEmp = await _context.FormRecord
+                            .Where(u => u.FormId == fvm.FormId)
+                            .OrderByDescending(d => d.ProcessingRecordId)
+                            .Select(e => e.UserId)
+                            .FirstOrDefaultAsync();
+                        var recieveEmp = await _context.User.Where(u => u.UserId == currentEmailEmp).Select(c => c).FirstOrDefaultAsync();
+                        emailService.SendFormReviewEmail(recieveEmp.Email, recieveEmp.UserName, fvm.FormId);
                     }
                     await UploadFiles(fvm);
                     return RedirectToAction("Index", "ToDoList");
@@ -602,53 +535,6 @@ namespace BPMPlus.Controllers
         }
 
         /* ------------ 方法層 -------------*/
-
-        // 下載檔案
-        [HttpPost]
-        public IActionResult Download(string id)
-        {
-            //讀取檔案
-            var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "upload");
-            filePath = Path.Combine(filePath, id);
-            byte[] data = null;
-            using (var memoryStream = new MemoryStream())
-            {
-                using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
-                {
-                    string[] allFiles = Directory.GetFiles(filePath, "*", SearchOption.AllDirectories);
-                    foreach (var file in allFiles)
-                    {
-                        archive.CreateEntryFromFile(file, Path.GetFileName(file));
-                    }
-                }
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                data = memoryStream.ToArray();
-            }
-
-            return File(data, "application/zip", "test.zip");
-
-        }
-
-
-        // 判斷檔案的MIME類型
-        private string GetContentType(string fileName)
-        {
-            var extension = Path.GetExtension(fileName).ToLowerInvariant();
-            return extension switch
-            {
-                ".pdf" => "application/pdf",
-                ".jpg" => "image/jpeg",
-                ".jpeg" => "image/jpeg",
-                ".png" => "image/png",
-                ".txt" => "text/plain",
-                ".doc" => "application/msword",
-                ".docx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                ".xls" => "application/vnd.ms-excel",
-                ".xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                _ => "application/octet-stream", // 預設二進位檔案類型
-            };
-        }
-
 
         // 查詢下一位資料
         public (string UserActivityId, string UserId, string DepartmentId, string ProcessNodeId) GetNextDetails(FormReviewViewModel fvm, string userId, string userActivityId)
@@ -788,29 +674,160 @@ namespace BPMPlus.Controllers
                 Console.WriteLine("檔案上傳失敗: " + ex.Message);
             }
         }
+
+        // 下載檔案
+        [HttpPost]
+        public IActionResult Download(string id)
+        {
+            //讀取檔案
+            var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "upload");
+            filePath = Path.Combine(filePath, id);
+            byte[] data = null;
+            using (var memoryStream = new MemoryStream())
+            {
+                using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+                {
+                    string[] allFiles = Directory.GetFiles(filePath, "*", SearchOption.AllDirectories);
+                    foreach (var file in allFiles)
+                    {
+                        archive.CreateEntryFromFile(file, Path.GetFileName(file));
+                    }
+                }
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                data = memoryStream.ToArray();
+            }
+
+            return File(data, "application/zip", "test.zip");
+
+        }
+
+
+        // 判斷檔案的MIME類型
+        private string GetContentType(string fileName)
+        {
+            var extension = Path.GetExtension(fileName).ToLowerInvariant();
+            return extension switch
+            {
+                ".pdf" => "application/pdf",
+                ".jpg" => "image/jpeg",
+                ".jpeg" => "image/jpeg",
+                ".png" => "image/png",
+                ".txt" => "text/plain",
+                ".doc" => "application/msword",
+                ".docx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                ".xls" => "application/vnd.ms-excel",
+                ".xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                _ => "application/octet-stream", // 預設二進位檔案類型
+            };
+        }
+
+        // 回傳ViewModel
+        private async Task<FormReviewViewModel> GetFormReviewViewModel(string formId, string userId)
+        {
+            User user = await GetAuthorizedUser();
+            // 目前最新進度
+            var latestStatus = await _context.FormRecord
+                .AsNoTracking()
+                .Where(c => c.FormId == formId && userId == c.UserId)
+                .OrderByDescending(t => t.ProcessingRecordId)
+                .Select(c => new
+                {
+                    resultId = c.ResultId,
+                    userActivityId = c.UserActivityId,
+                    userId = c.UserId,
+                    userName = user.UserName,
+                })
+                .FirstOrDefaultAsync();
+
+
+            //顯示在View 欄位的畫面
+            var formViewModel = await _context.Form
+                .AsNoTracking()
+                .Where(c => c.FormId == formId)
+                .Select(m => new FormReviewViewModel
+                {
+                    FormId = m.FormId,
+                    UserName = latestStatus.userName,
+                    UserId = userId,
+                    Date = m.Date,
+                    CategoryId = m.CategoryId,
+                    CategoryDescription = m.Category.CategoryDescription,
+                    DepartmentId = m.DepartmentId,
+                    DepartmentName = m.Department.DepartmentName,
+                    CurrentResults = latestStatus.resultId ?? "Unknown",
+                    CurrentResultsDescription = _context.Result
+                        .Where(r => r.ResultId == latestStatus.resultId)
+                        .Select(r => r.ResultDescription)
+                        .FirstOrDefault(),
+                    NeedEmployees = _context.User
+                        .Where(u => u.UserId == m.UserId)
+                        .Select(u => u.UserName)
+                        .FirstOrDefault(),
+                    HopeFinishDate = m.ExpectedFinishedDay,
+                    BelongProjects = m.Project.ProjectName,
+                    EstimatedTime = m.ManDay.HasValue ? (int)m.ManDay : 0,
+                    Content = m.Content,
+                    UserActivityId = latestStatus.userActivityId,
+                    ProcessNodeId = m.ProcessNodeId,
+                    FormProcessFlow = _context.ProcessNodes.Include(c => c.UserActivity)
+                     .Where(c => c.FormId == formId)
+                     .AsNoTracking()
+                     .AsSplitQuery()
+                     .Select(c => new FormReviewProcessFlowViewModel
+                     {
+                         ProcessNodeId = c.ProcessNodeId,
+                         UserActivityId = c.UserActivityId,
+                         UserActivityIdDescription = c.UserActivity.UserActivityIdDescription
+
+                     }).ToList(),
+                    FormRecordList = _context.FormRecord.Where(fr => fr.FormId == formId)
+                        .Select(fr => new FormReviewFormProcessViewModel
+                        {
+                            Date = fr.Date,
+                            UserActivityDes = fr.UserActivity.UserActivityIdDescription,
+                            UserName = fr.User.UserName,
+                            Remark = fr.Remark,
+                            ResultDes = fr.Result.ResultDescription,
+                        }).ToList(),
+                })
+                    .FirstOrDefaultAsync();
+
+            //流程進度
+            // 該工單的流程節點全部
+            var processNode = _context.ProcessNodes.Include(c => c.UserActivity)
+                 .Where(c => c.FormId == formId)
+                 .AsNoTracking()
+                 .AsSplitQuery()
+                 .Select(c => new FormReviewProcessFlowViewModel
+                 {
+                     ProcessNodeId = c.ProcessNodeId,
+                     UserActivityId = c.UserActivityId,
+                     UserActivityIdDescription = c.UserActivity.UserActivityIdDescription
+
+                 }).ToList();
+
+            if (processNode.Any(c => c.ProcessNodeId == formViewModel.ProcessNodeId)) //Any適用判斷true/false
+            {
+                var node = processNode.FirstOrDefault(c => c.ProcessNodeId == formViewModel.ProcessNodeId);
+                node.IsHightLight = true;
+            }
+            formViewModel.FormProcessFlow = processNode;
+
+            return formViewModel;
+        }
+
+        // 寄信給下一位
+        //private async void FindAndSendNextEmployeeEmail(FormReviewViewModel fvm)
+        //{
+        //    var currentEmailEmp = await _context.FormRecord
+        //        .Where(u => u.FormId == fvm.FormId)
+        //        .OrderByDescending(d => d.ProcessingRecordId)
+        //        .Select(e => e.UserId)
+        //        .FirstOrDefaultAsync();
+
+        //    var recieveEmp = await _context.User.Where(u => u.UserId == currentEmailEmp).Select(c => c).FirstOrDefaultAsync();
+
+        //    emailService.SendFormReviewEmail(recieveEmp.Email, recieveEmp.UserName, fvm.FormId);
+        //}
     }
-
-    // 新建工單
-    //public async Task CreateApproveFormRecord(FormReviewViewModel fvm, dynamic details, List<string> formRecordIdList)
-    //{
-    //    var formRecord = new FormRecord
-    //    {
-    //        ProcessingRecordId = formRecordIdList[0],
-    //        Remark = fvm.Remark,
-    //        FormId = fvm.FormId,
-    //        DepartmentId = details.DepartmentId,
-    //        UserId = details.UserId,
-    //        ResultId = "RS2",
-    //        UserActivityId = fvm.UserActivityId,
-    //        GradeId = details.
-    //        Date = DateTime.UtcNow,
-    //        CreatedTime = DateTime.UtcNow,
-    //        UpdatedTime = DateTime.UtcNow,
-    //    };
-
-    //    _context.Add(formRecord);
-    //    _context.SaveChanges();
-
-    //} 
-
 }
