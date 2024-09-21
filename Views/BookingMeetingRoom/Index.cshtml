@@ -331,7 +331,7 @@
             });
 
             renderDropdown();
-
+            
             /* --------------------------------------------------------------------------------------------------------------------------- */
 
             //選擇會議室帶入可容納人數
@@ -365,24 +365,21 @@
                         cheaking = response.data;
 
                         if (cheaking == "") {
-                            let StartTimeSelect = $("#startTimeSelect");
-                            let EndTimeSelect = $("#endTimeSelect")
+                            let StartSelect = $("#startTimeSelect");
+                            let EndSelect = $("#endTimeSelect")
 
-                            // 生成時間選項的函數
-                            function generateTimeOptions(startHour, endHour, interval) {
-                                StartTimeSelect.empty(); // 清空現有選項
+                            function generateTimeOptions($select, startHour, endHour, interval, defaultText) {
+                                $select.empty();
 
-                                // 添加預設選項
-                                StartTimeSelect.append($('<option>', {
+                                $select.append($('<option>', {
                                     value: '',
-                                    text: '-- 請選擇開始時間 --'
+                                    text: defaultText
                                 }));
 
-                                // 生成時間選項
                                 for (var hour = startHour; hour <= endHour; hour++) {
                                     for (var minute = 0; minute < 60; minute += interval) {
                                         var time = padZero(hour) + ':' + padZero(minute);
-                                        StartTimeSelect.append($('<option>', {
+                                        $select.append($('<option>', {
                                             value: time,
                                             text: time
                                         }));
@@ -390,13 +387,66 @@
                                 }
                             }
 
-                            // 補零函數
                             function padZero(num) {
                                 return (num < 10 ? '0' : '') + num;
                             }
 
-                            // 初始化時間選項（8:00 到 22:00，每小時一個選項）
-                            generateTimeOptions(8, 22, 60);
+                            function updateEndTimeOptions() {
+                                var startTime = StartSelect.val();
+                                if (startTime) {
+                                    var [startHour, startMinute] = startTime.split(':').map(Number);
+                                    generateTimeOptions(EndSelect, startHour, 22, 60, '-- 請選擇結束時間 --');
+                                    EndSelect.find('option').filter(function () {
+                                        var [hour, minute] = $(this).val().split(':').map(Number);
+                                        return hour < startHour || (hour === startHour && minute <= startMinute);
+                                    }).prop('disabled', true);
+                                } else {
+                                    generateTimeOptions(EndSelect, 8, 22, 60, '-- 請先選擇開始時間 --');
+                                    EndSelect.prop('disabled', true);
+                                }
+                            }
+
+                            // 初始化時間選項
+                            generateTimeOptions(StartSelect, 8, 22, 60, '-- 請選擇開始時間 --');
+                            generateTimeOptions(EndSelect, 8, 22, 60, '-- 請先選擇結束時間 --');
+                            EndSelect.prop('disabled', true);
+
+                            // 當開始時間改變時更新結束時間選項
+                            StartSelect.change(function () {
+                                updateEndTimeOptions();
+                                EndSelect.val('').prop('disabled', false);
+                            });
+
+
+                            // // 生成時間選項的函數
+                            // function generateTimeOptions(startHour, endHour, interval) {
+                            //     StartTimeSelect.empty(); // 清空現有選項
+
+                            //     // 添加預設選項
+                            //     StartTimeSelect.append($('<option>', {
+                            //         value: '',
+                            //         text: '-- 請選擇開始時間 --'
+                            //     }));
+
+                            //     // 生成時間選項
+                            //     for (var hour = startHour; hour <= endHour; hour++) {
+                            //         for (var minute = 0; minute < 60; minute += interval) {
+                            //             var time = padZero(hour) + ':' + padZero(minute);
+                            //             StartTimeSelect.append($('<option>', {
+                            //                 value: time,
+                            //                 text: time
+                            //             }));
+                            //         }
+                            //     }
+                            // }
+
+                            // // 補零函數
+                            // function padZero(num) {
+                            //     return (num < 10 ? '0' : '') + num;
+                            // }
+
+                            // // 初始化時間選項（8:00 到 22:00，每小時一個選項）
+                            // generateTimeOptions(8, 22, 60);
 
                         }
                         else {
