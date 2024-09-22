@@ -14,6 +14,9 @@ using System.Web;
 using static System.Net.Mime.MediaTypeNames;
 using System.Data;
 using BPMPlus.Attributes;
+using Microsoft.AspNetCore.Hosting;
+using BPMPlus.ViewModels;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BPMPlus.Controllers
 {
@@ -23,13 +26,15 @@ namespace BPMPlus.Controllers
         private readonly EmailService emailService;
         private readonly AesAndTimestampService aesAndTimestampService;
         private readonly ResetPasswordService resetPwService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public LoginController(ApplicationDbContext context, EmailService emailService, AesAndTimestampService aesAndTimestampService, ResetPasswordService resetPwService) : base(context)
+        public LoginController(ApplicationDbContext context, EmailService emailService, AesAndTimestampService aesAndTimestampService, ResetPasswordService resetPwService, IWebHostEnvironment WebHostEnvironment) : base(context)
         {
             _context = context;
             this.emailService = emailService;
             this.aesAndTimestampService = aesAndTimestampService;
             this.resetPwService = resetPwService;
+            _webHostEnvironment = WebHostEnvironment;
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -400,9 +405,46 @@ namespace BPMPlus.Controllers
         }
 
         //設定大頭貼
-        public IActionResult PhotoSetting()
+
+        [HttpGet]
+        public IActionResult UploadProfilePicture()
         {
+            
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UploadProfilePicture(IFormFile profilePicture)
+        {
+            User user = await GetAuthorizedUser();
+
+           
+            if (profilePicture == null || profilePicture.Length == 0)
+            {
+                return Json(new { success = false, message = "請選擇檔案上傳" });
+            }
+
+            //var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "profiles");
+
+            var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/profiles");
+
+            if (!Directory.Exists(uploadPath))
+            {
+                Directory.CreateDirectory(uploadPath);
+            }
+
+            var fileName = Path.GetFileName(profilePicture.FileName);
+            var newFileName = $"{user.UserId}{Path.GetExtension(fileName)}";
+            var filePath = Path.Combine(uploadPath, newFileName);
+
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await profilePicture.CopyToAsync(fileStream);
+            }
+
+           
+
+            return Json(new { success = true, message = "上傳成功", imagePath = $"/profiles/{newFileName}" });
         }
 
     }

@@ -1,0 +1,115 @@
+﻿@model BPMPlus.ViewModels.FileUploadViewModel
+
+@section Style
+{
+    <style>
+        #title{
+            padding-top:20px;
+            padding-left:5px;
+            color: rgba(0, 81, 255, 0.884);
+            font-weight: bold;
+        }
+
+        /* img{
+            border-radius:50%;
+        } */
+
+       .upload{
+             margin-top:10px;
+       }
+    </style>
+}
+
+
+
+<h3 id="title">個人大頭貼設定</h3>
+
+<div class="row">
+    <div class="col-md-6">
+
+
+           
+            <!-- 上傳圖片 -->
+            <form asp-controller="Login" asp-action="UploadProfilePicture" method="post" enctype="multipart/form-data">
+            <div class="upload">
+                <input id="file" type="file" accept="image/*" />
+                <button id="btnSubmit" class="btn btn-primary">上傳</button>
+            </div>
+            </form>
+    </div>
+
+    <div class="col-md-6">
+        <!-- 如果有上傳成功的圖片則顯示預覽 -->
+    
+    </div>
+</div>
+@section Scripts
+{
+    <script>
+        // document.getElementById('imageInput').addEventListener('change', function(event) {
+        //     // 獲取選擇的圖片檔案
+        //     const file = event.target.files[0];
+
+        //     if (file) {
+        //         // 創建 FileReader 來讀取圖片
+        //         const reader = new FileReader();
+
+        //         reader.onload = function(e) {
+        //             // 讀取完成後，將預覽圖片的 src 改為上傳的圖片
+        //             document.getElementById('previewImage').src = e.target.result;
+        //         };
+
+        //         // 讀取所選圖片為 Data URL
+        //         reader.readAsDataURL(file);
+        //     }
+        // });
+
+
+        $("#btnSubmit").click(function () {
+            let userConfirmed = confirm("是否送出?");
+            if (!userConfirmed) return;
+
+            //檢查資料
+           
+            let file = $("#file").get(0).files[0];
+
+            let formData = new FormData();
+
+            //單檔案
+            if (file) { formData.append('file', file) };
+
+           
+
+            fetch('/Login/UploadProfilePicture',
+                {
+                    method: 'POST',
+                    body: formData,
+
+                }).then(response => {
+                    if (response.ok) {
+                        return response.json(); // 將回應解析為 JSON
+                    } else {
+                        throw new Error('送出失敗'); // 拋出錯誤以進行錯誤處理
+                    }
+                })
+                .then(data => {
+                    // 成功的情況下顯示返回的 message 並跳轉
+                    window.alert(data.message); // 假設 message 在返回的 JSON 中
+                    if (data.success) {
+                        window.location.href = "/Home/Index/";
+                    }
+
+                })
+                .catch(error => {
+                    // 處理錯誤情況
+                    window.alert(error.message || '送出失敗');
+                });
+
+
+          
+        });
+
+
+
+    </script>
+}
