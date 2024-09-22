@@ -251,7 +251,7 @@ namespace BPMPlus.Controllers
                     .Select(e => e.UserId)
                     .FirstOrDefaultAsync();
                 var recieveEmp = await _context.User.Where(u => u.UserId == currentEmailEmp).Select(c => c).FirstOrDefaultAsync();
-                emailService.SendFormReviewEmail(recieveEmp.Email, recieveEmp.UserName, firstReviewFormRecord.FormId);
+                emailService.SendFormReviewEmail(recieveEmp, firstReviewFormRecord.FormId);
                 return Json(new { success = true, message = "修改成功" });
             }
             catch (Exception)

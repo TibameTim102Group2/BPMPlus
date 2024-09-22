@@ -13,6 +13,7 @@ using BCryptHelper = BCrypt.Net.BCrypt;
 using System.Web;
 using static System.Net.Mime.MediaTypeNames;
 using System.Data;
+using BPMPlus.Attributes;
 
 namespace BPMPlus.Controllers
 {
@@ -40,6 +41,7 @@ namespace BPMPlus.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginInputVM login)
         {
+
             //先判斷user是否存在
             var user = await _context.User
                  .FirstOrDefaultAsync(m => EF.Functions.Collate(m.UserId, "Latin1_General_BIN") == login.UserId && m.UserIsActive == true);
@@ -110,7 +112,6 @@ namespace BPMPlus.Controllers
             // 套用相應layout, 使用session
             if (isAdminUser)
             {
-                
                 HttpContext.Session.SetString("IsAdmin", "true");
                 return RedirectToAction("Index", "Home");
             }
@@ -218,7 +219,7 @@ namespace BPMPlus.Controllers
                     if (user != null)
                     {
                         //判斷user是否在30分鐘內重設過密碼
-                        if (nowStampTime >= user.ModifyPasswordTime + 1800)
+                        if (nowStampTime <= user.ModifyPasswordTime + 1800)
                         {
                             //判斷密碼是否符合規則
                             var resetPasswordService = new ResetPasswordService();
@@ -318,6 +319,7 @@ namespace BPMPlus.Controllers
 
         /* 修改密碼 */
         [Authorize]
+        [AuthAttribute]
         [HttpPost]
         public async Task<IActionResult> ResetPassWord(ChangePasswordVM vm)
         {
