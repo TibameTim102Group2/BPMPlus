@@ -65,7 +65,7 @@
                         </div>
                         <div class="col-3 d-flex justify-content-center">
                             <select class="form-select selectbtn selectUserName" asp-items="ViewBag.UserId">
-                                <option value="" disabled selected>申請者</option>
+                                <option value=""  disabled selected>申請者</option>
                             </select>
                         </div>
                         <div class="col-3 d-flex justify-content-center">
@@ -214,6 +214,10 @@
                                                     <td>${item.createdTime}</td>
                                                 </tr>`;
                         $("tbody").append(newRow);
+                        $(".selectUserName").val("");
+                        $(".selectCategoryId").val("");
+                        $(".selectProjectId").val("");
+                        $(".createddate").val("");
                         $('table').DataTable({
                             paging: true,
                             ordering: true,
@@ -224,6 +228,10 @@
 
                     } else {
                         alert(response.message || "連接失敗，請重新輸入");
+                        $(".selectUserName").val("");
+                        $(".selectCategoryId").val("");
+                        $(".createddate").val("");
+                        $(".selectProjectId").val("");
                     }
                 },
             });
@@ -255,7 +263,9 @@
                                                         <td>${item.createdTime}</td>
                                                     </tr>`;
                             $("tbody").append(newRow);
-
+                            $(".selectCategoryId").val("");
+                            $(".selectProjectId").val("");
+                            $(".createddate").val("");
                         });
                         $('table').DataTable({
                             paging: true,
@@ -267,6 +277,9 @@
 
                     } else {
                         alert(response.message);
+                        $(".selectCategoryId").val("");
+                        $(".selectProjectId").val("");
+                        $(".createddate").val("");
                     }
 
                 },
@@ -303,7 +316,9 @@
                                                                 <td>${item.createdTime}</td>
                                                             </tr>`;
                             $("tbody").append(newRow);
-
+                            $(".selectUserName").val("");
+                            $(".selectProjectId").val("");
+                            $(".createddate").val("");
                         });
                         $('table').DataTable({
                             paging: true,
@@ -314,6 +329,9 @@
                         });
                     } else {
                         alert(response.message);
+                        $(".selectUserName").val("");
+                        $(".selectProjectId").val("");
+                        $(".createddate").val("");
                     }
 
                 },
@@ -350,7 +368,9 @@
                                                                         <td>${item.createdTime}</td>
                                                                     </tr>`;
                             $("tbody").append(newRow);
-
+                            $(".selectUserName").val("");
+                            $(".selectCategoryId").val("");
+                            $(".createddate").val("");
                         });
                         $('table').DataTable({
                             paging: true,
@@ -362,6 +382,9 @@
 
                     } else {
                         alert(response.message);
+                        $(".selectUserName").val("");
+                        $(".selectCategoryId").val("");
+                        $(".createddate").val("");
                     }
 
                 },
@@ -400,6 +423,9 @@
                                                                             </tr>`;
                             $("tbody").append(newRow);
                             $(".createddate").val("");
+                            $(".selectUserName").val("");
+                            $(".selectCategoryId").val("");
+                            $(".selectProjectId").val("");
 
                         });
                         $('table').DataTable({
@@ -411,6 +437,10 @@
                         });
                     } else {
                         alert(response.message || "連接失敗，請重新輸入");
+                        $(".createddate").val("");
+                        $(".selectUserName").val("");
+                        $(".selectCategoryId").val("");
+                        $(".selectProjectId").val("");
                     }
                 },
             });
