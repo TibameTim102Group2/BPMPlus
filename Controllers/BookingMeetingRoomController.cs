@@ -92,8 +92,8 @@ namespace BPMPlus.Controllers
 
                 meeting.MeetingId = id.FirstOrDefault();
                 meeting.MeetingRoomId = vm.Room;
-                meeting.StartTime = DateTime.ParseExact(vm.StartDate, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
-                meeting.EndTime = DateTime.ParseExact(vm.EndDate, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture);
+                meeting.StartTime = DateTime.ParseExact(vm.StartDate, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture).AddHours(-8);
+                meeting.EndTime = DateTime.ParseExact(vm.EndDate, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture).AddHours(-8);
                 meeting.MeetingHost = host;
                 meeting.Note = vm.Note;
                 meeting.CreatedTime = DateTime.Now;
