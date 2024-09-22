@@ -414,15 +414,31 @@ namespace BPMPlus.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UploadProfilePicture(IFormFile profilePicture)
+        public async Task<IActionResult> UploadProfilePicture(IFormFile file)
         {
             User user = await GetAuthorizedUser();
 
            
-            if (profilePicture == null || profilePicture.Length == 0)
+            if (file == null || file.Length == 0)
             {
                 return Json(new { success = false, message = "請選擇檔案上傳" });
             }
+
+            // 檢查文件類型
+            var allowedTypes = new[] { "image/jpeg", "image/png", "image/gif" };
+            if (!allowedTypes.Contains(file.ContentType.ToLower()))
+            {
+                return Json(new { success = false, message = "只允許上傳 JPEG、PNG 或 GIF 圖片" });
+            }
+
+            // 檢查文件擴展名
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+            var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
+            if (!allowedExtensions.Contains(fileExtension))
+            {
+                return Json(new { success = false, message = "檔案類型不允許，請上傳 JPEG、PNG 或 GIF 圖片" });
+            }
+
 
             //var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "profiles");
 
@@ -433,18 +449,18 @@ namespace BPMPlus.Controllers
                 Directory.CreateDirectory(uploadPath);
             }
 
-            var fileName = Path.GetFileName(profilePicture.FileName);
+            var fileName = Path.GetFileName(file.FileName);
             var newFileName = $"{user.UserId}{Path.GetExtension(fileName)}";
             var filePath = Path.Combine(uploadPath, newFileName);
 
             using (var fileStream = new FileStream(filePath, FileMode.Create))
             {
-                await profilePicture.CopyToAsync(fileStream);
+                await file.CopyToAsync(fileStream);
             }
 
            
 
-            return Json(new { success = true, message = "上傳成功", imagePath = $"/profiles/{newFileName}" });
+            return Json(new { success = true, message = "上傳成功" });
         }
 
     }
