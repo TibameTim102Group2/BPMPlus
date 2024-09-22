@@ -399,5 +399,11 @@ namespace BPMPlus.Controllers
             return View();
         }
 
+        //設定大頭貼
+        public IActionResult PhotoSetting()
+        {
+            return View();
+        }
+
     }
 }
