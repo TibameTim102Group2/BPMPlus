@@ -25,7 +25,7 @@
     <!-- dropzonejs -->
     <link rel="stylesheet" href="~/AdminLTE/plugins/dropzone/min/dropzone.min.css">
     <!-- Theme style -->
-    <link rel="stylesheet" href="~/AdminLTE/dist/css/adminlte.min.css">
+@*     <link rel="stylesheet" href="~/AdminLTE/dist/css/adminlte.min.css"> *@
     <link rel="stylesheet" href="~/font-awesome/css/all.css" />
     <style>
         .title {
@@ -157,7 +157,7 @@
                                     }
                                     else
                                     {
-                                        <button class="button btn btn-warning" type="submit" disabled><i class="fa-solid fa-pen-to-square"></i>  修改</button>
+                                        <button class="button btn btn-warning" type="button" disabled><i class="fa-solid fa-pen-to-square"></i>  修改</button>
                                     }
 
                                 </div>
@@ -319,8 +319,7 @@
         $("#btnInvalid").click(function () {
 
             let userConfirmed = confirm("是否作廢?");
-            console.log(userConfirmed);
-
+           
             if (!userConfirmed) return;
 
             let id = $("#FromDetails_FormId").val();
@@ -345,37 +344,83 @@
         });
         
 
+        // $("#btnDownload").click(function () {
+
+        //     let userConfirmed = confirm("是否下載?");
+        //     if (!userConfirmed) return;
+
+
+        //     let id = $("#FromDetails_FormId").val();
+
+        //     let formData = new FormData();
+        //     formData.append("id", id);
+
+        //     fetch('/FormDetails/Download',
+        //         {
+        //             method: 'POST',
+        //             body: formData,
+
+        //         }).then(response => {
+        //             if (response.ok) {
+        //                 alert("下載成功");
+        //             } else {
+        //                 alert("下載失敗");
+        //             }
+        //             return response.blob()
+        //                 } )
+        //         .then( blob => {
+        //             var file = window.URL.createObjectURL(blob);
+        //             window.location.assign(file);
+        //           });
+
+               
+
+        // });
+
+
         $("#btnDownload").click(function () {
 
             let userConfirmed = confirm("是否下載?");
             if (!userConfirmed) return;
-
 
             let id = $("#FromDetails_FormId").val();
 
             let formData = new FormData();
             formData.append("id", id);
 
-            fetch('/FormDetails/Download',
-                {
-                    method: 'POST',
-                    body: formData,
+            fetch('/FormDetails/Download', {
+                method: 'POST',
+                body: formData,
+            }).then(response => {
+                // 檢查是否成功
+                if (!response.ok) {
+                    throw new Error('下載失敗');
+                }
 
-                }).then(response => {
-                    if (response.ok) {
-                        alert("下載成功");
-                    } else {
-                        alert("下載失敗");
-                    }
-                    return response.blob()
-                        } )
-                .then( blob => {
-                    var file = window.URL.createObjectURL(blob);
-                    window.location.assign(file);
-                  });
+                // 嘗試獲取回應的內容類型
+                let contentType = response.headers.get("content-type");
 
-               
+                // 如果伺服器返回的是文本
+                if (contentType && contentType.includes("text")) {
+                    return response.text().then(text => {
+                        alert(text);  // 例如：顯示 "無檔案可下載"
+                    });
+                }
 
+                // 否則繼續處理檔案下載
+                return response.blob().then(blob => {
+                    let file = window.URL.createObjectURL(blob);
+                    let link = document.createElement('a');
+                    link.href = file;
+                    link.download = 'download.zip';  // 可以更改為你的文件名
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    alert("下載成功");
+                });
+            }).catch(error => {
+                alert(error.message);
+            });
         });
     </script>
 }

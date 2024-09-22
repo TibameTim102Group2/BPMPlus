@@ -36,7 +36,7 @@
     <!-- SweetAlert -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <style>
-        .brand-link {
+        .sidebar-mini aside .brand-link {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -137,8 +137,11 @@
                                     <a class="nav-link" href="@Url.Action("ResetPassWord","Login")">修改密碼</a>
                                 </li>
                                 <li class="nav-item" style="margin-left:10%;">
-                                    <a class="nav-link" href="@Url.Action("Logout","Login")">登出</a>
+                                    <a class="nav-link" href="@Url.Action("PhotoSetting","Login")">設定</a>
                                 </li>
+                                <li class="nav-item" style="margin-left:10%;">
+                                    <a class="nav-link" href="@Url.Action("Logout","Login")">登出</a>
+                                </li>  
                             </ul>
                         </li>
                         <!-- /User -->
