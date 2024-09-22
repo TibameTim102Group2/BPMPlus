@@ -420,9 +420,11 @@
             let checkIcon = document.querySelector(".checkIcon");
             let falseIcon = document.querySelector(".falseIcon");
             let loadIcon = document.querySelector(".loadIcon");
+            let rejectBtn = document.querySelector(".rejectBtn");
+            let approveBtn = document.querySelector(".approveBtn");
             let userPermit;
 
-            // Validate employee function
+            // 針對有指派人員欄位權限者 , 輸入時發送請求確認人員是否符合資格
             async function validateEmp(empName) {
                 let response = await fetch(`/FormReview/AssignEmp?empName=${empName}`, {
                     method: "POST",
@@ -434,22 +436,16 @@
                 return result;
             }
 
-            // Send request to check permissions
+
+            // 發請求確認當前user 身分權限 回應相對應功能
             fetch(`/FormReview/CheckEmp/?id=${formId}`, {
                 method: "GET"
             })
                 .then(response => response.json())
                 .then(data => {
-                    userPermit = data.userPermit;
                     if (data.status === true) {
-                        needEmp.value = data.handler || '';
 
-                        if (data.userPermit === "07") {
-                            let rejectBtn = document.querySelector(".rejectBtn");
-                            let approveBtn = document.querySelector(".approveBtn");
-                            needEmp.value = "";
-
-                            function handleRejectClick() {
+                         function handleRejectClick() {
                                 needEmp.setAttribute("readonly", "readonly");
                                 needEmp.value = "退回時無需填寫人員";
                                 needEmp.style = "color:red;"
@@ -458,19 +454,36 @@
                                 loadIcon.setAttribute("hidden", "hidden");
                             }
 
-                            function handleApproveClick() {
+                         function handleApproveClick() {
                                 needEmp.removeAttribute("readonly");
                                 if (needEmp.value === "退回時無需填寫人員"){
+                                    needEmp.style = "color:black;"
                                     needEmp.value = "";
                                 }
                             }
+
+                        if (data.userPermit === "other") {
+                            needEmp.setAttribute("readonly", "readonly");
+                            checkEstimatedTime.setAttribute("readonly", "readonly");
+                            checkEstimatedTime.value = "";
+                            needEmp.value = "";
+                            rejectBtn.addEventListener("click", handleRejectClick);
+                            approveBtn.addEventListener("click", function () {
+                                if (needEmp.value === "退回時無需填寫人員") {
+                                    needEmp.style = "color:black;"
+                                    needEmp.value = "";
+                                }
+                            });
+                        }
+                        else if (data.userPermit === "07") {
+                            needEmp.value = data.handler;
 
                             rejectBtn.addEventListener("click", handleRejectClick);
                             approveBtn.addEventListener("click", handleApproveClick);
 
                             needEmp.removeAttribute("readonly");
                             checkEstimatedTime.setAttribute("readonly", "readonly");
-                            checkEstimatedTime.value = data.time || '';
+                            checkEstimatedTime.value = "";
 
                             needEmp.addEventListener("input", function (event) {
                                 clearTimeout(this.inputTimer);
@@ -481,37 +494,51 @@
                                         falseIcon.setAttribute("hidden", "hidden");
                                         loadIcon.setAttribute("hidden", "hidden");
                                         loadIcon.removeAttribute("hidden");
+
                                     this.inputTimer = setTimeout(async () => {
                                         let result = await validateEmp(enterEmp);
                                         loadIcon.setAttribute("hidden", "hidden");
+
                                         if (result.status) {
                                             checkIcon.removeAttribute("hidden");
                                         } else {
                                             falseIcon.removeAttribute("hidden");
                                         }
                                     }, 1000);
-                                }else{
+                                }
+                                else{
                                     checkIcon.setAttribute("hidden", "hidden");
                                     falseIcon.setAttribute("hidden", "hidden");
                                     loadIcon.setAttribute("hidden", "hidden");
                                 }
                             });
-                        } else if (data.userPermit === "08") {
+                        }
+                        else if (data.userPermit === "08") {
+                            needEmp.value = data.handler;
                             needEmp.setAttribute("readonly", "readonly");
                             checkEstimatedTime.removeAttribute("readonly");
 
-                            if (data.previousEstimatedTime) {
-                                checkEstimatedTime.value = data.previousEstimatedTime;
-                            } else {
-                                checkEstimatedTime.value = data.time || '';
+                            if (data.time != null) {
+                                checkEstimatedTime.value = data.time;
                             }
-                        } else {
+                            else {
+                                checkEstimatedTime.value =  "";
+                            }
+                        }
+                        else if (data.userPermit === "09") {
+                            needEmp.value = data.handler;
                             needEmp.setAttribute("readonly", "readonly");
                             checkEstimatedTime.setAttribute("readonly", "readonly");
-                            checkEstimatedTime.value = data.time || '';
+
+                            if (data.time != null) {
+                                checkEstimatedTime.value = data.time;
+                            }
+                            else {
+                                checkEstimatedTime.value = "";
+                            }
                         }
 
-                        // Form submission validation
+                        // submit驗證
                         formValid.addEventListener("submit", async function (event) {
                             event.preventDefault();
                             let rejectBtn = document.querySelector('input[name="reviewResult"][value="reject"]').checked;
@@ -545,13 +572,15 @@
                                 this.submit();
                             }
                         });
-                    } else {
+                    }
+                    else {
                         needEmp.setAttribute("readonly", "readonly");
                         checkEstimatedTime.setAttribute("readonly", "readonly");
                         alert("您沒有權限進行此操作。");
                     }
                 })
                 .catch(err => {
+                    console.error("Error:", err);
                     alert("發生錯誤：" + JSON.stringify(err));
                 });
         });
