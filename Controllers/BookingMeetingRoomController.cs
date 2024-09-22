@@ -2,12 +2,11 @@
 using BPMPlus.Models;
 using BPMPlus.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using NuGet.Protocol;
-using System.Linq;
+using System.Globalization;
 using System.Text.Json;
 
 namespace BPMPlus.Controllers
@@ -55,7 +54,6 @@ namespace BPMPlus.Controllers
         // 撈會議室可容納人數
         public async Task<IActionResult> GetMeetingRoomInfo(string id)
         {
-            User user = await GetAuthorizedUser();
             var accommdation = _context.MeetingRooms
                 .Where(n => n.MeetingRoomId == id)
                 .Select(n => n.Accommodation);
@@ -66,35 +64,58 @@ namespace BPMPlus.Controllers
         //確認預約狀況
         public async Task<IActionResult> CheakMeetingRooms(string RoomId, string BookingDate)
         {
-            User user = await GetAuthorizedUser();
-
-            var cheaking = await _context.Meeting
+            var bookedTimes = await _context.Meeting
                 .Where(b=>b.MeetingRoomId == RoomId && b.StartTime.Date == DateTime.Parse(BookingDate).Date)
                 .Select(b=>new {
-                    StartTime=b.StartTime.AddHours(8).ToString("HH"),
-                    EndTime=b.EndTime.AddHours(8).ToString("HH")
+                    StartTime = b.StartTime.AddHours(8).ToString("HH:mm"),
+                    EndTime = b.EndTime.AddHours(8).ToString("HH:mm")
                 })
                 .ToListAsync();
-
-            return Json(new { success = true, data = cheaking });
+            return Json(new { success = true, data = bookedTimes });
         }
 
 
         [HttpPost]
         public async Task<IActionResult> SubmitBooking([FromBody] BookingMeetingRoomVM vm)
         {
-            //if (ModelState.IsValid)
-            //{
-            //    Meeting meeting = new Meeting();
-            //    meeting.MeetingId = "";
-            //    meeting.MeetingRoomId = vm.Room;
-            //    meeting.StartTime = DateTime.Parse(vm.StartTime);
-            //    meeting.EndTime = DateTime.Parse(vm.EndTime);
-            //    meeting.Note = vm.Note;
-            //    await _context.Meeting.AddAsync(meeting);
-            //    await _context.SaveChangesAsync();
 
-            //}
+            List<string> id = await CreateMeetingIdListAsync(1);
+
+            if (ModelState.IsValid)
+            {
+                Meeting meeting = new Meeting();
+
+                var host = await _context.User
+                    .Where(u => u.UserName == vm.MeetingHost)
+                    .Select(h => h.UserId)
+                    .FirstOrDefaultAsync();
+
+                meeting.MeetingId = id.FirstOrDefault();
+                meeting.MeetingRoomId = vm.Room;
+                meeting.StartTime = DateTime.ParseExact(vm.StartDate, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture).AddHours(-8);
+                meeting.EndTime = DateTime.ParseExact(vm.EndDate, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture).AddHours(-8);
+                meeting.MeetingHost = host;
+                meeting.Note = vm.Note;
+                meeting.CreatedTime = DateTime.Now;
+                meeting.UpdatedTime = DateTime.Now;
+
+                await _context.Meeting.AddAsync(meeting);
+                await _context.SaveChangesAsync();
+
+            }
+            var meetingid = _context.Meeting.Include(x => x.Users).FirstOrDefault(x => x.MeetingId == id[0]);
+
+            foreach (var item in vm.Members)
+            {
+
+                //重新建關聯
+                var newMeetingMember = _context.User.FirstOrDefault(pg => pg.UserId == item);
+                if (newMeetingMember != null)
+                {
+                    meetingid.Users.Add(newMeetingMember);
+                    _context.SaveChanges();
+                }
+            }
 
             return RedirectToAction("Index", "CurrentMeetingRoom");
         }
