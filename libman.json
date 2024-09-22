@@ -21,6 +21,10 @@
     {
       "library": "jQuery.Gantt@1.1.0",
       "destination": "wwwroot/jQuery.Gantt/"
+    },
+    {
+      "library": "frappe-gantt@0.8.0",
+      "destination": "wwwroot/frappe-gantt/"
     }
   ]
 }

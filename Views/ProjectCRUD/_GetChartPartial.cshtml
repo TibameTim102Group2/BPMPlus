@@ -1,36 +1,41 @@
-﻿@model BPMPlus.ViewModels.ProjectChartViewModel
+﻿@model BPMPlus.ViewModels.Project.ProjectChartViewModel
+@{
+    ViewData["Title"] = "Gantt Chart";
+}
 
+<link rel="stylesheet" href="~/frappe-gantt/style.css" />
 
-<div class="gantt" id="gantt"></div>
+<div id="gantt"></div>
 
+<script src="~/frappe-gantt/frappe-gantt.js"></script>
 
-
-<script src="~/jquery.gantt/js/jquery.js"></script>
-<script src="~/moment.js/moment.js"></script>
-<script src="~/jquery.gantt/js/jquery.fn.gantt.js"></script>
 <script>
-    $(document).ready(function () {
-        "use strict";
-        var today = moment();
-        var andTwoHours = moment().add(2, "hours");
-        var today_friendly = "/Date(" + today.valueOf() + ")/";
-        var next_friendly = "/Date(" + andTwoHours.valueOf() + ")/";
-        $("#gantt").gantt({
-            source: [{
-                name: "Testing",
-                desc: " ",
-                values: [{
-                    from: today_friendly,
-                    to: next_friendly,
-                    label: "Test",
-                    customClass: "ganttRed"
-                }]
-            }],
-            scale: "hours",
-            minScale: "hours",
-            navigate: "scroll"
-        });
-    })
-    
+    var formGanttDataList = @Html.Raw(Json.Serialize(Model.FormGanttDataList))
+    var projectGanttDataList = @Html.Raw(Json.Serialize(Model.ProjectGanttDataList))
+    var tasks = [];
+    for (var i = 0; i < formGanttDataList.length; ++i) {
+        console.log(formGanttDataList[i])
+        tasks.push(
+            {
+                id: formGanttDataList[i].id,
+                name: formGanttDataList[i].id,
+                start: formGanttDataList[i].startTime,
+                end: formGanttDataList[i].endTime,
+                progress: formGanttDataList[i].progress,
+                dependencies: formGanttDataList[i].dependencies
+            },
+           
+        );
+    }
+    tasks.push(
+        {
+            id: projectGanttDataList[0].id,
+            name: projectGanttDataList[0].name,
+            start: projectGanttDataList[0].startTime,
+            end: projectGanttDataList[0].endTime,
+            progress: projectGanttDataList[0].progress,
+            dependencies: projectGanttDataList[0].dependencies
+        },
+    );
+    const gantt = new Gantt("#gantt", tasks);
 </script>
-
