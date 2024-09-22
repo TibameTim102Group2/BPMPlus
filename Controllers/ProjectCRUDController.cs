@@ -88,7 +88,7 @@ namespace BPMPlus.Controllers
                 projectFormsViewModels.Add(new ProjectFormsViewModels(
                     form.Form.FormId, 
                     form.Form.Department.DepartmentName, 
-                    form.Form.UserId, 
+                    form.Form.UserId,
                     form.Form.User.UserName, 
                     form.Form.Category.CategoryDescription,
                     (form.PN.UserActivity.UserActivityIdDescription)
@@ -96,7 +96,8 @@ namespace BPMPlus.Controllers
                 
                 int formNodeCount = form.Form.ProcessNode.Count()-1;
                 int index = 0;
-                foreach(var node in form.Form.ProcessNode)
+                var pnList = form.Form.ProcessNode.OrderBy(p => p.ProcessNodeId);
+                foreach (var node in pnList)
                 {
                     if(node.ProcessNodeId == form.Form.ProcessNodeId)
                     {
@@ -119,20 +120,25 @@ namespace BPMPlus.Controllers
                 formIndexList.Add( index );
                 formNodeCountList.Add( formNodeCount );
             }
-
+            string formGantListStr = "";
+            foreach(var node in FormGanttList)
+            {
+                formGantListStr += node.Id+", ";
+            }
+            var prg = (formIndexList.Sum() * (100/formNodeCountList.Sum()));
             ProjectChartViewModel projectChartViewModel = new ProjectChartViewModel(
                 new List<GanttData>() {
                     new GanttData(
                         Project.ProjectId,
                         Project.ProjectName,
-                        Project.CreatedTime.AddHours(8).Date.ToString("yyyyNNDD"),
-                        Project.DeadLine.AddHours(8).Date.ToString("yyyyNNDD"),
-                        formIndexList.Sum(x => x)/formNodeCountList.Sum(x => x),
+                        Project.CreatedTime.AddHours(8).Date.ToString("yyyy-MM-dd"),
+                        Project.DeadLine.AddHours(8).Date.ToString("yyyy-MM-dd"),
+                        prg,
                         null
                     )
                 },
                 FormGanttList
-            );  
+            );
             return View(
                 new ProjectDetailsViewModel(
                     projectUsersViewModels,
