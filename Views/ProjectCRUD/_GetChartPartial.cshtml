@@ -1,36 +1,41 @@
-﻿@model BPMPlus.ViewModels.ProjectChartViewModel
+﻿@model BPMPlus.ViewModels.Project.ProjectChartViewModel
+@{
+    ViewData["Title"] = "Gantt Chart";
+}
 
+<link rel="stylesheet" href="~/frappe-gantt/style.css" />
 
-<div class="gantt" id="gantt"></div>
+<div id="gantt"></div>
 
+<script src="~/frappe-gantt/frappe-gantt.js"></script>
 
-
-<script src="~/jquery.gantt/js/jquery.js"></script>
-<script src="~/moment.js/moment.js"></script>
-<script src="~/jquery.gantt/js/jquery.fn.gantt.js"></script>
 <script>
-    $(document).ready(function () {
-        "use strict";
-        var today = moment();
-        var andTwoHours = moment().add(2, "hours");
-        var today_friendly = "/Date(" + today.valueOf() + ")/";
-        var next_friendly = "/Date(" + andTwoHours.valueOf() + ")/";
-        $("#gantt").gantt({
-            source: [{
-                name: "Testing",
-                desc: " ",
-                values: [{
-                    from: today_friendly,
-                    to: next_friendly,
-                    label: "Test",
-                    customClass: "ganttRed"
-                }]
-            }],
-            scale: "hours",
-            minScale: "hours",
-            navigate: "scroll"
-        });
-    })
-    
-</script>
+    const tasks = [
+        {
+            id: 'Task 1',
+            name: 'Design Phase',
+            start: '2024-09-01',
+            end: '2024-09-05',
+            progress: 20,
+            dependencies: null
+        },
+        {
+            id: 'Task 2',
+            name: 'Development Phase',
+            start: '2024-09-06',
+            end: '2024-09-10',
+            progress: 50,
+            dependencies: null
+        },
+        {
+            id: 'Task 3',
+            name: 'Testing Phase',
+            start: '2024-09-11',
+            end: '2024-09-15',
+            progress: 10,
+            dependencies: null
+        }
+    ];
 
+    const gantt = new Gantt("#gantt", tasks);
+</script>

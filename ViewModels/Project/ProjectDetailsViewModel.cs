@@ -1,13 +1,13 @@
-﻿namespace BPMPlus.ViewModels
+﻿namespace BPMPlus.ViewModels.Project
 {
     public class ProjectFormsViewModels
     {
-        public string FormId {  get; set; }
-        public string Department {  get; set; }
-        public string UserId {  get; set; }
+        public string FormId { get; set; }
+        public string Department { get; set; }
+        public string UserId { get; set; }
         public string UserName { get; set; }
-        public string Category {  get; set; }
-        public string Status {  get; set; }
+        public string Category { get; set; }
+        public string Status { get; set; }
         public ProjectFormsViewModels(
             string formId,
             string department,
@@ -17,12 +17,12 @@
             string status
         )
         {
-            this.FormId = formId;
-            this.Department = department;
-            this.UserId = userId;
-            this.UserName = userName;
-            this.Category = category;
-            this.Status = status;
+            FormId = formId;
+            Department = department;
+            UserId = userId;
+            UserName = userName;
+            Category = category;
+            Status = status;
         }
 
     }
@@ -32,8 +32,8 @@
         public string UserId { get; set; }
         public string Department { get; set; }
         public string Grade { get; set; }
-        public string IsPm {  get; set; }
-        
+        public string IsPm { get; set; }
+
         public ProjectUsersViewModels(
             string userName,
             string userId,
@@ -42,11 +42,11 @@
             string isPm
         )
         {
-            this.UserName = userName;
-            this.Department = department;
-            this.UserId = userId;
-            this.Grade = grade;
-            this.IsPm = isPm;
+            UserName = userName;
+            Department = department;
+            UserId = userId;
+            Grade = grade;
+            IsPm = isPm;
         }
 
     }
@@ -59,12 +59,13 @@
         public List<ProjectUsersViewModels> ProjectUsersViewModels { get; set; }
         public List<ProjectFormsViewModels> ProjectFormsViewModels { get; set; }
         public ProjectChartViewModel ProjectChartViewModel { get; set; }
-        public ProjectDetailsViewModel(List<ProjectUsersViewModels> pu, List<ProjectFormsViewModels> pf, ProjectChartViewModel pc) { 
-            this.ProjectUsersViewModels = pu;
-            this.ProjectFormsViewModels = pf;
-            this.ProjectChartViewModel = pc;
+        public ProjectDetailsViewModel(List<ProjectUsersViewModels> pu, List<ProjectFormsViewModels> pf, ProjectChartViewModel pc)
+        {
+            ProjectUsersViewModels = pu;
+            ProjectFormsViewModels = pf;
+            ProjectChartViewModel = pc;
         }
     }
 
-    
+
 }

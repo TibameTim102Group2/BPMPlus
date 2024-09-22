@@ -1,6 +1,6 @@
 ﻿using BPMPlus.Data;
 using BPMPlus.Models;
-using BPMPlus.ViewModels;
+using BPMPlus.ViewModels.Project;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -91,6 +91,7 @@ namespace BPMPlus.Controllers
                     (form.PN.UserActivity.UserActivityIdDescription)
                 ));
             }
+            
             ProjectChartViewModel projectChartViewModel = new ProjectChartViewModel();  
             return View(
                 new ProjectDetailsViewModel(
