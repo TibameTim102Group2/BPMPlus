@@ -82,10 +82,10 @@
                 <div class="card-body" style="background-color:white;margin-top:2vw; border-color:black">
                     <p style="font-size:large">選取日期: {{ selectedDate }}</p>
                     <h4>會議資訊</h4>
-                    <p class="pContent"><i class="fa-solid fa-arrow-right"></i> 會議室:{{bookedDetails.meetingRoomId||無}}</p>
-                    <p class="pContent"><i class="fa-regular fa-user "></i> 主持人:{{bookedDetails.meetingHost||無}}</p>
+                    <p class="pContent"><i class="fa-solid fa-arrow-right"></i> 會議室:{{bookedDetails.meetingRoomId}}</p>
+                    <p class="pContent"><i class="fa-regular fa-user "></i> 主持人:{{bookedDetails.meetingHost}}</p>
                 <p class="pContent"><i class="fa-regular fa-clock "></i> 預約時間:{{formatTime(bookedDetails.startTime)}}-{{formatTime(bookedDetails.endTime)}} </p>
-                    <p class="pContent"><i class="fa-regular fa-comment "></i> 備註:{{bookedDetails.note||無}}</p>
+                    <p class="pContent"><i class="fa-regular fa-comment "></i> 備註:{{bookedDetails.note}}</p>
                 </div>
 
 
@@ -122,10 +122,6 @@
                     }
                     return "00:00"
                 },
-                fetchBookings() {
-                    var _this = this;
-                    if (!_this.selectedDate) return;
-                },
                 isBooked(room, time) {
                     const hour = parseInt(time.split(':')[0], 10);
                     return this.bookedSlots[room] && this.bookedSlots[room].includes(hour);
@@ -152,11 +148,13 @@
                     //先清空內容
                     this.bookedDetails = {};
                     const clickTime = parseInt(time.split(':')[0], 10);
-                    const findBooking = this.bookings.find(booking => {
-                        return booking.meetingRoomId===room 
+                    const findBooking = this.bookings.filter(booking => {
+                        return booking.meetingRoomId === room&&
+                            clickTime >= booking.startTime &&
+                            clickTime <= booking.endTime;
                     });
                     if(findBooking){
-                        this.bookedDetails = findBooking;
+                        this.bookedDetails = findBooking[0];
                     }
                     else{
                         console.log("notfind")

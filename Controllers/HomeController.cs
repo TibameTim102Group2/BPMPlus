@@ -1,3 +1,4 @@
+using BPMPlus.Attributes;
 using BPMPlus.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -6,6 +7,7 @@ using System.Diagnostics;
 namespace BPMPlus.Controllers
 {
     [Authorize]
+    [AuthAttribute]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

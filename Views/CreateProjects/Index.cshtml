@@ -75,6 +75,15 @@
           
         }
 
+        .error-border {
+            border: 2px solid red;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+        }
       
     
     </style>
@@ -97,7 +106,8 @@
                 </div>
                 <div class="mb-3 form-label">
                     <label >專案名稱</label>
-                    <input id="inputProject" class="form-control"  placeholder="請輸入專案名稱" >
+                    <input id="inputProject" class="form-control" placeholder="請輸入專案名稱" oninput="validateProjectName()" required>
+                    <span id="errorProjectName" class="error-message"></span>
                 </div>
             </div>
             <div class="mb-3 inputField ">
@@ -113,7 +123,8 @@
             <div class="mb-3 inputField ">
                 <div class="mb-3 form-label">
                     <label>專案期限</label>
-                    <input id="inputDeadline" class="form-control" type="date">
+                    <input id="inputDeadline" class="form-control" type="date" min="">
+                    <span id="errorSummary" class="error-message"></span>
                 </div>
             </div>
            @*  <div class="mb-3 inputField ">
@@ -125,7 +136,8 @@
             <div class="mb-3 inputField ">
                 <div class="mb-3 form-label summaryarea">
                     <label>專案概要</label>
-                    <textarea id="textSummary" rows="5" cols="52" class="form-control"></textarea>
+                    <textarea id="textSummary" rows="5" cols="52" class="form-control" placeholder="請輸入專案概要" required></textarea>
+                    <span id="errorDeadline" class="error-message"></span>
                 </div>
                 <div class="mb-3 form-label">
                     <button type="submit" id="btnSubmit" class="btn btn-warning">送出</button>
@@ -142,6 +154,52 @@
 @section Scripts {
      
     <script>
+
+        function validateProjectName() {
+            let projectName = $("#inputProject").val();
+            if (projectName === "") {
+                $("#inputProject").addClass("error-border");
+                // $("#errorProjectName").text("專案名稱不可為空");
+            } else {
+                $("#inputProject").removeClass("error-border");
+                // $("#errorProjectName").text("");
+            }
+        }
+
+        function validateDeadline() {
+            let deadLine = $("#inputDeadline").val();
+            let now = new Date();
+            now.setDate(now.getDate() - 1); // 今天的日期減一天
+            let inputDate = new Date(deadLine);
+
+            if (deadLine === "") {
+                $("#inputDeadline").addClass("error-border");
+                // $("#errorDeadline").text("專案期限不可為空");
+            } else if (inputDate < now) {
+                $("#inputDeadline").addClass("error-border");
+                // $("#errorDeadline").text("專案期限不可早於今日");
+            } else {
+                $("#inputDeadline").removeClass("error-border");
+                // $("#errorDeadline").text("");
+            }
+        }
+
+        function validateSummary() {
+            let summary = $("#textSummary").val();
+            if (summary === "") {
+                $("#textSummary").addClass("error-border");
+                // $("#errorSummary").text("專案概要不可為空");
+            } else {
+                $("#textSummary").removeClass("error-border");
+                // $("#errorSummary").text("");
+            }
+        }
+
+        validateProjectName();
+        validateDeadline();
+        validateSummary();
+
+
         $(document).ready(function () { 
         $("#btnSubmit").click(function () {
             let userConfirmed = confirm("是否送出?");
@@ -157,24 +215,26 @@
             let inputDate = new Date(deadLine); //輸入時間
             
             //驗證
-            // if (projectName == "") {
-            //     alert("專案名稱不可為空");
-            //     return;
-            // }
-            // if (deadLine == "") {
-            //     alert("專案期限不可為空");
-            //     return;
-            // }
+            if (projectName == "") {
+                alert("專案名稱不可為空");
+                return;
+            }
+            if (deadLine == "") {
+                alert("專案期限不可為空");
+                return;
+            }
 
-            // if (summary == "") {
-            //     alert("專案概要不可為空");
-            //     return;
-            // }
+            if (summary == "") {
+                alert("專案概要不可為空");
+                return;
+            }
 
-            // if (inputDate < now) {
-            //     alert("專案期限不可早於今日");
-            //     return;
-            // }
+            if (inputDate < now) {
+                alert("專案期限不可早於今日");
+                return;
+            }
+
+              
 
             let formData = new FormData();
             formData.append('projectName', projectName);
@@ -208,6 +268,18 @@
 
             })
         });
+
+        //min日期
+        let today = new Date();
+        let year = today.getFullYear();
+        let month = String(today.getMonth() + 1).padStart(2, '0'); // 月份從0開始，需+1，padStart補0
+        let day = String(today.getDate()).padStart(2, '0'); // 補0
+
+        // 格式化日期為 YYYY-MM-DD
+        let formattedDate = `${year}-${month}-${day}`;
+
+        // 將 min 設定為今天的日期
+        document.getElementById("inputDeadline").setAttribute("min", formattedDate);
 
     </script>
 

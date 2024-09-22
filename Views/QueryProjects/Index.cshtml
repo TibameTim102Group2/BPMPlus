@@ -39,6 +39,7 @@
 
         table {
             text-align: center;
+            width:100%;
         }
 
         .projectArea {
@@ -48,6 +49,11 @@
         #btnQuery {
             font-weight: 600;
         }
+
+        #employeeId{
+           padding-left:5px
+        }
+
 
     </style>
 }
@@ -72,13 +78,14 @@
         <div class="row groupInput">
             <div class="col-6">
                 <label class="groupLabel">參與員工</label>
-                <select id="employeeId">
-                    <option>請選擇員工</option>
+                <input placeholder="請選擇員工" list="employeeId" id="employeeList" />
+                <datalist id="employeeId" >
+                    <@* option value="">--請選擇員工--</option> *@
                     @foreach (var employee in Model.QueryProjectsSearchEmployees)
                     {
-                        <option value="@employee.EmployeeId">@employee.EmployeeId @employee.EmployeeName</option>
+                        <option value="@employee.EmployeeId">@employee.EmployeeName</option>
                     }
-                </select>
+                </datalist>
             </div>
             <div class="col-6">
                 <button class="btn btn-primary" id="btnQuery">查詢專案</button>
@@ -98,7 +105,7 @@
 
                     </tr>
                 </thead>
-
+               
             
                 @*  <tbody>
                 @foreach (var project in Model.QueryProjectsProjectContents)
@@ -135,6 +142,8 @@
         $(document).ready(function () {
             // alert("ready");
             $("table").dataTable({
+                "autoWidth": false,
+                "responsive": true,
                 "searching": false,
                 ajax: {
                     type: "GET",
@@ -174,7 +183,7 @@
             let projectId = $("#projectId").val();
             let projectName = $("#projectName").val();
             let employeeDepartmentName = $("#employeeDepartmentName").val();
-            let employeeId = $("#employeeId").val();
+            let employeeId = $("#employeeList").val();
 
             let projectData = {
                 "ProjectId": projectId,
@@ -191,7 +200,7 @@
                 success: function (response) {
 
 
-                    if (response.data && response.data.length > 0) {
+                    if (response.data) {
                         let model = response.data;
 
                         // 若有初始化要先銷毀
@@ -201,6 +210,8 @@
 
                         // 初始化或重新加載 DataTable
                         $("table").DataTable({
+                            "autoWidth": false,
+                            "responsive": true,
                             "searching": false,
                             "processing": true,  // 顯示加載
                             "data": model,  // 前面返回的model
@@ -226,6 +237,7 @@
                         });
                     } else {
                         alert("查無資料");
+                        
                        
                     }
                 },
