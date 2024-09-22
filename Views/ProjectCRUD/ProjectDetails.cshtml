@@ -177,7 +177,6 @@
 
     <!-- inside -->
     <div class="inside">
-        <form>
             <h2 class="title" style="margin-top: 5%;font-weight: 900">專案資料</h2>
             <div class="mb-3 inputField ">
                 <div class="mb-3 form-label">
@@ -201,7 +200,7 @@
             </div>
             <div class="note" style="margin-top:10%; padding:2%; width:200%">
                 <div class="noteContent">專案描述</div>
-                <textarea style="width: 40%; height: 150px">@ViewBag.Summary</textarea>
+                <textarea disabled style="width: 40%; height: 150px">@ViewBag.Summary</textarea>
             </div>
             <div height: 40px>
 
@@ -220,106 +219,6 @@
             <div  class="note" style="padding:2%; width:100%">
                 @await Html.PartialAsync("_GetChartPartial", Model.ProjectChartViewModel)
             </div>
-            
-            @* <div class="mb-3 inputField ">
-                <div class="mb-3 form-label">
-                    <label for="xxx1">需求部門</label>
-                    <input inside ="@ViewBag.DepartmentId" id="DepartmentId" type="xxx1" class="form-control" value="@ViewBag.DepartmentName" Disabled>
-                </div>
-                <div class="mb-3 form-label">
-                </div>
-            </div>
-            <div class="mb-3 inputField ">
-                <div class="mb-3 form-label">
-                    <label for="xxx1">聯繫電話</label>
-                    <input id="Tel" type="xxx1" class="form-control" value="@ViewBag.UserTEL" Disabled>
-                </div>
-                <div class="mb-3 form-label">
-                    <label for="xxx2">專案編號</label>
-                    <select id="projectId" name="ProjectId" class="form-control" onchange="updateProjectName()">
-                        <option value="">-- 請選擇專案編號 --</option>
-                        @foreach (var project in ViewBag.Projects)
-                        {
-                                <!option value="@project.ProjectId" data-id="@project.ProjectName" @(project.ProjectId == ViewBag.SelectProjectId ? "selected" : "")>@project.ProjectId</!option>
-                        }
-                    </select>
-                </div>
-            </div>
-            <div class="mb-3 inputField ">
-                <div class="mb-3 form-label">
-                    <label for="xxx2">希望完成日期</label>
-                    <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                        <input id="ExpectedFinishedDay" type="text" class="form-control datetimepicker-input" data-target="#reservationdate" />
-                        <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
-                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mb-3 form-label">
-                    <label for="xxx2">專案名稱</label>
-                    <select id="projectName" name="ProjectName" class="form-control" onchange="updateProjectId()">
-                        <option value="">-- 請選擇專案名稱 --</option>
-                        @foreach (var project in ViewBag.Projects)
-                        {
-                                <!option value="@project.ProjectName" data-id="@project.ProjectId" @(project.ProjectName == ViewBag.SelectedProjectName ? "selected" : "")>@project.ProjectName</!option>
-                        }
-                    </select>
-                </div>
-            </div>
-            <div class="mb-3 inputField">
-                <div class="mb-3 form-label">
-                    <label for="xxx1">複製單號</label>
-                    <select id="formDropdown" class="form-control" onchange="updateFormId()">
-                        <option value="">-- 請選擇複製單號 --</option>
-                        @foreach (var form in ViewBag.Forms as List<Form>)
-                        {
-                                <option value="@form.FormId" data-id="@form.FormId">@form.FormId</option>
-                        }
-                    </select>
-
-
-                </div>
-                <div class="mb-3 form-label">
-                    <label for="xxx2"></label>
-                    <input type="xxx2" class="form-control" style="visibility:hidden">
-                </div>
-            </div>
-            <div class="mb-3 inputField" style="margin-top:10%;height: 100%">
-                <div class="mb-3 form-label">
-                    <label for="xxx1">檔案上傳</label>
-                    <form id="uploadForm">
-                        <input type="file" class="form-control" id="fileInput" name="files" multiple />
-                    </form>
-                    <br />
-                </div>
-                <div class="mb-3 form-label">
-                    <label for="xxx2"></label>
-                    <input type="xxx2" class="form-control" style="visibility:hidden">
-                </div>
-                
-
-            </div>
-            <div id="fileListContainer" style="width:30%">
-                    <ul id="fileList"></ul>
-            </div>
-                
-
-
-            <!-- 需求內容的位置 -->
-
-            <div class="note" style="margin-top:10%; padding:2%; width:100%">
-                <div class="noteContent">需求內容</div>
-                <div class="txtInput" id="txtInput">
-                    <div id="summernote"></div>
-
-                </div>
-
-            </div>
-            <!-- 送出按鈕 -->
-            <div class="submit-btn">
-                <button type="submit" id="submitButton"  class="btn btn-primary">送出</button>
-            </div> *@
-        </form>
     </div>
 </div>
 @section Scripts {
