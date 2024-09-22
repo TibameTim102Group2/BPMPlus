@@ -675,12 +675,24 @@ namespace BPMPlus.Controllers
             //讀取檔案
             var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "upload");
             filePath = Path.Combine(filePath, id);
+
+            if (!Directory.Exists(filePath))
+            {
+                return Content("無檔案可下載");
+            }
+
+            string[] allFiles = Directory.GetFiles(filePath, "*", SearchOption.AllDirectories);
+
+            if(allFiles.Length == 0)
+            {
+                return Content("無檔案可下載");
+            }
+
             byte[] data = null;
             using (var memoryStream = new MemoryStream())
             {
                 using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
                 {
-                    string[] allFiles = Directory.GetFiles(filePath, "*", SearchOption.AllDirectories);
                     foreach (var file in allFiles)
                     {
                         archive.CreateEntryFromFile(file, Path.GetFileName(file));
