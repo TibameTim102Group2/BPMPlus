@@ -50,9 +50,33 @@
         }
 
     }
+    public class GanttData
+    {
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string StartTime {  get; set; }
+        public string EndTime { get; set; }
+        public int Progress {  get; set; }
+        public string ?Dependencies {  get; set; }
+        public GanttData(string id, string name, string startTime, string endTime, int progess, string? dependence)
+        {
+            this.Id = id;
+            this.Name = name;
+            this.StartTime = startTime;
+            this.EndTime = endTime;
+            this.Progress = progess;
+            this.Dependencies = (dependence==null? dependence : null);
+        }
+    }
     public class ProjectChartViewModel
     {
-
+        public List<GanttData> ProjectGanttDataList { get; set; }
+        public List<GanttData> FormGanttDataList { get; set; }
+        public ProjectChartViewModel(List<GanttData> pgd, List<GanttData> fgd)
+        { 
+            this.ProjectGanttDataList = pgd;
+            this.FormGanttDataList = fgd;
+        }
     }
     public class ProjectDetailsViewModel
     {

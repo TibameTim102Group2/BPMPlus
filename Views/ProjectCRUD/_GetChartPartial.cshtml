@@ -10,32 +10,55 @@
 <script src="~/frappe-gantt/frappe-gantt.js"></script>
 
 <script>
-    const tasks = [
-        {
-            id: 'Task 1',
-            name: 'Design Phase',
-            start: '2024-09-01',
-            end: '2024-09-05',
-            progress: 20,
-            dependencies: null
-        },
-        {
-            id: 'Task 2',
-            name: 'Development Phase',
-            start: '2024-09-06',
-            end: '2024-09-10',
-            progress: 50,
-            dependencies: null
-        },
-        {
-            id: 'Task 3',
-            name: 'Testing Phase',
-            start: '2024-09-11',
-            end: '2024-09-15',
-            progress: 10,
-            dependencies: null
-        }
-    ];
+    var formGanttDataList = @Html.Raw(Json.Serialize(Model.FormGanttDataList))
+    var tasks = [];
+    for (var i = 0; i < formGanttDataList.length; ++i) {
+        console.log(formGanttDataList[i])
+        tasks.push(
+            {
+                id: formGanttDataList[i].id,
+                name: formGanttDataList[i].name,
+                start: formGanttDataList[i].startTime,
+                end: formGanttDataList[i].endTime,
+                progress: formGanttDataList[i].progress,
+                dependencies: formGanttDataList[i].dependencies
+            },
+            // {
+            //     id: '1',
+            //     name: '2',
+            //     start: '2024-09-01',
+            //     end: '2024-09-05',
+            //     progress: 20,
+            //     dependencies: null
+            // }
+        );
+    }
+    // const tasks = [
+    //     {
+    //         id: 'Task 1',
+    //         name: 'Design Phase',
+    //         start: '2024-09-01',
+    //         end: '2024-09-05',
+    //         progress: 20,
+    //         dependencies: null
+    //     },
+    //     {
+    //         id: 'Task 2',
+    //         name: 'Development Phase',
+    //         start: '2024-09-06',
+    //         end: '2024-09-10',
+    //         progress: 50,
+    //         dependencies: null
+    //     },
+    //     {
+    //         id: 'Task 3',
+    //         name: 'Testing Phase',
+    //         start: '2024-09-11',
+    //         end: '2024-09-15',
+    //         progress: 10,
+    //         dependencies: null
+    //     }
+    // ];
 
     const gantt = new Gantt("#gantt", tasks);
 </script>

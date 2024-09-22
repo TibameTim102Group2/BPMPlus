@@ -80,6 +80,9 @@ namespace BPMPlus.Controllers
                     projectUsersViewModels.Add(new ProjectUsersViewModels(u.UserName, u.UserId, u.Department.DepartmentName, u.Grade.GradeName, "組員"));
             }
             List<ProjectFormsViewModels> projectFormsViewModels = new List<ProjectFormsViewModels>();
+            List<GanttData> FormGanttList = new List<GanttData>();
+            List<int> formIndexList = new List<int>();
+            List<int> formNodeCountList = new List<int>();
             foreach(var form in Forms)
             {
                 projectFormsViewModels.Add(new ProjectFormsViewModels(
@@ -90,9 +93,46 @@ namespace BPMPlus.Controllers
                     form.Form.Category.CategoryDescription,
                     (form.PN.UserActivity.UserActivityIdDescription)
                 ));
+                
+                int formNodeCount = form.Form.ProcessNode.Count()-1;
+                int index = 0;
+                foreach(var node in form.Form.ProcessNode)
+                {
+                    if(node.ProcessNodeId == form.Form.ProcessNodeId)
+                    {
+                        break;
+                    }
+                    index++;
+                }
+                int formProgress = (100 / formNodeCount) * index;
+
+                FormGanttList.Add(
+                    new GanttData(
+                        form.Form.FormId,
+                        form.Form.Category.CategoryDescription,
+                        form.Form.Date.AddHours(8).Date.ToString("yyyy-MM-dd"),
+                        form.Form.ExpectedFinishedDay.AddHours(8).Date.ToString("yyyy-MM-dd"),
+                        formProgress,
+                        null
+                    )
+                );
+                formIndexList.Add( index );
+                formNodeCountList.Add( formNodeCount );
             }
-            
-            ProjectChartViewModel projectChartViewModel = new ProjectChartViewModel();  
+
+            ProjectChartViewModel projectChartViewModel = new ProjectChartViewModel(
+                new List<GanttData>() {
+                    new GanttData(
+                        Project.ProjectId,
+                        Project.ProjectName,
+                        Project.CreatedTime.AddHours(8).Date.ToString("yyyyNNDD"),
+                        Project.DeadLine.AddHours(8).Date.ToString("yyyyNNDD"),
+                        formIndexList.Sum(x => x)/formNodeCountList.Sum(x => x),
+                        null
+                    )
+                },
+                FormGanttList
+            );  
             return View(
                 new ProjectDetailsViewModel(
                     projectUsersViewModels,
