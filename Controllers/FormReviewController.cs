@@ -352,7 +352,7 @@ namespace BPMPlus.Controllers
                             .Select(e => e.UserId)
                             .FirstOrDefaultAsync();
                         var recieveEmp = await _context.User.Where(u => u.UserId == currentEmailEmp).Select(c => c).FirstOrDefaultAsync();
-                        //emailService.SendFormReviewEmail(recieveEmp, fvm.FormId);
+                        emailService.SendFormReviewEmail(recieveEmp, fvm.FormId);
                     }
 
                     // 驗收階段
@@ -519,7 +519,7 @@ namespace BPMPlus.Controllers
                             .Select(e => e.UserId)
                             .FirstOrDefaultAsync();
                         var recieveEmp = await _context.User.Where(u => u.UserId == currentEmailEmp).Select(c => c).FirstOrDefaultAsync();
-                        //emailService.SendFormReviewEmail(recieveEmp, fvm.FormId);
+                        emailService.SendFormReviewEmail(recieveEmp, fvm.FormId);
                     }
                     await UploadFiles(fvm);
                     return RedirectToAction("Index", "ToDoList");
