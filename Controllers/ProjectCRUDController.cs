@@ -1,6 +1,6 @@
 ﻿using BPMPlus.Data;
 using BPMPlus.Models;
-using BPMPlus.ViewModels;
+using BPMPlus.ViewModels.Project;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -80,18 +80,65 @@ namespace BPMPlus.Controllers
                     projectUsersViewModels.Add(new ProjectUsersViewModels(u.UserName, u.UserId, u.Department.DepartmentName, u.Grade.GradeName, "組員"));
             }
             List<ProjectFormsViewModels> projectFormsViewModels = new List<ProjectFormsViewModels>();
+            List<GanttData> FormGanttList = new List<GanttData>();
+            List<int> formIndexList = new List<int>();
+            List<int> formNodeCountList = new List<int>();
             foreach(var form in Forms)
             {
                 projectFormsViewModels.Add(new ProjectFormsViewModels(
                     form.Form.FormId, 
                     form.Form.Department.DepartmentName, 
-                    form.Form.UserId, 
+                    form.Form.UserId,
                     form.Form.User.UserName, 
                     form.Form.Category.CategoryDescription,
                     (form.PN.UserActivity.UserActivityIdDescription)
                 ));
+                
+                int formNodeCount = form.Form.ProcessNode.Count()-1;
+                int index = 0;
+                var pnList = form.Form.ProcessNode.OrderBy(p => p.ProcessNodeId);
+                foreach (var node in pnList)
+                {
+                    if(node.ProcessNodeId == form.Form.ProcessNodeId)
+                    {
+                        break;
+                    }
+                    index++;
+                }
+                int formProgress = (100 / formNodeCount) * index;
+
+                FormGanttList.Add(
+                    new GanttData(
+                        form.Form.FormId,
+                        form.Form.Category.CategoryDescription,
+                        form.Form.Date.AddHours(8).Date.ToString("yyyy-MM-dd"),
+                        form.Form.ExpectedFinishedDay.AddHours(8).Date.ToString("yyyy-MM-dd"),
+                        formProgress,
+                        null
+                    )
+                );
+                formIndexList.Add( index );
+                formNodeCountList.Add( formNodeCount );
             }
-            ProjectChartViewModel projectChartViewModel = new ProjectChartViewModel();  
+            string formGantListStr = "";
+            foreach(var node in FormGanttList)
+            {
+                formGantListStr += node.Id+", ";
+            }
+            var prg = (formIndexList.Sum() * (100/formNodeCountList.Sum()));
+            ProjectChartViewModel projectChartViewModel = new ProjectChartViewModel(
+                new List<GanttData>() {
+                    new GanttData(
+                        Project.ProjectId,
+                        Project.ProjectName,
+                        Project.CreatedTime.AddHours(8).Date.ToString("yyyy-MM-dd"),
+                        Project.DeadLine.AddHours(8).Date.ToString("yyyy-MM-dd"),
+                        prg,
+                        null
+                    )
+                },
+                FormGanttList
+            );
             return View(
                 new ProjectDetailsViewModel(
                     projectUsersViewModels,
