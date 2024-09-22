@@ -199,20 +199,17 @@
                 </div>
             </div>
             <div class="note" style="margin-top:10%; padding:2%; width:200%">
-                <div class="noteContent">專案描述</div>
+                <div class="noteContent">專案概述</div>
                 <textarea disabled style="width: 40%; height: 150px">@ViewBag.Summary</textarea>
-            </div>
-            <div height: 40px>
-
-            </div>
-            <h2 class="title" style="margin-top: 5%;font-weight: 900">專案工單</h2>
-            <div  class="note" style="padding:2%; width:100%">
-                @await Html.PartialAsync("_GetFormPartial", Model.ProjectFormsViewModels)
-            </div>
-
+            </div>           
             <h2 class="title" style="margin-top: 5%;font-weight: 900">專案成員</h2>
             <div  class="note" style="padding:2%; width:100%">
                 @await Html.PartialAsync("_GetUserPartial", Model.ProjectUsersViewModels)
+            </div>
+
+            <h2 class="title" style="margin-top: 5%;font-weight: 900">專案工單</h2>
+            <div  class="note" style="padding:2%; width:100%">
+                @await Html.PartialAsync("_GetFormPartial", Model.ProjectFormsViewModels)
             </div>
 
             <h2 class="title" style="margin-top: 5%;font-weight: 900">資料圖表</h2>

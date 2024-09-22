@@ -4,6 +4,7 @@ using BPMPlus.ViewModels.Project;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Build.Graph;
 using Microsoft.EntityFrameworkCore;
 
 namespace BPMPlus.Controllers
@@ -125,7 +126,8 @@ namespace BPMPlus.Controllers
             {
                 formGantListStr += node.Id+", ";
             }
-            var prg = (formIndexList.Sum() * (100/formNodeCountList.Sum()));
+            var prg = 0;
+            if(!(formNodeCountList.Sum() == 0)) prg = (formIndexList.Sum() * (100/formNodeCountList.Sum()));
             ProjectChartViewModel projectChartViewModel = new ProjectChartViewModel(
                 new List<GanttData>() {
                     new GanttData(
