@@ -174,19 +174,19 @@
 
             <div class="form-group">
                 <label for="">開始時間</label>
-                <select id="startTimeSelect" class="form-control timeSelect_startTime" style="outline:none;">
+                <select id="startTimeSelect" class="form-control startTimeSelect" style="outline:none;">
                 </select>
             </div>
 
             <div class="form-group">
                 <label for="">結束時間</label>
-                <select id="endTimeSelect" class="form-control timeSelect_endTime" style="outline:none;">
+                <select id="endTimeSelect" class="form-control endTimeSelect" style="outline:none;">
                 </select>
             </div>
 
             <div class="form-group">
                 <label for="">預約人</label>
-                <input type="text" class="form-control" value="@ViewBag.MeetingHost" Disabled />
+                <input type="text" class="form-control meetingHost" value="@ViewBag.MeetingHost" Disabled />
             </div>
 
             <div class="form-group">
@@ -348,10 +348,15 @@
                 });
             });
 
-            //選擇預約日期確認預約狀況
-            $(".bookingDate").change(function () {
+            //時間選擇器
+            let StartSelect = $("#startTimeSelect");
+            let EndSelect = $("#endTimeSelect");
+
+            function loadAvailableTimes() {
                 let meetingRoomId = $(".selectRoom").val();
-                let bookingDate = this.value;
+                let bookingDate = $(".bookingDate").val();
+
+                if (!meetingRoomId || !bookingDate) return;
 
                 $.ajax({
                     url: '@Url.Action("CheakMeetingRooms", "BookingMeetingRoom")',
@@ -361,123 +366,73 @@
                         BookingDate: bookingDate
                     },
                     success: function (response) {
-                        // alert('response');
-                        cheaking = response.data;
-
-                        if (cheaking == "") {
-                            let StartSelect = $("#startTimeSelect");
-                            let EndSelect = $("#endTimeSelect")
-
-                            function generateTimeOptions($select, startHour, endHour, interval, defaultText) {
-                                $select.empty();
-
-                                $select.append($('<option>', {
-                                    value: '',
-                                    text: defaultText
-                                }));
-
-                                for (var hour = startHour; hour <= endHour; hour++) {
-                                    for (var minute = 0; minute < 60; minute += interval) {
-                                        var time = padZero(hour) + ':' + padZero(minute);
-                                        $select.append($('<option>', {
-                                            value: time,
-                                            text: time
-                                        }));
-                                    }
-                                }
-                            }
-
-                            function padZero(num) {
-                                return (num < 10 ? '0' : '') + num;
-                            }
-
-                            function updateEndTimeOptions() {
-                                var startTime = StartSelect.val();
-                                if (startTime) {
-                                    var [startHour, startMinute] = startTime.split(':').map(Number);
-                                    generateTimeOptions(EndSelect, startHour, 22, 60, '-- 請選擇結束時間 --');
-                                    EndSelect.find('option').filter(function () {
-                                        var [hour, minute] = $(this).val().split(':').map(Number);
-                                        return hour < startHour || (hour === startHour && minute <= startMinute);
-                                    }).prop('disabled', true);
-                                } else {
-                                    generateTimeOptions(EndSelect, 8, 22, 60, '-- 請先選擇開始時間 --');
-                                    EndSelect.prop('disabled', true);
-                                }
-                            }
-
-                            // 初始化時間選項
-                            generateTimeOptions(StartSelect, 8, 22, 60, '-- 請選擇開始時間 --');
-                            generateTimeOptions(EndSelect, 8, 22, 60, '-- 請先選擇結束時間 --');
-                            EndSelect.prop('disabled', true);
-
-                            // 當開始時間改變時更新結束時間選項
-                            StartSelect.change(function () {
-                                updateEndTimeOptions();
-                                EndSelect.val('').prop('disabled', false);
-                            });
-
-
-                            // // 生成時間選項的函數
-                            // function generateTimeOptions(startHour, endHour, interval) {
-                            //     StartTimeSelect.empty(); // 清空現有選項
-
-                            //     // 添加預設選項
-                            //     StartTimeSelect.append($('<option>', {
-                            //         value: '',
-                            //         text: '-- 請選擇開始時間 --'
-                            //     }));
-
-                            //     // 生成時間選項
-                            //     for (var hour = startHour; hour <= endHour; hour++) {
-                            //         for (var minute = 0; minute < 60; minute += interval) {
-                            //             var time = padZero(hour) + ':' + padZero(minute);
-                            //             StartTimeSelect.append($('<option>', {
-                            //                 value: time,
-                            //                 text: time
-                            //             }));
-                            //         }
-                            //     }
-                            // }
-
-                            // // 補零函數
-                            // function padZero(num) {
-                            //     return (num < 10 ? '0' : '') + num;
-                            // }
-
-                            // // 初始化時間選項（8:00 到 22:00，每小時一個選項）
-                            // generateTimeOptions(8, 22, 60);
-
-                        }
-                        else {
-                        // for (i = 0; i < cheaking.length; i++) {
-                        //     var start = cheaking[i].startTime;
-                        //     var end = cheaking[i].endTime;
-                            
-                        // }
-                        // return cheaking;
-
-
-                        }
-
+                        let bookedTimes = response.data;
+                        updateTimeSelects(bookedTimes);
                     }
                 });
+            }
 
+            function updateTimeSelects(bookedTimes) {
+                function isTimeBooked(time) {
+                    return bookedTimes.some(booking => {
+                        return time >= booking.startTime && time < booking.endTime;
+                    });
+                }
 
-            });
+                function generateTimeOptions($select, startHour, endHour, interval, defaultText) {
+                    $select.empty();
+                    $select.append($('<option>', {
+                        value: '',
+                        text: defaultText
+                    }));
+                    for (var hour = startHour; hour < endHour; hour++) {
+                        for (var minute = 0; minute < 60; minute += interval) {
+                            var time = padZero(hour) + ':' + padZero(minute);
+                            if (!isTimeBooked(time)) {
+                                $select.append($('<option>', {
+                                    value: time,
+                                    text: time
+                                }));
+                            }
+                        }
+                    }
+                }
 
+                function padZero(num) {
+                    return (num < 10 ? '0' : '') + num;
+                }
 
-            //點選開始時間後
-            $(".startTime").change(function () {
-                var startTime = this.value;
+                // 初始化時間選項
+                generateTimeOptions(StartSelect, 8, 22, 60, '-- 請選擇開始時間 --');
+                generateTimeOptions(EndSelect, 8, 22, 60, '-- 請先選擇開始時間 --');
+                EndSelect.prop('disabled', true);
 
+                // 當開始時間改變時更新結束時間選項
+                StartSelect.off('change').on('change', function () {
+                    var startTime = StartSelect.val();
+                    if (startTime) {
+                        var [startHour, startMinute] = startTime.split(':').map(Number);
+                        generateTimeOptions(EndSelect, startHour, 22, 60, '-- 請選擇結束時間 --');
+                        EndSelect.find('option').filter(function () {
+                            var [hour, minute] = $(this).val().split(':').map(Number);
+                            return hour < startHour || (hour === startHour && minute <= startMinute);
+                        }).prop('disabled', true);
+                        EndSelect.val('').prop('disabled', false);
+                    } else {
+                        generateTimeOptions(EndSelect, 8, 22, 60, '-- 請先選擇開始時間 --');
+                        EndSelect.prop('disabled', true);
+                    }
+                });
+            }
 
-            });
+            // 監聽日期變更
+            $(".bookingDate").change(loadAvailableTimes);
 
-
-            //結束時間不可早於開始時間
-            $(".endTime").change(function () {
-                
+            // 監聽會議室變更
+            $(".selectRoom").change(function () {
+                if ($(".bookingDate").val()) {
+                    loadAvailableTimes();
+                }
             });
 
             // submit
@@ -485,10 +440,16 @@
 
                 let room = $(".selectRoom").val();
                 let bookingDate = $(".bookingDate").val();
-                let startTime = $(".startTime").val();
-                let endTime = $(".endTime").val();
+                let startTime = $(".startTimeSelect").val();
+                let endTime = $(".endTimeSelect").val();
+
+                let saveStartDate = bookingDate + " " + startTime;
+                let saveEndDate = bookingDate + " " + endTime;
+
                 let note = $(".note").val();
+                let meetingHost = $(".meetingHost").val();
                 let members = [];
+
 
                 $('#members .selected-item').each(function () {
                     // 取得中間的文字部分 (排除 <span>)
@@ -496,12 +457,12 @@
                         return this.nodeType === 3; // 只選擇內文
                     }).text().trim();
 
-                    // 取得UserId
+                    // 取得UserId, 加入members
                     var firstFourChars = text.substring(0, 4);
                     members.push(firstFourChars);
                 });
 
-                //檢查內容 不可為空
+                //檢查內容
                 if (room == "") {
                     alert('會議室不可為空!');
                     retuen;
@@ -528,18 +489,20 @@
                     contentType: 'application/json',
                     data: JSON.stringify({
                         Room: room,
-                        BookingDate: bookingDate,
-                        StartTime: startTime,
-                        EndTime: endTime,
+                        StartDate: saveStartDate,
+                        EndDate: saveEndDate,
                         Note: note,
+                        MeetingHost: meetingHost,
                         Members: members
                     }),
                     success: function (response) { 
                         alert('預約成功');
+                        window.location.href = "CurrentMeetingRoom/Index/";
                     },
                     error: function () { 
                         alert('error');
                     }
+
                 });
 
             })
