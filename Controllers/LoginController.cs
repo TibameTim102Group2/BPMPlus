@@ -98,6 +98,7 @@ namespace BPMPlus.Controllers
                 return View("Index", login); // 登入失敗導回頁面
             }
 
+
             // 抓第一筆符合的User資料
             var userWithGroups = await _context.User
                 .Include(u => u.PermissionGroups)
@@ -418,25 +419,24 @@ namespace BPMPlus.Controllers
         {
             User user = await GetAuthorizedUser();
 
-           
             if (file == null || file.Length == 0)
             {
                 return Json(new { success = false, message = "請選擇檔案上傳" });
             }
 
             // 檢查文件類型
-            var allowedTypes = new[] { "image/jpeg", "image/png", "image/gif" };
+            var allowedTypes = new[] { "image/jpeg" };
             if (!allowedTypes.Contains(file.ContentType.ToLower()))
             {
-                return Json(new { success = false, message = "只允許上傳 JPEG、PNG 或 GIF 圖片" });
+                return Json(new { success = false, message = "只允許上傳 JPG圖片" });
             }
 
             // 檢查文件擴展名
-            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+            var allowedExtensions = new[] { ".jpg"};
             var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
             if (!allowedExtensions.Contains(fileExtension))
             {
-                return Json(new { success = false, message = "檔案類型不允許，請上傳 JPEG、PNG 或 GIF 圖片" });
+                return Json(new { success = false, message = "檔案類型不允許，請上傳JPG圖片" });
             }
 
 
@@ -458,10 +458,52 @@ namespace BPMPlus.Controllers
                 await file.CopyToAsync(fileStream);
             }
 
-           
+            
+
 
             return Json(new { success = true, message = "上傳成功" });
         }
+
+        [HttpGet]
+        public async Task<IActionResult> ProfilePicture()
+        {
+            User user = await GetAuthorizedUser();
+            string file = user.UserId + ".jpg";
+            var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/profiles");
+            var filePath = Path.Combine(uploadPath, file);
+
+
+            if (System.IO.File.Exists(filePath))
+            {
+                TempData["FilePath"] = "/profiles/" + file;
+            }
+            else
+            {
+                TempData["FilePath"] = "/images/" + "default.jpg";
+            }
+
+
+
+            return Json(new { filePath = TempData["FilePath"] });
+
+        }
+
+
+        //[HttpGet]
+        //public async Task<IActionResult> ProfilePicture()
+        //{
+        //    User user = await GetAuthorizedUser();
+        //    string file = user.UserId + ".jpg";
+        //    var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/profiles");
+        //    var filePath = Path.Combine(uploadPath, file);
+
+        //    string relativePath = System.IO.File.Exists(filePath) ? "/profiles/" + file : "/images/default.jpg";
+
+        //    // 將圖片路徑傳遞到 View
+        //    ViewBag.ProfilePicturePath = relativePath;
+
+        //    return View();
+        //}
 
     }
 }
