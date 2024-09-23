@@ -10,9 +10,9 @@
             font-weight: bold;
         }
 
-        /* img{
-            border-radius:50%;
-        } */
+       label{
+            color: red;
+       }
 
        .upload{
              margin-top:10px;
@@ -27,10 +27,15 @@
     <!-- 預設圖片 -->
     <img id="preview" src="~/images/NoImage.jpg" alt="預覽圖片" style="width:200px;height:200px" />
 
+    <!-- 提示 -->
+    <div>
+    <label>僅限JPG檔案</label>
+    </div>
            
     <!-- 上傳圖片 -->
            
      <div class="upload">
+   
     <input id="file" type="file" accept="image/*" />
           <button id="btnSubmit" class="btn btn-primary">上傳</button>
      </div>
