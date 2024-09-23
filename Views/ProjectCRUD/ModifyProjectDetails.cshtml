@@ -291,15 +291,15 @@
             var allUsers = (@Html.Raw(ViewBag.AllUserList))['$values'];
             var allForms = (@Html.Raw(ViewBag.AllFormList))['$values'];
             // 獲取唯一的部門、職稱和姓名
+            var userIdsList = [...new Set(allUsers.map(user => user.UserId))];
             var uniqueDepartments = [...new Set(allUsers.map(user => user.Department.DepartmentName))];
             var uniqueGrades = [...new Set(allUsers.map(user => user.Grade.GradeName))];
             var uniqueUserNames = [...new Set(allUsers.map(user => user.UserName))];
-
+            var formIdsList = [...new Set(allForms.map(f => f.FormId))];
             // 填充 userIdList 的選項
             allUsers.forEach(user => {
                 $('#userIdList').append('<option value="' + user.UserId + '">' + user.UserName + '</option>');
             });
-
             // 填充 userNameList 的選項
             uniqueUserNames.forEach(userName => {
                 $('#userNameList').append('<option value="' + userName + '">');
@@ -484,7 +484,17 @@
             });
             $('#formInput').on('input', function () {
                 var selectedId = $(this).val();
+                if(formIdsList.find(fm => fm.FormId === selectedId))
+                {
+                    $("#departmentInputForm").val('');
+                    $("#userIdInputForm").val('');
+                    $("#userNameInputForm").val('');
+                    $("#categoryInput").val('');
+                    $("#statusInput").val('');
+                    return 0;
+                }
                 var form = allForms.find(form => form.FormId === selectedId);
+                
                 if (form) {
                     $("#departmentInputForm").val(form.DepartmentName);
                     $("#userIdInputForm").val(form.UserId);
@@ -501,6 +511,13 @@
             });
             $('#userIdInput').on('input', function () {
                 var selectedId = $(this).val();
+                if(userIdsList.find(u => u.UserId === selectedId))
+                {
+                    $('#userNameInput').val('');
+                    $('#departmentInput').val('');
+                    $('#gradeInput').val('');
+                    return 0;
+                }
                 var user = allUsers.find(user => user.UserId === selectedId);
                 if (user) {
                     $('#userNameInput').val(user.UserName);
