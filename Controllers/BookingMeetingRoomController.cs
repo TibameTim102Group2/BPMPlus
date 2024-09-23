@@ -6,9 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using System.Globalization;
-using JsonSerializer = System.Text.Json.JsonSerializer;
+using System.Text.Json;
 
 namespace BPMPlus.Controllers
 {
@@ -25,11 +24,6 @@ namespace BPMPlus.Controllers
         public async Task<IActionResult> Index()
         {
             User user = await GetAuthorizedUser();
-
-            var rooms = await _context.MeetingRooms.Select(r => r.MeetingRoomId).ToArrayAsync();
-            var timeSlots = GetTimeSlots(8, 22, 60);
-            ViewBag.Rooms = rooms;
-            ViewBag.TimeSlots = timeSlots;
 
             //預約人部門
             var Department = await _context.Department
@@ -57,21 +51,6 @@ namespace BPMPlus.Controllers
             return View();
         }
 
-        private List<DateTime> GetTimeSlots(int start, int end, int Minutes)
-        {
-            var slots = new List<DateTime>();
-            var currentTime = DateTime.Today.AddHours(start);
-            var endTime = DateTime.Today.AddHours(end);
-
-            while (currentTime <= endTime)
-            {
-                slots.Add(currentTime);
-                currentTime = currentTime.AddMinutes(Minutes);
-            }
-
-            return slots;
-        }
-
         // 撈會議室可容納人數
         public async Task<IActionResult> GetMeetingRoomInfo(string id)
         {
@@ -83,10 +62,10 @@ namespace BPMPlus.Controllers
         }
 
         //GetBookedTime
-        public async Task<IActionResult> CheakMeetingRooms(string BookingDate)
+        public async Task<IActionResult> CheakMeetingRooms(string RoomId, string BookingDate)
         {
             var bookedTimes = await _context.Meeting
-                .Where(b=>b.StartTime.Date == DateTime.Parse(BookingDate).Date)
+                .Where(b=>b.MeetingRoomId == RoomId && b.StartTime.Date == DateTime.Parse(BookingDate).Date)
                 .Select(b=>new {
                     StartTime = b.StartTime.AddHours(8).ToString("HH:mm"),
                     EndTime = b.EndTime.AddHours(8).ToString("HH:mm"),
@@ -96,8 +75,7 @@ namespace BPMPlus.Controllers
             return Json(new { success = true, data = bookedTimes });
         }
 
-
-		[HttpPost]
+        [HttpPost]
         public async Task<IActionResult> SubmitBooking([FromBody] BookingMeetingRoomVM vm)
         {
 
@@ -105,9 +83,6 @@ namespace BPMPlus.Controllers
 
             if (ModelState.IsValid)
             {
-                
-
-
                 Meeting meeting = new Meeting();
 
                 var host = await _context.User
