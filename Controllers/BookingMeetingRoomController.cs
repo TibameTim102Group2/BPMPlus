@@ -26,8 +26,10 @@ namespace BPMPlus.Controllers
         {
             User user = await GetAuthorizedUser();
 
-            var allrooms = await _context.MeetingRooms.AsNoTracking().Select(n => n.MeetingRoomId).ToListAsync();
-            ViewBag.allRooms = JsonSerializer.Serialize(allrooms);
+            var rooms = await _context.MeetingRooms.Select(r => r.MeetingRoomId).ToArrayAsync();
+            var timeSlots = GetTimeSlots(8, 22, 60);
+            ViewBag.Rooms = rooms;
+            ViewBag.TimeSlots = timeSlots;
 
             //預約人部門
             var Department = await _context.Department
@@ -55,6 +57,21 @@ namespace BPMPlus.Controllers
             return View();
         }
 
+        private List<DateTime> GetTimeSlots(int start, int end, int Minutes)
+        {
+            var slots = new List<DateTime>();
+            var currentTime = DateTime.Today.AddHours(start);
+            var endTime = DateTime.Today.AddHours(end);
+
+            while (currentTime <= endTime)
+            {
+                slots.Add(currentTime);
+                currentTime = currentTime.AddMinutes(Minutes);
+            }
+
+            return slots;
+        }
+
         // 撈會議室可容納人數
         public async Task<IActionResult> GetMeetingRoomInfo(string id)
         {
@@ -66,10 +83,10 @@ namespace BPMPlus.Controllers
         }
 
         //GetBookedTime
-        public async Task<IActionResult> CheakMeetingRooms(string RoomId, string BookingDate)
+        public async Task<IActionResult> CheakMeetingRooms(string BookingDate)
         {
             var bookedTimes = await _context.Meeting
-                .Where(b=>b.MeetingRoomId == RoomId && b.StartTime.Date == DateTime.Parse(BookingDate).Date)
+                .Where(b=>b.StartTime.Date == DateTime.Parse(BookingDate).Date)
                 .Select(b=>new {
                     StartTime = b.StartTime.AddHours(8).ToString("HH:mm"),
                     EndTime = b.EndTime.AddHours(8).ToString("HH:mm"),
@@ -78,23 +95,6 @@ namespace BPMPlus.Controllers
                 .ToListAsync();
             return Json(new { success = true, data = bookedTimes });
         }
-
-
-		public async Task<ActionResult> GetMeetingBook(string id)
-		{
-			//找出所當日有被預約的時間
-			var hasBookedData = await _context.Meeting.AsNoTracking().Where(m => m.StartTime.Date.ToString() == id)
-				.Select(n => new
-				{
-					meetingRoomId = n.MeetingRoomId,
-					startTime = n.StartTime.AddHours(8).Hour,
-					endTime = n.EndTime.AddHours(8).Hour,
-				})
-				.ToListAsync();
-			//選取只需要的資料
-			return Json(new { success = true, data = hasBookedData });
-		}
-
 
 
 		[HttpPost]
