@@ -1,0 +1,193 @@
+﻿@section Style {
+    <style>
+
+        .content-wrapper {
+            background-color: rgb(225, 239, 252);
+        }
+
+        .outside {
+            padding: 20px;
+            background-color: rgb(225, 239, 252);
+            height: 100%;
+        }
+
+        .title {
+            color: rgba(0, 81, 255, 0.884);
+            margin-top: 20px;
+            margin-bottom: 30px;
+            margin-left: 30px;
+            font-weight: bold;
+        }
+
+        .inside {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: rgb(225, 229, 252);
+            border: 0.5px solid gainsboro;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: white;
+            color: rgba(0, 81, 255, 0.884);
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        td {
+            background-color: white;
+        }
+
+        .booked {
+            background-color: #42a8fa;
+        }
+
+            .booked:hover {
+                border: 3px solid red;
+            }
+
+        .pContent {
+            font-size: 1.5vw;
+            border-bottom: solid 0.2vw rgba(0, 81, 255, 0.884);
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+}
+<div class="outside">
+
+    <div id="app" class="row">
+        @* 時間表的部分 *@
+        <div class="col-8">
+            <table class="info" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th v-for="(room, index) in rooms" :key="index">{{ room }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="time in times" :key="time">
+                        <td>{{ time }}</td>
+                        <td v-for="room in rooms" :key="room" :class="{ booked: isBooked(room, time) }" @@click="handclick(room,time)"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <div style="display:inline-block" class="col-4">
+
+            <div ref="calendarContainer"></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js" integrity="sha512-DdX/YwF5e41Ok+AI81HI8f5/5UsoxCVT9GKYZRIzpLxb8Twz4ZwPPX+jQMwMhNQ9b5+zDEefc+dcvQoPWGNZ3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                baseAddress: "https://localhost:7129/CurrentMeetingRoom",
+                selectedDate: '',
+                rooms: [],
+                times: ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00'],
+                bookings: [],
+                bookedSlots: {},
+                bookedDetails: {}
+            },
+            methods: {
+                formatTime(hour) {
+                    if (!(hour === undefined)) {
+                        const formattedHour = String(hour).padStart(2, '0');
+                        return `${formattedHour}:00`;
+                    }
+                    return "00:00"
+                },
+                isBooked(room, time) {
+                    const hour = parseInt(time.split(':')[0], 10);
+                    return this.bookedSlots[room] && this.bookedSlots[room].includes(hour);
+                },
+                calculateBookedSlots() {
+
+                    if (!Array.isArray(this.bookings)) {
+                        console.error("Bookings is not an array:", this.bookings);
+                        return;
+                    }
+                    this.bookedSlots = {};
+                    this.bookings.forEach(booking => {
+                        const room = booking.meetingRoomId;
+                        if (!this.bookedSlots[room]) {
+                            this.bookedSlots[room] = [];
+                        }
+                        for (let i = booking.startTime; i < booking.endTime; i++) {
+                            this.bookedSlots[room].push(i);
+                        }
+                    });
+                },
+                handclick(room, time) {
+                    //當按到不同的會議室顯示對應的資料
+                    //先清空內容
+                    this.bookedDetails = {};
+                    const clickTime = parseInt(time.split(':')[0], 10);
+                    const findBooking = this.bookings.filter(booking => {
+                        return booking.meetingRoomId === room &&
+                            clickTime >= booking.startTime &&
+                            clickTime <= booking.endTime;
+                    });
+                    if (findBooking) {
+                        this.bookedDetails = findBooking[0];
+                    }
+                    else {
+                        console.log("notfind")
+                    }
+
+                }
+
+            },
+            mounted() {
+                flatpickr(this.$refs.calendarContainer, {
+                    inline: true,
+                    dateFormat: "Y-m-d",
+                    minDate: "today",
+                    onChange: (selectedDates, dateStr) => {
+                        let _this = this;
+                        _this.selectedDate = dateStr;
+                        _this.bookedDetails = {};
+                        _this.bookedSlots = {};
+                        axios.get(`${_this.baseAddress}/getMeetingBook/${_this.selectedDate}`)
+                            .then(response => {
+                                if (response.data && Array.isArray(response.data.data)) {
+                                    _this.bookings = response.data.data;
+                                    _this.calculateBookedSlots();
+                                } else {
+                                    console.error('Unexpected data format:', response.data);
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error fetching bookings:', error);
+                            });
+                    }
+                });
+
+                let _this = this;
+                _this.rooms = JSON.parse('@Html.Raw(ViewBag.allRooms)');
+            }
+        });
+    </script>
+}
