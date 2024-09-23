@@ -362,7 +362,30 @@
                         createResponseErrorCode = response['errorCode'];
                         if (response['errorCode'] != null && response['errorCode'] == 200) {
                             if(window.confirm(response['message'])){
-                                window.alert("haha")
+                                $.ajax({
+                                    url: '/ProjectCRUD/ModifyProject',
+                                    type: 'POST',
+                                    contentType: 'application/json',
+                                    headers: {
+                                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()  // 傳送驗證 token
+                                    },
+                                    data: dta,
+                                    success: function (response) {
+                                        createResponseErrorCode = response['errorCode'];
+                                        if (response['errorCode'] != null && response['errorCode'] == 200) {
+                                            window.alert(response['message']);
+                                            window.location.replace(`/ProjectCRUD/ProjectDetails/${projectId}`);
+                                        }
+                                        if (response['errorCode'] != null && response['errorCode'] == 400) {
+                                            window.alert(response['message']);
+                                        }
+                                        // 成功後的操作
+                                    },
+                                    error: function (xhr, status, error) {
+
+                                        // 錯誤時的操作
+                                    }
+                                });
                             }
                         }
                         if (response['errorCode'] != null && response['errorCode'] == 400) {
