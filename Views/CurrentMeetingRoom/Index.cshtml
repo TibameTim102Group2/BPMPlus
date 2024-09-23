@@ -1,199 +1,347 @@
 ﻿@section Style {
-    <style>
+	<style>
 
-        .content-wrapper {
-            background-color: rgb(225, 239, 252);
-        }
-        .outside {
-            padding: 20px;
-            background-color: rgb(225, 239, 252);
-            height: 100%;
-        }
-        .title {
-            color: rgba(0, 81, 255, 0.884);
-            margin-top: 20px;
-            margin-bottom: 30px;
-            margin-left: 30px;
-            font-weight: bold;
-        }
+		.content-wrapper {
+			background-color: rgb(225, 239, 252);
+		}
 
-        .inside {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: rgb(225, 229, 252);
-            border: 0.5px solid gainsboro;
-        }
+		.outside {
+			padding: 20px;
+			background-color: rgb(225, 239, 252);
+			height: 100%;
+		}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th {
-            background-color:white;
-            color:rgba(0, 81, 255, 0.884);
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center;
-        }
-        td {
-            background-color:white;
-        }
+		.title {
+			color: rgba(0, 81, 255, 0.884);
+			margin-top: 20px;
+			margin-bottom: 30px;
+			margin-left: 30px;
+			font-weight: bold;
+		}
 
-        .booked {
-            background-color: #42a8fa;
-        }
-        .booked:hover{
-                border: 3px solid red;
-        }
-        .pContent{
-            font-size:1.5vw;
-            border-bottom: solid 0.2vw rgba(0, 81, 255, 0.884);
-        }
-    </style>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+		.inside {
+			margin-top: 30px;
+			padding: 20px;
+			background-color: rgb(225, 229, 252);
+			border: 0.5px solid gainsboro;
+		}
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+		}
+
+		th {
+			background-color: white;
+			color: rgba(0, 81, 255, 0.884);
+		}
+
+		th, td {
+			border: 1px solid #ddd;
+			padding: 8px;
+			text-align: center;
+		}
+
+		td {
+			background-color: white;
+		}
+
+		.booked {
+			background-color: #42a8fa;
+		}
+
+			.booked:hover {
+				border: 3px solid red;
+			}
+
+		.pContent {
+			font-size: 1.5vw;
+			border-bottom: solid 0.2vw rgba(0, 81, 255, 0.884);
+		}
+
+		img {
+			width: 50%;
+			height: 80%;
+		}
+	</style>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 }
-<div class="outside" >
-    <h1 class="title">目前會議室</h1>
+<div class="outside">
+	<h1 class="title">目前會議室</h1>
 
-    <div id="app" class="row">
-    @* 時間表的部分 *@ 
-        <div class="col-8">
-            <table class="info" style="width:100%;">
-                <thead >
-                    <tr>
-                        <th>Time</th>
-                        <th v-for="(room, index) in rooms" :key="index" >{{ room }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="time in times" :key="time">
-                        <td>{{ time }}</td>
-                        <td v-for="room in rooms" :key="room" :class="{ booked: isBooked(room, time) }" @@click="handclick(room,time)"></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-
-        <div style="display:inline-block" class="col-4">
-
-                <div ref="calendarContainer"></div>
+	<div id="app" class="row">
+		@* 時間表的部分 *@
+		<div class="col-8">
+			<table class="info" style="width:100%;">
+				<thead>
+					<tr>
+						<th>Time</th>
+						<th v-for="(room, index) in rooms" :key=" index">{{ room }}</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="time in times" :key="time">
+						<td>{{ time }}</td>
+						<td v-for="room in rooms" :key="room" :class="{ booked: isBooked(room, time) }" @@click="handclick(room,time)"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 
 
-                <div class="card-body" style="background-color:white;margin-top:2vw; border-color:black">
-                    <p style="font-size:large">選取日期: {{ selectedDate }}</p>
-                    <h4>會議資訊</h4>
-                    <p class="pContent"><i class="fa-solid fa-arrow-right"></i> 會議室:{{bookedDetails.meetingRoomId}}</p>
-                    <p class="pContent"><i class="fa-regular fa-user "></i> 主持人:{{bookedDetails.meetingHost}}</p>
-                <p class="pContent"><i class="fa-regular fa-clock "></i> 預約時間:{{formatTime(bookedDetails.startTime)}}-{{formatTime(bookedDetails.endTime)}} </p>
-                    <p class="pContent"><i class="fa-regular fa-comment "></i> 備註:{{bookedDetails.note}}</p>
-                </div>
+		<div style="display:inline-block" class="col-4">
+
+			<div ref="calendarContainer"></div>
 
 
+			<div class="card-body" style="background-color:white;margin-top:2vw; border-color:black">
+				<p style="font-size:large">選取日期: {{ selectedDate }}</p>
+				<div style="display:flex">
+					<h4>會議資訊 </h4>
+					<div v-if="meetingHostDistinguish" style="display:inline-flex;margin-left:1vw">
+						<img src="@Url.Content("~/images/userdata/edit.png")"
+							 class="operation-icon"
+							 @@click="editMeeting(bookedDetails.meetingId)" />
+						<img src="@Url.Content("~/images/userdata/delete.png")"
+							 class="operation-icon"
+							 @@click="deleteMeeting(bookedDetails.meetingId)" />
+					</div>
+				</div>
 
-        </div>
+				<p class="pContent"><i class="fa-solid fa-arrow-right"></i> 會議室:{{bookedDetails.meetingRoomId}}</p>
+				<p class="pContent"><i class="fa-regular fa-user "></i> 主持人:{{bookedDetails.meetingHost}}</p>
+				<p class="pContent"><i class="fa-regular fa-clock "></i> 預約時間:{{formatTime(bookedDetails.startTime)}}-{{formatTime(bookedDetails.endTime)}} </p>
+				<p class="pContent"><i class="fa-regular fa-comment "></i> 備註:{{bookedDetails.note}}</p>
+			</div>
+		</div>
 
-    </div>
+@* 
+		編輯視窗 *@
+
+		<div class="modal fade"
+			 id="modalId"
+			 tabindex="-1"
+			 data-bs-backdrop="static"
+			 data-bs-keyboard="false"
+			 role="dialog"
+			 aria-labelledby="modalTitleId"
+			 aria-hidden="true">
+			<div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-md"
+				 role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="modalTitleId">
+							修改預約資料
+						</h5>
+						<button type="button"
+								class="btn-close"
+								aria-label="Close"
+								@@click="unshowModle"></button>
+					</div>
+					
+					<div class="modal-body">
+						<div class="mb-3">
+							<label class="form-control">
+								選擇會議室
+							</label>
+
+						</div>
+						<div class="mb-3">
+							<label class="form-control">Description</label>
+							<input type="text"  class="form-control" />
+						</div>
+						<div class="mb-3">
+							<label class="form-control">Picture</label>
+							
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button"
+								class="btn btn-warning"
+								@@click="unshowModle">
+							取消
+						</button>
+						<button type="button" class="btn btn-primary" @@click="editSubmit(bookedDetails.meetingId)">送出</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	</div>
 
 </div>
 
 
 @section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js" integrity="sha512-DdX/YwF5e41Ok+AI81HI8f5/5UsoxCVT9GKYZRIzpLxb8Twz4ZwPPX+jQMwMhNQ9b5+zDEefc+dcvQoPWGNZ3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script>
-        new Vue({
-            el: '#app',
-            data: {
-                baseAddress: "https://localhost:7129/CurrentMeetingRoom",
-                selectedDate: '',
-                rooms: [], 
-                times: ['08:00','09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00','19:00','20:00','21:00','22:00'], 
-                bookings:[],
-                bookedSlots:{},
-                bookedDetails:{}
-            },
-            methods: {
-                formatTime(hour) {
-                    if (!(hour === undefined)) {
-                        const formattedHour = String(hour).padStart(2, '0');
-                        return `${formattedHour}:00`;
-                    }
-                    return "00:00"
-                },
-                isBooked(room, time) {
-                    const hour = parseInt(time.split(':')[0], 10);
-                    return this.bookedSlots[room] && this.bookedSlots[room].includes(hour);
-                },
-                calculateBookedSlots() {
- 
-                    if (!Array.isArray(this.bookings)) {
-                        console.error("Bookings is not an array:", this.bookings);
-                        return;
-                    }
-                    this.bookedSlots = {};
-                    this.bookings.forEach(booking => {
-                        const room = booking.meetingRoomId;
-                        if (!this.bookedSlots[room]) {
-                            this.bookedSlots[room] = [];
-                        }
-                        for (let i = booking.startTime; i < booking.endTime; i++) {
-                            this.bookedSlots[room].push(i);
-                        }
-                    });
-                },
-                handclick(room,time) {
-                    //當按到不同的會議室顯示對應的資料
-                    //先清空內容
-                    this.bookedDetails = {};
-                    const clickTime = parseInt(time.split(':')[0], 10);
-                    const findBooking = this.bookings.filter(booking => {
-                        return booking.meetingRoomId === room&&
-                            clickTime >= booking.startTime &&
-                            clickTime <= booking.endTime;
-                    });
-                    if(findBooking){
-                        this.bookedDetails = findBooking[0];
-                    }
-                    else{
-                        console.log("notfind")
-                    }
+	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js" integrity="sha512-DdX/YwF5e41Ok+AI81HI8f5/5UsoxCVT9GKYZRIzpLxb8Twz4ZwPPX+jQMwMhNQ9b5+zDEefc+dcvQoPWGNZ3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script>
+		new Vue({
+			el: '#app',
+			data: {
+				baseAddress: "https://localhost:7129/CurrentMeetingRoom",
+				selectedDate: '',
+				rooms: [],
+				times: ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00'],
+				bookings: [],
+				bookedSlots: {},
+				bookedDetails: {},
+				meetingHostDistinguish: false,
+				nowUserId: '@Html.Raw(ViewBag.nowUserId)',
+				editData:{
+					meetingRoom:'',
+					note:'',
+					startTime:'',
+					endTime:'',
+				},
+			},
+			methods: {
+				showModle() {
+					$("#modalId").modal('show');
+				},
+				unshowModle() {
+					$("#modalId").modal('hide');
+				},
+				refreshTable() {
+					let _this = this;
+					axios.get(`${_this.baseAddress}/getMeetingBook/${_this.selectedDate}`)
+						.then(response => {
+							if (response.data && Array.isArray(response.data.data)) {
+								_this.bookings = response.data.data;
+								_this.calculateBookedSlots();
+								_this.meetingHostDistinguish = false;
+							} else {
+								console.error('Unexpected data format:', response.data);
+							}
+						})
+						.catch(error => {
+							console.error('Error fetching bookings:', error);
+						});
+					
+				},
+				formatTime(hour) {
+					if (!(hour === undefined)) {
+						const formattedHour = String(hour).padStart(2, '0');
+						return `${formattedHour}:00`;
+					}
+					return "00:00"
+				},
+				isBooked(room, time) {
+					const hour = parseInt(time.split(':')[0], 10);
+					return this.bookedSlots[room] && this.bookedSlots[room].includes(hour);
+				},
+				calculateBookedSlots() {
 
-                }
+					if (!Array.isArray(this.bookings)) {
+						console.error("Bookings is not an array:", this.bookings);
+						return;
+					}
+					this.bookedSlots = {};
+					this.bookings.forEach(booking => {
+						const room = booking.meetingRoomId;
+						if (!this.bookedSlots[room]) {
+							this.bookedSlots[room] = [];
+						}
+						for (let i = booking.startTime; i < booking.endTime; i++) {
+							this.bookedSlots[room].push(i);
+						}
+					});
+				},
+				handclick(room, time) {
+					//當按到不同的會議室顯示對應的資料
+					//先清空內容
+					this.bookedDetails = {};
+					const clickTime = parseInt(time.split(':')[0], 10);
+					const findBooking = this.bookings.filter(booking => {
+						return booking.meetingRoomId === room &&
+							clickTime >= booking.startTime &&
+							clickTime <= booking.endTime;
+					});
+					if (findBooking) {
+						this.bookedDetails = findBooking[0];
+						//判斷當前登入者 和預約的人是不是同一個
+						if (this.nowUserId === this.bookedDetails.meetingHostUserId) {
+							this.meetingHostDistinguish = true;
+						}
+						else {
+							this.meetingHostDistinguish = false;
+						}
+					}
+					else {
+						console.log("notfind")
+					}
 
-            },
-            mounted() {
-                flatpickr(this.$refs.calendarContainer, {
-                    inline: true,
-                    dateFormat: "Y-m-d",
-                    minDate: "today",
-                    onChange: (selectedDates, dateStr) => {
-                        let _this = this;
-                        _this.selectedDate = dateStr;
-                        _this.bookedDetails = {};
-                        _this.bookedSlots={};
-                        axios.get(`${_this.baseAddress}/getMeetingBook/${_this.selectedDate}`)
-                            .then(response => { 
-                                if (response.data && Array.isArray(response.data.data)) {
-                                    _this.bookings = response.data.data;
-                                    _this.calculateBookedSlots(); 
-                                } else {
-                                    console.error('Unexpected data format:', response.data);
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error fetching bookings:', error);
-                            });
-                    }
-                });
+				},
+				editMeeting(e) {
+					let _this = this;
 
-                let _this = this;
-                _this.rooms = JSON.parse('@Html.Raw(ViewBag.allRooms)');
-            }
-        });
-    </script>
+					//去後端要回當筆資料
+					axios.get(`${_this.baseAddress}/editMeetingBook/${e}`)
+						.then(response => {
+							if (response.data.success) {
+								alert(JSON.stringify(response.data.data));
+								_this.editData = response.data.data;
+								//重新渲染
+								// 資料清空
+								_this.bookedDetails = {};
+							} else {
+								alert("沒有此筆預約")
+							}
+						})
+						.catch(error => {
+							console.error('Error fetching bookings:', error);
+						});
+					//叫出修改頁面
+					_this.showModle();
+
+				},
+				deleteMeeting(e) {
+					//抓到單號
+					let _this = this;
+					axios.get(`${_this.baseAddress}/deleteMeetingBook/${e}`)
+						.then(response => {
+							if (response.data.success) {
+								alert(response.data.data);
+								//重新渲染
+								// 資料清空
+								_this.bookedDetails = {};
+								//要讓格子重新選染
+								_this.refreshTable();
+							} else {
+								alert("沒有此筆預約")
+							}
+						})
+						.catch(error => {
+							console.error('Error fetching bookings:', error);
+						});
+				},
+				editSubmit(e) {
+					console.log(e);
+				}
+
+
+
+			},
+			mounted() {
+				flatpickr(this.$refs.calendarContainer, {
+					inline: true,
+					dateFormat: "Y-m-d",
+					minDate: "today",
+					onChange: (selectedDates, dateStr) => {
+						let _this = this;
+						_this.selectedDate = dateStr;
+						_this.bookedDetails = {};
+						_this.bookedSlots = {};
+						_this.refreshTable();
+					}
+				});
+
+				let _this = this;
+				_this.rooms = JSON.parse('@Html.Raw(ViewBag.allRooms)');
+			}
+		});
+	</script>
 }
