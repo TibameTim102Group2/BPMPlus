@@ -84,6 +84,20 @@
             .sidebar-mini.sidebar-collapse .main-sidebar .brand-text {
                 display: none;
             }
+
+            .adminUserIcon {
+                margin-left: 0.1rem;
+                font-size: 1.2rem;
+                margin-right: .2rem;
+                text-align: center;
+            }
+
+            .adminCategoryIcon{
+                margin-left: 0.1rem;
+                font-size: 1.2rem;
+                margin-right: .35rem;
+                text-align: center;
+            }
         }
     </style>
     @await RenderSectionAsync("Style", required: false)
@@ -195,7 +209,7 @@
                                 <li class="nav-item" style="margin-left: 5%">
                                     <a class="nav-link" asp-area="" asp-controller="QueryProjects" asp-action="Index">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>查刪專案</p>
+                                        <p>查詢專案</p>
                                     </a>
                                 </li>
                                 @* <li class="nav-item" style="margin-left: 5%">
@@ -251,7 +265,7 @@
                         </li> *@
                         <li class="nav-item">
                             <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-book"></i>
+                                <i class="fa-solid fa-people-roof adminUserIcon"></i>
                                 <p>
                                     後台-人員管理
                                     <i class="fas fa-angle-left right"></i>
@@ -276,7 +290,7 @@
                         </li>
                         <li class="nav-item">
                             <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-book"></i>
+                                <i class="fa-solid fa-folder-tree adminCategoryIcon"></i>
                                 <p>
                                     後台-工單管理
                                     <i class="fas fa-angle-left right"></i>
