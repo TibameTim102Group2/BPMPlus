@@ -67,10 +67,19 @@
     public class RenderForm
     {
         public string FormId { get; set; }
-        public DepartmentPart Department {get;set; }
-        public UserPart User { get; set; }
-        public CategoryPart Category { get; set; }
-        public StatusPart Status { get; set; }
+        public string DepartmentName {get;set; }
+        public string UserId { get; set; }
+        public string UserName { get; set; }
+        public string Category { get; set; }
+        public string Status { get; set; }
+        public RenderForm(string fI, string dN, string uI, string uN, string cT, string sT) { 
+            this.FormId = fI;
+            this.DepartmentName = dN;
+            this.UserId = uI;
+            this.UserName = uN;
+            this.Category = cT;
+            this.Status = sT;
+        }
     }
 
     public class ModifyProjectViewModels

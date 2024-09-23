@@ -180,7 +180,7 @@
     </div>
     <h1 class="title">專案細節</h1>
     <style>
-        .createddate{
+        .createddate {
             border: 1px solid #ced4da;
             border-radius: 0.25rem;
             padding: 0.375rem 0.75rem;
@@ -218,7 +218,7 @@
         <div class="mb-3 inputField ">
             <div class="mb-3 form-label">
                 <label for="xxx1">截止期限</label>
-                <input type="date" class="createddate form-control"  id="deadline" value="@ViewBag.DeadLine.ToString("yyyy-MM-dd")" min="@ViewBag.MinDate.ToString("yyyy-MM-dd")"/>
+                <input type="date" class="createddate form-control" id="deadline" value="@ViewBag.DeadLine.ToString("yyyy-MM-dd")" min="@ViewBag.MinDate.ToString("yyyy-MM-dd")" />
             </div>
             <div class="mb-3 form-label">
                 <label for="xxx2">專案名稱</label>
@@ -264,7 +264,7 @@
 </div>
 @section Scripts {
     <script>
-        
+
         // 儲存滾動位置
         function saveScrollPositionAndReload() {
             const scrollPos = window.scrollY || document.documentElement.scrollTop;
@@ -314,6 +314,9 @@
             uniqueGrades.forEach(grade => {
                 $('#gradeList').append('<option value="' + grade + '">');
             });
+            allForms.forEach(form => {
+                $('#formIdList').append('<Option value="' + form.FormId + '"></option>');
+            })
             $("#submitButton").on("click", function (e) {
                 e.preventDefault();  // 阻止默認的提交行為
                 var userIds = [];
@@ -324,7 +327,7 @@
                     userIds.push(userId);
                 });
                 $("#forms-tr tr").each(function () {
-                    var formId= $(this).find("td:nth-child(1)").text().trim();
+                    var formId = $(this).find("td:nth-child(1)").text().trim();
                     formIds.push(formId);
                 });
                 // 在 console 中輸出所有員工編號
@@ -338,15 +341,15 @@
                 // 發送 Ajax 請求
 
                 var dta = JSON.stringify(
-                {
+                    {
                         ProjectId: projectId,
                         Deadline: deadline,
                         ProjectName: projectName,
                         ProjectDescription: projectDescription,
                         UserIds: userIds,
                         FormIds: formIds
-                });
-                
+                    });
+
                 $.ajax({
                     url: '/ProjectCRUD/CheckModify',
                     type: 'POST',
@@ -372,7 +375,7 @@
                 });
             });
             $("#add-btn").click(function () {
-        // 獲取輸入框中的值
+                // 獲取輸入框中的值
                 var isPm = "組員";
                 var userName = $("#userNameInput").val();
                 var userId = $("#userIdInput").val();
@@ -383,17 +386,17 @@
                 if (userName && userId && department && grade) {
                     // 在輸入行之前插入新行
                     $("#new-user-row").before(`
-                        <tr>
-                            <td>${isPm}</td>
-                            <td>${userId}</td>
-                            <td>${userName}</td>
-                            <td>${department}</td>
-                            <td>${grade}</td>
-                            <td>
-                                <button class="delete-btn btn btn-danger"><i class="fa-solid fa-square-minus"></i> 移除</button>
-                            </td>
-                        </tr>
-                    `);
+                                <tr>
+                                    <td>${isPm}</td>
+                                    <td>${userId}</td>
+                                    <td>${userName}</td>
+                                    <td>${department}</td>
+                                    <td>${grade}</td>
+                                    <td>
+                                        <button class="delete-btn btn btn-danger"><i class="fa-solid fa-square-minus"></i> 移除</button>
+                                    </td>
+                                </tr>
+                            `);
 
                     // 重置輸入框
                     $("#isPmInput").val('組員');
@@ -408,6 +411,67 @@
                     });
                 } else {
                     alert("請填寫所有欄位！");
+                }
+            });
+
+            
+            $("#add-btn-for-form").click(function () {
+                // 獲取輸入框中的值
+
+                var formId = $("#formInput").val();
+                var departmentInputForm = $("#departmentInputForm").val();
+                var userId = $("#userIdInputForm").val();
+                var userName = $("#userNameInputForm").val();
+                var category = $("#categoryInput").val();
+                var status = $("#statusInput").val();
+
+                // 確保輸入不為空
+                if (departmentInputForm && formId && userId && userName && category && status) {
+                    // 在輸入行之前插入新行
+                    $("#new-user-row-form").before(`
+                                    <tr>
+                                        <td>${formId}</td>
+                                        <td>${departmentInputForm}</td>
+                                        <td>${userId}</td>
+                                        <td>${userName}</td>
+                                        <td>${category}</td>
+                                        <td>${status}</td>
+                                        <td>
+                                            <button class="delete-btn btn btn-danger"><i class="fa-solid fa-square-minus"></i> 移除</button>
+                                        </td>
+                                    </tr>
+                                `);
+
+                    // 重置輸入框
+                    $("#formInput").val('');
+                    $("#departmentInputForm").val('');
+                    $("#userIdInputForm").val('');
+                    $("#userNameInputForm").val('');
+                    $("#categoryInput").val('');
+                    $("#statusInput").val('');
+                    // 重新綁定刪除按鈕的事件
+                    $(".delete-btn").off("click").on("click", function () {
+                        $(this).closest('tr').remove();
+                    });
+                } else {
+                    alert("請填寫所有欄位！");
+                }
+            });
+            $('#formInput').on('input', function () {
+                var selectedId = $(this).val();
+                var form = allForms.find(form => form.FormId === selectedId);
+                if (form) {
+                    $("#departmentInputForm").val(form.DepartmentName);
+                    $("#userIdInputForm").val(form.UserId);
+                    $("#userNameInputForm").val(form.UserName);
+                    $("#categoryInput").val(form.Category);
+                    $("#statusInput").val(form.Status);
+                } else {
+                    $("#departmentInputForm").val('');
+                    $("#userIdInputForm").val('');
+                    $("#userNameInputForm").val('');
+                    $("#categoryInput").val('');
+                    $("#statusInput").val('');
                 }
             });
             $('#userIdInput').on('input', function () {
@@ -448,7 +512,7 @@
                 $('#userIdList').empty();
                 $('#userNameList').empty();
 
-            }
+                }
 
             // 監聽 departmentInput 的變化
             $('#departmentInput').on('input', function () {
@@ -458,7 +522,7 @@
             // 監聽 gradeInput 的變化
             $('#gradeInput').on('input', function () {
                 updateUserDatalist();
-            });
+        });
         });
         
 
@@ -482,5 +546,5 @@
                 $(this).closest('tr').remove();
             });
         });
-</script>
+    </script>
 }

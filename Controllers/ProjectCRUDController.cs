@@ -305,8 +305,22 @@ namespace BPMPlus.Controllers
                         Form = f,
                         PN = pN
                     })
-                .Select(f => new { f.Form.Department.DepartmentName, f.Form.User.UserId, f.Form.User.UserName, f.Form.Category.CategoryDescription, f.PN.UserActivity.UserActivityIdDescription})
+                .Select(f => new { f.Form.FormId, f.Form.Department.DepartmentName, f.Form.User.UserId, f.Form.User.UserName, f.Form.Category.CategoryDescription, f.PN.UserActivity.UserActivityIdDescription})
                 .ToListAsync();
+            List<RenderForm> fList = new List<RenderForm>();
+            foreach (var f in AllForms)
+            {
+                fList.Add(
+                    new RenderForm(
+                        f.FormId,
+                        f.DepartmentName,
+                        f.UserId,
+                        f.UserName,
+                        f.CategoryDescription,
+                        f.UserActivityIdDescription
+                    )
+                );
+            }
             ViewBag.ProjectId = ProjectId;
             ViewBag.ProjectName = Project.ProjectName;
             ViewBag.Summary = Project.Summary;
@@ -315,7 +329,7 @@ namespace BPMPlus.Controllers
             ViewBag.ModMode = true;
 
             ViewBag.AllUserList = JsonSerializer.Serialize(uList, new JsonSerializerOptions { ReferenceHandler = ReferenceHandler.Preserve });
-            ViewBag.AllFormList = JsonSerializer.Serialize(AllForms, new JsonSerializerOptions { ReferenceHandler = ReferenceHandler.Preserve });
+            ViewBag.AllFormList = JsonSerializer.Serialize(fList, new JsonSerializerOptions { ReferenceHandler = ReferenceHandler.Preserve });
 
             List<ProjectUsersViewModels> projectUsersViewModels = new List<ProjectUsersViewModels>();
             foreach (var u in Project.Users)
