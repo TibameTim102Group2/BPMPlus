@@ -226,7 +226,7 @@
             </div>
         </div>
         <div class="note" style="margin-top:10%; padding:2%; width:200%">
-            <div class="noteContent">專案概述</div>
+            <div class="noteContent" style="font-weight:bold">專案概述</div>
             <textarea id="project-description" style="width: 40%; height: 150px">@ViewBag.Summary</textarea>
         </div>
         <h2 class="title" style="margin-top: 5%;font-weight: 900">專案成員</h2>
@@ -323,7 +323,7 @@
                 var formIds = [];
                 // 遍歷每個 <tr>，找到包含 UserId 的 <td> 元素，並提取其文本
                 $("#users-tr tr").each(function () {
-                    var userId = $(this).find("td:nth-child(3)").text().trim();
+                    var userId = $(this).find("td:nth-child(2)").text().trim();
                     userIds.push(userId);
                 });
                 $("#forms-tr tr").each(function () {
@@ -417,7 +417,6 @@
             
             $("#add-btn-for-form").click(function () {
                 // 獲取輸入框中的值
-
                 var formId = $("#formInput").val();
                 var departmentInputForm = $("#departmentInputForm").val();
                 var userId = $("#userIdInputForm").val();
@@ -430,7 +429,7 @@
                     // 在輸入行之前插入新行
                     $("#new-user-row-form").before(`
                                     <tr>
-                                        <td>${formId}</td>
+                                        <td><a href="/FormDetails/Index/${formId}">${formId}</td>
                                         <td>${departmentInputForm}</td>
                                         <td>${userId}</td>
                                         <td>${userName}</td>
@@ -455,6 +454,7 @@
                     });
                 } else {
                     alert("請填寫所有欄位！");
+                    
                 }
             });
             $('#formInput').on('input', function () {

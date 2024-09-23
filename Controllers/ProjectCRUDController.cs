@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Graph;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -70,13 +71,67 @@ namespace BPMPlus.Controllers
             List<User> updatedUserList = await _context.User.Where(u => model.UserIds.Contains(u.UserId)).ToListAsync();
             List<User> addedPeople = updatedUserList.Except(project.Users).ToList();
             List<User> removedPeople = project.Users.Except(updatedUserList).ToList();
-
+            List<Form> updatedFormList = await _context.Form.Where(f => model.FormIds.Contains(f.FormId)).ToListAsync();
+            List<Form> originProjectFormList = await _context.Form.Where(f => f.ProjectId == project.ProjectId).ToListAsync();
+            List<Form> addedForm = updatedFormList.Except(originProjectFormList).ToList();
+            List<Form> removedForm = originProjectFormList.Except(updatedFormList).ToList();
             if (!(project.ProjectManagerId == user.UserId) && (addedPeople.Count != 0 || removedPeople.Count != 0))
             {
                 return Json(new { errorCode = 400, message = "非專案經理無法增刪人員" });
             }
-
-            return Json(new { errorCode = 200, message = "CheckOK"});
+            DateTime inputTime = DateTime.Parse(model.Deadline);
+            if(inputTime.Date != project.DeadLine.AddHours(8).Date)
+            {
+                retString += $"專案截止日期 : 由 {project.DeadLine.AddHours(8)} 修改為 {inputTime.Date}\n";
+            }
+            if (model.ProjectName != project.ProjectName) 
+            {
+                retString += $"專案名稱 : 由 {project.ProjectName} 修改為 {model.ProjectName}\n";
+            }
+            if (model.ProjectDescription != project.Summary)
+            {
+                retString += $"專案概述 : 由 {project.Summary} 修改為 {model.ProjectDescription}\n";
+            }
+            if (addedPeople.Count > 0)
+            {
+                retString += $"專案成員 : 增加";
+                foreach (var f in addedPeople)
+                {
+                    retString += f.UserId + f.UserName + " ";
+                }
+                retString += "\n";
+            }
+            if (removedPeople.Count > 0)
+            {
+                retString += $"專案工單 : 開除";
+                foreach (var f in removedPeople)
+                {
+                    retString += f.UserId + f.UserName + " ";
+                }
+                retString += "\n";
+            }
+            if (addedForm.Count > 0)
+            {
+                retString += $"專案工單 : 增加";
+                foreach (var f in addedForm) {
+                    retString += f.FormId + " ";
+                }
+                retString += "\n";
+            }
+            if (removedForm.Count > 0)
+            {
+                retString += $"專案工單 : 移除";
+                foreach (var f in removedForm)
+                {
+                    retString += f.FormId + " ";
+                }
+                retString += "\n";
+            }
+            if(retString == "")
+            {
+                return Json(new { errorCode = 400, message = "沒有任何修改" });
+            }
+            return Json(new { errorCode = 200, message = $"以下為本次修改{retString}請確認是否送出"});
         }
 
         [HttpGet("ProjectCRUD/ProjectDetails/{projectId}")]
