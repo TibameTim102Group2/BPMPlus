@@ -25,12 +25,22 @@ namespace BPMPlus.Controllers
         {
             User user = await GetAuthorizedUser();
 
+            /* 左-會議室概況查看 */
+            var rooms = await _context.MeetingRooms.Select(r => r.MeetingRoomId).ToArrayAsync();
+            var timeSlots = GetTimeSlots(8, 22, 60);
+            ViewBag.Rooms = rooms;
+            ViewBag.TimeSlots = timeSlots;
+
+
+            /* 右-預約內容填寫 */
+
             //預約人部門
             var Department = await _context.Department
                  .FirstOrDefaultAsync(d => d.DepartmentId == user.DepartmentId);
             
             //抓今天日期 (設定預約日期不可早於今天)
             var bookingDate = DateTime.Now.ToString("yyyy-MM-dd");
+            ViewBag.MinDate = bookingDate;
 
             //User字典
             var departments = _context.User
@@ -46,9 +56,24 @@ namespace BPMPlus.Controllers
             ViewBag.MeetingRooms = new SelectList(_context.MeetingRooms, "MeetingRoomId", "MeetingRoomId");
             ViewBag.MeetingHost = user.UserName;
             ViewBag.DepartmentName = Department.DepartmentName;
-            ViewBag.MinDate = bookingDate;
 
             return View();
+        }
+
+
+        private List<DateTime> GetTimeSlots(int start, int end, int Minutes)
+        {
+            var slots = new List<DateTime>();
+            var currentTime = DateTime.Today.AddHours(start);
+            var endTime = DateTime.Today.AddHours(end);
+
+            while (currentTime < endTime)
+            {
+                slots.Add(currentTime);
+                currentTime = currentTime.AddMinutes(Minutes);
+            }
+
+            return slots;
         }
 
         // 撈會議室可容納人數
@@ -61,19 +86,19 @@ namespace BPMPlus.Controllers
             return Json(new { success=true, data=accommdation });
         }
 
-        //確認預約狀況
+        //GetBookedTime
         public async Task<IActionResult> CheakMeetingRooms(string RoomId, string BookingDate)
         {
             var bookedTimes = await _context.Meeting
                 .Where(b=>b.MeetingRoomId == RoomId && b.StartTime.Date == DateTime.Parse(BookingDate).Date)
                 .Select(b=>new {
                     StartTime = b.StartTime.AddHours(8).ToString("HH:mm"),
-                    EndTime = b.EndTime.AddHours(8).ToString("HH:mm")
+                    EndTime = b.EndTime.AddHours(8).ToString("HH:mm"),
+                    roomId = b.MeetingRoomId
                 })
                 .ToListAsync();
             return Json(new { success = true, data = bookedTimes });
         }
-
 
         [HttpPost]
         public async Task<IActionResult> SubmitBooking([FromBody] BookingMeetingRoomVM vm)
@@ -96,27 +121,26 @@ namespace BPMPlus.Controllers
                 meeting.EndTime = DateTime.ParseExact(vm.EndDate, "yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture).AddHours(-8);
                 meeting.MeetingHost = host;
                 meeting.Note = vm.Note;
-                meeting.CreatedTime = DateTime.Now;
-                meeting.UpdatedTime = DateTime.Now;
+                meeting.CreatedTime = DateTime.Now.AddHours(-8);
+                meeting.UpdatedTime = DateTime.Now.AddHours(-8);
 
                 await _context.Meeting.AddAsync(meeting);
                 await _context.SaveChangesAsync();
-
             }
-            var meetingid = _context.Meeting.Include(x => x.Users).FirstOrDefault(x => x.MeetingId == id[0]);
+            var meetingid = _context.Meeting
+                .Include(x => x.Users)
+                .FirstOrDefault(x => x.MeetingId == id[0]);
 
-            foreach (var item in vm.Members)
+            foreach (var memberId in vm.Members)
             {
-
                 //重新建關聯
-                var newMeetingMember = _context.User.FirstOrDefault(pg => pg.UserId == item);
+                var newMeetingMember = _context.User.FirstOrDefault(pg => pg.UserId == memberId);
                 if (newMeetingMember != null)
                 {
                     meetingid.Users.Add(newMeetingMember);
                     _context.SaveChanges();
                 }
             }
-
             return RedirectToAction("Index", "CurrentMeetingRoom");
         }
 

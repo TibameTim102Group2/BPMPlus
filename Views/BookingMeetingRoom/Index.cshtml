@@ -28,6 +28,26 @@
             justify-content: space-between;
         }
 
+        table {
+            width: 80%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: white;
+            color: rgba(0, 81, 255, 0.884);
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        td {
+            background-color: white;
+        }
+
         .form-group {
             display: flex;
             flex-direction: row;
@@ -149,8 +169,28 @@
     <!-- inside -->
     <div class="inside row">
         <div class="col-7">
-            <table>
-                預留table位子
+            <table id="scheduleTable" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th style="color: rgba(0, 81, 255, 0.884);">Time</th>
+                        @foreach (var room in ViewBag.Rooms)
+                        {
+                            <th style="color: rgba(0, 81, 255, 0.884);">@room</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var timeSlot in ViewBag.TimeSlots)
+                    {
+                        <tr>
+                            <td>@timeSlot.ToString("HH:mm")</td>
+                            @foreach (var room in ViewBag.Rooms)
+                            {
+                                <td data-room="@room" data-time="@timeSlot.ToString("HH:mm")"></td>
+                            }
+                        </tr>
+                    }
+                </tbody>
             </table>
         </div>
 
@@ -195,15 +235,10 @@
             </div>
 
             <div class="form-group">
-                <label for="">備註</label>
-                <input type="text" class="form-control note">
-            </div>
-
-            <div class="form-group">
                 <label for="">與會者</label>
                 <div class="multiselect-container">
                     <div class="multiselect-input-container">
-                        <input type="text" class="multiselect-input form-control members" placeholder="點擊加入與會者">
+                        <input type="text" class="multiselect-input form-control members" placeholder="-- 請加入與會者 --">
                         <span class="dropdown-arrow">▾</span>
                         <div class="multiselect-dropdown">
                             <input type="text" class="search-input" placeholder="搜尋">
@@ -212,6 +247,13 @@
                 </div>
             </div>
             <div id="members" class="selected-items" style="margin-bottom:10px;"></div>
+
+            <div class="form-group">
+                <label for="">備註</label>
+                <textarea class="form-control note"></textarea>
+            </div>
+
+
 
             <div class="btn-center">
                 <button id="submitButton" class="btn btn-success">送出</button>
@@ -235,7 +277,7 @@
     <script>
         $(document).ready(function() {
 
-            //加入與會者
+            //加入與會者選擇器
             var colleagues = @Html.Raw(ViewBag.Employees);
             let selectedItems = [];
             let isDropdownOpen = false;
@@ -331,10 +373,9 @@
             });
 
             renderDropdown();
-            
             /* --------------------------------------------------------------------------------------------------------------------------- */
 
-            //選擇會議室帶入可容納人數
+            //選擇會議室取得可容納人數
             $(".selectRoom").change(function(){
                 let meetingRoomId = this.value;
                 $.ajax({
@@ -348,9 +389,9 @@
                 });
             });
 
-            //時間選擇器
-            let StartSelect = $("#startTimeSelect");
-            let EndSelect = $("#endTimeSelect");
+            //get booked time
+            let StartSelect = $(".startTimeSelect");
+            let EndSelect = $(".endTimeSelect");
 
             function loadAvailableTimes() {
                 let meetingRoomId = $(".selectRoom").val();
@@ -373,57 +414,71 @@
             }
 
             function updateTimeSelects(bookedTimes) {
-                function isTimeBooked(time) {
+                function isTimeBooked(hour) {
                     return bookedTimes.some(booking => {
-                        return time >= booking.startTime && time < booking.endTime;
+                        let start = parseInt(booking.startTime.split(':')[0]);
+                        let end = parseInt(booking.endTime.split(':')[0]);
+                        return hour >= start && hour < end;
                     });
                 }
-
-                function generateTimeOptions($select, startHour, endHour, interval, defaultText) {
-                    $select.empty();
-                    $select.append($('<option>', {
-                        value: '',
-                        text: defaultText
-                    }));
-                    for (var hour = startHour; hour < endHour; hour++) {
-                        for (var minute = 0; minute < 60; minute += interval) {
-                            var time = padZero(hour) + ':' + padZero(minute);
-                            if (!isTimeBooked(time)) {
-                                $select.append($('<option>', {
-                                    value: time,
-                                    text: time
-                                }));
-                            }
+                //排除已預約時間的時間選擇器
+                function generateTimeOptions($select, startHour, endHour, defaultText) {
+                    $select.empty().append($('<option>', { value: '', text: defaultText }));
+                    for (let hour = startHour; hour < endHour; hour++) {
+                        if (!isTimeBooked(hour)) {
+                            $select.append($('<option>', {
+                                value: hour + ':00',
+                                text: hour + ':00'
+                            }));
                         }
                     }
                 }
 
-                function padZero(num) {
-                    return (num < 10 ? '0' : '') + num;
-                }
-
                 // 初始化時間選項
-                generateTimeOptions(StartSelect, 8, 22, 60, '-- 請選擇開始時間 --');
-                generateTimeOptions(EndSelect, 8, 22, 60, '-- 請先選擇開始時間 --');
+                generateTimeOptions(StartSelect, 8, 22, '-- 請選擇開始時間 --');
+                generateTimeOptions(EndSelect, 8, 22, '-- 請先選擇開始時間 --');
                 EndSelect.prop('disabled', true);
+
+                updateTableColors(bookedTimes);
 
                 // 當開始時間改變時更新結束時間選項
                 StartSelect.off('change').on('change', function () {
-                    var startTime = StartSelect.val();
+                    let startTime = StartSelect.val();
                     if (startTime) {
-                        var [startHour, startMinute] = startTime.split(':').map(Number);
-                        generateTimeOptions(EndSelect, startHour, 22, 60, '-- 請選擇結束時間 --');
-                        EndSelect.find('option').filter(function () {
-                            var [hour, minute] = $(this).val().split(':').map(Number);
-                            return hour < startHour || (hour === startHour && minute <= startMinute);
-                        }).prop('disabled', true);
-                        EndSelect.val('').prop('disabled', false);
+                        let startHour = parseInt(startTime.split(':')[0]);
+                        generateTimeOptions(EndSelect, startHour + 1, 22, '-- 請選擇結束時間 --');
+                        EndSelect.prop('disabled', false);
                     } else {
-                        generateTimeOptions(EndSelect, 8, 22, 60, '-- 請先選擇開始時間 --');
+                        generateTimeOptions(EndSelect, 8, 22, '-- 請先選擇開始時間 --');
                         EndSelect.prop('disabled', true);
                     }
                 });
+                updateTableColors(bookedTimes);
             }
+
+            //加入表格顏色
+            function updateTableColors(bookedTimes) {
+                $('table td').css('background-color', '');
+                bookedTimes.forEach(booking => {
+                    let start = parseInt(booking.startTime.split(':')[0]);
+                    let end = parseInt(booking.endTime.split(':')[0]);
+                    let roomId = booking.roomId;
+                    for (let hour = start; hour < end; hour++) {
+                        $('table tr').each(function () {
+                            let $timeCell = $(this).find('td:first');
+                            if ($timeCell.text() === hour + ':00') {
+                                $(this).find('td').eq(roomId.replace('R', '')).css('background-color', '#42a8fa');
+                            }
+                        });
+                    }
+                });
+            }
+
+            $(".bookingDate, .selectRoom").change(function () {
+                if ($(".selectRoom").val() && $(".bookingDate").val()) {
+                    loadAvailableTimes();
+                }
+            });
 
             // 監聽日期變更
             $(".bookingDate").change(loadAvailableTimes);
@@ -439,6 +494,7 @@
             $("#submitButton").click(function () {
 
                 let room = $(".selectRoom").val();
+
                 let bookingDate = $(".bookingDate").val();
                 let startTime = $(".startTimeSelect").val();
                 let endTime = $(".endTimeSelect").val();
@@ -449,7 +505,6 @@
                 let note = $(".note").val();
                 let meetingHost = $(".meetingHost").val();
                 let members = [];
-
 
                 $('#members .selected-item').each(function () {
                     // 取得中間的文字部分 (排除 <span>)
@@ -500,14 +555,12 @@
                         window.location.href = "CurrentMeetingRoom/Index/";
                     },
                     error: function () { 
-                        alert('error');
+                        alert('預約失敗, 請確認選擇時間尚未被預約!');
                     }
 
                 });
 
             })
-
-
         });
     </script>
 }
