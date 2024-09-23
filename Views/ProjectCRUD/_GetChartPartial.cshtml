@@ -1,4 +1,4 @@
-﻿@model BPMPlus.ViewModels.Project.ProjectChartViewModel
+﻿@model BPMPlus.ViewModels.Project.ProjectDetailsViewModel
 @{
     ViewData["Title"] = "Gantt Chart";
 }
@@ -10,8 +10,8 @@
 <script src="~/frappe-gantt/frappe-gantt.js"></script>
 
 <script>
-    var formGanttDataList = @Html.Raw(Json.Serialize(Model.FormGanttDataList))
-    var projectGanttDataList = @Html.Raw(Json.Serialize(Model.ProjectGanttDataList))
+    var formGanttDataList = @Html.Raw(Json.Serialize(Model.ProjectChartViewModel.FormGanttDataList))
+        var projectGanttDataList = @Html.Raw(Json.Serialize(Model.ProjectChartViewModel.ProjectGanttDataList))
     var tasks = [];
     for (var i = 0; i < formGanttDataList.length; ++i) {
         console.log(formGanttDataList[i])

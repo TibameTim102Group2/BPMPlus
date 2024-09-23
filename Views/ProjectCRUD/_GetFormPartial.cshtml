@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BPMPlus.ViewModels.Project.ProjectFormsViewModels>
+﻿@model BPMPlus.ViewModels.Project.ProjectDetailsViewModel
 @{
     ViewData["Title"] = "_GetForm";
 }
@@ -53,10 +53,11 @@
                         <th>
                             狀態
                         </th>
+
                     </tr>
                 </thead>
-                <tbody>
-                    @foreach (var item in Model){
+                <tbody id="forms-tr">
+                    @foreach (var item in Model.ProjectFormsViewModels){
                         <tr style="padding-top: 5px">
                             <td>
                                 @Html.ActionLink(item.FormId, "Index", "FormDetails", new { id = item.FormId }, null)
@@ -76,8 +77,40 @@
                             <td>
                                 @Html.DisplayFor(modelItem => item.Status)
                             </td>
-                            <td hidden>
-                                <button asp-action="Delete" class="button btn btn-danger" style="margin-top: -4px;margin-bottom: -4px" asp-route-id="@item.FormId"><i class="fa-solid fa-square-minus"></i> 移除</button>
+                            <td>
+                                @if (Model.AllowModify == "true" && ViewBag.ModMode == true)
+                                {
+                                    <button asp-action="Delete" class="button btn btn-danger delete-btn" style="margin-top: -4px;margin-bottom: -4px" asp-route-id="@item.UserId"><i class="fa-solid fa-square-minus"></i> 移除</button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                    @if (ViewBag.ModMode == true)
+                    {
+                        <tr id="new-user-row">
+                            <td>
+                                <input type="text" id="formInput" class="form-control" style="text-align: center" placeholder="單號" list="formIdList" />
+                                <datalist id="formIdList">
+                                    <!-- 選項會在 document.ready 中填充 -->
+                                </datalist>
+                            </td>
+                            <td>
+                                <input type="text" id="departmentInput" class="form-control" style="text-align: center" placeholder="部門" list="departmentList" disabled />
+                            </td>
+                            <td>
+                                <input type="text" id="userIdInput" class="form-control" style="text-align: center" placeholder="員工編號" list="userIdList" disabled />
+                            </td>
+                            <td>
+                                <input type="text" id="userNameInput" class="form-control" style="text-align: center" placeholder="姓名" list="userNameList" disabled />
+                            </td>
+                            <td>
+                                <input type="text" id="categoryInput" class="form-control" style="text-align: center" placeholder="需求項目類別" list="categoryList" disabled />
+                            </td>
+                            <td>
+                                <input type="text" id="statusInput" class="form-control" style="text-align: center" placeholder="狀態" list="statusList" disabled />
+                            </td>
+                            <td>
+                                <button id="add-btn" class="btn btn-success"><i class="fa-solid fa-plus"></i> 新增</button>
                             </td>
                         </tr>
                     }

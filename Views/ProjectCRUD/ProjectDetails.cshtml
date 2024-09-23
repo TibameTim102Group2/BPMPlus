@@ -180,22 +180,36 @@
             <h2 class="title" style="margin-top: 5%;font-weight: 900">專案資料</h2>
             <div class="mb-3 inputField ">
                 <div class="mb-3 form-label">
-                    <label for="xxx1">專案名稱</label>
-                    <input type="xxx1" class="form-control" value="@ViewBag.ProjectName" Disabled>
+                    <label for="xxx1">專案編號</label>
+                    <input type="xxx1" class="form-control" value="@ViewBag.ProjectId" Disabled>
                 </div>
-                <div class="mb-3 form-label">
-                    <label for="xxx2">專案編號</label>
-                    <input type="xxx2" class="form-control" value="@ViewBag.ProjectId" Disabled>
-                </div>
+                @if (Model.AllowModify == "true")
+                {
+                    <div class="mb-3 form-label" style="display: flex">
+                        <div style="width: 400px">
+                        </div>
+                    <a class="button btn btn-warning btn-link" style="height: 40px; width: 100px" asp-area="" asp-controller="ProjectCRUD" asp-action="ModifyProjectDetails" asp-route-id="@ViewBag.ProjectId"><i class="fa-solid fa-pen-to-square"></i> 修改</a>
+                    </div>
+                    
+                }
+                else
+                {
+                    <div class="mb-3 form-label">
+                        <div style="width: 400px">
+                        </div>
+                        <a class="button btn btn-warning btn-link" style="height: 40px" disabled><i class="fa-solid fa-pen-to-square"></i> 修改</a>
+                    </div>
+                }
             </div>
+            
             <div class="mb-3 inputField ">
                 <div class="mb-3 form-label">
                     <label for="xxx1">截止期限</label>
                     <input type="xxx1" class="form-control" value="@ViewBag.DeadLine" Disabled>
                 </div>
                 <div class="mb-3 form-label">
-                    <label for="xxx2"></label hidden>
-                    <input type="xxx2" class="form-control" value="@ViewBag.ProjectId" Disabled hidden>
+                    <label for="xxx2">專案名稱</label>
+                    <input type="xxx2" class="form-control" value="@ViewBag.ProjectName" Disabled>
                 </div>
             </div>
             <div class="note" style="margin-top:10%; padding:2%; width:200%">
@@ -204,17 +218,17 @@
             </div>           
             <h2 class="title" style="margin-top: 5%;font-weight: 900">專案成員</h2>
             <div  class="note" style="padding:2%; width:100%">
-                @await Html.PartialAsync("_GetUserPartial", Model.ProjectUsersViewModels)
+                @await Html.PartialAsync("_GetUserPartial", Model)
             </div>
 
             <h2 class="title" style="margin-top: 5%;font-weight: 900">專案工單</h2>
             <div  class="note" style="padding:2%; width:100%">
-                @await Html.PartialAsync("_GetFormPartial", Model.ProjectFormsViewModels)
+                @await Html.PartialAsync("_GetFormPartial", Model)
             </div>
 
             <h2 class="title" style="margin-top: 5%;font-weight: 900">資料圖表</h2>
             <div  class="note" style="padding:2%; width:100%">
-                @await Html.PartialAsync("_GetChartPartial", Model.ProjectChartViewModel)
+                @await Html.PartialAsync("_GetChartPartial", Model)
             </div>
     </div>
 </div>
