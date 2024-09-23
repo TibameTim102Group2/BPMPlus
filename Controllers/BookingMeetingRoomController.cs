@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Globalization;
-using System.Text.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace BPMPlus.Controllers
 {
@@ -24,6 +25,9 @@ namespace BPMPlus.Controllers
         public async Task<IActionResult> Index()
         {
             User user = await GetAuthorizedUser();
+
+            var allrooms = await _context.MeetingRooms.AsNoTracking().Select(n => n.MeetingRoomId).ToListAsync();
+            ViewBag.allRooms = JsonSerializer.Serialize(allrooms);
 
             //預約人部門
             var Department = await _context.Department
@@ -83,6 +87,9 @@ namespace BPMPlus.Controllers
 
             if (ModelState.IsValid)
             {
+                
+
+
                 Meeting meeting = new Meeting();
 
                 var host = await _context.User

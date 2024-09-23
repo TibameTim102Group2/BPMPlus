@@ -64,8 +64,16 @@
 <div class="outside">
 
     <div id="app" class="row">
+
+        @* calendar *@
+        <div style="display:inline-block;" class="col-3">
+            <div ref="calendarContainer"></div>
+        </div>
+
+        <div class="col-2"></div>
+
         @* 時間表的部分 *@
-        <div class="col-8">
+        <div class="col-7">
             <table class="info" style="width:100%;">
                 <thead>
                     <tr>
@@ -80,13 +88,6 @@
                     </tr>
                 </tbody>
             </table>
-        </div>
-
-
-        <div style="display:inline-block" class="col-4">
-
-            <div ref="calendarContainer"></div>
-
         </div>
 
     </div>
