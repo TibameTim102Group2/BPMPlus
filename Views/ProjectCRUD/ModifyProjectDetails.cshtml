@@ -361,7 +361,9 @@
                     success: function (response) {
                         createResponseErrorCode = response['errorCode'];
                         if (response['errorCode'] != null && response['errorCode'] == 200) {
-                            window.alert(response['message']);
+                            if(window.confirm(response['message'])){
+                                window.alert("haha")
+                            }
                         }
                         if (response['errorCode'] != null && response['errorCode'] == 400) {
                             window.alert(response['message']);

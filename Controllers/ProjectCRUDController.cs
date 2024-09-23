@@ -131,7 +131,7 @@ namespace BPMPlus.Controllers
             {
                 return Json(new { errorCode = 400, message = "沒有任何修改" });
             }
-            return Json(new { errorCode = 200, message = $"以下為本次修改{retString}請確認是否送出"});
+            return Json(new { errorCode = 200, message = $"以下為本次修改{retString}請確認是否送出?"});
         }
 
         [HttpGet("ProjectCRUD/ProjectDetails/{projectId}")]
