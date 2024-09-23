@@ -14,6 +14,9 @@ using System.Web;
 using static System.Net.Mime.MediaTypeNames;
 using System.Data;
 using BPMPlus.Attributes;
+using Microsoft.AspNetCore.Hosting;
+using BPMPlus.ViewModels;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BPMPlus.Controllers
 {
@@ -23,13 +26,15 @@ namespace BPMPlus.Controllers
         private readonly EmailService emailService;
         private readonly AesAndTimestampService aesAndTimestampService;
         private readonly ResetPasswordService resetPwService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public LoginController(ApplicationDbContext context, EmailService emailService, AesAndTimestampService aesAndTimestampService, ResetPasswordService resetPwService) : base(context)
+        public LoginController(ApplicationDbContext context, EmailService emailService, AesAndTimestampService aesAndTimestampService, ResetPasswordService resetPwService, IWebHostEnvironment WebHostEnvironment) : base(context)
         {
             _context = context;
             this.emailService = emailService;
             this.aesAndTimestampService = aesAndTimestampService;
             this.resetPwService = resetPwService;
+            _webHostEnvironment = WebHostEnvironment;
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -92,6 +97,7 @@ namespace BPMPlus.Controllers
                 ViewBag.errMsg = "帳號或密碼輸入錯誤";
                 return View("Index", login); // 登入失敗導回頁面
             }
+
 
             // 抓第一筆符合的User資料
             var userWithGroups = await _context.User
@@ -400,10 +406,104 @@ namespace BPMPlus.Controllers
         }
 
         //設定大頭貼
-        public IActionResult PhotoSetting()
+
+        [HttpGet]
+        public IActionResult UploadProfilePicture()
         {
+            
             return View();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> UploadProfilePicture(IFormFile file)
+        {
+            User user = await GetAuthorizedUser();
+
+            if (file == null || file.Length == 0)
+            {
+                return Json(new { success = false, message = "請選擇檔案上傳" });
+            }
+
+            // 檢查文件類型
+            var allowedTypes = new[] { "image/jpeg" };
+            if (!allowedTypes.Contains(file.ContentType.ToLower()))
+            {
+                return Json(new { success = false, message = "只允許上傳 JPG圖片" });
+            }
+
+            // 檢查文件擴展名
+            var allowedExtensions = new[] { ".jpg"};
+            var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
+            if (!allowedExtensions.Contains(fileExtension))
+            {
+                return Json(new { success = false, message = "檔案類型不允許，請上傳JPG圖片" });
+            }
+
+
+            //var uploadPath = Path.Combine(_webHostEnvironment.WebRootPath, "profiles");
+
+            var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/profiles");
+
+            if (!Directory.Exists(uploadPath))
+            {
+                Directory.CreateDirectory(uploadPath);
+            }
+
+            var fileName = Path.GetFileName(file.FileName);
+            var newFileName = $"{user.UserId}{Path.GetExtension(fileName)}";
+            var filePath = Path.Combine(uploadPath, newFileName);
+
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(fileStream);
+            }
+
+            
+
+
+            return Json(new { success = true, message = "上傳成功" });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ProfilePicture()
+        {
+            User user = await GetAuthorizedUser();
+            string file = user.UserId + ".jpg";
+            var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/profiles");
+            var filePath = Path.Combine(uploadPath, file);
+
+
+            if (System.IO.File.Exists(filePath))
+            {
+                TempData["FilePath"] = "/profiles/" + file;
+            }
+            else
+            {
+                TempData["FilePath"] = "/images/" + "default.jpg";
+            }
+
+
+
+            return Json(new { filePath = TempData["FilePath"] });
+
+        }
+
+
+        //[HttpGet]
+        //public async Task<IActionResult> ProfilePicture()
+        //{
+        //    User user = await GetAuthorizedUser();
+        //    string file = user.UserId + ".jpg";
+        //    var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/profiles");
+        //    var filePath = Path.Combine(uploadPath, file);
+
+        //    string relativePath = System.IO.File.Exists(filePath) ? "/profiles/" + file : "/images/default.jpg";
+
+        //    // 將圖片路徑傳遞到 View
+        //    ViewBag.ProfilePicturePath = relativePath;
+
+        //    return View();
+        //}
 
     }
 }
