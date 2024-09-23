@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System.Globalization;
-using System.Text.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace BPMPlus.Controllers
 {
@@ -24,6 +25,9 @@ namespace BPMPlus.Controllers
         public async Task<IActionResult> Index()
         {
             User user = await GetAuthorizedUser();
+
+            var allrooms = await _context.MeetingRooms.AsNoTracking().Select(n => n.MeetingRoomId).ToListAsync();
+            ViewBag.allRooms = JsonSerializer.Serialize(allrooms);
 
             //預約人部門
             var Department = await _context.Department
@@ -75,7 +79,25 @@ namespace BPMPlus.Controllers
             return Json(new { success = true, data = bookedTimes });
         }
 
-        [HttpPost]
+
+		public async Task<ActionResult> GetMeetingBook(string id)
+		{
+			//找出所當日有被預約的時間
+			var hasBookedData = await _context.Meeting.AsNoTracking().Where(m => m.StartTime.Date.ToString() == id)
+				.Select(n => new
+				{
+					meetingRoomId = n.MeetingRoomId,
+					startTime = n.StartTime.AddHours(8).Hour,
+					endTime = n.EndTime.AddHours(8).Hour,
+				})
+				.ToListAsync();
+			//選取只需要的資料
+			return Json(new { success = true, data = hasBookedData });
+		}
+
+
+
+		[HttpPost]
         public async Task<IActionResult> SubmitBooking([FromBody] BookingMeetingRoomVM vm)
         {
 
@@ -83,6 +105,9 @@ namespace BPMPlus.Controllers
 
             if (ModelState.IsValid)
             {
+                
+
+
                 Meeting meeting = new Meeting();
 
                 var host = await _context.User

@@ -30,7 +30,7 @@
         }
 
         table {
-            width: 80%;
+            width: 100%;
             border-collapse: collapse;
         }
 
@@ -48,7 +48,6 @@
         td {
             background-color: white;
         }
-
         .form-group {
             display: flex;
             flex-direction: row;
@@ -170,7 +169,7 @@
     <!-- inside -->
     <div class="inside row">
 
-        <div class="col-5">
+        <div class="col-6">
             <div class="form-group">
                 <label>選擇會議室</label>
                 <select class="form-control selectRoom" asp-items="ViewBag.MeetingRooms">
@@ -233,21 +232,119 @@
                 <button id="submitButton" class="btn btn-success">送出</button>
             </div>
         </div>
-
-        <div class="col-7">
-            @await Html.PartialAsync("CurrentMeetingRoom_PartialView")
-        </div>
-
     </div>
+
+        @await Html.PartialAsync("CurrentMeetingRoom_PartialView")
+
 </div>
-
-
-
 
 
 @section Scripts
 {
-    <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js" integrity="sha512-DdX/YwF5e41Ok+AI81HI8f5/5UsoxCVT9GKYZRIzpLxb8Twz4ZwPPX+jQMwMhNQ9b5+zDEefc+dcvQoPWGNZ3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                baseAddress: "https://localhost:7129/BookingMeetingRoom",
+                rooms: [],
+                times: ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00'],
+                bookings: [],
+                bookedSlots: {},
+            },
+            methods: {
+                refreshTable() {
+                    let _this = this;
+                    axios.get(`${_this.baseAddress}/GetMeetingBook/${_this.selectedDate}`)
+                        .then(response => {
+                            if (response.data && Array.isArray(response.data.data)) {
+                                _this.bookings = response.data.data;
+                                _this.calculateBookedSlots();
+                                _this.meetingHostDistinguish = false;
+                            } else {
+                                console.error('Unexpected data format:', response.data);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching bookings:', error);
+                        });
+
+                },
+                formatTime(hour) {
+                    if (!(hour === undefined)) {
+                        const formattedHour = String(hour).padStart(2, '0');
+                        return `${formattedHour}:00`;
+                    }
+                    return "00:00"
+                },
+                isBooked(room, time) {
+                    const hour = parseInt(time.split(':')[0], 10);
+                    return this.bookedSlots[room] && this.bookedSlots[room].includes(hour);
+                },
+                calculateBookedSlots() {
+
+                    if (!Array.isArray(this.bookings)) {
+                        console.error("Bookings is not an array:", this.bookings);
+                        return;
+                    }
+                    this.bookedSlots = {};
+                    this.bookings.forEach(booking => {
+                        const room = booking.meetingRoomId;
+                        if (!this.bookedSlots[room]) {
+                            this.bookedSlots[room] = [];
+                        }
+                        for (let i = booking.startTime; i < booking.endTime; i++) {
+                            this.bookedSlots[room].push(i);
+                        }
+                    });
+                },
+                handclick(room, time) {
+                    //當按到不同的會議室顯示對應的資料
+                    //先清空內容
+                    this.bookedDetails = {};
+                    const clickTime = parseInt(time.split(':')[0], 10);
+                    const findBooking = this.bookings.filter(booking => {
+                        return booking.meetingRoomId === room &&
+                            clickTime >= booking.startTime &&
+                            clickTime <= booking.endTime;
+                    });
+                    if (findBooking) {
+                        this.bookedDetails = findBooking[0];
+                        //判斷當前登入者 和預約的人是不是同一個
+                        if (this.nowUserId === this.bookedDetails.meetingHostUserId) {
+                            this.meetingHostDistinguish = true;
+                        }
+                        else {
+                            this.meetingHostDistinguish = false;
+                        }
+                    }
+                    else {
+                        console.log("notfind")
+                    }
+
+                },
+                editMeeting(e) {
+                    let _this = this;
+                },
+            },
+
+            mounted() {
+                flatpickr(this.$refs.calendarContainer, {
+                    inline: true,
+                    dateFormat: "Y-m-d",
+                    minDate: "today",
+                });
+
+                let _this = this;
+                _this.rooms = JSON.parse('@Html.Raw(ViewBag.allRooms)');
+            }
+        });
+    </script>
+
+
 
     <script>
         $(document).ready(function () {
@@ -526,103 +623,5 @@
 
             })
         });
-        //==================================== Partial
-    </script>
-
-
-    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js" integrity="sha512-DdX/YwF5e41Ok+AI81HI8f5/5UsoxCVT9GKYZRIzpLxb8Twz4ZwPPX+jQMwMhNQ9b5+zDEefc+dcvQoPWGNZ3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script>
-        new Vue({
-            el: '#app',
-            data: {
-                baseAddress: "https://localhost:7129/CurrentMeetingRoom",
-                selectedDate: '',
-                rooms: [],
-                times: ['08:00','09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00','19:00','20:00','21:00','22:00'],
-                bookings:[],
-                bookedSlots:{},
-                bookedDetails:{}
-            },
-            methods: {
-                formatTime(hour) {
-                    if (!(hour === undefined)) {
-                        const formattedHour = String(hour).padStart(2, '0');
-                        return `${formattedHour}:00`;
-                    }
-                    return "00:00"
-                },
-                isBooked(room, time) {
-                    const hour = parseInt(time.split(':')[0], 10);
-                    return this.bookedSlots[room] && this.bookedSlots[room].includes(hour);
-                },
-                calculateBookedSlots() {
-
-                    if (!Array.isArray(this.bookings)) {
-                        console.error("Bookings is not an array:", this.bookings);
-                        return;
-                    }
-                    this.bookedSlots = {};
-                    this.bookings.forEach(booking => {
-                        const room = booking.meetingRoomId;
-                        if (!this.bookedSlots[room]) {
-                            this.bookedSlots[room] = [];
-                        }
-                        for (let i = booking.startTime; i < booking.endTime; i++) {
-                            this.bookedSlots[room].push(i);
-                        }
-                    });
-                },
-                handclick(room,time) {
-                    //當按到不同的會議室顯示對應的資料
-                    //先清空內容
-                    this.bookedDetails = {};
-                    const clickTime = parseInt(time.split(':')[0], 10);
-                    const findBooking = this.bookings.filter(booking => {
-                        return booking.meetingRoomId === room&&
-                            clickTime >= booking.startTime &&
-                            clickTime <= booking.endTime;
-                    });
-                    if(findBooking){
-                        this.bookedDetails = findBooking[0];
-                    }
-                    else{
-                        console.log("notfind")
-                    }
-
-                }
-
-            },
-            mounted() {
-                flatpickr(this.$refs.calendarContainer, {
-                    inline: true,
-                    dateFormat: "Y-m-d",
-                    minDate: "today",
-                    onChange: (selectedDates, dateStr) => {
-                        let _this = this;
-                        _this.selectedDate = dateStr;
-                        _this.bookedDetails = {};
-                        _this.bookedSlots={};
-                        axios.get(`${_this.baseAddress}/getMeetingBook/${_this.selectedDate}`)
-                            .then(response => {
-                                if (response.data && Array.isArray(response.data.data)) {
-                                    _this.bookings = response.data.data;
-                                    _this.calculateBookedSlots();
-                                } else {
-                                    console.error('Unexpected data format:', response.data);
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error fetching bookings:', error);
-                            });
-                    }
-                });
-
-                let _this = this;
-                _this.rooms = JSON.parse('@Html.Raw(ViewBag.allRooms)');
-            }
-        });
-
     </script>
 }
