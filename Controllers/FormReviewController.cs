@@ -62,56 +62,54 @@ namespace BPMPlus.Controllers
             // 撈出其userId, manday
             var Handler = await _context.User.Where(u => u.UserId == pnUser).Select(u => u.UserName).FirstOrDefaultAsync();
 
-            // 撈出其manday
-            var handlerTime = _context.Form.Where(f => f.FormId == id).Select(f => f.ManDay).Max().ToString();
-
             // 撈出manday
-            var previousEstimatedTime = await _context.Form
+            var now = await _context.Form
                .Where(fr => fr.FormId == id)
-               .Select(fr => fr.ManDay)
-               .FirstOrDefaultAsync();
+               .Select(fr => new
+               {
+                   fr.ManDay,
+                   fr.ProcessNodeId 
+               }).FirstOrDefaultAsync();
 
             //抓最新的工單紀錄跳過一筆
-            var skipOneFormRecord = await _context.FormRecord
-                .Where(fr => fr.FormId == id)
-                .OrderByDescending(d => d.Date)
-                .Skip(1)
-                .Select(fr => new
-                {
-                    fr.UserId,
-                    fr.UserActivityId,
-                    fr.DepartmentId,
-                    fr.ResultId
-                }).FirstOrDefaultAsync();
+            //var skipOneFormRecord = await _context.FormRecord
+            //    .Where(fr => fr.FormId == id)
+            //    .OrderByDescending(d => d.Date)
+            //    .Skip(1)
+            //    .Select(fr => new
+            //    {
+            //        fr.UserId,
+            //        fr.UserActivityId,
+            //        fr.DepartmentId,
+            //        fr.ResultId
+            //    }).FirstOrDefaultAsync();
 
-            // 檢查這筆工單紀錄是退回且功能是指派方07
-			bool isRejectedTo07 = skipOneFormRecord.ResultId == "RS1" && skipOneFormRecord.UserActivityId == "07";
-
-            // 
-            if (isRejectedTo07 || (int.Parse(skipOneFormRecord.UserActivityId) <= 6 && skipOneFormRecord.ResultId != "RS1"))
+            var processNode = await _context.ProcessNodes.Where(pn => pn.FormId == id).Select(c => new
             {
-                if (user.PermittedTo("01") || user.PermittedTo("02") || user.PermittedTo("03") ||
-                    user.PermittedTo("04") || user.PermittedTo("05") || user.PermittedTo("06") ||
-                    user.PermittedTo("07"))
-                {
-                    return Json(new { status = true, userPermit = skipOneFormRecord.UserActivityId, handler = Handler, time = handlerTime, previousEstimatedTime });
-                }
-            }
+                c.ProcessNodeId,
+                c.UserId,
+                c.UserActivityId,
+            })
+           .ToListAsync();
+
             // User 有 08 功能且 現在流程節點上的 08 userId是現在登入的userId 且最新的工單紀錄上要是08 且不等於 其他
-            if (user.PermittedTo("07") && latestDetails.UserActivityId != "09")
+            if ((user.PermittedTo("02") || user.PermittedTo("03") || user.PermittedTo("04") || user.PermittedTo("05") || user.PermittedTo("06")) && int.Parse(latestDetails.UserActivityId) <= 6)
             {
-                return Json(new { status = true, userPermit = "07", handler = Handler, previousEstimatedTime });
+                return Json(new { status = true, userPermit = "other" });
             }
-            else if (user.PermittedTo("08") && latestDetails.UserActivityId != "07" && latestDetails.UserActivityId != "09")
+            if (user.PermittedTo("07") && latestDetails.UserActivityId == "07")
             {
-                return Json(new { status = true, userPermit = "08", handler = Handler, previousEstimatedTime });
+                return Json(new { status = true, userPermit = "07", handler = Handler, time = now.ManDay});
             }
-            else if (user.PermittedTo("09") && latestDetails.UserActivityId != "07")
+            else if (user.PermittedTo("08") && latestDetails.UserActivityId == "08")
             {
-                return Json(new { status = true, userPermit = "09", handler = Handler, time = handlerTime, previousEstimatedTime });
+                return Json(new { status = true, userPermit = "08", handler = Handler, time = now.ManDay });
+            }
+            else if (user.PermittedTo("09") && latestDetails.UserActivityId == "09")
+            {
+                return Json(new { status = true, userPermit = "09", handler = Handler, time = now.ManDay });
             }
             return Json(new { status = false });
-
         }
 
         // 指派方輸入人員時會檢查是否與指派方同部門以及有權限處理者
@@ -226,6 +224,16 @@ namespace BPMPlus.Controllers
                     // 如果user不等於提單方or 驗收方
                     if ( !activityId.Contains(fvm.UserActivityId ))
                     {
+
+                        // 查詢被指派的員工細項
+                        var assignEmp = await _context.User.Where(u => u.UserName == fvm.AssginEmployee).Select(u => new
+                        {
+                            userId = u.UserId,
+                            userDepartment = u.DepartmentId,
+                            userGradeId = u.GradeId,
+                        })
+                        .FirstOrDefaultAsync();
+
                         // 呼叫創建ProcessingRecordId方法
                         List<string> formRecordIdList = await GetCreateFormRecordIdListAsync(2);
 
@@ -253,16 +261,6 @@ namespace BPMPlus.Controllers
                                                             .Where(u => u.UserId == nextDetails.UserId)
                                                             .Select(c => c.GradeId)
                                                             .FirstOrDefault();
-
-                        // 查詢被指派的員工細項
-                        var assignEmp = await _context.User.Where(u => u.UserName == fvm.AssginEmployee).Select(u => new
-                        {
-                            userId = u.UserId,
-                            userDepartment = u.DepartmentId,
-                            userGradeId = u.GradeId,
-                        })
-                            .FirstOrDefaultAsync();
-
 
                             // 現在這張工單的流程節點要是07
                         if (nextDetails.UserId != fvm.AssginEmployee && fvm.UserActivityId == "07")
@@ -332,9 +330,16 @@ namespace BPMPlus.Controllers
                             // 更新該工單的 ProcessNodeId, 更新時間
                             formToUpdate.ProcessNodeId = nextDetails.ProcessNodeId;
                             formToUpdate.UpdatedTime = DateTime.UtcNow;
-                            if (user.UserId == assignEmp.userId)
+                            if (user.UserId == assignEmp?.userId)
                             {
-                                formToUpdate.ManDay = fvm.EstimatedTime;
+                                if (fvm.EstimatedTime == 0)
+                                {
+                                    formToUpdate.ManDay = null;
+                                }
+                                else
+                                {
+                                    formToUpdate.ManDay = fvm.EstimatedTime;
+                                }
                                 _context.Update(formToUpdate);
                             }
                             _context.Update(formToUpdate);
