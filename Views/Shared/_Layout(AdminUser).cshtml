@@ -125,10 +125,12 @@
                         <!-- User -->
                         <li class="nav-item">
                             <a href="#" class="nav-link">
-                                <img src="~/images/237143-0147e.jpg" class="img-circle">
+                                <img id="profilePicture" src="~/images/default.jpg" class="img-circle" style="width:30px;height:30px">
+                               @*  <img id="profilePicture" src="@ViewBag.ProfilePicturePath" class="img-circle" style="width:30px;height:30px"> *@
+
                                 @{
                                     var userName = HttpContextAccessor.HttpContext.Request.Cookies["UserName"];
-                                    <p style="margin-left:10px;">@userName</p>
+                                    <p style="margin-left:5px;">@userName</p>
                                 }
                                 <div class="user-panel pb-3 mb-3 d-flex image"></div>
                             </a>
@@ -137,7 +139,7 @@
                                     <a class="nav-link" href="@Url.Action("ResetPassWord","Login")">修改密碼</a>
                                 </li>
                                 <li class="nav-item" style="margin-left:10%;">
-                                    <a class="nav-link" href="@Url.Action("PhotoSetting","Login")">設定</a>
+                                    <a class="nav-link" href="@Url.Action("UploadProfilePicture","Login")">設定</a>
                                 </li>
                                 <li class="nav-item" style="margin-left:10%;">
                                     <a class="nav-link" href="@Url.Action("Logout","Login")">登出</a>
@@ -354,3 +356,20 @@
 </body>
 
 </html>
+<script>
+  
+        $.ajax({
+            url: '@Url.Action("ProfilePicture", "Login")', 
+            type: 'GET',
+            success: function (response) {
+                if (response.filePath) {
+                    $('#profilePicture').attr('src', response.filePath);
+                }
+            },
+            error: function () {
+                console.log("Error retrieving profile picture.");
+            }
+        });
+
+
+</script>

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BPMPlus.ViewModels.ProjectUsersViewModels>
+﻿@model IEnumerable<BPMPlus.ViewModels.Project.ProjectUsersViewModels>
 
 @{
     ViewData["Title"] = "_GetUser";
@@ -73,8 +73,7 @@
                                 @Html.DisplayFor(modelItem => item.Grade)
                             </td>
                             
-                            <td>
-                                <button asp-action="Details" class="button btn btn-primary" style="margin-top: -4px;margin-bottom: -4px" asp-route-id="@item.UserId"><i class="fas fa-search"></i> 細節</button>
+                            <td hidden>
                                 <button asp-action="Delete" class="button btn btn-danger" style="margin-top: -4px;margin-bottom: -4px" asp-route-id="@item.UserId"><i class="fa-solid fa-square-minus"></i> 移除</button>
                             </td>
                         </tr>
