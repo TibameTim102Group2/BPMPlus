@@ -25,15 +25,6 @@ namespace BPMPlus.Controllers
         {
             User user = await GetAuthorizedUser();
 
-            /* 左-會議室概況查看 */
-            var rooms = await _context.MeetingRooms.Select(r => r.MeetingRoomId).ToArrayAsync();
-            var timeSlots = GetTimeSlots(8, 22, 60);
-            ViewBag.Rooms = rooms;
-            ViewBag.TimeSlots = timeSlots;
-
-
-            /* 右-預約內容填寫 */
-
             //預約人部門
             var Department = await _context.Department
                  .FirstOrDefaultAsync(d => d.DepartmentId == user.DepartmentId);
@@ -58,22 +49,6 @@ namespace BPMPlus.Controllers
             ViewBag.DepartmentName = Department.DepartmentName;
 
             return View();
-        }
-
-
-        private List<DateTime> GetTimeSlots(int start, int end, int Minutes)
-        {
-            var slots = new List<DateTime>();
-            var currentTime = DateTime.Today.AddHours(start);
-            var endTime = DateTime.Today.AddHours(end);
-
-            while (currentTime < endTime)
-            {
-                slots.Add(currentTime);
-                currentTime = currentTime.AddMinutes(Minutes);
-            }
-
-            return slots;
         }
 
         // 撈會議室可容納人數

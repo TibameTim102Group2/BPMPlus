@@ -4,6 +4,7 @@
 @section Style
 {
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
     <style>
         .outside {
@@ -168,37 +169,12 @@
 
     <!-- inside -->
     <div class="inside row">
-        <div class="col-7">
-            <table id="scheduleTable" class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th style="color: rgba(0, 81, 255, 0.884);">Time</th>
-                        @foreach (var room in ViewBag.Rooms)
-                        {
-                            <th style="color: rgba(0, 81, 255, 0.884);">@room</th>
-                        }
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var timeSlot in ViewBag.TimeSlots)
-                    {
-                        <tr>
-                            <td>@timeSlot.ToString("HH:mm")</td>
-                            @foreach (var room in ViewBag.Rooms)
-                            {
-                                <td data-room="@room" data-time="@timeSlot.ToString("HH:mm")"></td>
-                            }
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
 
         <div class="col-5">
             <div class="form-group">
                 <label>選擇會議室</label>
                 <select class="form-control selectRoom" asp-items="ViewBag.MeetingRooms">
-                    <option value="">-- 請選擇 --</option>
+                    <option value="">-- 請選擇會議室 --</option>
                 </select>
             </div>
 
@@ -253,17 +229,16 @@
                 <textarea class="form-control note"></textarea>
             </div>
 
-
-
             <div class="btn-center">
                 <button id="submitButton" class="btn btn-success">送出</button>
             </div>
+        </div>
 
-
+        <div class="col-7">
+            @await Html.PartialAsync("CurrentMeetingRoom_PartialView")
         </div>
 
     </div>
-
 </div>
 
 
@@ -389,7 +364,7 @@
                 });
             });
 
-            //get booked time
+            //取得已預約時間
             let StartSelect = $(".startTimeSelect");
             let EndSelect = $(".endTimeSelect");
 
@@ -397,7 +372,7 @@
                 let meetingRoomId = $(".selectRoom").val();
                 let bookingDate = $(".bookingDate").val();
 
-                if (!meetingRoomId || !bookingDate) return;
+                if (!bookingDate) return;
 
                 $.ajax({
                     url: '@Url.Action("CheakMeetingRooms", "BookingMeetingRoom")',
@@ -421,6 +396,15 @@
                         return hour >= start && hour < end;
                     });
                 }
+
+                //找出下一個被預約的時段
+                function getNextBookedTime(startHour) {
+                    let nextBooked = bookedTimes.find(booking =>
+                        parseInt(booking.startTime.split(':')[0]) > startHour
+                    );
+                    return nextBooked ? parseInt(nextBooked.startTime.split(':')[0]) : 22;
+                }
+
                 //排除已預約時間的時間選擇器
                 function generateTimeOptions($select, startHour, endHour, defaultText) {
                     $select.empty().append($('<option>', { value: '', text: defaultText }));
@@ -439,37 +423,17 @@
                 generateTimeOptions(EndSelect, 8, 22, '-- 請先選擇開始時間 --');
                 EndSelect.prop('disabled', true);
 
-                updateTableColors(bookedTimes);
-
                 // 當開始時間改變時更新結束時間選項
                 StartSelect.off('change').on('change', function () {
                     let startTime = StartSelect.val();
                     if (startTime) {
                         let startHour = parseInt(startTime.split(':')[0]);
-                        generateTimeOptions(EndSelect, startHour + 1, 22, '-- 請選擇結束時間 --');
+                        let nextBookedTime = getNextBookedTime(startHour);
+                        generateTimeOptions(EndSelect, startHour + 1, nextBookedTime, '-- 請選擇結束時間 --');
                         EndSelect.prop('disabled', false);
                     } else {
-                        generateTimeOptions(EndSelect, 8, 22, '-- 請先選擇開始時間 --');
+                        EndSelect.empty().append($('<option>', { value: '', text: '-- 請先選擇開始時間 --' }));
                         EndSelect.prop('disabled', true);
-                    }
-                });
-                updateTableColors(bookedTimes);
-            }
-
-            //加入表格顏色
-            function updateTableColors(bookedTimes) {
-                $('table td').css('background-color', '');
-                bookedTimes.forEach(booking => {
-                    let start = parseInt(booking.startTime.split(':')[0]);
-                    let end = parseInt(booking.endTime.split(':')[0]);
-                    let roomId = booking.roomId;
-                    for (let hour = start; hour < end; hour++) {
-                        $('table tr').each(function () {
-                            let $timeCell = $(this).find('td:first');
-                            if ($timeCell.text() === hour + ':00') {
-                                $(this).find('td').eq(roomId.replace('R', '')).css('background-color', '#42a8fa');
-                            }
-                        });
                     }
                 });
             }
@@ -480,7 +444,7 @@
                 }
             });
 
-            // 監聽日期變更
+            // 監聽日期變
             $(".bookingDate").change(loadAvailableTimes);
 
             // 監聽會議室變更
@@ -562,5 +526,103 @@
 
             })
         });
+        //==================================== Partial
+    </script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.7/axios.min.js" integrity="sha512-DdX/YwF5e41Ok+AI81HI8f5/5UsoxCVT9GKYZRIzpLxb8Twz4ZwPPX+jQMwMhNQ9b5+zDEefc+dcvQoPWGNZ3g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                baseAddress: "https://localhost:7129/CurrentMeetingRoom",
+                selectedDate: '',
+                rooms: [],
+                times: ['08:00','09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00','19:00','20:00','21:00','22:00'],
+                bookings:[],
+                bookedSlots:{},
+                bookedDetails:{}
+            },
+            methods: {
+                formatTime(hour) {
+                    if (!(hour === undefined)) {
+                        const formattedHour = String(hour).padStart(2, '0');
+                        return `${formattedHour}:00`;
+                    }
+                    return "00:00"
+                },
+                isBooked(room, time) {
+                    const hour = parseInt(time.split(':')[0], 10);
+                    return this.bookedSlots[room] && this.bookedSlots[room].includes(hour);
+                },
+                calculateBookedSlots() {
+
+                    if (!Array.isArray(this.bookings)) {
+                        console.error("Bookings is not an array:", this.bookings);
+                        return;
+                    }
+                    this.bookedSlots = {};
+                    this.bookings.forEach(booking => {
+                        const room = booking.meetingRoomId;
+                        if (!this.bookedSlots[room]) {
+                            this.bookedSlots[room] = [];
+                        }
+                        for (let i = booking.startTime; i < booking.endTime; i++) {
+                            this.bookedSlots[room].push(i);
+                        }
+                    });
+                },
+                handclick(room,time) {
+                    //當按到不同的會議室顯示對應的資料
+                    //先清空內容
+                    this.bookedDetails = {};
+                    const clickTime = parseInt(time.split(':')[0], 10);
+                    const findBooking = this.bookings.filter(booking => {
+                        return booking.meetingRoomId === room&&
+                            clickTime >= booking.startTime &&
+                            clickTime <= booking.endTime;
+                    });
+                    if(findBooking){
+                        this.bookedDetails = findBooking[0];
+                    }
+                    else{
+                        console.log("notfind")
+                    }
+
+                }
+
+            },
+            mounted() {
+                flatpickr(this.$refs.calendarContainer, {
+                    inline: true,
+                    dateFormat: "Y-m-d",
+                    minDate: "today",
+                    onChange: (selectedDates, dateStr) => {
+                        let _this = this;
+                        _this.selectedDate = dateStr;
+                        _this.bookedDetails = {};
+                        _this.bookedSlots={};
+                        axios.get(`${_this.baseAddress}/getMeetingBook/${_this.selectedDate}`)
+                            .then(response => {
+                                if (response.data && Array.isArray(response.data.data)) {
+                                    _this.bookings = response.data.data;
+                                    _this.calculateBookedSlots();
+                                } else {
+                                    console.error('Unexpected data format:', response.data);
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error fetching bookings:', error);
+                            });
+                    }
+                });
+
+                let _this = this;
+                _this.rooms = JSON.parse('@Html.Raw(ViewBag.allRooms)');
+            }
+        });
+
     </script>
 }
