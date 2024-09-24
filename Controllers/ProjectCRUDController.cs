@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Graph;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Frameworks;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -20,7 +21,68 @@ namespace BPMPlus.Controllers
         {
             _context = context;
         }
-        
+
+        [HttpDelete("ProjectCRUD/DeleteProjectConfirm/{inputProjectId}")]
+        [Authorize]
+        public async Task<JsonResult> DeleteProjectConfirm(string inputProjectId)
+        {
+            User user = await GetAuthorizedUser();
+            if (!user.PermittedTo("11"))
+            {
+                return Json(new { errorCode = 400, message = "您的權限無法刪除專案細節" });
+            }
+            Project project = await _context.Project
+                .Include(p => p.Users)
+                .FirstOrDefaultAsync(p => p.ProjectId == inputProjectId);
+            if (project == null)
+            {
+                return Json(new { errorCode = 400, message = "刪除異常，無此專案" });
+            }
+            if (!(project.ProjectManagerId == user.UserId))
+            {
+                return Json(new { errorCode = 400, message = "非專案經理無法刪除專案" });
+            }
+
+            return Json(new { errorCode = 200, message = $"請確認是否要刪除專案 {inputProjectId} {project.ProjectName}?" });
+        }
+
+        [HttpDelete("ProjectCRUD/DeleteProject/{inputProjectId}")]
+
+        [Authorize]
+        public async Task<JsonResult> DeleteProject(string inputProjectId)
+        {
+            User user = await GetAuthorizedUser();
+            if (!user.PermittedTo("11"))
+            {
+                return Json(new { errorCode = 400, message = "您的權限無法刪除專案細節" });
+            }
+            Project project = await _context.Project
+                .Include(p => p.Users)
+                .FirstOrDefaultAsync(p => p.ProjectId == inputProjectId);
+            if (project == null)
+            {
+                return Json(new { errorCode = 400, message = "刪除異常，無此專案" });
+            }
+            if (!(project.ProjectManagerId == user.UserId))
+            {
+                return Json(new { errorCode = 400, message = "非專案經理無法刪除專案" });
+            }
+
+            for(int i = 0; i < project.Users.Count; ++i)
+            {
+                project.Users.Remove(project.Users[i]);
+            }
+            
+            var forms = await _context.Form.Where(f=> f.ProjectId == inputProjectId).ToListAsync();
+            for(int i = 0; i < forms.Count; ++i)
+            {
+                forms[i].ProjectId = null;
+            }
+            _context.Project.Remove(project);
+            await _context.SaveChangesAsync();
+            return Json(new { errorCode = 200, message = $"刪除成功" });
+        }
+
         [HttpPost]
         [Authorize]
         public async Task<JsonResult> CheckModify([FromBody] ModifyProjectViewModels model)
@@ -103,7 +165,7 @@ namespace BPMPlus.Controllers
             }
             if (removedPeople.Count > 0)
             {
-                retString += $"專案工單 : 開除";
+                retString += $"專案工單 : 移除";
                 foreach (var f in removedPeople)
                 {
                     retString += f.UserId + f.UserName + " ";
@@ -580,6 +642,30 @@ namespace BPMPlus.Controllers
             }
 
 
+            project.ProjectName = model.ProjectName;
+            project.Summary = model.ProjectDescription;
+            project.DeadLine = DateTime.Parse(model.Deadline).AddHours(-8);
+            project.UpdatedTime = DateTime.UtcNow;
+            for (int i = 0; i < removedPeople.Count(); ++i)
+            {
+                project.Users.Remove(removedPeople[i]);
+            }
+            for (int i = 0; i < addedPeople.Count(); ++i)
+            {
+                project.Users.Add(addedPeople[i]);
+            }
+
+            for (int i = 0; i < removedForm.Count(); ++i)
+            {
+                removedForm[i].ProjectId = null;
+            }
+            for (int i = 0; i < addedForm.Count(); ++i)
+            {
+                addedForm[i].ProjectId = project.ProjectId;
+            }
+
+            _context.Project.Update(project);
+            await _context.SaveChangesAsync();
 
             return Json(new { errorCode = 200, message = $"修改成功" });
         }
