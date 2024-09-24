@@ -105,22 +105,53 @@ namespace BPMPlus.Controllers
                 .Select(d => new { d.StartTime, d.EndTime })
                 .ToListAsync();
 
-
-            string[] start = new string[14];
-            string[] end = new string[14];
-            foreach (var time in bookedTime)
-            {
-
-            }
-
-
-
             if (ModelState.IsValid)
             {
                 var StartTime = DateTime.Parse($"{vm.Date} {vm.StartTime}").AddHours(-8);
                 var EndTime = DateTime.Parse($"{vm.Date} {vm.EndTime}").AddHours(-8);
 
-                
+                if (bookedTime.Count != 0)
+                {
+                    //建立空陣列 存放已被預約的時段和要存的時段
+                    int[] booked = new int[14];
+                    int[] select = new int[14];
+
+                    //選擇的日期和會議室有幾個預約時段
+                    int count = 0;
+
+                    int selectStart = Int32.Parse(vm.StartTime.Substring(0, 2));
+                    int selectEnd = Int32.Parse(vm.EndTime.Substring(0, 2));
+
+                    // 取得會議室已被預約的時段
+                    foreach (var time in bookedTime)
+                    {
+                        int startTiming = time.StartTime.AddHours(8).Hour;
+                        int endTiming = time.EndTime.AddHours(8).Hour;
+                        for (var i = startTiming; i <= endTiming - 1; i++)
+                        {
+                            booked[count] = i;
+                            count++;
+                        }
+                    }
+
+                    count = 0;
+                    for (int i = selectStart; i <= selectEnd - 1; i++)
+                    {
+                        select[count] = i;
+                        count++;
+                    }
+
+                    //比對booked和select時段
+                    var filterBookTime = booked.Where(x => x != 0).ToArray();
+                    var filterSeletedTime = select.Where(x => x != 0).ToArray();
+                    //已被預約時間回傳
+                    var repeatTimes = filterBookTime.Intersect(filterSeletedTime).ToArray();
+                    if (repeatTimes.Any())
+                    {
+                        return Json(new { success = false, message = "選取時段已被預約!" });
+                    }
+
+                }
 
 
                 Meeting meeting = new Meeting();
@@ -130,7 +161,6 @@ namespace BPMPlus.Controllers
                     .Where(u => u.UserName == vm.MeetingHost)
                     .Select(h => h.UserId)
                     .FirstOrDefaultAsync();
-
 
                 meeting.MeetingId = id.FirstOrDefault();
                 meeting.MeetingRoomId = vm.Room;
@@ -143,7 +173,6 @@ namespace BPMPlus.Controllers
 
                 await _context.Meeting.AddAsync(meeting);
                 await _context.SaveChangesAsync();
-
 
                 var meetingid = _context.Meeting
                     .Include(x => x.Users)
