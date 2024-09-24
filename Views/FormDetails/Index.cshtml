@@ -93,6 +93,15 @@
         table {
             text-align: center;
             line-height: 1.5;
+            width: 100%;
+            table-layout: fixed; /* 固定表格佈局 */
+        }
+
+        /* 固定表頭 */
+        thead th {
+            position: sticky; /* 表頭固定 */
+            top: 0; /* 固定在頂部 */
+            z-index: 1; /* 確保表頭位於內容上方 */
         }
 
     </style>
@@ -261,7 +270,7 @@
 
                         <!-- /.row -->
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="item-name">需求內容</label>
                                 </div>
