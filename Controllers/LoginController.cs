@@ -461,10 +461,18 @@ namespace BPMPlus.Controllers
             var newFileName = $"{user.UserId}{Path.GetExtension(fileName)}";
             var filePath = Path.Combine(uploadPath, newFileName);
 
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            try
             {
-                await file.CopyToAsync(fileStream);
+                using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
+                {
+                    await file.CopyToAsync(fileStream);
+                }
             }
+            catch(Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+            
 
             
 
@@ -480,14 +488,23 @@ namespace BPMPlus.Controllers
             var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/profiles");
             var filePath = Path.Combine(uploadPath, file);
 
+            string versionedFilePath;
 
             if (System.IO.File.Exists(filePath))
             {
-                TempData["FilePath"] = "/profiles/" + file;
+                // 獲取檔案的最後修改時間
+                var lastModified = System.IO.File.GetLastWriteTime(filePath);
+                string version = lastModified.ToString("yyyyMMddHHmmss"); // 格式化為字符串
+
+                // 創建版本化的檔案路徑
+                versionedFilePath = $"/profiles/{file}?v={version}";
+
+
+                TempData["FilePath"] = versionedFilePath;
             }
             else
             {
-                TempData["FilePath"] = "/images/" + "default.jpg";
+                TempData["FilePath"] =null;
             }
 
 

@@ -10,7 +10,7 @@
 
         public string Id { get; set; }
 
-        public List<IFormFile> Files { get; set; } = null;
+        public List<IFormFile> Files { get; set; } 
 
 
     }
