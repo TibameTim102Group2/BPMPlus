@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BPMPlus.ViewModels.Project.ProjectUsersViewModels>
+﻿@model BPMPlus.ViewModels.Project.ProjectDetailsViewModel
 
 @{
     ViewData["Title"] = "_GetUser";
@@ -28,6 +28,7 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="~/AdminLTE/dist/css/adminlte.min.css">
     <link rel="stylesheet" href="~/font-awesome/css/all.css" />
+    
 }
 
 <div class="card">
@@ -53,18 +54,18 @@
                         </th>
                     </tr>
                 </thead>
-                <tbody>
-                    @foreach (var item in Model)
+                <tbody id="users-tr">
+                    @foreach (var item in Model.ProjectUsersViewModels)
                     {
                         <tr style="padding-top: 5px">
                             <td>
                                 @Html.DisplayFor(modelItem => item.IsPm)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.UserName)
+                                @Html.DisplayFor(modelItem => item.UserId)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.UserId)
+                                @Html.DisplayFor(modelItem => item.UserName)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Department)
@@ -73,8 +74,45 @@
                                 @Html.DisplayFor(modelItem => item.Grade)
                             </td>
                             
-                            <td hidden>
-                                <button asp-action="Delete" class="button btn btn-danger" style="margin-top: -4px;margin-bottom: -4px" asp-route-id="@item.UserId"><i class="fa-solid fa-square-minus"></i> 移除</button>
+                            <td>
+                                @if (Model.AllowModify == "true" && ViewBag.ModMode == true && item.IsPm == "組員")
+                                {
+                                    <button asp-action="Delete" class="button btn btn-danger delete-btn" style="margin-top: -4px;margin-bottom: -4px" asp-route-id="@item.UserId"><i class="fa-solid fa-square-minus"></i> 移除</button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                    @if(ViewBag.ModMode == true)
+                    {
+                        <tr id="new-user-row">
+                            <td>組員</td>
+                            <td>
+                                <input type="text" id="userIdInput" class="form-control" style="text-align: center" placeholder="-- 員工編號 --" list="userIdList" />
+                                <datalist id="userIdList">
+                                    <!-- 選項會在 document.ready 中填充 -->
+                                </datalist>
+                            </td>
+                            <td>
+                                <input type="text" id="userNameInput" class="form-control" style="text-align: center" placeholder="-- 員工姓名 --" list="userNameList" />
+                                <datalist id="userNameList">
+                                    <option value="">-- 選擇姓名 --</option>
+                                    <!-- 選項會在 document.ready 中填充 -->
+                                </datalist>
+                            </td>
+                            <td>
+                                <input type="text" id="departmentInput" class="form-control" style="text-align: center" placeholder="-- 部門 --" list="departmentList" disabled/>
+                                <datalist id="departmentList">
+                                    <option value="">-- 部門 --</option>
+                                </datalist>
+                            </td>
+                            <td>
+                                <input type="text" id="gradeInput" class="form-control" style="text-align: center" placeholder="-- 職稱 --" list="gradeList" disabled />
+                                <datalist id="gradeList">
+                                    <option value="">-- 職稱 --</option>
+                                </datalist>
+                            </td>
+                            <td>
+                                <button id="add-btn" class="btn btn-success"><i class="fa-solid fa-plus"></i> 新增</button>
                             </td>
                         </tr>
                     }
