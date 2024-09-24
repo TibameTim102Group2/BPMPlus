@@ -32,199 +32,147 @@
     <!-- Theme style -->
 @*     <link rel="stylesheet" href="~/AdminLTE/dist/css/adminlte.min.css"> *@
     <style>
-
-        #fullPage {
-            background-color: #DFF1FF;
-            padding: 10px;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
         }
 
         h4 {
-            color: #3D60A5;
+            color: #007bff;
+            font-weight: bold;
         }
 
-        #secondeBackground {
-            background-color: #D1DEFF;
-            margin-left: 15px;
-            margin-right: 15px;
-            margin-bottom: 15px;
+        form {
+            background-color: white;
+            padding: 20px;
+            margin: 15px;
         }
 
-        .formBackground {
-            background-color: #D1DEFF;
-            padding-left: 35px;
-            padding-right: 35px;
-            display: block;
-            padding-top: 15px;
-        }
-
-        #formArea {
-            padding-bottom: 20px;
+        .form-row {
             display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
         }
 
-            #formArea label {
-                background-color: #D8D7DB;
-                margin: auto;
-                width: 120px;
-                text-align: center;
-                border-radius: 5%;
-                margin-right: 20px;
-            }
-
-            #formArea input {
-                width: 180px;
-                height: 30px;
-                display: inline;
-            }
-
-        .process {
-            padding-bottom: 20px;
-        }
-
-            .process label {
-                margin: auto;
-                height: 30px;
-                width: 120px;
-                text-align: center;
-            }
-
-            .process button {
-                width: 80px;
-                margin-right: 10px;
-            }
-
-        table {
-            text-align: center;
-            line-height: 1.5;
-            padding-left: 50px;
-        }
-
-        .btnArea {
-            height: 60px;
+        .form-group {
+            flex: 1;
+            margin-right: 10px;
             display: flex;
-            align-items: center;
+            justify-content: space-between;
         }
 
-        .btns {
-            width: auto;
-            margin: auto,0;
+        label {
+            margin-bottom: 5px;
         }
 
-        .result {
-            padding-left: 30px;
-            padding-right: 30px;
-            padding-bottom: 20px
+        .formBackground input[type="text"], textarea {
+            width: 95%;
+            padding: 5px;
+            background-color: whitesmoke;
         }
 
-        .reviewResult {
-            margin-left: 10px;
-        }
-
-            .reviewResult label {
-                margin-right: 20px;
-            }
-
-        .file {
-            padding-left: 50px;
-        }
-
-        .submit button {
-            margin-right: 30px;
-            width: 120px;
-        }
-
-        .pd {
-            padding-left: 50px;
-        }
-
-        .ManagerOpinion {
+        textarea {
             width: 100%;
             height: 200px;
-        }
-
-        .textContent {
-            color: black;
-        }
-
-            .textContent[readonly] {
-                resize: none;
-                background-color: white;
-            }
-
-        input[type=text][readonly] {
-            color: black;
+            border-radius: 5px;
             background-color: white;
+            border: 1px solid #c2c2c2;
+            padding:5px;
+        }
+        
+        .borderLine{
+            width: 100%;
+            border: 1px solid #ced4da;
+            margin-top: 20px;
         }
 
-        .file {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-left: 30px;
-            padding-right: 30px;
+        .processRecord{
+            margin-top: 20px;
         }
 
-        #btnDownload {
-            font-size: 14px;
-            white-space: nowrap; 
-            min-width: 120px; 
-        }
-
-        #inputReview label {
-            background-color: yellow;
-            font-size: 14px;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        #inputReview input {
-            width: 20px;
-            height: 20px;
-        }
-
-        .result {
-            padding: 20px 30px;
-        }
-
-        .result {
-            padding: 20px 30px;
-        }
-
-            .result .noteContent {
-                margin-bottom: 10px;
-                font-weight: bold;
+        .processRecord button {
+                margin: 5px 0;
             }
 
-            .result .textContent {
-                width: 100%;
-                min-height: 300px;
-                overflow-y: visible; 
-                overflow-x: auto; 
-                padding: 10px;
-                background-color: white;
-                border: 1px solid #ced4da;
-                border-radius: 0.25rem;
-            }
+        .formRecord {
+            margin-top: 20px;
+        }
 
-            .result .textContent table{
-                text-align:left;
-            }
+        .fileDownloadGroup{
+            margin-top: 20px;
+        }
 
-         /*        .result .textContent table {
-                    width: 100%;
-                    border-collapse: collapse;
-                    margin-bottom: 0;
-                }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-                    .result .textContent table th,
-                    .result .textContent table td {
-                        border: 1px solid #ddd;
-                        padding: 8px;
-                        text-align: left;
-                    }
-                    */
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
 
-        </style>
+        button {
+            padding: 5px 10px;
+            margin-right: 5px;
+        }
+
+        .resultArea{
+            display:flex;
+            justify-content: center;
+            align-items:center;
+            margin-top:20px;
+        }
+
+       .resultArea .reviewResult .reviewTxt {
+           display: block;
+           text-align: center;
+           color: red;
+           font-size: x-large;
+       }
+
+        .resultArea  label {
+            margin : 5px 5px;
+        }
+
+        .submitBtn{
+            display: block;
+            text-align: center;
+        }
+
+        input.btn.btn-danger {
+            width: 15%;
+        }
+
+        .result{
+            margin-top: 20px;
+        }
+
+        .result .textContent {
+            background-color:whitesmoke;
+            width: 100%;
+            min-height: 300px;
+            overflow-y: visible;
+            overflow-x: auto;
+            padding: 10px;
+            background-color: white;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+        }
+
+        .form-group input#Files {
+            width:100%;
+        }
+
+        .checkIcon{
+            color : green;
+        }
+
+        .falseIcon{
+            color: red;
+        }
+    </style>
 }
 
 
@@ -236,11 +184,10 @@
 
     <form id="formArea" asp-controller="FormReview" method="post" asp-action="CreateAndUpdate" enctype="multipart/form-data">
         <div id="secondeBackground">
-
             <!-- 工單區域 -->
             <div class="formBackground">
-                <div class="row" style="display:flex;">
-                    <div class="col-6 mb-3 form-label">
+                <div class="row">
+                    <div class="col-6 form-label form-group-centered">
                         <input type="hidden" asp-for="@Model.UserId" />
                         <input type="hidden" asp-for="@Model.ResultId" />
                         <input type="hidden" asp-for="@Model.DepartmentId" />
@@ -249,94 +196,102 @@
                         <label>工單編號</label>
                         <input asp-for="@Model.FormId" type="text" class="form-control" value="@Model.FormId" readonly />
                     </div>
-                    <div class="col-6 mb-3 form-label">
+                    <div class="col-6 form-label form-group-centered">
                         <label>建立日期</label>
                         <input asp-for="@Model.Date" type="text" class="form-control" value="@Model.Date.ToLocalTime().ToString(" yyyy-MM-dd")" readonly />
                     </div>
-                    <div class="col-6 mb-3 form-label">
+                    <div class="col-6 form-label form-group-centered">
                         <label>需求類別</label>
                         <input asp-for="@Model.CategoryDescription" type="text" class="form-control" value="@Model.CategoryDescription" readonly />
                     </div>
-                    <div class="col-6 mb-3 form-label">
+                    <div class="col-6 form-label form-group-centered">
                         <label>處理狀態</label>
                         <input asp-for="@Model.CurrentResultsDescription" type="text" class="form-control" value="@Model.CurrentResultsDescription" readonly />
                     </div>
-                    <div class="col-6 mb-3 form-label">
+                    <div class="col-6 form-label form-group-centered">
                         <label>需求部門</label>
                         <input asp-for="@Model.DepartmentName" type="text" class="form-control" value="@Model.DepartmentName" readonly />
                     </div>
-                    <div class="col-6 mb-3 form-label">
-                        <label>指派人員</label>
+                    <div class="col-6 form-label form-group-centered">
+                        <label>指派人員
+                            <i class="fa-solid fa-spinner fa-spin loadIcon" hidden></i>
+                            <i class="fa-solid fa-check checkIcon" hidden></i>
+                            <i class="fa-solid fa-xmark falseIcon" hidden></i>
+                        </label>
                         <input asp-for="@Model.AssginEmployee" type="text" class="assignEmp form-control" value="@Model.AssginEmployee" readonly />
-                        <i class="fa-solid fa-spinner fa-spin loadIcon" style="color:grey;" hidden></i>
-                        <i class="fa-solid fa-check checkIcon" style="color:green;" hidden></i>
-                        <i class="fa-solid fa-xmark falseIcon" style="color: red;" hidden></i>
                     </div>
-                    <div class="col-6 mb-3 form-label">
+                    <div class="col-6 form-label form-group-centered">
                         <label>需求員工</label>
                         <input asp-for="@Model.NeedEmployees" type="text" class="form-control" value="@Model.NeedEmployees" readonly />
                     </div>
-                    <div class="col-6 mb-3 form-label">
+                    <div class="col-6 form-label form-group-centered">
                         <label>希望完成日期</label>
                         <input asp-for="@Model.HopeFinishDate" type="text" class="form-control" value="@Model.HopeFinishDate.ToLocalTime().ToString(" yyyy-MM-dd")" readonly />
                     </div>
-                    <div class="col-6 mb-3 form-label">
+                    <div class="col-6 form-label form-group-centered">
                         <label>所屬專案</label>
                         <input asp-for="@Model.BelongProjects" type="text" class="form-control" value="@Model.BelongProjects" readonly />
                     </div>
-                    <div class="col-6 mb-3 form-label">
+                    <div class="col-6 form-label form-group-centered">
                         <label>預估工時</label>
                         <input asp-for="@Model.EstimatedTime" type="text" class="EstimatedTime form-control" value="@Model.EstimatedTime" readonly />
                     </div>
                 </div>
             </div>
 
+            <div class="borderLine"></div>
+
             <!--  流程節點進度  -->
-            <label style="margin-left:35px;">流程進度</label>
-            <br>
-            <div class="formBackground btnArea">
-
-                <div>
-                    @foreach (var activity in Model.FormProcessFlow)
-                    {
-                        if (activity.IsHightLight == true)
+            <div id="formBackground btnArea">
+                <div class="processRecord">
+                    <label>流程進度</label>
+                    <div>
+                        @foreach (var activity in Model.FormProcessFlow)
                         {
-                            <button type="button" class="btn btn-sm btn-danger btns">@activity.UserActivityIdDescription</button>
+                            if (activity.IsHightLight == true)
+                            {
+                                <button type="button" class="btn btn-sm btn-danger btns">@activity.UserActivityIdDescription</button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-sm btn-primary btns">@activity.UserActivityIdDescription</button>
+                            }
                         }
-                        else
-                        {
-                            <button type="button" class="btn btn-sm btn-primary btns">@activity.UserActivityIdDescription</button>
-                        }
-                    }
 
-                </div>
-            </div><br /><br />
+                    </div>
+            </div>
+
+                <div class="borderLine"></div>
 
             <!--  工單處理紀錄  -->
-            <label>處理紀錄</label>
-            <table class="table table-hover table-bordered ">
-                <thead>
-                    <tr>
-                        <th>時間</th>
-                        <th>處理狀態</th>
-                        <th>處理人員</th>
-                        <th>出示意見</th>
-                        <th>審核結果</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.FormRecordList)
-                    {
+            <div class="formRecord">
+                <label>處理紀錄</label>
+                <table class="table table-hover table-bordered ">
+                    <thead>
                         <tr>
-                            <td>@item.Date.ToLocalTime()</td>
-                            <td>@item.UserActivityDes</td>
-                            <td>@item.UserName</td>
-                            <td>@item.Remark</td>
-                            <td>@item.ResultDes</td>
+                            <th>時間</th>
+                            <th>處理狀態</th>
+                            <th>處理人員</th>
+                            <th>出示意見</th>
+                            <th>審核結果</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.FormRecordList)
+                        {
+                            <tr>
+                                <td>@item.Date.ToLocalTime()</td>
+                                <td>@item.UserActivityDes</td>
+                                <td>@item.UserName</td>
+                                <td>@item.Remark</td>
+                                <td>@item.ResultDes</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="borderLine"></div>
 
             <!-- 需求內容/附件/出示意見 -->
             <!-- 需求內容 -->
@@ -345,45 +300,47 @@
                     <div asp-for="@Model.Content" class="textContent form-control" readonly>@Html.Raw(Model.Content)</div>
             </div>
 
+            <div class="borderLine"></div>
+
             <!-- 附件上傳/下載 -->
-            <div>
+            <div class="fileDownloadGroup">
                 <input type="hidden" name="id" value="@Model.FormId" />
+                    <label>附件</label>
                 <div class="form-group">
-                    <div class="file">
-                        <div style="margin-right:600px;">
-                            <label id="attachment">附件</label>
+                        <div>
                             <input asp-for="@Model.Files" type="file" class="form-control" multiple />
                         </div>
                         <button id="btnDownload" class="button btn btn-primary" type="button">
                             <i class="fa-solid fa-file-arrow-down"></i>  附件下載
                         </button>
-                    </div>
                 </div>
             </div>
+
+                <div class="borderLine"></div>
 
             <div class="result">
                 <label class="control-label">出示意見</label><br />
                 <div class="txtInput">
                     <div>
                         @* <div id="summernote"></div> *@
-                        <textarea class="ManagerOpinion" asp-for="@Model.Remark">
+                        <textarea class="ManagerOpinion" asp-for="@Model.Remark" placeholder="試試看輸入反饋~">
                             @Model.Remark
                             </textarea>
                     </div>
                 </div>
-                <div style="display:flex; justify-content: space-between; align-items: center;">
-                    <div class="reviewResult" style="flex: 1; text-align: left;">
-                        <label>審核結果: </label>
+
+                <div class="borderLine"></div>
+
+                <div class="resultArea">
+                    <div class="reviewResult" >
+                        <label class="reviewTxt">審核結果: </label>
+                        <label><input name="reviewResult" type="radio" value="reject" class="rejectBtn" />退回</label>
+                        <label><input name="reviewResult" type="radio" value="approve" class="approveBtn" /> 核准</label>
                     </div>
-                    <div class="reviewOptions" style="flex: 1; text-align: center;">
-                        <div id="inputReview">
-                            <label><input name="reviewResult" type="radio" value="reject" class="rejectBtn"/>退回</label>
-                            <label><input name="reviewResult" type="radio" value="approve" class="approveBtn" /> 核准</label>
-                        </div>
-                    </div>
-                    <div class="submitBtn" style="flex: 1; text-align: right;">
-                        <input type="submit" class="btn btn-success btns" value="送出" />
-                    </div>
+                </div>
+                 
+                <div class="submitBtn">
+                        <input type="submit" class="btn btn-danger" value="送出" />
                 </div>
 
             </div>
@@ -477,6 +434,8 @@
                         }
                         else if (data.userPermit === "07") {
                             needEmp.value = data.handler;
+                            needEmp.style = "background-color:white;"
+                            
 
                             rejectBtn.addEventListener("click", handleRejectClick);
                             approveBtn.addEventListener("click", handleApproveClick);
@@ -517,6 +476,7 @@
                             needEmp.value = data.handler;
                             needEmp.setAttribute("readonly", "readonly");
                             checkEstimatedTime.removeAttribute("readonly");
+                            checkEstimatedTime.style = "background-color:white;"
 
                             if (data.time != null) {
                                 checkEstimatedTime.value = data.time;
