@@ -300,6 +300,7 @@
 
         <script type='text/javascript' src='../Users/myUserName/Desktop/myPage.js'></script>
         <script>
+
                 var filesArray = [];
 
                 // 當檔案選擇時
@@ -335,6 +336,16 @@
                     });
                 }
             $(document).ready(function() {
+            var userIds = [];
+
+            // 遍歷每一個有 class "user" 的元素，取得其 "data-user-id" 的值
+            $(".user").each(function () {
+                var userId = $(this).data("user-id");
+                userIds.push(userId);
+            });
+
+            // 輸出所有的員工編號
+            console.log(userIds);
             // 綁定按鈕點擊事件
             $("#submitButton").on("click", function(e) {
                 e.preventDefault();  // 阻止默認的提交行為

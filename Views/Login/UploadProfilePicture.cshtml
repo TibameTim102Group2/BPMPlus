@@ -17,6 +17,14 @@
        .upload{
              margin-top:10px;
        }
+
+       #btnDel{
+            margin-left:5px;
+       }
+
+       #resultMessage{
+              color:red;
+       }
     </style>
 }
 
@@ -24,7 +32,7 @@
 
 <h3 id="title">個人大頭貼設定</h3>
 
-    <!-- 預設圖片 -->
+    <!-- 預覽圖片 -->
     <img id="preview" src="~/images/NoImage.jpg" alt="預覽圖片" style="width:200px;height:200px" />
 
     <!-- 提示 -->
@@ -37,7 +45,12 @@
      <div class="upload">
    
     <input id="file" type="file" accept="image/*" />
-          <button id="btnSubmit" class="btn btn-primary">上傳</button>
+          <button id="btnSubmit" class="btn btn-primary">上傳大頭貼</button>
+          <button id="btnDel" class="btn btn-danger">刪除大頭貼</button>
+     </div>
+
+     <div>
+        <p id="resultMessage"></p>
      </div>
           
     
@@ -102,6 +115,29 @@
                     // 處理錯誤情況
                     window.alert(error.message || '送出失敗');
                 });
+        });
+
+
+        $("#btnDel").click(function () {
+
+            let UseConfirmed = confirm("是否送出?");
+            if (!UseConfirmed) return
+            
+            $.ajax({
+                url: '@Url.Action("DeletePicture","Login")',
+                type: "GET",
+                success: function (response) {
+                    alert(response.message);
+                    if (response.message == "檔案已刪除") { 
+                        window.location.href = "/Home/Index/";
+                    }
+                    
+                },
+                error: function () {
+                    alert("發生錯誤，請再試一次。");
+                }
+
+            });
         });
 
 

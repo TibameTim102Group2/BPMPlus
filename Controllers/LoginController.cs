@@ -489,21 +489,25 @@ namespace BPMPlus.Controllers
         }
 
 
-        //[HttpGet]
-        //public async Task<IActionResult> ProfilePicture()
-        //{
-        //    User user = await GetAuthorizedUser();
-        //    string file = user.UserId + ".jpg";
-        //    var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/profiles");
-        //    var filePath = Path.Combine(uploadPath, file);
+        [HttpGet]
+        public async Task<IActionResult> DeletePicture()
+        {
+            User user = await GetAuthorizedUser();
+            string file = user.UserId + ".jpg";
+            var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/profiles");
+            var filePath = Path.Combine(uploadPath, file);
 
-        //    string relativePath = System.IO.File.Exists(filePath) ? "/profiles/" + file : "/images/default.jpg";
-
-        //    // 將圖片路徑傳遞到 View
-        //    ViewBag.ProfilePicturePath = relativePath;
-
-        //    return View();
-        //}
+            if (System.IO.File.Exists(filePath))
+            {
+                System.IO.File.Delete(filePath);
+                return Json(new { success = true, message = "檔案已刪除" });
+            }
+            else
+            {
+                return Json(new { success = true, message = "檔案不存在" });
+            }
+                
+        }
 
     }
 }
