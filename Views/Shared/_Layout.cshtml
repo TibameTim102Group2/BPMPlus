@@ -359,8 +359,8 @@
             url: '@Url.Action("ProfilePicture", "Login")', 
             type: 'GET',
             success: function (response) {
-                if (response.filePath) {
-                   // $('#profilePicture').attr('src', response.filePath);
+                if (response.filePath != null) {
+                    $('#profilePicture').attr('src', response.filePath);
                 }
             },
             error: function () {
