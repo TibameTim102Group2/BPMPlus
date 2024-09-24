@@ -461,10 +461,18 @@ namespace BPMPlus.Controllers
             var newFileName = $"{user.UserId}{Path.GetExtension(fileName)}";
             var filePath = Path.Combine(uploadPath, newFileName);
 
-            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            try
             {
-                await file.CopyToAsync(fileStream);
+                using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
+                {
+                    await file.CopyToAsync(fileStream);
+                }
             }
+            catch(Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
+            
 
             
 

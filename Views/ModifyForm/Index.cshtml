@@ -369,31 +369,9 @@
                 alert("作廢失敗，請重新嘗試或洽管理員!")
             })
 
-            // // 找到表單
-            // var form = $(this).closest("form");
-            // // 設置表單的 action
-            // form.attr("action", '@Url.Action("Invalid", "ModifyForm")');
-            // // 提交表單
-            // form.submit();
-
         });
 
 
-        // $("#btnUpload").click(function () {
-
-        //     let userConfirmed = confirm("是否上傳?");
-        //     if (userConfirmed) {
-        //         // 找到表單
-        //         var form = $(this).closest("form");
-        //         // 設置表單的 action
-        //         form.attr("action", '@Url.Action("Upload", "ModifyForm")');
-        //         // 提交表單
-        //         form.submit();
-        //     }
-        //     else {
-        //     }
-        // });
-        console.log($("#btnEdit"));
         $("#btnEdit").click(function () {
             let userConfirmed = confirm("是否送出?");
             if (!userConfirmed) return;
@@ -487,19 +465,9 @@
         });
 
 
-        //min日期
-        let today = new Date();
-        let year = today.getFullYear();
-        let month = String(today.getMonth() + 1).padStart(2, '0'); // 月份從0開始，需+1，padStart補0
-        let day = String(today.getDate()).padStart(2, '0'); // 補0
-
-        // 格式化日期為 YYYY-MM-DD
-        let formattedDate = `${year}-${month}-${day}`;
-
-        // 將 min 設定為今天的日期
-        document.getElementById("endDatePicker").setAttribute("min", formattedDate);
-
-
+        // //min日期
+        let today = new Date().toISOString().split('T')[0];
+         $('#endDatePicker').attr('min', today);
 
     </script>
 }
