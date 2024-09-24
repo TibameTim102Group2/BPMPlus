@@ -22,6 +22,7 @@
 <!--登入區塊-->
 @using (Html.BeginForm("Login", "Login", FormMethod.Post))
 {
+	<input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
     <div class="login-page bg-light">
         <div class="login-box">
             <div class="login-logo">

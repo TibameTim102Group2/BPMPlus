@@ -1,0 +1,664 @@
+﻿﻿
+@model BPMPlus.ViewModels.Project.ProjectDetailsViewModel
+<!-- Google Font: Source Sans Pro -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="~/AdminLTE/plugins/fontawesome-free/css/all.min.css">
+<!-- daterange picker -->
+<link rel="stylesheet" href="~/AdminLTE/plugins/daterangepicker/daterangepicker.css">
+<!-- iCheck for checkboxes and radio inputs -->
+<link rel="stylesheet" href="~/AdminLTE/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+<!-- Bootstrap Color Picker -->
+<link rel="stylesheet" href="~/AdminLTE/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css">
+<!-- Tempusdominus Bootstrap 4 -->
+<link rel="stylesheet" href="~/AdminLTE/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+<!-- Select2 -->
+<link rel="stylesheet" href="~/AdminLTE/plugins/select2/css/select2.min.css">
+<link rel="stylesheet" href="~/AdminLTE/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+<!-- Bootstrap4 Duallistbox -->
+<link rel="stylesheet" href="~/AdminLTE/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
+<!-- BS Stepper -->
+<link rel="stylesheet" href="~/AdminLTE/plugins/bs-stepper/css/bs-stepper.min.css">
+<!-- dropzonejs -->
+<link rel="stylesheet" href="~/AdminLTE/plugins/dropzone/min/dropzone.min.css">
+<!-- Theme style -->
+<link rel="stylesheet" href="~/AdminLTE/dist/css/adminlte.min.css">
+@section Style {
+    <style>
+        /* 讓檔案列表出現在上傳 input 的下方 */
+        #fileList {
+            margin-top: 1%; /* 與上傳 input 保持適當距離 */
+            padding: 0;
+            list-style-type: none;
+        }
+
+        #fileListContainer {
+            padding: 10px;
+            margin-top: 10px;
+            overflow-y: auto;
+        }
+
+        #fileList li {
+            margin-bottom: 1%; /* 每個檔案的間距 */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* 刪除按鈕的樣式 */
+        #fileList button {
+            background-color: red;
+            color: white;
+            height: 50%;
+            border: none;
+            cursor: pointer;
+        }
+
+        .content-wrapper {
+            background-color: rgb(225, 239, 252);
+        }
+
+        .outside {
+            padding: 20px;
+            background-color: rgb(225, 239, 252);
+            height: 100%;
+        }
+
+        .title {
+            color: rgba(0, 81, 255, 0.884);
+            margin-top: 20px;
+            margin-bottom: 30px;
+            margin-left: 30px;
+            font-weight: bold;
+        }
+
+        .inside {
+            margin-top: 30px;
+            padding: 0;
+            background-color: rgb(225, 229, 252);
+            border: 0.5px solid gainsboro;
+        }
+
+        .list {
+            display: flex;
+            justify-content: space-around;
+            list-style: none;
+        }
+
+        .bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-left: 10px;
+        }
+
+        #BackToForm {
+            margin-left: auto;
+        }
+
+        #FormCategory {
+            margin-left: auto;
+        }
+
+
+        .inputField {
+            display: flex;
+            height: 40px;
+        }
+
+        .form-label {
+            padding-top: 20px;
+            display: flex;
+            width: 50%;
+            margin: 2%;
+        }
+
+        label {
+            margin: auto;
+            display: inline;
+            width: 150px;
+            margin-right: 20PX;
+            background-color: #458bfc;
+            text-align: center;
+            color: white;
+            text-decoration: double;
+            border-radius: 5%;
+        }
+
+        .form-file {
+            padding-top: 20px;
+            display: flex;
+            width: 50%;
+            margin: 2%;
+        }
+
+        .dropdown-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .form-date {
+            padding-top: 20px;
+            margin-left: 40px;
+            height: 58px;
+            display: flex;
+        }
+
+        .noteContent {
+            background-color: #458bfc;
+            color: white;
+            border-radius: 5%;
+            width: 100px;
+            text-align: center;
+        }
+
+        .txtInput {
+            width: 100%;
+            background-color: white;
+        }
+
+        .submit-btn {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .upload {
+            width: 100%;
+        }
+
+    </style>
+}
+
+
+
+<!-- outside -->
+<div class="outside">
+    @Html.AntiForgeryToken()
+    <div style="color:red;">
+        @ViewBag.errMsg
+    </div>
+    <h1 class="title">專案細節</h1>
+    <style>
+        .createddate {
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            padding: 0.375rem 0.75rem;
+            background-color: #fff;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+    </style>
+    <!-- inside -->
+    <div class="inside">
+        <h2 class="title" style="margin-top: 5%;font-weight: 900">專案資料</h2>
+        <div class="mb-3 inputField ">
+            <div class="mb-3 form-label">
+                <label for="xxx1">專案編號</label>
+                <input type="xxx1" class="form-control" id="project-id" value="@ViewBag.ProjectId" Disabled>
+            </div>
+            @if (Model.AllowModify == "true")
+            {
+                <div class="mb-3 form-label" style="display: flex">
+                    <div style="width: 360px">
+                    </div>
+                    <a class="button btn btn-warning btn-link" style="height: 40px; width: 100px" onclick="saveScrollPositionAndReload()"><i class="fa-solid fa-rotate-left"></i> 還原</a>
+                    <a id="delete-project-button" class="button btn btn-danger btn-link" style="margin-left: 10%; height: 40px; width: 100px"><i class="fa-solid fa-trash" style="color: white;"></i> <b style="color: white">刪除</b></a>
+                </div>
+
+            }
+            else
+            {
+                <div class="mb-3 form-label">
+                    <div style="width: 360px">
+                    </div>
+                    <a class="button btn btn-warning btn-link" style="height: 40px; width: 100px" disabled><i class="fa-solid fa-rotate-left"></i> 還原</a>
+                </div>
+            }
+        </div>
+
+        <div class="mb-3 inputField ">
+            <div class="mb-3 form-label">
+                <label for="xxx1">截止期限</label>
+                <input type="date" class="createddate form-control" id="deadline" value="@ViewBag.DeadLine.ToString("yyyy-MM-dd")" min="@ViewBag.MinDate.ToString("yyyy-MM-dd")" />
+            </div>
+            <div class="mb-3 form-label">
+                <label for="xxx2">專案名稱</label>
+                <input type="xxx2" class="form-control" id="project-name" value="@ViewBag.ProjectName">
+            </div>
+        </div>
+        <div class="note" style="margin-top:10%; padding:2%; width:200%">
+            <div class="noteContent" style="font-weight:bold">專案概述</div>
+            <textarea id="project-description" style="width: 40%; height: 150px">@ViewBag.Summary</textarea>
+        </div>
+        <h2 class="title" style="margin-top: 5%;font-weight: 900">專案成員</h2>
+        <div class="note" style="padding:2%; width:100%">
+            @await Html.PartialAsync("_GetUserPartial", Model)
+        </div>
+
+        <h2 class="title" style="margin-top: 5%;font-weight: 900">專案工單</h2>
+        <div class="note" style="padding:2%; width:100%">
+            @await Html.PartialAsync("_GetFormPartial", Model)
+        </div>
+
+        <h2 class="title" style="margin-top: 5%;font-weight: 900">資料圖表</h2>
+        <div class="note" style="padding:2%; width:100%">
+            @await Html.PartialAsync("_GetChartPartial", Model)
+        </div>
+        @if (Model.AllowModify == "true")
+        {
+
+            <div style="width: 260%">
+            </div>
+            <a class="button btn btn-warning btn-link" style="margin-left: 45%;margin-bottom: 2%;height: 40px; width: 100px" id="submitButton"><i class="fa-solid fa-pen-to-square"></i> 送出</a>
+
+
+        }
+        else
+        {
+
+            <div style="width: 260%">
+            </div>
+            <a class="button btn btn-warning btn-link" style="margin-left: 50%;margin-bottom: 2%;height: 40px; width: 100px" disabled><i class="fa-solid fa-pen-to-square"></i> 送出</a>
+
+        }
+    </div>
+</div>
+@section Scripts {
+    <script>
+
+        // 儲存滾動位置
+        function saveScrollPositionAndReload() {
+            const scrollPos = window.scrollY || document.documentElement.scrollTop;
+            localStorage.setItem('scrollPos', scrollPos);
+
+            // 強制重新整理頁面
+            window.location.reload();
+        }
+
+
+        // 還原滾動位置
+        function restoreScrollPosition() {
+            const savedPos = localStorage.getItem('scrollPos');
+            if (savedPos) {
+                window.scrollTo(0, parseInt(savedPos));
+            }
+        }
+
+        // 當頁面載入時還原滾動位置
+        window.onload = function () {
+            restoreScrollPosition();
+        }
+        $(document).ready(function () {
+            var allUsers = (@Html.Raw(ViewBag.AllUserList))['$values'];
+            var allForms = (@Html.Raw(ViewBag.AllFormList))['$values'];
+            var model = (@Html.Raw(Json.Serialize(Model)));
+            console.log(model)
+            var ExistFormList = [];
+            console.log(model.projectFormsViewModels)
+            for(var i = 0; i < model.projectFormsViewModels.length ;++i)
+            {
+                ExistFormList.push(model.projectFormsViewModels[i].formId);
+            }
+            var ExistUserList = [];
+            for(var i = 0; i < model.projectUsersViewModels.length ;++i)
+            {
+                ExistUserList.push(model.projectUsersViewModels[i].userId);
+            }
+            console.log(ExistFormList);
+            console.log(ExistUserList);
+            
+            // 獲取唯一的部門、職稱和姓名
+            var userIdsList = [...new Set(allUsers.map(user => user.UserId))];
+            var uniqueDepartments = [...new Set(allUsers.map(user => user.Department.DepartmentName))];
+            var uniqueGrades = [...new Set(allUsers.map(user => user.Grade.GradeName))];
+            var uniqueUserNames = [...new Set(allUsers.map(user => user.UserName))];
+            var formIdsList = [...new Set(allForms.map(f => f.FormId))];
+            // 填充 userIdList 的選項
+            allUsers.forEach(user => {
+                $('#userIdList').append('<option value="' + user.UserId + '">' + user.UserName + '</option>');
+            });
+            // 填充 userNameList 的選項
+            uniqueUserNames.forEach(userName => {
+                $('#userNameList').append('<option value="' + userName + '">');
+            });
+
+            // 填充 departmentList 的選項
+            uniqueDepartments.forEach(department => {
+                $('#departmentList').append('<option value="' + department + '">');
+            });
+
+            // 填充 gradeList 的選項
+            uniqueGrades.forEach(grade => {
+                $('#gradeList').append('<option value="' + grade + '">');
+            });
+            allForms.forEach(form => {
+                $('#formIdList').append('<Option value="' + form.FormId + '"></option>');
+            })
+            $("#submitButton").on("click", function (e) {
+                e.preventDefault();  // 阻止默認的提交行為
+                var userIds = [];
+                var formIds = [];
+                // 遍歷每個 <tr>，找到包含 UserId 的 <td> 元素，並提取其文本
+                $("#users-tr tr").each(function () {
+                    var userId = $(this).find("td:nth-child(2)").text().trim();
+                    userIds.push(userId);
+                });
+                $("#forms-tr tr").each(function () {
+                    var formId = $(this).find("td:nth-child(1)").text().trim();
+                    formIds.push(formId);
+                });
+                // 在 console 中輸出所有員工編號
+                // 獲取輸入欄位的值
+                var projectId = $("#project-id").val();
+                var deadline = $("#deadline").val()
+                var projectName = $("#project-name").val()
+                var projectDescription = $("#project-description").val()
+                var form = $('#__AjaxAntiForgeryForm');
+                var token = $('input[name="__RequestVerificationToken"]', form).val();
+                // 發送 Ajax 請求
+
+                var dta = JSON.stringify(
+                    {
+                        ProjectId: projectId,
+                        Deadline: deadline,
+                        ProjectName: projectName,
+                        ProjectDescription: projectDescription,
+                        UserIds: userIds,
+                        FormIds: formIds
+                    });
+
+                $.ajax({
+                    url: '/ProjectCRUD/CheckModify',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    headers: {
+                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()  // 傳送驗證 token
+                    },
+                    data: dta,
+                    success: function (response) {
+                        createResponseErrorCode = response['errorCode'];
+                        if (response['errorCode'] != null && response['errorCode'] == 200) {
+                            if(window.confirm(response['message'])){
+                                $.ajax({
+                                    url: '/ProjectCRUD/ModifyProject',
+                                    type: 'POST',
+                                    contentType: 'application/json',
+                                    headers: {
+                                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()  // 傳送驗證 token
+                                    },
+                                    data: dta,
+                                    success: function (response) {
+                                        createResponseErrorCode = response['errorCode'];
+                                        if (response['errorCode'] != null && response['errorCode'] == 200) {
+                                            window.alert(response['message']);
+                                            window.location.replace(`/ProjectCRUD/ProjectDetails/${projectId}`);
+                                        }
+                                        if (response['errorCode'] != null && response['errorCode'] == 400) {
+                                            window.alert(response['message']);
+                                        }
+                                        // 成功後的操作
+                                    },
+                                    error: function (xhr, status, error) {
+
+                                        // 錯誤時的操作
+                                    }
+                                });
+                            }
+                        }
+                        if (response['errorCode'] != null && response['errorCode'] == 400) {
+                            window.alert(response['message']);
+                        }
+                        // 成功後的操作
+                    },
+                    error: function (xhr, status, error) {
+
+                        // 錯誤時的操作
+                    }
+                });
+            });
+            $("#add-btn").click(function () {
+                // 獲取輸入框中的值
+                var isPm = "組員";
+                var userName = $("#userNameInput").val();
+                var userId = $("#userIdInput").val();
+                var department = $("#departmentInput").val();
+                var grade = $("#gradeInput").val();
+
+                // 確保輸入不為空
+                if (userName && userId && department && grade) {
+                    // 在輸入行之前插入新行
+                    $("#new-user-row").before(`
+                                <tr>
+                                    <td>${isPm}</td>
+                                    <td>${userId}</td>
+                                    <td>${userName}</td>
+                                    <td>${department}</td>
+                                    <td>${grade}</td>
+                                    <td>
+                                        <button class="delete-btn btn btn-danger"><i class="fa-solid fa-square-minus"></i> 移除</button>
+                                    </td>
+                                </tr>
+                            `);
+
+                    // 重置輸入框
+                    $("#isPmInput").val('組員');
+                    $("#userNameInput").val('');
+                    $("#userIdInput").val('');
+                    $("#departmentInput").val('');
+                    $("#gradeInput").val('');
+
+                    // 重新綁定刪除按鈕的事件
+                    $(".delete-btn").off("click").on("click", function () {
+                        $(this).closest('tr').remove();
+                    });
+                } else {
+                    alert("請填寫所有欄位！");
+                }
+            });
+
+            
+            $("#add-btn-for-form").click(function () {
+                // 獲取輸入框中的值
+                var formId = $("#formInput").val();
+                var departmentInputForm = $("#departmentInputForm").val();
+                var userId = $("#userIdInputForm").val();
+                var userName = $("#userNameInputForm").val();
+                var category = $("#categoryInput").val();
+                var status = $("#statusInput").val();
+
+                // 確保輸入不為空
+                if (departmentInputForm && formId && userId && userName && category && status) {
+                    // 在輸入行之前插入新行
+                    $("#new-user-row-form").before(`
+                                    <tr>
+                                        <td><a href="/FormDetails/Index/${formId}">${formId}</td>
+                                        <td>${departmentInputForm}</td>
+                                        <td>${userId}</td>
+                                        <td>${userName}</td>
+                                        <td>${category}</td>
+                                        <td>${status}</td>
+                                        <td>
+                                            <button class="delete-btn btn btn-danger"><i class="fa-solid fa-square-minus"></i> 移除</button>
+                                        </td>
+                                    </tr>
+                                `);
+
+                    // 重置輸入框
+                    $("#formInput").val('');
+                    $("#departmentInputForm").val('');
+                    $("#userIdInputForm").val('');
+                    $("#userNameInputForm").val('');
+                    $("#categoryInput").val('');
+                    $("#statusInput").val('');
+                    // 重新綁定刪除按鈕的事件
+                    $(".delete-btn").off("click").on("click", function () {
+                        $(this).closest('tr').remove();
+                    });
+                } else {
+                    alert("請填寫所有欄位！");
+                    
+                }
+            });
+            $('#formInput').on('input', function () {
+                var selectedId = $(this).val();
+                if(ExistFormList.includes(selectedId))
+                {
+                    window.alert("工單已存在");
+                    return 0;
+                }
+                if(formIdsList.find(fm => fm.FormId === selectedId))
+                {
+                    $("#departmentInputForm").val('');
+                    $("#userIdInputForm").val('');
+                    $("#userNameInputForm").val('');
+                    $("#categoryInput").val('');
+                    $("#statusInput").val('');
+                    return 0;
+                }
+                var form = allForms.find(form => form.FormId === selectedId);
+                
+                if (form) {
+                    $("#departmentInputForm").val(form.DepartmentName);
+                    $("#userIdInputForm").val(form.UserId);
+                    $("#userNameInputForm").val(form.UserName);
+                    $("#categoryInput").val(form.Category);
+                    $("#statusInput").val(form.Status);
+                } else {
+                    $("#departmentInputForm").val('');
+                    $("#userIdInputForm").val('');
+                    $("#userNameInputForm").val('');
+                    $("#categoryInput").val('');
+                    $("#statusInput").val('');
+                }
+            });
+            $('#userIdInput').on('input', function () {
+                var selectedId = $(this).val();
+                if(ExistUserList.includes(selectedId))
+                {
+                    window.alert("成員已存在");
+                    return 0;
+                }
+                if(userIdsList.find(u => u.UserId === selectedId))
+                {
+                    $('#userNameInput').val('');
+                    $('#departmentInput').val('');
+                    $('#gradeInput').val('');
+                    return 0;
+                }
+                var user = allUsers.find(user => user.UserId === selectedId);
+                if (user) {
+                    $('#userNameInput').val(user.UserName);
+                    $('#departmentInput').val(user.Department.DepartmentName);
+                    $('#gradeInput').val(user.Grade.GradeName);
+                } else {
+                    $('#userNameInput').val('');
+                    $('#departmentInput').val('');
+                    $('#gradeInput').val('');
+                }
+            });
+
+            // 監聽 userNameInput 的變化
+            $('#userNameInput').on('input', function () {
+                var selectedName = $(this).val();
+                var user = allUsers.find(user => user.UserName === selectedName);
+                if (user) {
+                    $('#userIdInput').val(user.UserId);
+                    $('#departmentInput').val(user.Department.DepartmentName);
+                    $('#gradeInput').val(user.Grade.GradeName);
+                } else {
+                    $('#userIdInput').val('');
+                    $('#departmentInput').val('');
+                    $('#gradeInput').val('');
+                }
+            });
+
+            // 監聽 departmentInput 的變化
+            function updateUserDatalist() {
+                var selectedDepartment = $('#departmentInput').val();
+                var selectedGrade = $('#gradeInput').val();
+
+                // 清空 datalist
+                $('#userIdList').empty();
+                $('#userNameList').empty();
+
+                }
+
+            // 監聽 departmentInput 的變化
+            $('#departmentInput').on('input', function () {
+                updateUserDatalist();
+            });
+
+            // 監聽 gradeInput 的變化
+            $('#gradeInput').on('input', function () {
+                updateUserDatalist();
+        });
+        });
+        
+
+        function updateUser() {
+            var userId = document.getElementById("userIdInput").value.trim();
+            var selectedUser = allUsers.find(user => user.UserId === userId);
+
+            // 只在已選擇用戶的情況下更新
+            if (selectedUser) {
+                selectedUser.UserName = document.getElementById("userNameInput").value;
+                selectedUser.Department = document.getElementById("departmentInput").value;
+                selectedUser.Grade = document.getElementById("gradeInput").value;
+            }
+        }
+        $("#delete-project-button").on("click", function (e) {
+                e.preventDefault();  // 阻止默認的提交行為
+               
+               let projectId = '@ViewBag.ProjectId';
+                $.ajax({
+                    url: `/ProjectCRUD/DeleteProjectConfirm/${projectId}`,
+                    type: 'DELETE',
+                    success: function (response) {
+                        createResponseErrorCode = response['errorCode'];
+                        if (response['errorCode'] != null && response['errorCode'] == 200) {
+                            if(window.confirm(response['message'])){
+                                $.ajax({
+                                    url: `/ProjectCRUD/DeleteProject/${projectId}`,
+                                    type: 'DELETE',
+                                    contentType: 'application/json',
+                                    
+                                    success: function (response) {
+                                        createResponseErrorCode = response['errorCode'];
+                                        if (response['errorCode'] != null && response['errorCode'] == 200) {
+                                            window.alert(response['message']);
+                                            window.location.replace(`/Home/Index`);
+                                        }
+                                        if (response['errorCode'] != null && response['errorCode'] == 400) {
+                                            window.alert(response['message']);
+                                        }
+                                        // 成功後的操作
+                                    },
+                                    error: function (xhr, status, error) {
+
+                                        // 錯誤時的操作
+                                    }
+                                });
+                            }
+                        }
+                        if (response['errorCode'] != null && response['errorCode'] == 400) {
+                            window.alert(response['message']);
+                        }
+                        // 成功後的操作
+                    },
+                    error: function (xhr, status, error) {
+
+                        // 錯誤時的操作
+                    }
+                });
+            });
+    </script>
+    <script>
+        $(document).ready(function () {
+            // 綁定點擊事件到刪除按鈕
+            $(".delete-btn").click(function () {
+                // 刪除該行所在的 <tr>
+                $(this).closest('tr').remove();
+            });
+        });
+    </script>
+}
