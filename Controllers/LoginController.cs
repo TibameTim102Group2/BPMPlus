@@ -233,7 +233,7 @@ namespace BPMPlus.Controllers
                     if (user != null)
                     {
                         //判斷user是否在30分鐘內重設過密碼
-                        if (nowStampTime <= user.ModifyPasswordTime + 1800)
+                        if (nowStampTime >= (user.ModifyPasswordTime ?? 0) + 1800)
                         {
                             //判斷密碼是否符合規則
                             var resetPasswordService = new ResetPasswordService();
@@ -293,7 +293,7 @@ namespace BPMPlus.Controllers
                 ViewBag.ErrorMessage = "密碼重設錯誤,請重試或聯繫系統管理員!+"+ex;
                 return View("~/Views/Login/ErrorPage.cshtml");
             }
-            return View("ForgetPwResetPw", vm);
+            return View("~/Views/Login/Index.cshtml");
         }
 
         //忘記密碼重設page
