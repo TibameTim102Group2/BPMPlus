@@ -1,9 +1,12 @@
 ﻿using BPMPlus.Data;
 using BPMPlus.Models;
+using BPMPlus.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 
@@ -97,8 +100,9 @@ namespace BPMPlus.Controllers
 			 .FirstOrDefault(u => u.MeetingId == id);
 			var meetingMember= userWithMeeting.Users.Select(u => new
 			{
-				Value = u.UserId,
-				Text = u.UserName,
+				UserId = u.UserId,
+				UserName = u.UserName,
+				DepartmentId = u.DepartmentId,
 				DepartmentName=_context.Department.Where(d=>d.DepartmentId==u.DepartmentId).FirstOrDefault()?.DepartmentName,
 			}).ToList();
 
@@ -122,7 +126,118 @@ namespace BPMPlus.Controllers
 			}
 			return Json(new { success = true, data = editMeetingId });
 		}
+		//進行編輯資料
+		[HttpPost]
+		public async Task<ActionResult> editMeetingBook([FromBody] BookingMeetingRoomEditVM editData)
+		{
+			//先建立一個陣列放 已經被預定的時間
+			int[] bookedTime =new int[14];
+			int[] selectTime = new int[14];
+			//紀錄放入幾個時段
+			int count = 0;
+			//把時間轉成int
+			int selectStart = Int32.Parse(editData.StartTime.Substring(0,2));
+			int selectEnd = Int32.Parse(editData.EndTime.Substring(0, 2));
 
+			//要時間更改的判斷
+			//要比較的對像是 在所選取的日期下 特定的會議室 內部有沒有重疊的時間
+			var meetingTimeRepeat =await _context.Meeting.Where(n => n.StartTime.AddHours(8).Date == DateTime.Parse(editData.Date) &&
+			n.MeetingRoomId==editData.MeetingRoom && n.MeetingId !=editData.MeetingId
+			).ToListAsync();
+
+            //要先把同一日且同一會議室 不同預約的 時間做成 一個區段
+            foreach (var item in meetingTimeRepeat)
+            {
+
+				int startTiming = item.StartTime.AddHours(8).Hour;
+				int endTiming = item.EndTime.AddHours(8).Hour;
+				for (int i = startTiming; i <= endTiming-1; i++)
+				{
+
+					bookedTime[count] = i;
+					count++;
+				}
+            }
+			//先把前端選的時間轉成陣列
+			//把計時器歸0
+			count = 0;
+			for(int i = selectStart; i <= selectEnd-1; i++)
+			{
+				selectTime[count] = i;
+				count++;
+			}
+			//要每一筆去比對時段
+			//先過濾0
+			var filterBookTime = bookedTime.Where(x => x != 0).ToArray();
+			var filterSeletedTime = selectTime.Where(x => x != 0).ToArray();
+			//找出兩者的交集
+			var repeatTimes = filterBookTime.Intersect(filterSeletedTime).ToArray();
+			if (repeatTimes.Any())
+			{
+				return Json(new { success=false,message="此時段已被預約"});
+			}
+
+			//先把時間合體成日期與時間
+			string startTimeString = $"{editData.Date} {editData.StartTime}";
+			string endTimeString = $"{editData.Date} {editData.EndTime}";
+			//找到當筆資料
+			var meetingEdit = _context.Meeting.Include(x => x.Users).FirstOrDefault(x => x.MeetingId == editData.MeetingId);
+			if (ModelState.IsValid)
+			{
+				try
+				{
+					meetingEdit.MeetingRoomId = editData.MeetingRoom;
+					meetingEdit.Note = editData.Note;
+					meetingEdit.StartTime = DateTime.Parse(startTimeString).AddHours(-8);
+					meetingEdit.EndTime = DateTime.Parse(endTimeString).AddHours(-8);
+					meetingEdit.UpdatedTime = DateTime.UtcNow;
+					//撈出現在所有的會議成員
+					var NowMeetingMembers = meetingEdit.Users.ToList();
+					
+					//先把關連表全刪
+					foreach (var item in NowMeetingMembers)
+					{
+
+						if (item != null)
+						{
+							meetingEdit.Users.Remove(item); //刪除關連
+							_context.SaveChanges();
+						}
+					}
+
+					//當不為空的話
+					//全部重新新增
+					//建立會議與人員的關聯
+					foreach (var item in editData.MeetingMembers)
+					{
+
+						//重新建關聯
+						var newMeetingMembers = _context.User.FirstOrDefault(pg => pg.UserId == item.UserId);
+						if (newMeetingMembers != null)
+						{
+							meetingEdit.Users.Add(newMeetingMembers);
+							_context.SaveChanges();
+						}
+					}
+
+
+
+					await _context.SaveChangesAsync();
+				}
+				catch (DbUpdateConcurrencyException)
+				{
+					if ((editData.MeetingId ==null))
+					{
+						return NotFound();
+					}
+					else
+					{
+						throw;
+					}
+				}
+			}
+			return Json(new { success = true, message = "修改預約成功" });
+		}
 
 
 	}

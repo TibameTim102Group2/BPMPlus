@@ -128,7 +128,7 @@
                         <!-- User -->
                         <li class="nav-item">
                             <a href="#" class="nav-link">
-                                <img id="profilePicture" src="~/images/default.jpg" class="img-circle" style="width:30px;height:30px">
+                                <img id="profilePicture" src="~/images/default.jpg" class="img-circle" style="width:30px;height:30px" asp-append-version="true">
                                 @{
                                     var userName = HttpContextAccessor.HttpContext.Request.Cookies["UserName"];
                                     <p style="margin-left:5px;">@userName</p>

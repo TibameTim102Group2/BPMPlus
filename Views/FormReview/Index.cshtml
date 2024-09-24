@@ -33,8 +33,11 @@
 @*     <link rel="stylesheet" href="~/AdminLTE/dist/css/adminlte.min.css"> *@
     <style>
         body {
-            font-family: Arial, sans-serif;
             background-color: #f4f6f9;
+        }
+
+        #formArea{
+            box-shadow: 0 0 1px rgba(0, 0, 0, .125), 0 1px 3px rgba(0, 0, 0, .2);
         }
 
         h4 {
@@ -78,6 +81,7 @@
             background-color: white;
             border: 1px solid #c2c2c2;
             padding:5px;
+            word-break: break-all;
         }
         
         .borderLine{
@@ -105,9 +109,11 @@
         table {
             width: 100%;
             border-collapse: collapse;
+            table-layout: fixed;
+            word-break: break-all;
         }
 
-        th, td {
+        #formArea .formRecord thead, th, td {
             border: 1px solid #ccc;
             padding: 8px;
             text-align: left;
@@ -159,6 +165,7 @@
             background-color: white;
             border: 1px solid #ced4da;
             border-radius: 0.25rem;
+            word-break: break-all;
         }
 
         .form-group input#Files {
@@ -183,7 +190,6 @@
     </div>
 
     <form id="formArea" asp-controller="FormReview" method="post" asp-action="CreateAndUpdate" enctype="multipart/form-data">
-        <div id="secondeBackground">
             <!-- 工單區域 -->
             <div class="formBackground">
                 <div class="row">
@@ -319,11 +325,13 @@
                 <div class="borderLine"></div>
 
             <div class="result">
-                <label class="control-label">出示意見</label><br />
+                <label class="control-label">出示意見</label>
+                <span class="alertTxt" hidden> 提示 :  字數超出範圍</span>
+                <br />
                 <div class="txtInput">
                     <div>
                         @* <div id="summernote"></div> *@
-                        <textarea class="ManagerOpinion" asp-for="@Model.Remark" placeholder="試試看輸入反饋~">
+                        <textarea class="ManagerOpinion" asp-for="@Model.Remark" placeholder="試試看輸入反饋~ (文字上限300字)">
                             @Model.Remark
                             </textarea>
                     </div>
@@ -333,7 +341,7 @@
 
                 <div class="resultArea">
                     <div class="reviewResult" >
-                        <label class="reviewTxt">審核結果: </label>
+                        <label class="reviewTxt">審核結果</label>
                         <label><input name="reviewResult" type="radio" value="reject" class="rejectBtn" />退回</label>
                         <label><input name="reviewResult" type="radio" value="approve" class="approveBtn" /> 核准</label>
                     </div>
@@ -344,7 +352,7 @@
                 </div>
 
             </div>
-        </div><!-- secondeBackground END -->
+        </div>
     </form>
 </div>
 
@@ -590,6 +598,43 @@
                 alert(error.message);
             });
         })
+
+        // 使用防抖
+        // 定義時間變數, 當回傳參數時會先清除計時
+        // 再開始計時
+        function debounce(func, wait) {
+            let timer;
+            return (...args) => {
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    func(...args);
+                }, wait);
+            };
+        }
+
+        let txtLimitDOM = document.querySelector(".ManagerOpinion");
+
+        // 隱藏送出按鈕方法
+        function disabledSubmit (){
+            let submitBtn = document.querySelector(".submitBtn input");
+            let alertTxt = document.querySelector(".alertTxt");
+            let txtLimit = txtLimitDOM.value;
+            if (txtLimit.length > 300) {
+                alertTxt.removeAttribute("hidden", "hidden");
+                alertTxt.style = "color:red;font-weight:bold;";
+                submitBtn.setAttribute("disabled", "true");
+                // alert("超過字數上限");
+            }
+            else {
+                submitBtn.removeAttribute("disabled", "false");
+                alertTxt.setAttribute("hidden", "hidden");
+            }
+        }
+
+        let debounceRemark = debounce(disabledSubmit, 500);
+        //啟用textarea監聽並加入防抖
+        txtLimitDOM.addEventListener("keyup", debounceRemark);
+
     </script>
 }
 
