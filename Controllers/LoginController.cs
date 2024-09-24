@@ -488,14 +488,23 @@ namespace BPMPlus.Controllers
             var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/profiles");
             var filePath = Path.Combine(uploadPath, file);
 
+            string versionedFilePath;
 
             if (System.IO.File.Exists(filePath))
             {
-                TempData["FilePath"] = "/profiles/" + file;
+                // 獲取檔案的最後修改時間
+                var lastModified = System.IO.File.GetLastWriteTime(filePath);
+                string version = lastModified.ToString("yyyyMMddHHmmss"); // 格式化為字符串
+
+                // 創建版本化的檔案路徑
+                versionedFilePath = $"/profiles/{file}?v={version}";
+
+
+                TempData["FilePath"] = versionedFilePath;
             }
             else
             {
-                TempData["FilePath"] = "/images/" + "default.jpg";
+                TempData["FilePath"] =null;
             }
 
 
