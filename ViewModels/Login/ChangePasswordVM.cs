@@ -4,8 +4,6 @@ namespace BPMPlus.ViewModels.Login
 {
     public class ChangePasswordVM
     {
-        public string UserId { get; set; }
-
         [Required]
         [DataType(DataType.Password)]
         [Display(Name = "舊密碼")]

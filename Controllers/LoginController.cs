@@ -335,24 +335,25 @@ namespace BPMPlus.Controllers
         [Authorize]
         [AuthAttribute]
         [HttpPost]
-        public async Task<IActionResult> ResetPassWord(ChangePasswordVM vm)
+        public async Task<IActionResult> ResetPassWord([FromBody] ChangePasswordVM vm)
         {
             var user = await GetAuthorizedUser();
 
             //判斷舊密碼是否輸入正確
             bool isTruePassword = BCryptHelper.Verify(vm.OldPassword, user.Password);
-            if (isTruePassword == true)
+            if (isTruePassword != true)
+            {
+                return Json(new { success = false, message = "舊密碼輸入錯誤!" });
+            }
+            else
             {
                 //判斷新舊密碼是否重複
-                if (vm.NewPassword == vm.OldPassword)
+                if (vm.NewPassword == user.Password)
                 {
                     return Json(new { success = false, message = "新舊密碼不得重複!" });
                 }
             }
-            else
-            {
-                return Json(new { success = false, message = "舊密碼輸入錯誤!" });
-            }
+
 
             //新密碼加密後儲存
             string newPassword = BCryptHelper.HashPassword(vm.NewPassword);
@@ -364,7 +365,7 @@ namespace BPMPlus.Controllers
             user.ModifyPasswordTime = saveChangeTime.ToUnixTimeSeconds();
             await _context.SaveChangesAsync();
 
-            return Json(new { success = true, date = "修改成功!" });
+            return Json(new { success = true, date = "密碼修改成功!" });
         }
 
         [Authorize]
