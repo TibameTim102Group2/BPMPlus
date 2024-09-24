@@ -22,150 +22,153 @@
 <link rel="stylesheet" href="~/AdminLTE/plugins/bs-stepper/css/bs-stepper.min.css">
 <!-- dropzonejs -->
 <link rel="stylesheet" href="~/AdminLTE/plugins/dropzone/min/dropzone.min.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.css" rel="stylesheet">
 <!-- Theme style -->
 @* <link rel="stylesheet" href="~/AdminLTE/dist/css/adminlte.min.css"> *@
 @section Style {
-        <style>
-                    /* 讓檔案列表出現在上傳 input 的下方 */
-                #fileList {
-                    margin-top: 1%; /* 與上傳 input 保持適當距離 */
-                    padding: 0;
-                    list-style-type: none;
-                }
-                #fileListContainer {
-                    padding: 10px;
-                    margin-top: 10px;
-                    overflow-y: auto;
-                }
-                #fileList li {
-                    margin-bottom: 1%; /* 每個檔案的間距 */
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                }
+    <style>
+        /* 讓檔案列表出現在上傳 input 的下方 */
+        #fileList {
+            margin-top: 1%; /* 與上傳 input 保持適當距離 */
+            padding: 0;
+            list-style-type: none;
+        }
 
-                /* 刪除按鈕的樣式 */
-                #fileList button {
-                    background-color: red;
-                    color: white;
-                    height:50%:
-                    border: none;
-                    cursor: pointer;
-                }
-            .content-wrapper {
-                background-color: rgb(225, 239, 252);
-            }
+        #fileListContainer {
+            padding: 10px;
+            margin-top: 10px;
+            overflow-y: auto;
+        }
 
-            .outside {
-                padding: 20px;
-                background-color: rgb(225, 239, 252);
-                height: 100%;
-            }
+        #fileList li {
+            margin-bottom: 1%; /* 每個檔案的間距 */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-            .title {
-                color: rgba(0, 81, 255, 0.884);
-                margin-top: 20px;
-                margin-bottom: 30px;
-                margin-left: 30px;
-                font-weight: bold;
-            }
+        /* 刪除按鈕的樣式 */
+        #fileList button {
+            background-color: red;
+            color: white;
+            height: 50%: border: none;
+            cursor: pointer;
+        }
 
-            .inside {
-                margin-top: 30px;
-                padding: 20px;
-                background-color: rgb(225, 229, 252);
+        .content-wrapper {
+            background-color: rgb(225, 239, 252);
+        }
 
-                border: 0.5px solid gainsboro;
-            }
+        .outside {
+            padding: 20px;
+            background-color: rgb(225, 239, 252);
+            height: 100%;
+        }
 
-            .list {
-                display: flex;
-                justify-content: space-around;
-                list-style: none;
-            }
+        .title {
+            color: rgba(0, 81, 255, 0.884);
+            margin-top: 20px;
+            margin-bottom: 30px;
+            margin-left: 30px;
+            font-weight: bold;
+        }
 
-            .bar {
-                display: flex;
-                align-items: center;
-                margin-bottom: 10px;
-                padding-left: 10px;
-            }
+        .inside {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: rgb(225, 229, 252);
+            border: 0.5px solid gainsboro;
+        }
 
-            #BackToForm {
-                margin-left: auto;
-            }
+        .list {
+            display: flex;
+            justify-content: space-around;
+            list-style: none;
+        }
 
-            #FormCategory {
-                margin-left: auto;
-            }
+        .bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-left: 10px;
+        }
 
+        #BackToForm {
+            margin-left: auto;
+        }
 
-            .inputField {
-                display: flex;
-                height: 40px;
-            }
-
-            .form-label {
-                padding-top: 20px;
-                display: flex;
-                width: 50%;
-                margin: 2%;
-            }
-
-            label {
-                margin: auto;
-                display: inline;
-                width: 150px;
-                margin-right: 20PX;
-                background-color: #458bfc;
-                text-align: center;
-                color: white;
-                text-decoration: double;
-                border-radius: 5%;
-            }
-
-            .form-file {
-                padding-top: 20px;
-                display: flex;
-                width: 50%;
-                margin: 2%;
-            }
-
-            .dropdown-container {
-                position: relative;
-                width:100%;
-            }
-            .form-date {
-                padding-top: 20px;
-                margin-left: 40px;
-                height: 58px;
-                display: flex;
-            }
-
-            .noteContent {
-                background-color: #458bfc;
-                color: white;
-                border-radius: 5%;
-                width: 100px;
-                text-align: center;
-            }
-
-            .txtInput {
-                width: 100%;
-                background-color: white;
-            }
-
-            .submit-btn {
-                display: flex;
-                justify-content: center;
-                margin-top: 20px;
-            }
-            .upload{
-                width:100%;
-            }
+        #FormCategory {
+            margin-left: auto;
+        }
 
 
-        </style>
+        .inputField {
+            display: flex;
+            height: 40px;
+        }
+
+        .form-label {
+            padding-top: 20px;
+            display: flex;
+            width: 50%;
+            margin: 2%;
+        }
+
+        label {
+            margin: auto;
+            display: inline;
+            width: 150px;
+            margin-right: 20PX;
+            background-color: #458bfc;
+            text-align: center;
+            color: white;
+            text-decoration: double;
+            border-radius: 5%;
+        }
+
+        .form-file {
+            padding-top: 20px;
+            display: flex;
+            width: 50%;
+            margin: 2%;
+        }
+
+        .dropdown-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .form-date {
+            padding-top: 20px;
+            margin-left: 40px;
+            height: 58px;
+            display: flex;
+        }
+
+        .noteContent {
+            background-color: #458bfc;
+            color: white;
+            border-radius: 5%;
+            width: 100px;
+            text-align: center;
+        }
+
+        .txtInput {
+            width: 100%;
+            background-color: white;
+        }
+
+        .submit-btn {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .upload {
+            width: 100%;
+        }
+
+    </style>
 }
 
 
@@ -180,162 +183,162 @@
 
     <!-- inside -->
     <div class="inside">
-            <div class="mb-3 inputField ">
-                <div class="mb-3 form-label">
-                    <label for="xxx1">員工編號</label>
-                    <input type="xxx1" class="form-control" value="@ViewBag.UserId" Disabled>
-                </div>
-                <div class="mb-3 form-label">
-                    <label for="xxx2">需求類別</label>
-                    <select type="xxx2" class="form-control" id="CategoryId" name="CategoryId" >
-                        <option value="">-- 請選擇需求類別 --</option>
-                        @foreach (var category in ViewBag.Categories)
-                        {
-                                <option value="@category.CategoryId" data-id="@category.CategoryId">@category.CategoryDescription</option>
-                        }
-                    </select>
-                </div>
+        <div class="mb-3 inputField ">
+            <div class="mb-3 form-label">
+                <label for="xxx1">員工編號</label>
+                <input type="xxx1" class="form-control" value="@ViewBag.UserId" Disabled>
             </div>
-            <div class="mb-3 inputField ">
-                <div class="mb-3 form-label">
-                    <label for="xxx1">需求部門</label>
-                    <input inside ="@ViewBag.DepartmentId" id="DepartmentId" type="xxx1" class="form-control" value="@ViewBag.DepartmentName" Disabled>
-                </div>
-                <div class="mb-3 form-label">
-                </div>
+            <div class="mb-3 form-label">
+                <label for="xxx2">需求類別</label>
+                <select type="xxx2" class="form-control" id="CategoryId" name="CategoryId">
+                    <option value="">-- 請選擇需求類別 --</option>
+                    @foreach (var category in ViewBag.Categories)
+                    {
+                        <option value="@category.CategoryId" data-id="@category.CategoryId">@category.CategoryDescription</option>
+                    }
+                </select>
             </div>
-            <div class="mb-3 inputField ">
-                <div class="mb-3 form-label">
-                    <label for="xxx1">聯繫電話</label>
-                    <input id="Tel" type="xxx1" class="form-control" value="@ViewBag.UserTEL" Disabled>
-                </div>
-                <div class="mb-3 form-label">
-                    <label for="xxx2">專案編號</label>
-                    <select id="projectId" name="ProjectId" class="form-control" onchange="updateProjectName()">
-                        <option value="">-- 請選擇專案編號 --</option>
-                        @foreach (var project in ViewBag.Projects)
-                        {
-                                <!option value="@project.ProjectId" data-id="@project.ProjectName" @(project.ProjectId == ViewBag.SelectProjectId ? "selected" : "")>@project.ProjectId</!option>
-                        }
-                    </select>
-                </div>
+        </div>
+        <div class="mb-3 inputField ">
+            <div class="mb-3 form-label">
+                <label for="xxx1">需求部門</label>
+                <input inside="@ViewBag.DepartmentId" id="DepartmentId" type="xxx1" class="form-control" value="@ViewBag.DepartmentName" Disabled>
             </div>
-            <div class="mb-3 inputField ">
-                <div class="mb-3 form-label">
-                    <label for="xxx2">希望完成日期</label>
-                    <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                        <input id="ExpectedFinishedDay" type="text" class="form-control datetimepicker-input" data-target="#reservationdate" />
-                        <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
-                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                        </div>
+            <div class="mb-3 form-label">
+            </div>
+        </div>
+        <div class="mb-3 inputField ">
+            <div class="mb-3 form-label">
+                <label for="xxx1">聯繫電話</label>
+                <input id="Tel" type="xxx1" class="form-control" value="@ViewBag.UserTEL" Disabled>
+            </div>
+            <div class="mb-3 form-label">
+                <label for="xxx2">專案編號</label>
+                <select id="projectId" name="ProjectId" class="form-control" onchange="updateProjectName()">
+                    <option value="">-- 請選擇專案編號 --</option>
+                    @foreach (var project in ViewBag.Projects)
+                    {
+                        <!option value="@project.ProjectId" data-id="@project.ProjectName" @(project.ProjectId == ViewBag.SelectProjectId ? "selected" : "")>@project.ProjectId</!option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="mb-3 inputField ">
+            <div class="mb-3 form-label">
+                <label for="xxx2">希望完成日期</label>
+                <div class="input-group date" id="reservationdate" data-target-input="nearest">
+                    <input id="ExpectedFinishedDay" type="text" class="form-control datetimepicker-input" data-target="#reservationdate" />
+                    <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                     </div>
                 </div>
-                <div class="mb-3 form-label">
-                    <label for="xxx2">專案名稱</label>
-                    <select id="projectName" name="ProjectName" class="form-control" onchange="updateProjectId()">
-                        <option value="">-- 請選擇專案名稱 --</option>
-                        @foreach (var project in ViewBag.Projects)
-                        {
-                                <!option value="@project.ProjectName" data-id="@project.ProjectId" @(project.ProjectName == ViewBag.SelectedProjectName ? "selected" : "")>@project.ProjectName</!option>
-                        }
-                    </select>
-                </div>
             </div>
-            <div class="mb-3 inputField">
-                <div class="mb-3 form-label">
-                    <label for="xxx1">複製單號</label>
-                <input id="formDropdown"  list="datal" class="form-control" onchange="updateFormId()" id="Input" name="ice-cream-choice" />
+            <div class="mb-3 form-label">
+                <label for="xxx2">專案名稱</label>
+                <select id="projectName" name="ProjectName" class="form-control" onchange="updateProjectId()">
+                    <option value="">-- 請選擇專案名稱 --</option>
+                    @foreach (var project in ViewBag.Projects)
+                    {
+                        <!option value="@project.ProjectName" data-id="@project.ProjectId" @(project.ProjectName == ViewBag.SelectedProjectName ? "selected" : "")>@project.ProjectName</!option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="mb-3 inputField">
+            <div class="mb-3 form-label">
+                <label for="xxx1">複製單號</label>
+                <input id="formDropdown" list="datal" class="form-control" onchange="updateFormId()" id="Input" name="ice-cream-choice" />
                 <datalist id="datal">
-                        @foreach (var form in ViewBag.Forms as List<Form>)
-                        {
-                                <option value="@form.FormId" data-id="@form.FormId">@form.FormId</option>
-                        }
-                    </datalist>
+                    @foreach (var form in ViewBag.Forms as List<Form>)
+                    {
+                        <option value="@form.FormId" data-id="@form.FormId">@form.FormId</option>
+                    }
+                </datalist>
 
-
-                </div>
-                <div class="mb-3 form-label">
-                    <label for="xxx2"></label>
-                    <input type="xxx2" class="form-control" style="visibility:hidden">
-                </div>
-            </div>
-            <div class="mb-3 inputField" style="margin-top:10%;height: 100%">
-                <div class="mb-3 form-label">
-                    <label for="xxx1">檔案上傳</label>
-                    <form id="uploadForm">
-                        <input type="file" class="form-control" id="fileInput" name="files" multiple />
-                    </form>
-                    <br />
-                </div>
-                <div class="mb-3 form-label">
-                    <label for="xxx2"></label>
-                    <input type="xxx2" class="form-control" style="visibility:hidden">
-                </div>
-                
 
             </div>
-            <div id="fileListContainer" style="width:30%">
-                    <ul id="fileList"></ul>
+            <div class="mb-3 form-label">
+                <label for="xxx2"></label>
+                <input type="xxx2" class="form-control" style="visibility:hidden">
             </div>
-                
+        </div>
+        <div class="mb-3 inputField" style="margin-top:10%;height: 100%">
+            <div class="mb-3 form-label">
+                <label for="xxx1">檔案上傳</label>
+                <form id="uploadForm">
+                    <input type="file" class="form-control" id="fileInput" name="files" multiple />
+                </form>
+                <br />
+            </div>
+            <div class="mb-3 form-label">
+                <label for="xxx2"></label>
+                <input type="xxx2" class="form-control" style="visibility:hidden">
+            </div>
 
 
-            <!-- 需求內容的位置 -->
+        </div>
+        <div id="fileListContainer" style="width:30%">
+            <ul id="fileList"></ul>
+        </div>
 
-            <div class="note" style="margin-top:10%; padding:2%; width:100%">
-                <div class="noteContent">需求內容</div>
-                <div class="txtInput" id="txtInput">
-                    <div id="summernote"></div>
 
-                </div>
+
+        <!-- 需求內容的位置 -->
+
+        <div class="note" style="margin-top:10%; padding:2%; width:100%">
+            <div class="noteContent">需求內容</div>
+            <div class="txtInput" id="txtInput">
+                <div id="summernote"></div>
 
             </div>
-            <!-- 送出按鈕 -->
-            <div class="submit-btn">
-                <button id="submitButton"  class="btn btn-primary">送出</button>
-            </div>
+
+        </div>
+        <!-- 送出按鈕 -->
+        <div class="submit-btn">
+            <button id="submitButton" class="btn btn-primary">送出</button>
+        </div>
     </div>
 </div>
 @section Scripts {
 
-        <script type='text/javascript' src='../Users/myUserName/Desktop/myPage.js'></script>
-        <script>
+    <script type='text/javascript' src='../Users/myUserName/Desktop/myPage.js'></script>
+    <script>
 
-                var filesArray = [];
+        var filesArray = [];
 
-                // 當檔案選擇時
-                $('#fileInput').on('change', function(e) {
-                    var files = e.target.files;
+        // 當檔案選擇時
+        $('#fileInput').on('change', function (e) {
+            var files = e.target.files;
 
-                    for (var i = 0; i < files.length; i++) {
-                        // 將檔案加入 filesArray
-                        filesArray.push(files[i]);
-                    }
+            for (var i = 0; i < files.length; i++) {
+                // 將檔案加入 filesArray
+                filesArray.push(files[i]);
+            }
 
-                    // 更新檔案列表
-                    renderFileList();
-                });
+            // 更新檔案列表
+            renderFileList();
+        });
 
-                // 刪除檔案
-                function deleteFile(index) {
-                    filesArray.splice(index, 1); // 從 filesArray 中移除該檔案
-                    renderFileList(); // 重新渲染檔案列表
-                }
+        // 刪除檔案
+        function deleteFile(index) {
+            filesArray.splice(index, 1); // 從 filesArray 中移除該檔案
+            renderFileList(); // 重新渲染檔案列表
+        }
 
-                // 渲染檔案列表
-                function renderFileList() {
-                    $('#fileList').empty(); // 清空列表
+        // 渲染檔案列表
+        function renderFileList() {
+            $('#fileList').empty(); // 清空列表
 
-                    filesArray.forEach(function(file, index) {
-                        $('#fileList').append(`
-                            <li>
-                                <label>${file.name}</label>
-                                <button type="button" onclick="deleteFile(${index})">Delete</button>
-                            </li>
-                        `);
-                    });
-                }
-            $(document).ready(function() {
+            filesArray.forEach(function (file, index) {
+                $('#fileList').append(`
+                                            <li>
+                                                <label>${file.name}</label>
+                                                <button type="button" onclick="deleteFile(${index})">Delete</button>
+                                            </li>
+                                        `);
+            });
+        }
+        $(document).ready(function () {
             var userIds = [];
 
             // 遍歷每一個有 class "user" 的元素，取得其 "data-user-id" 的值
@@ -347,13 +350,13 @@
             // 輸出所有的員工編號
             console.log(userIds);
             // 綁定按鈕點擊事件
-            $("#submitButton").on("click", function(e) {
+            $("#submitButton").on("click", function (e) {
                 e.preventDefault();  // 阻止默認的提交行為
 
                 // 獲取輸入欄位的值
                 var tel = $("#Tel").val();
                 var expectedFinishedDay = $("#ExpectedFinishedDay").val()
-                var departmentId =document.getElementById("DepartmentId").getAttribute("inside")
+                var departmentId = document.getElementById("DepartmentId").getAttribute("inside")
                 var pj = document.getElementById('projectId');
                 var projectId = pj.options[pj.selectedIndex].value;
                 var ct = document.getElementById("CategoryId")
@@ -361,16 +364,16 @@
                 var content = $('#summernote').summernote('code');
                 // 檢查是否有空值
                 if (!tel || !departmentId || !categoryId || !expectedFinishedDay || !content || content == "<p><br></p>") {
-                    console.log( "分機" + tel)
-                    if(!tel){window.alert("尚未填寫聯絡電話");return ;} 
-                    console.log( "部門ID" + departmentId)
-                    if(!departmentId){window.alert("尚未填寫聯絡部門");return ;} 
-                    console.log( "需求"  + categoryId)
-                    if(!categoryId){window.alert("尚未選擇需求類別");return ;} 
+                    console.log("分機" + tel)
+                    if (!tel) { window.alert("尚未填寫聯絡電話"); return; }
+                    console.log("部門ID" + departmentId)
+                    if (!departmentId) { window.alert("尚未填寫聯絡部門"); return; }
+                    console.log("需求" + categoryId)
+                    if (!categoryId) { window.alert("尚未選擇需求類別"); return; }
                     console.log("希望完成時間" + expectedFinishedDay)
-                    if(!expectedFinishedDay){window.alert("尚未填寫希望完成時間");return ;} 
+                    if (!expectedFinishedDay) { window.alert("尚未填寫希望完成時間"); return; }
                     console.log("需求內容" + content)
-                    if(!content || content == "<p><br></p>"){window.alert("尚未填寫需求內容");return ;} 
+                    if (!content || content == "<p><br></p>") { window.alert("尚未填寫需求內容"); return; }
                 }
                 var form = $('#__AjaxAntiForgeryForm');
                 var token = $('input[name="__RequestVerificationToken"]', form).val();
@@ -378,7 +381,7 @@
                 var formData = new FormData();
 
                 // 將 filesArray 中的每個檔案加入 FormData
-                filesArray.forEach(function(file) {
+                filesArray.forEach(function (file) {
                     formData.append("files", file);
                 });
                 let formId = "";
@@ -398,7 +401,7 @@
                         TEL: tel,
                         Content: content
                     }),
-                    success: function(response) {
+                    success: function (response) {
                         createResponseErrorCode = response['errorCode'];
                         if (response['errorCode'] != null && response['errorCode'] == 200) {
                             formId = response['formId']
@@ -406,20 +409,19 @@
                             window.alert(response['message']);
                             window.location.replace("/QueryForms");
                         }
-                        if(response['errorCode'] != null && response['errorCode'] == 400)
-                        {
+                        if (response['errorCode'] != null && response['errorCode'] == 400) {
                             window.alert(response['message']);
                         }
                         // 成功後的操作
                     },
-                    error: function(xhr, status, error) {
+                    error: function (xhr, status, error) {
 
                         // 錯誤時的操作
                     }
                 });
                 var uploadFileFormData = new FormData();
-        // 將 filesArray 中的每個檔案加入 FormData
-                function upload(){
+                // 將 filesArray 中的每個檔案加入 FormData
+                function upload() {
                     if (createResponseErrorCode == 200) {
 
                         filesArray.forEach(function (file) {
@@ -438,106 +440,115 @@
                         });
                     }
                 }
-                
+
             });
         });
 
-            function loadScript(url, callback) {
-                var script = document.createElement('script');
-                script.src = url;
-                script.type = 'text/javascript';
-                script.onload = function () {
-                    if (callback) {
-                        callback();
-                    }
-                };
-                document.head.appendChild(script);
-            }
-            $(document).ready(function() 
-            {
-                loadScript('/AdminLTE/plugins/summernote/summernote-bs4.js', function () {
-                            $('#summernote').summernote('code');
-                        }
-            )
-            }); 
-
-
-        </script>
-        <script>
-            function updateProjectId() {
-                var projectNameSelect = document.getElementById('projectName');
-                var projectIdSelect = document.getElementById('projectId');
-                var selectedProjectId = projectNameSelect.options[projectNameSelect.selectedIndex].getAttribute('data-id');
-
-                projectIdSelect.value = selectedProjectId || '';
-            }
-
-            function updateProjectName() {
-                var projectIdSelect = document.getElementById('projectId');
-                var projectNameSelect = document.getElementById('projectName');
-                var selectedProjectName = projectIdSelect.options[projectIdSelect.selectedIndex].getAttribute('data-id');
-
-                projectNameSelect.value = selectedProjectName || '';
-            }
-            function updateFormId() {
-                referenceId = document.getElementById('formDropdown').value;
-                var CategorySelect = document.getElementById('CategoryId');
-                var Content = document.getElementById('summernote');
-                $.ajax({
-                    url: '/CreateForms/GetFormById',
-                    type: 'GET',
-                    data: { formId: referenceId},
-                    success: function (data) {
-                        for (var i = 0; i < CategorySelect.options.length; i++) {
-                            var option = CategorySelect.options[i];
-
-                            if (option.getAttribute('data-id') == data['categoryId']) {
-                                CategorySelect.selectedIndex = i; // 設置選中的選項
-                                break;
-                            }
-                        }
-                        $('.summernote').each(function (index) {
-                            $(this).summernote('destroy');
-                        });
-                        $('#summernote').summernote('code', data['content']);
-
-                    },
-                    error: function (xhr, status, error) {
-                        if(status == 401)
-                        {
-                            window.location.href = "/Login/Index/";
-                        }
-                    }
+        function loadScript(url, callback) {
+            var script = document.createElement('script');
+            script.src = url;
+            script.type = 'text/javascript';
+            script.onload = function () {
+                if (callback) {
+                    callback();
+                }
+            };
+            document.head.appendChild(script);
+        }
+        $(document).ready(function () {
+            loadScript('/AdminLTE/plugins/summernote/summernote-bs4.js', function () {
+                $('#summernote').summernote({
+                    placeholder: '在此編輯內容...',
+                    height: 300, // 設定編輯器的高度
+                    toolbar: [
+                        ['style', ['bold', 'italic', 'underline', 'clear']], // 樣式
+                        ['font', ['strikethrough', 'superscript', 'subscript']], // 字體
+                        ['para', ['ul', 'ol', 'paragraph']], // 段落
+                        ['insert', ['link']] // 插入功能
+                        ['table', ['table']], // 添加表格按钮
+                        // 移除多餘的工具，保持最常用的
+                    ]
                 });
             }
-            document.getElementById('filterInput').addEventListener('input', function () {
-                var filterValue = this.value.toLowerCase();
-                var dropdown = document.getElementById('formDropdown');
-                var options = dropdown.options;
+            )
+        });
 
-                for (var i = 0; i < options.length; i++) {
-                    var option = options[i];
-                    var text = option.text.toLowerCase();
-                    option.style.display = text.includes(filterValue) ? '' : 'none';
+
+    </script>
+    <script>
+        function updateProjectId() {
+            var projectNameSelect = document.getElementById('projectName');
+            var projectIdSelect = document.getElementById('projectId');
+            var selectedProjectId = projectNameSelect.options[projectNameSelect.selectedIndex].getAttribute('data-id');
+
+            projectIdSelect.value = selectedProjectId || '';
+        }
+
+        function updateProjectName() {
+            var projectIdSelect = document.getElementById('projectId');
+            var projectNameSelect = document.getElementById('projectName');
+            var selectedProjectName = projectIdSelect.options[projectIdSelect.selectedIndex].getAttribute('data-id');
+
+            projectNameSelect.value = selectedProjectName || '';
+        }
+        function updateFormId() {
+            referenceId = document.getElementById('formDropdown').value;
+            var CategorySelect = document.getElementById('CategoryId');
+            var Content = document.getElementById('summernote');
+            $.ajax({
+                url: '/CreateForms/GetFormById',
+                type: 'GET',
+                data: { formId: referenceId },
+                success: function (data) {
+                    for (var i = 0; i < CategorySelect.options.length; i++) {
+                        var option = CategorySelect.options[i];
+
+                        if (option.getAttribute('data-id') == data['categoryId']) {
+                            CategorySelect.selectedIndex = i; // 設置選中的選項
+                            break;
+                        }
+                    }
+                    $('.summernote').each(function (index) {
+                        $(this).summernote('destroy');
+                    });
+                    $('#summernote').summernote('code', data['content']);
+
+                },
+                error: function (xhr, status, error) {
+                    if (status == 401) {
+                        window.location.href = "/Login/Index/";
+                    }
                 }
             });
+        }
+        document.getElementById('filterInput').addEventListener('input', function () {
+            var filterValue = this.value.toLowerCase();
+            var dropdown = document.getElementById('formDropdown');
+            var options = dropdown.options;
+
+            for (var i = 0; i < options.length; i++) {
+                var option = options[i];
+                var text = option.text.toLowerCase();
+                option.style.display = text.includes(filterValue) ? '' : 'none';
+            }
+        });
 
 
-        </script>
-            <script src="~/AdminLTE/plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap 4 -->
-<script src="~/AdminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- AdminLTE App -->
-<script src="~/AdminLTE/dist/js/adminlte.min.js"></script>
-<!-- Summernote -->
-<script src="~/AdminLTE/plugins/summernote/summernote-bs4.min.js"></script>
-<!-- CodeMirror -->
-<script src="~/AdminLTE/plugins/codemirror/codemirror.js"></script>
-<script src="~/AdminLTE/plugins/codemirror/mode/css/css.js"></script>
-<script src="~/AdminLTE/plugins/codemirror/mode/xml/xml.js"></script>
-<script src="~/AdminLTE/plugins/codemirror/mode/htmlmixed/htmlmixed.js"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="~/AdminLTE/dist/js/demo.js"></script>
+    </script>
+    <script src="~/AdminLTE/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/AdminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="~/AdminLTE/dist/js/adminlte.min.js"></script>
+    <!-- Summernote -->
+    <script src="~/AdminLTE/plugins/summernote/summernote-bs4.min.js"></script>
+    <!-- CodeMirror -->
+    <script src="~/AdminLTE/plugins/codemirror/codemirror.js"></script>
+    <script src="~/AdminLTE/plugins/codemirror/mode/css/css.js"></script>
+    <script src="~/AdminLTE/plugins/codemirror/mode/xml/xml.js"></script>
+    <script src="~/AdminLTE/plugins/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="~/AdminLTE/dist/js/demo.js"></script>
     <!-- jQuery -->
     <script src="~/AdminLTE/plugins/jquery/jquery.min.js"></script>
     <!-- Bootstrap 4 -->
@@ -558,142 +569,142 @@
     <script src="~/AdminLTE/dist/js/demo.js"></script>
     <script>
 
-      $(function () {
-        //Initialize Select2 Elements
-        $('.select2').select2()
+        $(function () {
+            //Initialize Select2 Elements
+            $('.select2').select2()
 
-        //Initialize Select2 Elements
-        $('.select2bs4').select2({
-          theme: 'bootstrap4'
-        })
+            //Initialize Select2 Elements
+            $('.select2bs4').select2({
+                theme: 'bootstrap4'
+            })
 
-        //Datemask dd/mm/yyyy
-        $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
-        //Datemask2 mm/dd/yyyy
-        $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
-        //Money Euro
-        $('[data-mask]').inputmask()
+            //Datemask dd/mm/yyyy
+            $('#datemask').inputmask('dd/mm/yyyy', { 'placeholder': 'dd/mm/yyyy' })
+            //Datemask2 mm/dd/yyyy
+            $('#datemask2').inputmask('mm/dd/yyyy', { 'placeholder': 'mm/dd/yyyy' })
+            //Money Euro
+            $('[data-mask]').inputmask()
             var today = new Date();
             var formattedDate = today.getFullYear() + '-' +
                 String(today.getMonth() + 1).padStart(2, '0') + '-' +
                 String(today.getDate()).padStart(2, '0');
-        //Date picker
-        $('#reservationdate').datetimepicker({
-            format: 'L',
-            minDate: formattedDate
-        });
+            //Date picker
+            $('#reservationdate').datetimepicker({
+                format: 'L',
+                minDate: formattedDate
+            });
 
-        //Date and time picker
-        $('#reservationdatetime').datetimepicker({ icons: { time: 'far fa-clock' } });
+            //Date and time picker
+            $('#reservationdatetime').datetimepicker({ icons: { time: 'far fa-clock' } });
 
-        //Date range picker
-        $('#reservation').daterangepicker()
-        //Date range picker with time picker
-        $('#reservationtime').daterangepicker({
-          timePicker: true,
-          timePickerIncrement: 30,
-          locale: {
-            format: 'MM/DD/YYYY hh:mm A'
-          }
+            //Date range picker
+            $('#reservation').daterangepicker()
+            //Date range picker with time picker
+            $('#reservationtime').daterangepicker({
+                timePicker: true,
+                timePickerIncrement: 30,
+                locale: {
+                    format: 'MM/DD/YYYY hh:mm A'
+                }
+            })
+            //Date range as a button
+            $('#daterange-btn').daterangepicker(
+                {
+                    ranges: {
+                        'Today': [moment(), moment()],
+                        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                        'This Month': [moment().startOf('month'), moment().endOf('month')],
+                        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                    },
+                    startDate: moment().subtract(29, 'days'),
+                    endDate: moment()
+                },
+                function (start, end) {
+                    $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+                }
+            )
+
+            //Timepicker
+            $('#timepicker').datetimepicker({
+                format: 'LT'
+            })
+
+            //Bootstrap Duallistbox
+            $('.duallistbox').bootstrapDualListbox()
+
+            //Colorpicker
+            $('.my-colorpicker1').colorpicker()
+            //color picker with addon
+            $('.my-colorpicker2').colorpicker()
+
+            $('.my-colorpicker2').on('colorpickerChange', function (event) {
+                $('.my-colorpicker2 .fa-square').css('color', event.color.toString());
+            })
+
+            $("input[data-bootstrap-switch]").each(function () {
+                $(this).bootstrapSwitch('state', $(this).prop('checked'));
+            })
+
         })
-        //Date range as a button
-        $('#daterange-btn').daterangepicker(
-          {
-            ranges   : {
-              'Today'       : [moment(), moment()],
-              'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-              'Last 7 Days' : [moment().subtract(6, 'days'), moment()],
-              'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-              'This Month'  : [moment().startOf('month'), moment().endOf('month')],
-              'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-            },
-            startDate: moment().subtract(29, 'days'),
-            endDate  : moment()
-          },
-          function (start, end) {
-            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
-          }
-        )
-
-        //Timepicker
-        $('#timepicker').datetimepicker({
-          format: 'LT'
+        // BS-Stepper Init
+        document.addEventListener('DOMContentLoaded', function () {
+            window.stepper = new Stepper(document.querySelector('.bs-stepper'))
         })
 
-        //Bootstrap Duallistbox
-        $('.duallistbox').bootstrapDualListbox()
+        // DropzoneJS Demo Code Start
+        Dropzone.autoDiscover = false
 
-        //Colorpicker
-        $('.my-colorpicker1').colorpicker()
-        //color picker with addon
-        $('.my-colorpicker2').colorpicker()
+        // Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
+        var previewNode = document.querySelector("#template")
+        previewNode.id = ""
+        var previewTemplate = previewNode.parentNode.innerHTML
+        previewNode.parentNode.removeChild(previewNode)
 
-        $('.my-colorpicker2').on('colorpickerChange', function(event) {
-          $('.my-colorpicker2 .fa-square').css('color', event.color.toString());
+        var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
+            url: "/target-url", // Set the url
+            thumbnailWidth: 80,
+            thumbnailHeight: 80,
+            parallelUploads: 20,
+            previewTemplate: previewTemplate,
+            autoQueue: false, // Make sure the files aren't queued until manually added
+            previewsContainer: "#previews", // Define the container to display the previews
+            clickable: ".fileinput-button" // Define the element that should be used as click trigger to select files.
         })
 
-        $("input[data-bootstrap-switch]").each(function(){
-          $(this).bootstrapSwitch('state', $(this).prop('checked'));
+        myDropzone.on("addedfile", function (file) {
+            // Hookup the start button
+            file.previewElement.querySelector(".start").onclick = function () { myDropzone.enqueueFile(file) }
         })
 
-      })
-      // BS-Stepper Init
-      document.addEventListener('DOMContentLoaded', function () {
-        window.stepper = new Stepper(document.querySelector('.bs-stepper'))
-      })
+        // Update the total progress bar
+        myDropzone.on("totaluploadprogress", function (progress) {
+            document.querySelector("#total-progress .progress-bar").style.width = progress + "%"
+        })
 
-      // DropzoneJS Demo Code Start
-      Dropzone.autoDiscover = false
+        myDropzone.on("sending", function (file) {
+            // Show the total progress bar when upload starts
+            document.querySelector("#total-progress").style.opacity = "1"
+            // And disable the start button
+            file.previewElement.querySelector(".start").setAttribute("disabled", "disabled")
+        })
 
-      // Get the template HTML and remove it from the doumenthe template HTML and remove it from the doument
-      var previewNode = document.querySelector("#template")
-      previewNode.id = ""
-      var previewTemplate = previewNode.parentNode.innerHTML
-      previewNode.parentNode.removeChild(previewNode)
+        // Hide the total progress bar when nothing's uploading anymore
+        myDropzone.on("queuecomplete", function (progress) {
+            document.querySelector("#total-progress").style.opacity = "0"
+        })
 
-      var myDropzone = new Dropzone(document.body, { // Make the whole body a dropzone
-        url: "/target-url", // Set the url
-        thumbnailWidth: 80,
-        thumbnailHeight: 80,
-        parallelUploads: 20,
-        previewTemplate: previewTemplate,
-        autoQueue: false, // Make sure the files aren't queued until manually added
-        previewsContainer: "#previews", // Define the container to display the previews
-        clickable: ".fileinput-button" // Define the element that should be used as click trigger to select files.
-      })
-
-      myDropzone.on("addedfile", function(file) {
-        // Hookup the start button
-        file.previewElement.querySelector(".start").onclick = function() { myDropzone.enqueueFile(file) }
-      })
-
-      // Update the total progress bar
-      myDropzone.on("totaluploadprogress", function(progress) {
-        document.querySelector("#total-progress .progress-bar").style.width = progress + "%"
-      })
-
-      myDropzone.on("sending", function(file) {
-        // Show the total progress bar when upload starts
-        document.querySelector("#total-progress").style.opacity = "1"
-        // And disable the start button
-        file.previewElement.querySelector(".start").setAttribute("disabled", "disabled")
-      })
-
-      // Hide the total progress bar when nothing's uploading anymore
-      myDropzone.on("queuecomplete", function(progress) {
-        document.querySelector("#total-progress").style.opacity = "0"
-      })
-
-      // Setup the buttons for all transfers
-      // The "add files" button doesn't need to be setup because the config
-      // `clickable` has already been specified.
-      document.querySelector("#actions .start").onclick = function() {
-        myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED))
-      }
-      document.querySelector("#actions .cancel").onclick = function() {
-        myDropzone.removeAllFiles(true)
-      }
-      // DropzoneJS Demo Code End
+        // Setup the buttons for all transfers
+        // The "add files" button doesn't need to be setup because the config
+        // `clickable` has already been specified.
+        document.querySelector("#actions .start").onclick = function () {
+            myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED))
+        }
+        document.querySelector("#actions .cancel").onclick = function () {
+            myDropzone.removeAllFiles(true)
+        }
+        // DropzoneJS Demo Code End
 
 
         $(function () {
@@ -832,7 +843,9 @@
             myDropzone.removeAllFiles(true)
         }
         // DropzoneJS Demo Code End
-    </script>
 
+    </script>
     
+
+
 }

@@ -291,6 +291,22 @@
         $(document).ready(function () {
             var allUsers = (@Html.Raw(ViewBag.AllUserList))['$values'];
             var allForms = (@Html.Raw(ViewBag.AllFormList))['$values'];
+            var model = (@Html.Raw(Json.Serialize(Model)));
+            console.log(model)
+            var ExistFormList = [];
+            console.log(model.projectFormsViewModels)
+            for(var i = 0; i < model.projectFormsViewModels.length ;++i)
+            {
+                ExistFormList.push(model.projectFormsViewModels[i].formId);
+            }
+            var ExistUserList = [];
+            for(var i = 0; i < model.projectUsersViewModels.length ;++i)
+            {
+                ExistUserList.push(model.projectUsersViewModels[i].userId);
+            }
+            console.log(ExistFormList);
+            console.log(ExistUserList);
+            
             // 獲取唯一的部門、職稱和姓名
             var userIdsList = [...new Set(allUsers.map(user => user.UserId))];
             var uniqueDepartments = [...new Set(allUsers.map(user => user.Department.DepartmentName))];
@@ -485,6 +501,11 @@
             });
             $('#formInput').on('input', function () {
                 var selectedId = $(this).val();
+                if(ExistFormList.includes(selectedId))
+                {
+                    window.alert("工單已存在");
+                    return 0;
+                }
                 if(formIdsList.find(fm => fm.FormId === selectedId))
                 {
                     $("#departmentInputForm").val('');
@@ -512,6 +533,11 @@
             });
             $('#userIdInput').on('input', function () {
                 var selectedId = $(this).val();
+                if(ExistUserList.includes(selectedId))
+                {
+                    window.alert("成員已存在");
+                    return 0;
+                }
                 if(userIdsList.find(u => u.UserId === selectedId))
                 {
                     $('#userNameInput').val('');
