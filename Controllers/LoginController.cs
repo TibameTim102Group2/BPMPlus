@@ -44,7 +44,7 @@ namespace BPMPlus.Controllers
 
         /* 登入 */
         [HttpPost]
-        public async Task<IActionResult> Login(LoginInputVM login)
+        public async Task<IActionResult> Login(LoginInputVM login, string returnUrl)
         {
 
             //先判斷user是否存在
@@ -115,23 +115,31 @@ namespace BPMPlus.Controllers
             // 判斷當前userId 是否包含在Admin群組內
             bool isAdminUser = userActivityList.Contains(login.UserId);
 
-            // 套用相應layout, 使用session
-            if (isAdminUser)
-            {
-                HttpContext.Session.SetString("IsAdmin", "true");
-                return RedirectToAction("Index", "Home");
-            }
-            else
-            {
-                HttpContext.Session.SetString("IsAdmin", "false");
-                return RedirectToAction("Index", "Home");
-            }
-        }
+			// 套用相應layout, 使用session
+			if (isAdminUser)
+			{
+				HttpContext.Session.SetString("IsAdmin", "true");
+				if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+				{
+					return Redirect(returnUrl);
+				}
+				else
+				{
+					return RedirectToAction("Index", "Home");
+				}
+			}
+			else
+			{
+				HttpContext.Session.SetString("IsAdmin", "false");
+				return RedirectToAction("Index", "Home");
+			}
+		}
 
        //登入page
-        public IActionResult Index()
+        public IActionResult Index(string returnUrl)
 		{
-            return View();
+			ViewData["ReturnUrl"] = returnUrl;
+			return View();
 		}
 
         /* 登出 */
@@ -225,7 +233,7 @@ namespace BPMPlus.Controllers
                     if (user != null)
                     {
                         //判斷user是否在30分鐘內重設過密碼
-                        if (nowStampTime <= user.ModifyPasswordTime + 1800)
+                        if (nowStampTime >= (user.ModifyPasswordTime ?? 0) + 1800)
                         {
                             //判斷密碼是否符合規則
                             var resetPasswordService = new ResetPasswordService();
@@ -285,7 +293,7 @@ namespace BPMPlus.Controllers
                 ViewBag.ErrorMessage = "密碼重設錯誤,請重試或聯繫系統管理員!+"+ex;
                 return View("~/Views/Login/ErrorPage.cshtml");
             }
-            return View("ForgetPwResetPw", vm);
+            return View("~/Views/Login/Index.cshtml");
         }
 
         //忘記密碼重設page

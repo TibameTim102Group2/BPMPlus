@@ -293,7 +293,6 @@
 						return;
 					}
 					_this.formData.permissions = _this.addPermissions.map(p => p.Value);
-					console.log(JSON.stringify(_this.formData));
 					axios.post(`${this.baseAddress}/Edit`, JSON.stringify(_this.formData), {
 						headers: {
 							'Content-Type': 'application/json'
