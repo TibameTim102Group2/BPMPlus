@@ -170,6 +170,9 @@
         <div>
             <p class="pdReset login-box-msg text-bold">重新設定密碼</p>
             <div class="input-group mb-3">
+					<div class="input-group" style="font-size:12px;">
+						<p>密碼8碼以上, 並包含1個數字.1個大寫英文.1個小寫英文以及1個特殊符號!@@#$_+.</p>
+					</div>
             @Html.PasswordFor(p => p.ResetPassword, new { @class = "form-control", placeholder = "請輸入新密碼" })
                 <div class="input-group-append">
                     <div class="input-group">
