@@ -172,6 +172,11 @@
 
         <div class="col-5">
             <div class="form-group">
+                <label for="">預約日期</label>
+                <input type="date" min="@ViewBag.MinDate" class="form-control bookingDate" style="outline:none;" />
+            </div>
+
+            <div class="form-group">
                 <label>選擇會議室</label>
                 <select class="form-control selectRoom" asp-items="ViewBag.MeetingRooms">
                     <option value="">-- 請選擇會議室 --</option>
@@ -181,11 +186,6 @@
             <div class="form-group">
                 <label for="">可容納人數</label>
                 <input class="form-control accommodation" Disabled />
-            </div>
-
-            <div class="form-group">
-                <label for="">預約日期</label>
-                <input type="date" min="@ViewBag.MinDate" class="form-control bookingDate" style="outline:none;" />
             </div>
 
             <div class="form-group">
@@ -460,6 +460,7 @@
 
             // submit
             $("#submitButton").click(function () {
+                $(this).disabled = true;
 
                 let room = $(".selectRoom").val();
 
@@ -520,14 +521,15 @@
                         Members: members
                     }),
                     success: function (response) {
-                        alert('預約成功!');
-                        window.location.href = "CurrentMeetingRoom/Index/";
-                    },
-                    error: function (response) {
-                    alert(response.data);
-                        // return;
-                    }
+                        if (response.success == true) {
+                            alert(response.data);
+                            window.location.href = "CurrentMeetingRoom/Index/";
+                        } else {
+                            $(this).disabled = false;
+                            alert(response.message);
+                        }
 
+                    },
                 });
 
             })

@@ -105,67 +105,100 @@ namespace BPMPlus.Controllers
                 .Select(d => new { d.StartTime, d.EndTime })
                 .ToListAsync();
 
-
-            string[] start = new string[14];
-            string[] end = new string[14];
-            foreach (var time in bookedTime)
+            if (ModelState.IsValid == false)
             {
-
+                return Json(new { success = false, message = "預約失敗! 請重新預約!" });
             }
-
-
-
-            if (ModelState.IsValid)
+            else
             {
                 var StartTime = DateTime.Parse($"{vm.Date} {vm.StartTime}").AddHours(-8);
                 var EndTime = DateTime.Parse($"{vm.Date} {vm.EndTime}").AddHours(-8);
 
-                
-
-
-                Meeting meeting = new Meeting();
-                List<string> id = await CreateMeetingIdListAsync(1);
-
-                var host = await _context.User
-                    .Where(u => u.UserName == vm.MeetingHost)
-                    .Select(h => h.UserId)
-                    .FirstOrDefaultAsync();
-
-
-                meeting.MeetingId = id.FirstOrDefault();
-                meeting.MeetingRoomId = vm.Room;
-                meeting.StartTime = StartTime;
-                meeting.EndTime = EndTime;
-                meeting.MeetingHost = host;
-                meeting.Note = vm.Note;
-                meeting.CreatedTime = DateTime.Now.AddHours(-8);
-                meeting.UpdatedTime = DateTime.Now.AddHours(-8);
-
-                await _context.Meeting.AddAsync(meeting);
-                await _context.SaveChangesAsync();
-
-
-                var meetingid = _context.Meeting
-                    .Include(x => x.Users)
-                    .FirstOrDefault(x => x.MeetingId == id[0]);
-
-                foreach (var memberId in vm.Members)
+                if (bookedTime.Count != 0)
                 {
-                    //重新建關聯
-                    var newMeetingMember = _context.User.FirstOrDefault(pg => pg.UserId == memberId);
-                    if (newMeetingMember != null)
+                    //建立空陣列 存放已被預約的時段和要存的時段
+                    int[] booked = new int[14];
+                    int[] select = new int[14];
+
+                    //選擇的日期和會議室有幾個預約時段
+                    int count = 0;
+
+                    int selectStart = Int32.Parse(vm.StartTime.Substring(0, 2));
+                    int selectEnd = Int32.Parse(vm.EndTime.Substring(0, 2));
+
+                    // 取得會議室已被預約的時段
+                    foreach (var time in bookedTime)
                     {
-                        meetingid.Users.Add(newMeetingMember);
-                        _context.SaveChanges();
+                        int startTiming = time.StartTime.AddHours(8).Hour;
+                        int endTiming = time.EndTime.AddHours(8).Hour;
+                        for (var i = startTiming; i <= endTiming - 1; i++)
+                        {
+                            booked[count] = i;
+                            count++;
+                        }
                     }
+
+                    count = 0;
+                    for (int i = selectStart; i <= selectEnd - 1; i++)
+                    {
+                        select[count] = i;
+                        count++;
+                    }
+
+                    //比對booked和select時段
+                    var filterBookTime = booked.Where(x => x != 0).ToArray();
+                    var filterSeletedTime = select.Where(x => x != 0).ToArray();
+                    //已被預約時間回傳
+                    var repeatTimes = filterBookTime.Intersect(filterSeletedTime).ToArray();
+                    if (repeatTimes.Any())
+                    {
+                        return Json(new { success = false, message = "選取時段已被預約!" });
+                    }
+                    else
+                    {
+                        Meeting meeting = new Meeting();
+                        List<string> id = await CreateMeetingIdListAsync(1);
+
+                        var host = await _context.User
+                            .Where(u => u.UserName == vm.MeetingHost)
+                            .Select(h => h.UserId)
+                            .FirstOrDefaultAsync();
+
+                        meeting.MeetingId = id.FirstOrDefault();
+                        meeting.MeetingRoomId = vm.Room;
+                        meeting.StartTime = StartTime;
+                        meeting.EndTime = EndTime;
+                        meeting.MeetingHost = host;
+                        meeting.Note = vm.Note;
+                        meeting.CreatedTime = DateTime.Now.AddHours(-8);
+                        meeting.UpdatedTime = DateTime.Now.AddHours(-8);
+
+                        await _context.Meeting.AddAsync(meeting);
+                        await _context.SaveChangesAsync();
+
+                        var meetingid = _context.Meeting
+                            .Include(x => x.Users)
+                            .FirstOrDefault(x => x.MeetingId == id[0]);
+
+                        foreach (var memberId in vm.Members)
+                        {
+                            //重新建關聯
+                            var newMeetingMember = _context.User.FirstOrDefault(pg => pg.UserId == memberId);
+                            if (newMeetingMember != null)
+                            {
+                                meetingid.Users.Add(newMeetingMember);
+                                _context.SaveChanges();
+                            }
+                        }
+
+
+                    }
+
                 }
-            }
-            else
-            {
-                var falseText = "預約失敗! 請重新預約!";
-                return Json(new { success = false, data = falseText });
-            }
-            return RedirectToAction("Index", "CurrentMeetingRoom");
+
+			}
+
+            return Json(new { success = true, data = "預約成功!" });
         }
 
     }
