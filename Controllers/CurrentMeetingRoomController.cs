@@ -131,10 +131,8 @@ namespace BPMPlus.Controllers
 		public async Task<ActionResult> editMeetingBook([FromBody] BookingMeetingRoomEditVM editData)
 		{
 			//先建立一個陣列放 已經被預定的時間
-			int[] bookedTime =new int[14];
-			int[] selectTime = new int[14];
-			//紀錄放入幾個時段
-			int count = 0;
+			List<int> bookedTime = new List<int>();
+			List<int> selectTime = new List<int>();
 			//把時間轉成int
 			int selectStart = Int32.Parse(editData.StartTime.Substring(0,2));
 			int selectEnd = Int32.Parse(editData.EndTime.Substring(0, 2));
@@ -151,27 +149,24 @@ namespace BPMPlus.Controllers
 
 				int startTiming = item.StartTime.AddHours(8).Hour;
 				int endTiming = item.EndTime.AddHours(8).Hour;
-				for (int i = startTiming; i <= endTiming-1; i++)
+				for (int i = startTiming; i < endTiming; i++)
 				{
 
-					bookedTime[count] = i;
-					count++;
+					bookedTime.Add(i);
 				}
             }
 			//先把前端選的時間轉成陣列
-			//把計時器歸0
-			count = 0;
-			for(int i = selectStart; i <= selectEnd-1; i++)
+
+			for(int i = selectStart; i < selectEnd; i++)
 			{
-				selectTime[count] = i;
-				count++;
+				selectTime.Add(i);
 			}
 			//要每一筆去比對時段
 			//先過濾0
-			var filterBookTime = bookedTime.Where(x => x != 0).ToArray();
-			var filterSeletedTime = selectTime.Where(x => x != 0).ToArray();
+			//var filterBookTime = bookedTime.Where(x => x != 0).ToArray();
+			//var filterSeletedTime = selectTime.Where(x => x != 0).ToArray();
 			//找出兩者的交集
-			var repeatTimes = filterBookTime.Intersect(filterSeletedTime).ToArray();
+			var repeatTimes = bookedTime.Intersect(selectTime).ToArray();
 			if (repeatTimes.Any())
 			{
 				return Json(new { success=false,message="此時段已被預約"});
