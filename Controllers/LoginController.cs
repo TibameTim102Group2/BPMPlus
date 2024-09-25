@@ -186,7 +186,7 @@ namespace BPMPlus.Controllers
 
         /* 忘記密碼重設 */
         [HttpPost]
-        public async Task<IActionResult> ForgetPwResetPw(ForgetPasswordVM vm)
+        public async Task<IActionResult> ForgetPwResetPw([FromBody] ForgetPasswordVM vm)
         {
             var _service = aesAndTimestampService;
 
@@ -365,7 +365,7 @@ namespace BPMPlus.Controllers
             user.ModifyPasswordTime = saveChangeTime.ToUnixTimeSeconds();
             await _context.SaveChangesAsync();
 
-            return Json(new { success = true, date = "密碼修改成功!" });
+            return Json(new { success = true, data = "密碼修改成功!" });
         }
 
         [Authorize]

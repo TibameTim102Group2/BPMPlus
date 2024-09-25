@@ -460,6 +460,7 @@
 
             // submit
             $("#submitButton").click(function () {
+                $(this).disabled = true;
 
                 let room = $(".selectRoom").val();
 
@@ -520,12 +521,14 @@
                         Members: members
                     }),
                     success: function (response) {
-                        if (response == true) {
-                            alert('預約成功!');
+                        if (response.success == true) {
+                            alert(response.data);
+                            window.location.href = "CurrentMeetingRoom/Index/";
                         } else {
+                            $(this).disabled = false;
                             alert(response.message);
                         }
-                        window.location.href = "CurrentMeetingRoom/Index/";
+
                     },
                 });
 
