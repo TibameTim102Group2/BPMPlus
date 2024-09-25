@@ -162,9 +162,6 @@ namespace BPMPlus.Controllers
 				selectTime.Add(i);
 			}
 			//要每一筆去比對時段
-			//先過濾0
-			//var filterBookTime = bookedTime.Where(x => x != 0).ToArray();
-			//var filterSeletedTime = selectTime.Where(x => x != 0).ToArray();
 			//找出兩者的交集
 			var repeatTimes = bookedTime.Intersect(selectTime).ToArray();
 			if (repeatTimes.Any())
