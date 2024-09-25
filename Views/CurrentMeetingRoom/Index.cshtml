@@ -66,13 +66,17 @@
 		label {
 			background-color: #42a8fa;
 		}
+
+		[v-cloak] {
+			display: none;
+		}
 	</style>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 }
 <div class="outside">
 	<h1 class="title">目前會議室</h1>
 
-	<div id="app" class="row">
+	<div id="app" class="row" v-cloak>
 		@* 時間表的部分 *@
 		<div class="col-8">
 			<table class="info" style="width:100%;">
