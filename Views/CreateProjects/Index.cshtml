@@ -11,16 +11,12 @@
         }
 
         .outside {
-            padding: 10px;
-            background-color: rgb(225, 239, 252);
-            height: 100%;
+            padding: 20px;
         }
+
 
         .title {
             color: rgba(0, 81, 255, 0.884);
-            margin-top: 10px;
-            margin-left: 30px;
-            padding-top: 10px;
             font-weight: bold;
         }
 
@@ -54,6 +50,7 @@
 
         .inputField{
             display:flex;
+            height:100px;
         }
 
         input {
@@ -62,17 +59,16 @@
 
         #btnSubmit{
             height:40px;
-            margin-top:70px;
         }
 
         .form-label{
             width:45%;
-        
+            align-items: center;
         }
 
         #btnSubmit {
             font-weight:1000;
-          
+            width:150px;
         }
 
         .error-border {
@@ -84,6 +80,20 @@
             font-size: 12px;
             margin-top: 5px;
         }
+
+        .inputDeadline{
+            margin-top:10px;
+        }
+
+        .btnArea{
+            display:flex;
+            justify-content: center;
+           
+        }
+
+        #textSummary{
+            max-height:100px;
+        }
       
     
     </style>
@@ -94,22 +104,12 @@
 <div class="outside">
  
 
-    <h1 class="title">新建專案</h1>
+    <h2 class="title">新建專案</h2>
 
     <!-- inside -->
     <div class="inside">
        
-            <div class="mb-3 inputField ">
-                <div class="mb-3 form-label">
-                    <label >部門</label>
-                    <input  class="form-control" value="@Model.DepartmentName"  Disabled>
-                </div>
-                <div class="mb-3 form-label">
-                    <label >專案名稱</label>
-                    <input id="inputProject" class="form-control" placeholder="請輸入專案名稱" oninput="validateProjectName()" required>
-                    <span id="errorProjectName" class="error-message"></span>
-                </div>
-            </div>
+           
             <div class="mb-3 inputField ">
                 <div class="mb-3 form-label">
                     <label>員工編號</label>
@@ -122,26 +122,28 @@
             </div>
             <div class="mb-3 inputField ">
                 <div class="mb-3 form-label">
-                    <label>專案期限</label>
-                <input id="inputDeadline" class="form-control" type="date" min="" oninput="validateDeadline()">
-                    <span id="errorSummary" class="error-message"></span>
+                    <label>部門</label>
+                    <input class="form-control" value="@Model.DepartmentName" Disabled>
+                </div>
+                <div class="mb-3 form-label">
+                    <label>專案名稱</label>
+                    <input id="inputProject" class="form-control" placeholder="請輸入專案名稱" oninput="validateProjectName()" required>
+                    <span id="errorProjectName" class="error-message"></span>
                 </div>
             </div>
-           @*  <div class="mb-3 inputField ">
-                <div class="mb-3 form-label">
-                    <label>甘特圖</label>
-                    <input class="form-control" type="file">
-                </div>
-            </div> *@
             <div class="mb-3 inputField ">
+                <div class="mb-3 form-label">
+                    <label>專案期限</label>
+                    <input id="inputDeadline" class="form-control" type="date" min="" oninput="validateDeadline()">
+                </div>
                 <div class="mb-3 form-label summaryarea">
                     <label>專案概要</label>
-                <textarea id="textSummary" rows="5" cols="52" class="form-control" placeholder="請輸入專案概要" required  oninput="validateSummary()"></textarea>
+                    <textarea id="textSummary" rows="5" cols="52" class="form-control" placeholder="請輸入專案概要，上限300字元" required oninput="validateSummary()"></textarea>
                     <span id="errorDeadline" class="error-message"></span>
                 </div>
-                <div class="mb-3 form-label">
+            </div>
+            <div class="btnArea">
                     <button type="submit" id="btnSubmit" class="btn btn-warning">送出</button>
-                </div>
             </div>
         
        

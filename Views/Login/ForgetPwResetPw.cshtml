@@ -22,7 +22,7 @@
 <!-- Theme style -->
 <link rel="stylesheet" href="~/AdminLTE/dist/css/adminlte.min.css">
 
-
+<title>重設密碼</title>
 <div class="login-page bg-light">
     <div class="login-box">
         <div class="login-logo">
@@ -173,7 +173,7 @@
 						@Html.PasswordFor(p => p.ResetPassword, new { @class = "form-control resetPassword", placeholder = "請輸入新密碼" })
 					</div>
 					<div class="input-group mb-3">
-						@Html.PasswordFor(p => p.ConfirmPassword, new { @class = "form-control", placeholder = "再次確認密碼" })
+						@Html.PasswordFor(p => p.ConfirmPassword, new { @class = "form-control confirmPassword", placeholder = "再次確認密碼" })
 					</div>
 
 					<!-- submit -->
@@ -201,14 +201,12 @@
 			<!-- /.col -->
 
             <!-- 隱藏的url data= 內容 -->
-            <div hidden>@Html.PasswordFor(p => p.dataStr, new { @Value = ViewBag.DataStr })</div>
+		<div hidden>@Html.PasswordFor(p => p.dataStr, new { @class = "dataStr", @Value=ViewBag.DataStr })</div>
 	</div>
 </div>
 
 
 
-@section Scripts
-{
 
 	<!-- jQuery -->
 	<script src="~/AdminLTE/plugins/jquery/jquery.min.js"></script>
@@ -269,7 +267,82 @@
 			});
 
 
+			$("#btnSubmit").click(function () {
+				$(this).disabled = true;
+
+				let resetPassword = $(".resetPassword").val();
+				let confirmPassword = $(".confirmPassword").val();
+				let dataStr = $(".dataStr").val();
+
+				let isLongEnough = resetPassword.length >= 8;
+				let hasUpperCase = /[A-Z]/.test(resetPassword);
+				let hasLowerCase = /[a-z]/.test(resetPassword);
+				let hasNumbers = /\d/.test(resetPassword);
+				let hasNonalphas = /[!@@#$_+.]/.test(resetPassword);
+
+				if (isLongEnough == false) {
+					alert('密碼不到8個字!');
+					return;
+				}
+				if (hasUpperCase == false) {
+					alert('密碼未包含大寫英文!');
+					return;
+				}
+				if (hasLowerCase == false) {
+					alert('密碼未包含小寫英文!');
+					return;
+				}
+				if (hasNumbers == false) {
+					alert('密碼未包含數字!');
+					return;
+				}
+				if (hasNonalphas == false) {
+					alert('密碼未包含特殊符號!');
+					return;
+				}
+
+				if (confirmPassword == null) {
+					alert('確認密碼不得為空!');
+					return;
+				}
+
+				if (confirmPassword != resetPassword) {
+					alert('請確認密碼是否輸入一致!');
+					return;
+				}
+
+
+				$.ajax({
+					url: '@Url.Action("ForgetPwResetPw", "Login")',
+					type: 'POST',
+					contentType: 'application/json',
+					data: JSON.stringify({
+						ResetPassword: resetPassword,
+						ConfirmPassword: confirmPassword,
+						dataStr: dataStr
+					}),
+					success: function (response) {
+						if (response.success == false)
+							// 30分鐘內重設過密碼
+							if (response.code == 400) {
+								alert(response.message);
+								window.location.href = "Login/";
+							}else
+							{ 
+							alert(response.message);
+							resetPassword = "";
+							confirmPassword = "";
+						}
+						else{
+							alert(response.message);
+							window.location.href = "Login/";
+						}
+					}
+
+				});
+
+				});
+
 		});
 
 	</script>
-}
