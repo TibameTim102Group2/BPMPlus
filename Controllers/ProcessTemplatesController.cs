@@ -69,6 +69,18 @@ namespace BPMPlus.Controllers
                 return false;
             }
             if (
+                (depGroup.ContainsKey("01") && depGroup["01"] != "Requester") ||
+                (depGroup.ContainsKey("02") && depGroup["02"] != "Requester") ||
+                (depGroup.ContainsKey("03") && depGroup["03"] != "Requester") ||
+                (depGroup.ContainsKey("04") && depGroup["04"] != "Requester") ||
+                (depGroup.ContainsKey("09") && depGroup["09"] != "Requester") ||
+                (depGroup.ContainsKey("10") && depGroup["10"] != "Requester")
+               )
+            {
+                err = $"需求方申請人送出、需求方驗收、驗收完成環節，均需為送單部門";
+                return false;
+            }
+            if (
                 (depGroup.ContainsKey("05") && depGroup["07"] != depGroup["05"]) ||
                 (depGroup.ContainsKey("06") && depGroup["07"] != depGroup["06"]) ||
                 (depGroup.ContainsKey("08") && depGroup["07"] != depGroup["08"])

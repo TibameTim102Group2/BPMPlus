@@ -209,19 +209,39 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label style="display: block; align-self: center; width: 100%">部門</label>
-                            <select class="custom-select form-control-border" id="department" name="department" style="font-size: small">
-                                @foreach (var department in Model.DepartmentDict)
-                                {
-                                    @if (department.Key == Model.TemplateOfNodeTemplates.Nodes[nodeIndex].DepartmentId)
+                            @if (Model.TemplateOfNodeTemplates.Nodes[nodeIndex].DepartmentId == "Requester")
+                            {
+                                <select class="custom-select form-control-border" id="department" name="department" style="font-size: small" disabled>
+                                    @foreach (var department in Model.DepartmentDict)
                                     {
-                                        <option selected value="@department.Key" style="font-size: small">@department.Value</option>
+                                        @if (department.Key == Model.TemplateOfNodeTemplates.Nodes[nodeIndex].DepartmentId)
+                                        {
+                                            <option selected value="@department.Key" style="font-size: small">@department.Value</option>
+                                        }
+                                        @if (department.Key != Model.TemplateOfNodeTemplates.Nodes[nodeIndex].DepartmentId)
+                                        {
+                                            <option value="@department.Key" style="font-size: small">@department.Value</option>
+                                        }
                                     }
-                                    @if (department.Key != Model.TemplateOfNodeTemplates.Nodes[nodeIndex].DepartmentId)
+                                </select>
+                            }
+                            @if (Model.TemplateOfNodeTemplates.Nodes[nodeIndex].DepartmentId != "Requester")
+                            {
+                                <select class="custom-select form-control-border" id="department" name="department" style="font-size: small">
+                                    @foreach (var department in Model.DepartmentDict)
                                     {
-                                        <option value="@department.Key" style="font-size: small">@department.Value</option>
+                                        @if (department.Key == Model.TemplateOfNodeTemplates.Nodes[nodeIndex].DepartmentId)
+                                        {
+                                            <option selected value="@department.Key" style="font-size: small">@department.Value</option>
+                                        }
+                                        @if (department.Key != Model.TemplateOfNodeTemplates.Nodes[nodeIndex].DepartmentId)
+                                        {
+                                            <option value="@department.Key" style="font-size: small">@department.Value</option>
+                                        }
                                     }
-                                }
-                            </select>
+                                </select>
+                            }
+
                         </div>
                         <div class="form-group">
                             <label style="display: block; align-self: center; width: 100%">功能</label>

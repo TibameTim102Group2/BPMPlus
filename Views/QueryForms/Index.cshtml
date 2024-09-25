@@ -5,6 +5,10 @@
             background-color: #cfecff;
         }
 
+        .connectedSortable{
+            padding:20px;
+        }
+
         #mainpart {
             padding: 30px 40px;
         }
@@ -32,29 +36,23 @@
         ::placeholder {
             color: aliceblue;
         }
+
+        .txtTitle{
+            color: rgba(0, 81, 255, 0.884);
+            font-weight:bold;
+            margin-bottom: 30px;
+        }
+
     </style>
     <link rel="stylesheet" href="~/font-awesome/css/all.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" />
 }
 
 
-
-<div class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-3 mx-4 justify-content-between">
-            <h1 class="m-0">查詢工單</h1>
-        </div>
-    </div>
-</div>
-
-
-
 <div class="container-fluid">
-    <br>
-    <br>
     <div class="row">
         <section class="connectedSortable">
-
+            <h2 class="txtTitle">查詢工單</h2>
             <div class="accordion" id="accordionExample">
                 <div id="mainpart" class="card">
                     <div class="row justify-content-between mb-3">

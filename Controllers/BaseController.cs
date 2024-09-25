@@ -118,7 +118,7 @@ namespace BPMPlus.Controllers
             var maxId = CategoryList.Max(n => Convert.ToInt32(n.CategoryId[1..]));
             var LastCategory = CategoryList.FirstOrDefault(n => Convert.ToInt32(n.CategoryId[1..]) == maxId);
             string id = CategoryList == null ? "C0" : LastCategory.CategoryId;
-            id = id[2..];// 拿掉第兩個 C
+            id = id[1..];// 拿掉第一個 C
             int idNum = Convert.ToInt32(id);
             idNum++;
             for (int i = 0; i < count; i++, idNum++)
