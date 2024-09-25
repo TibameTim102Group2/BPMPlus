@@ -121,8 +121,8 @@ namespace BPMPlus.Controllers
             //}
 
             //返回查詢工單頁面
-            return RedirectToAction("Index", "QueryForms");
-       
+            return Json(new { success = true, message = "作廢成功" });
+
         }
 
         [HttpPost]

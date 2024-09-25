@@ -344,7 +344,7 @@
                 'mimeType': 'multipart/form-data',
                 'data': formData
             }).done(function (response) {
-                alert("作廢成功!");
+                alert(response.message);
                 window.location.href = "/QueryForms/Index/";
             }).fail(function (response) {
                 alert("作廢失敗，請重新嘗試或洽管理員!")
