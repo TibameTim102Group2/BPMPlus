@@ -451,9 +451,6 @@
 						}
 					})
 						.then(response => {
-							if (!response.data.success) {
-								alert(JSON.stringify(response.data.message));
-							}
 							alert(JSON.stringify(response.data.message));
 							_this.refreshTable();
 							//清空memo

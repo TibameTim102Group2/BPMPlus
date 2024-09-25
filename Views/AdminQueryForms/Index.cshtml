@@ -71,12 +71,17 @@
             vertical-align: middle;
         }
 
+        #formsTable th {
+            text-align: center;
+            vertical-align: middle;
+        }
+
         #formsTable td button {
             margin: 2px;
             padding: 5px 8px;
             font-size: 0.85rem; 
             min-width: 50px;
-            white-space: nowrap;  /* 防止按鈕文字換行 */
+            white-space: nowrap;
         }
 
         #formsTable th:last-child,
@@ -106,12 +111,9 @@
 }
 
 <div class="container-fluid">
-    <div>
-
         <div class="row">
             <section class="connectedSortable">
                 <h4 class="pageTitle">查詢工單</h4>
-                <div class="accordion" id="accordionExample">
                     <div id="mainpart" class="card">
                         <div class="row justify-content-between mb-3">
 
@@ -203,10 +205,8 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
             </section>
         </div>
-    </div>
 </div>
 
 @section Scripts {

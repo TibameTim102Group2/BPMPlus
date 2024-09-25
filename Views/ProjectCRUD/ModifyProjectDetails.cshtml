@@ -318,6 +318,11 @@
                 $('#userIdList').append('<option value="' + user.UserId + '">' + user.UserName + '</option>');
             });
             // 填充 userNameList 的選項
+            for(let u of ExistUserList)
+            {
+                console.log(u)
+                $('#userIdList option[value="' + u + '"]').remove();
+            }
             uniqueUserNames.forEach(userName => {
                 $('#userNameList').append('<option value="' + userName + '">');
             });
@@ -332,8 +337,13 @@
                 $('#gradeList').append('<option value="' + grade + '">');
             });
             allForms.forEach(form => {
-                $('#formIdList').append('<Option value="' + form.FormId + '"></option>');
+                $('#formIdList').append('<option value="' + form.FormId + '"></option>');
             })
+            for(let f of ExistFormList)
+            {
+                console.log(f)
+                $('#formIdList option[value="' + f + '"]').remove();
+            }
             $("#submitButton").on("click", function (e) {
                 e.preventDefault();  // 阻止默認的提交行為
                 var userIds = [];
@@ -435,7 +445,7 @@
                                     <td>${department}</td>
                                     <td>${grade}</td>
                                     <td>
-                                        <button class="delete-btn btn btn-danger"><i class="fa-solid fa-square-minus"></i> 移除</button>
+                                        <button class="delete-user-btn btn btn-danger"><i class="fa-solid fa-square-minus"></i> 移除</button>
                                     </td>
                                 </tr>
                             `);
@@ -448,9 +458,18 @@
                     $("#gradeInput").val('');
 
                     // 重新綁定刪除按鈕的事件
-                    $(".delete-btn").off("click").on("click", function () {
+                    $(".delete-user-btn").off("click").on("click", function () {
+                        var userId = ($(this).closest('tr')).find("td:nth-child(2)").text().trim();
+                        var userName = ($(this).closest('tr')).find("td:nth-child(3)").text().trim();
+                        $('#userIdList').append('<option value="' + userId + '">' + userName + '</option>');
+                        $('#userIdList option').sort(function(a, b) {
+                            // 根據 option 的顯示文本進行排序
+                            return $(a).val().localeCompare($(b).val());
+                        }).appendTo('#userIdList');
+                        $(this).closest('tr').remove();
                         $(this).closest('tr').remove();
                     });
+                    $('#userIdList option[value="' + userId + '"]').remove();
                 } else {
                     alert("請填寫所有欄位！");
                 }
@@ -478,7 +497,7 @@
                                         <td>${category}</td>
                                         <td>${status}</td>
                                         <td>
-                                            <button class="delete-btn btn btn-danger"><i class="fa-solid fa-square-minus"></i> 移除</button>
+                                            <button class="delete-form-btn btn btn-danger"><i class="fa-solid fa-square-minus"></i> 移除</button>
                                         </td>
                                     </tr>
                                 `);
@@ -491,9 +510,16 @@
                     $("#categoryInput").val('');
                     $("#statusInput").val('');
                     // 重新綁定刪除按鈕的事件
-                    $(".delete-btn").off("click").on("click", function () {
+                    $(".delete-form-btn").off("click").on("click", function () {
+                        var formId = ($(this).closest('tr')).find("td:nth-child(1)").text().trim();
+                        $('#formIdList').append('<option value="' + formId + '"></option>');
+                        $('#formIdList option').sort(function(a, b) {
+                            // 根據 option 的顯示文本進行排序
+                            return $(a).val().localeCompare($(b).val());
+                        }).appendTo('#formIdList');
                         $(this).closest('tr').remove();
                     });
+                    $('#formIdList option[value="' + formId + '"]').remove();
                 } else {
                     alert("請填寫所有欄位！");
                     
@@ -501,11 +527,7 @@
             });
             $('#formInput').on('input', function () {
                 var selectedId = $(this).val();
-                if(ExistFormList.includes(selectedId))
-                {
-                    window.alert("工單已存在");
-                    return 0;
-                }
+
                 if(formIdsList.find(fm => fm.FormId === selectedId))
                 {
                     $("#departmentInputForm").val('');
@@ -533,11 +555,7 @@
             });
             $('#userIdInput').on('input', function () {
                 var selectedId = $(this).val();
-                if(ExistUserList.includes(selectedId))
-                {
-                    window.alert("成員已存在");
-                    return 0;
-                }
+
                 if(userIdsList.find(u => u.UserId === selectedId))
                 {
                     $('#userNameInput').val('');
@@ -655,8 +673,24 @@
     <script>
         $(document).ready(function () {
             // 綁定點擊事件到刪除按鈕
-            $(".delete-btn").click(function () {
+            $(".delete-user-btn").click(function () {
                 // 刪除該行所在的 <tr>
+                    var userId = ($(this).closest('tr')).find("td:nth-child(2)").text().trim();
+                    $('#userIdList').append('<option value="' + userId + '"></option>');
+                    $('#userIdList option').sort(function(a, b) {
+                            // 根據 option 的顯示文本進行排序
+                            return $(a).val().localeCompare($(b).val());
+                        }).appendTo('#userIdList');
+                        $(this).closest('tr').remove();
+            });
+            $(".delete-form-btn").click(function () {
+                // 刪除該行所在的 <tr>
+                var formId = ($(this).closest('tr')).find("td:nth-child(1)").text().trim();
+                $('#formIdList').append('<option value="' + formId + '"></option>');
+                $('#formIdList option').sort(function (a, b) {
+                    // 根據 option 的顯示文本進行排序
+                    return $(a).val().localeCompare($(b).val());
+                }).appendTo('#formIdList');
                 $(this).closest('tr').remove();
             });
         });
