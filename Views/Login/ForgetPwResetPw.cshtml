@@ -5,36 +5,34 @@
         .pdReset {
             font-size: 25px;
         }
+		.svg-icon path,
+		.svg-icon ellipse {
+			fill: var(--bs-primary, #3877BD);
+		}
     </style>
-    <link rel="icon" type="image/x-icon" href="~/images/favicon.ico">
 }
 @{
     Layout = null;
 }
+<link rel="icon" type="image/x-icon" href="~/images/favicon.ico">
 <!-- Font Awesome -->
-<link rel="stylesheet" href="~/AdminLTE/plugins/fontawesome-free/css/all.min.css">
-<!-- Tempusdominus Bootstrap 4 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- bootstrap -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 <!-- Theme style -->
 <link rel="stylesheet" href="~/AdminLTE/dist/css/adminlte.min.css">
 
-@using (Html.BeginForm("ForgetPwResetPw", "Login", FormMethod.Post))
-{
-    <div class="login-page bg-light">
+
+<div class="login-page bg-light">
     <div class="login-box">
         <div class="login-logo">
 				<svg version="1.1" class="svg-icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 					 width="360px" viewBox="0 0 619.874 134.355" enable-background="new 0 0 619.874 134.355"
 					 xml:space="preserve">
-				<style>
-					.svg-icon path,
-					.svg-icon ellipse {
-						fill: var(--bs-primary, #3877BD);
-					}
-	</style>
-	<g id="圖層_2">
-	</g>
-	<g id="圖層_1">
+
+	    <g id="圖層_2">
+	    </g>
+	    <g id="圖層_1">
 				<g>
 				<path fill="#2D66B1" d="M147.147,100.314l15.201-72.591h24.808c5.38,0,9.144,0.165,11.29,0.495
 			c3.565,0.495,6.586,1.485,9.062,2.971c2.476,1.485,4.357,3.466,5.645,5.942c1.287,2.476,1.931,5.216,1.931,8.22
@@ -163,88 +161,115 @@
 			l12.112-0.102c1.051-4.738,1.509-9.437,1.383-13.968l7.285-1.646c0.325-0.457,0.348-0.753,0.25-0.944L77.263,62.683z" />
 				<path fill="#FFFFFF" d="M70.22,65.163c0.161,0.288,0.353,0.553,0.594,0.771c-0.184-0.249-0.349-0.512-0.475-0.798L70.22,65.163z" />
 		</g>
-	</g>
-	</svg>
+	    </g>
+	    </svg>
         </div>
         <!-- /.login-logo -->
         <div>
             <p class="pdReset login-box-msg text-bold">重新設定密碼</p>
-            <div class="input-group mb-3">
-            @Html.PasswordFor(p => p.ResetPassword, new { @class = "form-control", placeholder = "請輸入新密碼" })
-                <div class="input-group-append">
-                    <div class="input-group">
-                    </div>
+			<div class="row">
+				<div class="col-7">
+					<div class="input-group mb-3">
+						@Html.PasswordFor(p => p.ResetPassword, new { @class = "form-control resetPassword", placeholder = "請輸入新密碼" })
+					</div>
+					<div class="input-group mb-3">
+						@Html.PasswordFor(p => p.ConfirmPassword, new { @class = "form-control", placeholder = "再次確認密碼" })
+					</div>
+
+					<!-- submit -->
+					<div>
+						<button id="btnSubmit" class="btn btn-primary btn-block" style="width:120px; margin:auto;">送出</button>
+					</div>
+
+					<div style="margin-top:5px;">
+						<p class="login-box-msg mid">
+						@Html.ActionLink("回到首頁", "Index", "Login")
+						</p>
+					</div>
+				</div>
+
+				<div class="col-5" style="font-size:12px;">
+                    <div><p class="passwordLength">密碼8碼以上</p></div>
+                    <div><p class="upper">1個大寫英文</p></div>
+                    <div><p class="lower">1個小寫英文</p></div>
+                    <div><p class="num">包含1個數字</p></div>
+                    <div><p class="nonalphas">1個特殊符號!@@#$_+.</p></div>
                 </div>
             </div>
-            <div class="input-group mb-3">
-                @Html.PasswordFor(p => p.ConfirmPassword, new { @class = "form-control", placeholder = "再次確認密碼" })
-                <div class="input-group-append">
-                    <div class="input-group">
-                    </div>
-                </div>
-            </div>
-                <div class="row">
-                    <!--顯示錯誤訊息 -->
-                    <div style="color:red;">
-                    @ViewBag.errMsg
-                    </div>
 
-                    <!-- 修改成功 -->
-                    <div style="color:blue;">
-                        <p>@TempData["SuccessMessage"]</p>
-                    </div>
+		</div>
+			<!-- /.col -->
 
-                    <!-- 隱藏的url data= 內容 -->
-                    <div hidden>
-                        @Html.PasswordFor(p => p.dataStr, new { @Value = ViewBag.DataStr })
-                    </div>
-
-                    <!-- submit -->
-                    <div class="row">
-                        <div class="col-4"></div>
-                        <div class="col-4">
-                            <button type="submit" class="btn btn-primary btn-block">送出修改</button>
-                        </div>
-                    </div>
-
-                    <div hidden>
-                        <p class="login-box-msg mid ">
-                            @Html.ActionLink("回到首頁", "Index", "Login")
-                        </p>
-                    </div>
-                        
-                    <!-- /.col -->
-                </div>
-        </div>
-    </div>
+            <!-- 隱藏的url data= 內容 -->
+            <div hidden>@Html.PasswordFor(p => p.dataStr, new { @Value = ViewBag.DataStr })</div>
+	</div>
 </div>
 
-}
-
-
-<!-- jQuery -->
-<script src="~/AdminLTE/plugins/jquery/jquery.min.js"></script>
-<!-- jQuery UI 1.11.4 -->
-<script src="~/AdminLTE/plugins/jquery-ui/jquery-ui.min.js"></script>
-<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-<script>$.widget.bridge('uibutton', $.ui.button)</script>
-<!-- Bootstrap 4 -->
-<script src="~/AdminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- jQuery Knob Chart -->
-<script src="~/AdminLTE/plugins/jquery-knob/jquery.knob.min.js"></script>
-<!-- Tempusdominus Bootstrap 4 -->
-<script src="~/AdminLTE/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
-<!-- AdminLTE App -->
-<script src="~/AdminLTE/dist/js/adminlte.js"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="~/AdminLTE/dist/js/demo.js"></script>
-<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="~/AdminLTE/dist/js/pages/dashboard.js"></script>
 
 
 @section Scripts
 {
-    <script>
-        
-    </script>
+
+	<!-- jQuery -->
+	<script src="~/AdminLTE/plugins/jquery/jquery.min.js"></script>
+	<!-- Bootstrap 4 -->
+	<script src="~/AdminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<!-- Tempusdominus Bootstrap 4 -->
+	<script src="~/AdminLTE/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+	<!-- AdminLTE App -->
+	<script src="~/AdminLTE/dist/js/adminlte.js"></script>
+	<!-- AdminLTE for demo purposes -->
+	<script src="~/AdminLTE/dist/js/demo.js"></script>
+	<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+	<script src="~/AdminLTE/dist/js/pages/dashboard.js"></script>
+
+
+
+	<script>
+		$(document).ready(function () {
+			$(".resetPassword").on('change', function () {
+
+				let input = $(this).val();
+				let isLongEnough = input.length >= 8;
+				let hasUpperCase = /[A-Z]/.test(input);
+				let hasLowerCase = /[a-z]/.test(input);
+				let hasNumbers = /\d/.test(input);
+				let hasNonalphas = /[!@@#$_+.]/.test(input);
+
+				let cheakIcon = `<i class="fa-regular fa-circle-check icon" style="color: #15b300;"></i>`;
+				let wrongIcon = `<i class="fa-regular fa-circle-xmark icon" style="color: #ff0000;"></i>`;
+
+				$(".icon").remove();
+
+				if (isLongEnough) {
+					$(".passwordLength").append(cheakIcon);
+				} else {
+					$(".passwordLength").append(wrongIcon);
+				}
+				if (hasUpperCase) {
+					$(".upper").append(cheakIcon);
+				} else {
+					$(".upper").append(wrongIcon);
+				}
+				if (hasLowerCase) {
+					$(".lower").append(cheakIcon);
+				} else {
+					$(".lower").append(wrongIcon);
+				}
+				if (hasNumbers) {
+					$(".num").append(cheakIcon);
+				} else {
+					$(".num").append(wrongIcon);
+				}
+				if (hasNonalphas) {
+					$(".nonalphas").append(cheakIcon);
+				} else {
+					$(".nonalphas").append(wrongIcon);
+				}
+			});
+
+
+		});
+
+	</script>
 }
