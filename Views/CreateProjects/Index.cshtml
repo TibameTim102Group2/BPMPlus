@@ -123,7 +123,7 @@
             <div class="mb-3 inputField ">
                 <div class="mb-3 form-label">
                     <label>專案期限</label>
-                    <input id="inputDeadline" class="form-control" type="date" min="">
+                <input id="inputDeadline" class="form-control" type="date" min="" oninput="validateDeadline()">
                     <span id="errorSummary" class="error-message"></span>
                 </div>
             </div>
@@ -136,7 +136,7 @@
             <div class="mb-3 inputField ">
                 <div class="mb-3 form-label summaryarea">
                     <label>專案概要</label>
-                    <textarea id="textSummary" rows="5" cols="52" class="form-control" placeholder="請輸入專案概要" required></textarea>
+                <textarea id="textSummary" rows="5" cols="52" class="form-control" placeholder="請輸入專案概要" required  oninput="validateSummary()"></textarea>
                     <span id="errorDeadline" class="error-message"></span>
                 </div>
                 <div class="mb-3 form-label">
@@ -168,30 +168,21 @@
 
         function validateDeadline() {
             let deadLine = $("#inputDeadline").val();
-            let now = new Date();
-            now.setDate(now.getDate() - 1); // 今天的日期減一天
-            let inputDate = new Date(deadLine);
-
             if (deadLine === "") {
                 $("#inputDeadline").addClass("error-border");
-                // $("#errorDeadline").text("專案期限不可為空");
-            } else if (inputDate < now) {
-                $("#inputDeadline").addClass("error-border");
-                // $("#errorDeadline").text("專案期限不可早於今日");
             } else {
                 $("#inputDeadline").removeClass("error-border");
-                // $("#errorDeadline").text("");
             }
         }
+
+      
 
         function validateSummary() {
             let summary = $("#textSummary").val();
             if (summary === "") {
                 $("#textSummary").addClass("error-border");
-                // $("#errorSummary").text("專案概要不可為空");
             } else {
                 $("#textSummary").removeClass("error-border");
-                // $("#errorSummary").text("");
             }
         }
 
