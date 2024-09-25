@@ -57,7 +57,7 @@
                 <tbody id="users-tr">
                     @foreach (var item in Model.ProjectUsersViewModels)
                     {
-                        <tr style="padding-top: 5px">
+                        <tr id ="user-tr" style="padding-top: 5px">
                             <td>
                                 @Html.DisplayFor(modelItem => item.IsPm)
                             </td>
@@ -77,7 +77,7 @@
                             <td>
                                 @if (Model.AllowModify == "true" && ViewBag.ModMode == true && item.IsPm == "組員")
                                 {
-                                    <button asp-action="Delete" class="button btn btn-danger delete-btn" style="margin-top: -4px;margin-bottom: -4px" asp-route-id="@item.UserId"><i class="fa-solid fa-square-minus"></i> 移除</button>
+                                    <button asp-action="Delete" class="button btn btn-danger delete-user-btn" style="margin-top: -4px;margin-bottom: -4px" asp-route-id="@item.UserId"><i class="fa-solid fa-square-minus"></i> 移除</button>
                                 }
                             </td>
                         </tr>
