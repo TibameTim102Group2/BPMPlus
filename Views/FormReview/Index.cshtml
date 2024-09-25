@@ -33,19 +33,23 @@
 @*     <link rel="stylesheet" href="~/AdminLTE/dist/css/adminlte.min.css"> *@
     <style>
         body {
-            font-family: Arial, sans-serif;
             background-color: #f4f6f9;
         }
 
-        h4 {
+        #formArea{
+            box-shadow: 0 0 1px rgba(0, 0, 0, .125), 0 1px 3px rgba(0, 0, 0, .2);
+        }
+
+        .txtTitle {
             color: #007bff;
             font-weight: bold;
+            margin: 15px 70px;
         }
 
         form {
             background-color: white;
             padding: 20px;
-            margin: 15px;
+            margin: 15px 70px;
         }
 
         .form-row {
@@ -67,7 +71,7 @@
 
         .formBackground input[type="text"], textarea {
             width: 95%;
-            padding: 5px;
+            padding: 10px;
             background-color: whitesmoke;
         }
 
@@ -78,6 +82,9 @@
             background-color: white;
             border: 1px solid #c2c2c2;
             padding:5px;
+            word-break: break-all;
+            max-height: 350px;
+            min-height: 200px;
         }
         
         .borderLine{
@@ -102,12 +109,31 @@
             margin-top: 20px;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        .formRecord .table-container {
+            max-height: 300px;
+            overflow-y: auto;
         }
 
-        th, td {
+        .formRecord table {
+            width: 100%;
+            table-layout: fixed;
+            word-break: break-all;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .formRecord thead th {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        /*     border-bottom: 2px solid #ccc; */
+        }
+
+        .formRecord tbody tr:nth-of-type(even) {
+            background-color: #ccc;
+        }
+
+        #formArea .formRecord thead, th, td {
             border: 1px solid #ccc;
             padding: 8px;
             text-align: left;
@@ -122,7 +148,7 @@
             display:flex;
             justify-content: center;
             align-items:center;
-            margin-top:20px;
+            margin: 10px;
         }
 
        .resultArea .reviewResult .reviewTxt {
@@ -139,6 +165,7 @@
         .submitBtn{
             display: block;
             text-align: center;
+            margin-bottom:10px;
         }
 
         input.btn.btn-danger {
@@ -152,13 +179,15 @@
         .result .textContent {
             background-color:whitesmoke;
             width: 100%;
-            min-height: 300px;
+            max-height: 500px;
+            min-height: 200px;
             overflow-y: visible;
             overflow-x: auto;
             padding: 10px;
             background-color: white;
             border: 1px solid #ced4da;
             border-radius: 0.25rem;
+            word-break: break-all;
         }
 
         .form-group input#Files {
@@ -179,11 +208,10 @@
 <div id="fullPage">
     <!--  title  -->
     <div class="title">
-        <h4 class="m-3">審核工單</h4>
+        <h4 class="txtTitle">審核工單</h4>
     </div>
 
     <form id="formArea" asp-controller="FormReview" method="post" asp-action="CreateAndUpdate" enctype="multipart/form-data">
-        <div id="secondeBackground">
             <!-- 工單區域 -->
             <div class="formBackground">
                 <div class="row">
@@ -217,7 +245,9 @@
                             <i class="fa-solid fa-spinner fa-spin loadIcon" hidden></i>
                             <i class="fa-solid fa-check checkIcon" hidden></i>
                             <i class="fa-solid fa-xmark falseIcon" hidden></i>
+                            <span class="alertAssignTxt" hidden> 請輸入同部門, 權限之人員</span>
                         </label>
+                    
                         <input asp-for="@Model.AssginEmployee" type="text" class="assignEmp form-control" value="@Model.AssginEmployee" readonly />
                     </div>
                     <div class="col-6 form-label form-group-centered">
@@ -266,29 +296,31 @@
             <!--  工單處理紀錄  -->
             <div class="formRecord">
                 <label>處理紀錄</label>
-                <table class="table table-hover table-bordered ">
-                    <thead>
-                        <tr>
-                            <th>時間</th>
-                            <th>處理狀態</th>
-                            <th>處理人員</th>
-                            <th>出示意見</th>
-                            <th>審核結果</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.FormRecordList)
-                        {
-                            <tr>
-                                <td>@item.Date.ToLocalTime()</td>
-                                <td>@item.UserActivityDes</td>
-                                <td>@item.UserName</td>
-                                <td>@item.Remark</td>
-                                <td>@item.ResultDes</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                    <div class="table-container">
+                        <table class="table table-hover table-bordered ">
+                            <thead>
+                                <tr>
+                                    <th>時間</th>
+                                    <th>處理狀態</th>
+                                    <th>處理人員</th>
+                                    <th>出示意見</th>
+                                    <th>審核結果</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.FormRecordList)
+                                {
+                                    <tr>
+                                        <td>@item.Date.ToLocalTime()</td>
+                                        <td>@item.UserActivityDes</td>
+                                        <td>@item.UserName</td>
+                                        <td>@item.Remark</td>
+                                        <td>@item.ResultDes</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
             </div>
 
             <div class="borderLine"></div>
@@ -319,11 +351,17 @@
                 <div class="borderLine"></div>
 
             <div class="result">
-                <label class="control-label">出示意見</label><br />
+                <label class="control-label">出示意見
+                    <i class="fa-solid fa-spinner fa-spin loadIconRemark" hidden></i>
+                    <i class="fa-solid fa-check checkIconRemark" hidden></i>
+                    <i class="fa-solid fa-xmark falseIconRemark" hidden></i>
+                    <span class="alertRemarkTxt" hidden> 字數超出上限</span>
+                </label>
+                <br />
                 <div class="txtInput">
                     <div>
                         @* <div id="summernote"></div> *@
-                        <textarea class="ManagerOpinion" asp-for="@Model.Remark" placeholder="試試看輸入反饋~">
+                        <textarea class="ManagerOpinion" asp-for="@Model.Remark" placeholder="試試看輸入反饋~ (文字上限300字)">
                             @Model.Remark
                             </textarea>
                     </div>
@@ -333,7 +371,7 @@
 
                 <div class="resultArea">
                     <div class="reviewResult" >
-                        <label class="reviewTxt">審核結果: </label>
+                        <label class="reviewTxt">審核結果</label>
                         <label><input name="reviewResult" type="radio" value="reject" class="rejectBtn" />退回</label>
                         <label><input name="reviewResult" type="radio" value="approve" class="approveBtn" /> 核准</label>
                     </div>
@@ -344,7 +382,7 @@
                 </div>
 
             </div>
-        </div><!-- secondeBackground END -->
+        </div>
     </form>
 </div>
 
@@ -379,6 +417,7 @@
             let loadIcon = document.querySelector(".loadIcon");
             let rejectBtn = document.querySelector(".rejectBtn");
             let approveBtn = document.querySelector(".approveBtn");
+            let alertAssignTxt = document.querySelector(".alertAssignTxt");
             let userPermit;
 
             // 針對有指派人員欄位權限者 , 輸入時發送請求確認人員是否符合資格
@@ -401,7 +440,7 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === true) {
-
+                        alertAssignTxt.style = "color : red ; font-weight: bold;";
                          function handleRejectClick() {
                                 needEmp.setAttribute("readonly", "readonly");
                                 needEmp.value = "退回時無需填寫人員";
@@ -409,6 +448,7 @@
                                 checkIcon.setAttribute("hidden", "hidden");
                                 falseIcon.setAttribute("hidden", "hidden");
                                 loadIcon.setAttribute("hidden", "hidden");
+                                alertAssignTxt.setAttribute("hidden", "hidden");
                             }
 
                          function handleApproveClick() {
@@ -452,6 +492,7 @@
                                         checkIcon.setAttribute("hidden", "hidden");
                                         falseIcon.setAttribute("hidden", "hidden");
                                         loadIcon.setAttribute("hidden", "hidden");
+                                        alertAssignTxt.setAttribute("hidden", "hidden");
                                         loadIcon.removeAttribute("hidden");
 
                                     this.inputTimer = setTimeout(async () => {
@@ -462,13 +503,15 @@
                                             checkIcon.removeAttribute("hidden");
                                         } else {
                                             falseIcon.removeAttribute("hidden");
+                                            alertAssignTxt.removeAttribute("hidden", "hidden");
                                         }
-                                    }, 1000);
+                                    }, 800);
                                 }
                                 else{
                                     checkIcon.setAttribute("hidden", "hidden");
                                     falseIcon.setAttribute("hidden", "hidden");
                                     loadIcon.setAttribute("hidden", "hidden");
+                                    alertAssignTxt.setAttribute("hidden", "hidden");
                                 }
                             });
                         }
@@ -523,7 +566,8 @@
                             if (data.userPermit === "07" && approveBtn && enterEmp !== "") {
                                 let result = await validateEmp(enterEmp);
                                 if (!result.status) {
-                                    alert("請填寫正確的指派人員！");
+                                    needEmp.scrollIntoView({ behavior: "smooth", block: "center" });
+                                    // alert("請填寫正確的指派人員！");
                                     return;
                                 }
                             }
@@ -590,6 +634,46 @@
                 alert(error.message);
             });
         })
+
+        let txtLimitDOM = document.querySelector(".ManagerOpinion");
+
+        // 隱藏送出按鈕方法
+        function disabledSubmit (){
+            let submitBtn = document.querySelector(".submitBtn input");
+            let alertRemarkTxt = document.querySelector(".alertRemarkTxt");
+            let txtLimit = txtLimitDOM.value;
+            let checkIcon = document.querySelector(".checkIconRemark");
+            let falseIcon = document.querySelector(".falseIconRemark");
+            let loadIcon = document.querySelector(".loadIconRemark");
+
+            checkIcon.setAttribute("hidden", "hidden");
+            falseIcon.setAttribute("hidden", "hidden");
+            loadIcon.setAttribute("hidden", "hidden");
+
+            if (txtLimit.length > 300) {
+                loadIcon.removeAttribute("hidden");
+                setTimeout(() => {
+                    loadIcon.setAttribute("hidden", "hidden");
+                    falseIcon.removeAttribute("hidden");
+                    falseIcon.style = "color:red;";
+                    alertRemarkTxt.removeAttribute("hidden");
+                    alertRemarkTxt.style = "color:red;font-weight:bold;";
+                    submitBtn.setAttribute("disabled", "true");
+                }, 800);
+            }
+            else {
+                submitBtn.removeAttribute("disabled", "false");
+                alertRemarkTxt.setAttribute("hidden", "hidden");
+                falseIcon.setAttribute("hidden", "hidden");
+                loadIcon.setAttribute("hidden", "hidden");
+            }
+        }
+        //啟用textarea監聽並加入防抖
+        txtLimitDOM.addEventListener("input", function (event) {
+            disabledSubmit();
+
+        });
+
     </script>
 }
 
