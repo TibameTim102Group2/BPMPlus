@@ -352,7 +352,7 @@
             // 綁定按鈕點擊事件
             $("#submitButton").on("click", function (e) {
                 e.preventDefault();  // 阻止默認的提交行為
-
+                $(this).prop('disabled', true);
                 // 獲取輸入欄位的值
                 var tel = $("#Tel").val();
                 var expectedFinishedDay = $("#ExpectedFinishedDay").val()
@@ -365,15 +365,15 @@
                 // 檢查是否有空值
                 if (!tel || !departmentId || !categoryId || !expectedFinishedDay || !content || content == "<p><br></p>") {
                     console.log("分機" + tel)
-                    if (!tel) { window.alert("尚未填寫聯絡電話"); return; }
+                    if (!tel) { window.alert("尚未填寫聯絡電話"); $("#submitButton").prop('disabled', false); return; }
                     console.log("部門ID" + departmentId)
-                    if (!departmentId) { window.alert("尚未填寫聯絡部門"); return; }
+                    if (!departmentId) { window.alert("尚未填寫聯絡部門"); $("#submitButton").prop('disabled', false); return; }
                     console.log("需求" + categoryId)
-                    if (!categoryId) { window.alert("尚未選擇需求類別"); return; }
+                    if (!categoryId) { window.alert("尚未選擇需求類別"); $("#submitButton").prop('disabled', false); return; }
                     console.log("希望完成時間" + expectedFinishedDay)
-                    if (!expectedFinishedDay) { window.alert("尚未填寫希望完成時間"); return; }
+                    if (!expectedFinishedDay) { window.alert("尚未填寫希望完成時間"); $("#submitButton").prop('disabled', false); return; }
                     console.log("需求內容" + content)
-                    if (!content || content == "<p><br></p>") { window.alert("尚未填寫需求內容"); return; }
+                    if (!content || content == "<p><br></p>") { window.alert("尚未填寫需求內容"); $("#submitButton").prop('disabled', false); return; }
                 }
                 var form = $('#__AjaxAntiForgeryForm');
                 var token = $('input[name="__RequestVerificationToken"]', form).val();
@@ -409,8 +409,10 @@
                             window.alert(response['message']);
                             window.location.replace("/QueryForms");
                         }
-                        if (response['errorCode'] != null && response['errorCode'] == 400) {
+                        if (response['errorCode'] != null && response['errorCode'] == 400) 
+                        {
                             window.alert(response['message']);
+                            $("#submitButton").prop('disabled', false);
                         }
                         // 成功後的操作
                     },
