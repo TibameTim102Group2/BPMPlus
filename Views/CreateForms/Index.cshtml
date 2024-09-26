@@ -56,28 +56,25 @@
         }
 
         .content-wrapper {
-            background-color: rgb(225, 239, 252);
+            background-image: linear-gradient(120deg, #ffffff 0%, #0079ff2e 100%);
         }
 
         .outside {
-            padding: 20px;
-            background-color: rgb(225, 239, 252);
+            padding: 0 20px;
             height: 100%;
         }
 
         .title {
             color: rgba(0, 81, 255, 0.884);
-            margin-top: 20px;
-            margin-bottom: 30px;
-            margin-left: 30px;
             font-weight: bold;
         }
 
         .inside {
-            margin-top: 30px;
             padding: 20px;
-            background-color: rgb(225, 229, 252);
-            border: 0.5px solid gainsboro;
+            margin-top:26px;
+            background-color: white;
+            border-radius: 0.25rem;
+            box-shadow: 0 0 1px rgba(0, 0, 0, .125), 0 1px 3px rgba(0, 0, 0, .2);
         }
 
         .list {
@@ -161,11 +158,13 @@
         .submit-btn {
             display: flex;
             justify-content: center;
-            margin-top: 20px;
         }
 
         .upload {
             width: 100%;
+        }
+
+        input#fileInput {
         }
 
     </style>
@@ -179,7 +178,8 @@
     <div style="color:red;">
         @ViewBag.errMsg
     </div>
-    <h1 class="title">新增工單</h1>
+    <h2 class="title">新增工單</h2>
+    
 
     <!-- inside -->
     <div class="inside">

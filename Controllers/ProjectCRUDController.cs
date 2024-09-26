@@ -309,7 +309,7 @@ namespace BPMPlus.Controllers
                 formGantListStr += node.Id+", ";
             }
             var prg = 0;
-            if(!(formNodeCountList.Sum() == 0)) prg = (formIndexList.Sum() * (100/formNodeCountList.Sum()));
+            if (!(formNodeCountList.Sum() == 0)) prg = (formIndexList.Sum()*100 / formNodeCountList.Sum());
             ProjectChartViewModel projectChartViewModel = new ProjectChartViewModel(
                 new List<GanttData>() {
                     new GanttData(
@@ -505,7 +505,7 @@ namespace BPMPlus.Controllers
                 formGantListStr += node.Id + ", ";
             }
             var prg = 0;
-            if (!(formNodeCountList.Sum() == 0)) prg = (formIndexList.Sum() * (100 / formNodeCountList.Sum()));
+            if (!(formNodeCountList.Sum() == 0)) prg = (formIndexList.Sum() * 100 / formNodeCountList.Sum());
             ProjectChartViewModel projectChartViewModel = new ProjectChartViewModel(
                 new List<GanttData>() {
                     new GanttData(

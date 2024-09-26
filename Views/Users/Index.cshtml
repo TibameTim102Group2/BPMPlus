@@ -2,12 +2,29 @@
 @section Style {
 	<meta charset="UTF-8">
 	<style>
-		#mainWrapper {
-			background-color: #fffacd;
+		.content-wrapper {
+			background-image: linear-gradient(135deg, #f5f7fa 0%, #f2f7ff 100%);
+		}
+
+		.container-fluid {
+			padding: 20px;
+		}
+
+		.table-container {
+			padding: 10px;
+			border-radius: 0.25rem;
+			background-color: white;
+			box-shadow: 0 0 1px rgba(0, 0, 0, .125), 0 1px 3px rgba(0, 0, 0, .2);
 		}
 
 		#mainpart {
 			padding: 30px 40px;
+		}
+
+		.txtTitle {
+			font-weight:bold;
+			margin-bottom:30px;
+			color: #333333;
 		}
 
 		.selectbtn {
@@ -68,55 +85,58 @@
 
 
 
-<div class="content-header">
+@* <div class="content-header">
 	<div class="container-fluid">
 		<div class="row mb-3 mx-4 justify-content-between">
-			<h1 class="m-0">查詢人員</h1>
+			
 		</div>
 	</div>
-</div>
+</div> *@
 
 
 <div class="container-fluid">
-	<div class="row" id="app">
-		<section class="connectedSortable">
-			<div class="container" style="width:50%;margin-left:auto;margin-right:0px">
-				<div class="mb-3">
-					<label class="form-label">篩選關鍵字:</label>
-					<input type="text" class="form-control" v-model="searchValue" placeholder="請輸入篩選關鍵字" />
-				</div>
-			</div>
-
-			<easy-data-table theme-color="#1d90ff"
-							 table-class-name="user-table"
-							 alternating
-							 :headers="headers"
-							 :items="items"
-							 buttons-pagination
-							 :rows-per-page="10"
-							 :search-value="searchValue"
-							 style="width: 100%; height: 500px;">
-				<template #empty-message>
-					<a href="#">未發現符合條件的記錄!</a>
-				</template>
-				<template #item-operation="item">
-					<div class="operation-wrapper">
-						<img src="@Url.Content("~/images/userdata/edit.png")"
-							 class="operation-icon"
-							 @@click="editItem(item)" />
-						<img src="@Url.Content("~/images/userdata/delete.png")"
-							 class="operation-icon"
-							 @@click="deleteItem(item)" />
-						<img src="@Url.Content("~/images/userdata/search.png")"
-							 class="operation-icon"
-							 @@click="detailItem(item)" />
-
+	<h2 class="txtTitle">查詢人員</h2>
+	<div class="table-container">
+		<div class="row" id="app">
+			<section class="connectedSortable">
+				<div class="container" style="width:50%;margin-left:auto;margin-right:0px">
+					<div class="mb-3">
+						<label class="form-label">篩選關鍵字:</label>
+						<input type="text" class="form-control" v-model="searchValue" placeholder="請輸入篩選關鍵字" />
 					</div>
-				</template>
+				</div>
+
+				<easy-data-table theme-color="#1d90ff"
+								 table-class-name="user-table"
+								 alternating
+								 :headers="headers"
+								 :items="items"
+								 buttons-pagination
+								 :rows-per-page="10"
+								 :search-value="searchValue"
+								 style="width: 100%; height: 450px;">
+					<template #empty-message>
+						<a href="#">未發現符合條件的記錄!</a>
+					</template>
+					<template #item-operation="item">
+						<div class="operation-wrapper">
+							<img src="@Url.Content("~/images/userdata/edit.png")"
+								 class="operation-icon"
+								 @@click="editItem(item)" />
+							<img src="@Url.Content("~/images/userdata/delete.png")"
+								 class="operation-icon"
+								 @@click="deleteItem(item)" />
+							<img src="@Url.Content("~/images/userdata/search.png")"
+								 class="operation-icon"
+								 @@click="detailItem(item)" />
+
+						</div>
+					</template>
 
 
-			</easy-data-table>
-		</section>
+				</easy-data-table>
+			</section>
+		</div>
 	</div>
 
 </div>
