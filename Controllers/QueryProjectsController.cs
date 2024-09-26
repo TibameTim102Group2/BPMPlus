@@ -1,6 +1,7 @@
 ﻿using BPMPlus.Data;
 using BPMPlus.Models;
 using BPMPlus.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,8 +17,9 @@ namespace BPMPlus.Controllers
             _context = context;
         }
 
-        // GET: QueryProjectsController
-        public async Task<IActionResult> Index()
+		// GET: QueryProjectsController
+		[Authorize]
+		public async Task<IActionResult> Index()
         {
             //Project表格資訊
             var tableData = await _context.Project
@@ -105,7 +107,8 @@ namespace BPMPlus.Controllers
             return Json(tableData);
         }
 
-        [HttpPost]
+		[Authorize]
+		[HttpPost]
         public async Task<JsonResult> Filter([FromBody]  QueryProjectInputModel data)
         {
 
