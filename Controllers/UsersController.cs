@@ -150,7 +150,11 @@ namespace BPMPlus.Controllers
 			{
 				string defaultPassword = $"{userdata.UserId}@tim102";
 				string newPassword = BCryptHelper.HashPassword(defaultPassword);
-
+				User? sameEmailUser = await _context.User.FirstOrDefaultAsync(u => u.Email == userdata.Email);
+				if(sameEmailUser != null)
+				{
+					return Json(new { message = "emailExists" });
+				}	
 				var NewUser = new User();
 				NewUser.UserId = userdata.UserId;
 				NewUser.UserName = userdata.UserName;
