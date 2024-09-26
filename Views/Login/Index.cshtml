@@ -5,6 +5,7 @@
         .welcomeText {
             font-size: 25px;
         }
+
     </style>
 }
 @{
@@ -173,7 +174,7 @@
             <div>
                 <p class="welcomeText login-box-msg text-bold">歡迎使用公司內部需求系統</p>
                 <div class="input-group mb-3">
-                    @Html.TextBoxFor(m => m.UserId, new { @class = "form-control", placeholder = "員工編號" })
+                    @Html.TextBoxFor(m => m.UserId, new { @class = "form-control userId", placeholder = "員工編號" })
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-envelope"></span>
@@ -181,7 +182,7 @@
                     </div>
                 </div>
                 <div class="input-group mb-3">
-                    @Html.PasswordFor(p => p.Password, new { @class = "form-control", placeholder = "登入密碼" })
+                    @Html.PasswordFor(p => p.Password, new { @class = "form-control password", placeholder = "登入密碼" })
                     <div class="input-group-append">
                         <div class="input-group-text">
                             <span class="fas fa-lock"></span>
@@ -193,7 +194,7 @@
                     @Html.ActionLink("忘記密碼", "ForgetPassword", "Login")
                     </p>
                     <div class="col-4">
-                        <button type="submit" class="btn btn-primary btn-block">登入</button>
+                        <button id="btnSubmit" type="submit" class="btn btn-primary btn-block">登入</button>
                     </div>
                     <!-- /.col -->
                 </div>
@@ -206,6 +207,7 @@
  </div>
  }
  <!--./登入區塊-->
+
 
 <!-- jQuery -->
 <script src="~/AdminLTE/plugins/jquery/jquery.min.js"></script>
