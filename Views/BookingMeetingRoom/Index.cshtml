@@ -204,9 +204,9 @@
                 <select id="endTimeSelect" class="form-control endTimeSelect" style="outline:none;">
                     <option value="">-- 請選擇結束時間 --</option>
                     @foreach (var time in ViewBag.TimeSlots)
-                    {
+                        {
                         <option>@time.ToString("HH:mm")</option>
-                    }
+                        }
 
                 </select>
             </div>

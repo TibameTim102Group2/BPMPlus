@@ -73,7 +73,8 @@ namespace BPMPlus.Controllers
             return View(allList);
         }
 
-        [HttpGet]
+		[Authorize]
+		[HttpGet]
         public async Task<IActionResult> CompositeSearch(string formId, string departmentId, string categoryId, string projectId, string formIsActive, string createdDate)
         {
             var query = _context.Form
@@ -128,7 +129,8 @@ namespace BPMPlus.Controllers
             return Json(result);
         }
 
-        [HttpGet]
+		[Authorize]
+		[HttpGet]
         // GET: AdminQueryForms/GetAll
         // 全部工單搜尋使用
         public async Task<IActionResult> GetAll()
@@ -162,7 +164,8 @@ namespace BPMPlus.Controllers
             return Json(query);
         }
 
-        [HttpPost]
+		[Authorize]
+		[HttpPost]
         // POST: AdminQueryForms/DeleteSingle/formId
         // 單筆刪除
         public async Task<IActionResult> DeleteSingle(string formId)
@@ -186,7 +189,8 @@ namespace BPMPlus.Controllers
             return Json(new { success = true });
         }
 
-        [HttpPost]
+		[Authorize]
+		[HttpPost]
         // POST: AdminQueryForms/DeleteMany/formIds
         // 批次刪除
         public async Task<IActionResult> DeleteMany(List<string> formIds)
@@ -214,7 +218,8 @@ namespace BPMPlus.Controllers
             return Json(new { success = true });
         }
 
-        [HttpPost]
+		[Authorize]
+		[HttpPost]
         // POST: AdminQueryForms/RecoverySingle/formId
         // 單筆復原
         public async Task<IActionResult> RecoverySingle(string formId)
@@ -237,7 +242,8 @@ namespace BPMPlus.Controllers
             return Json(new { success = true });
         }
 
-        [HttpPost]
+		[Authorize]
+		[HttpPost]
         // POST: AdminQueryForms/RecoveryMany/formIds
         // 批次復原
         public async Task<IActionResult> RecoveryMany(List<string> formIds)

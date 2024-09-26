@@ -23,7 +23,6 @@ namespace BPMPlus.Controllers
         }
 
         [Authorize]
-
         // GET: CreateProjects
         public async Task<IActionResult> Index()
         {
@@ -59,7 +58,8 @@ namespace BPMPlus.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateProjectsInPutModel project)
+		[Authorize]
+		public async Task<IActionResult> Create(CreateProjectsInPutModel project)
         {
             User user = await GetAuthorizedUser();
 

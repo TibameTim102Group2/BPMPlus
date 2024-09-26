@@ -1,6 +1,7 @@
 ﻿using BPMPlus.Data;
 using BPMPlus.Models;
 using BPMPlus.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -21,6 +22,7 @@ namespace BPMPlus.Controllers
 			_context = context;
 		}
 
+		[Authorize]
 		public async Task<IActionResult> Index()
 		{
 			//判斷是誰登入
@@ -52,6 +54,7 @@ namespace BPMPlus.Controllers
 			return View();
 		}
 		[HttpGet]
+		[Authorize]
 		public async Task<ActionResult> getMeetingBook(string id)
 		{
 			//找出所有當日有被預約的時間
@@ -77,6 +80,7 @@ namespace BPMPlus.Controllers
 		}
 		//刪除預約
 		[HttpGet]
+		[Authorize]
 		public async Task<ActionResult> deleteMeetingBook(string id)
 		{
 			var deleteMeetingId = await _context.Meeting.Where(m => m.MeetingId == id).FirstOrDefaultAsync();
@@ -91,6 +95,7 @@ namespace BPMPlus.Controllers
 		}
 		//取得編輯資料
 		[HttpGet]
+		[Authorize]
 		public async Task<ActionResult> editMeetingBook(string id)
 		{
 			//找此筆資料的成員
@@ -128,6 +133,7 @@ namespace BPMPlus.Controllers
 		}
 		//進行編輯資料
 		[HttpPost]
+		[Authorize]
 		public async Task<ActionResult> editMeetingBook([FromBody] BookingMeetingRoomEditVM editData)
 		{
 			//先建立一個陣列放 已經被預定的時間

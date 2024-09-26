@@ -1,4 +1,5 @@
-﻿using BPMPlus.Data;
+﻿using BPMPlus.Attributes;
+using BPMPlus.Data;
 using BPMPlus.Models;
 using BPMPlus.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -21,7 +22,7 @@ namespace BPMPlus.Controllers
             _context = context;
         }
 
-        [Authorize]
+		[Authorize]
         public async Task<IActionResult> Index()
         {
             User user = await GetAuthorizedUser();
@@ -73,8 +74,9 @@ namespace BPMPlus.Controllers
             return slots;
         }
 
-        // 撈會議室可容納人數
-        public async Task<IActionResult> GetMeetingRoomInfo(string id)
+		// 撈會議室可容納人數
+		[Authorize]
+		public async Task<IActionResult> GetMeetingRoomInfo(string id)
         {
             var accommdation = _context.MeetingRooms
                 .Where(n => n.MeetingRoomId == id)
@@ -83,8 +85,9 @@ namespace BPMPlus.Controllers
             return Json(new { success=true, data = accommdation });
         }
 
-        //GetBookedTime
-        public async Task<IActionResult> CheakMeetingRooms(string BookingDate)
+		//GetBookedTime
+		[Authorize]
+		public async Task<IActionResult> CheakMeetingRooms(string BookingDate)
         {
             var bookedTimes = await _context.Meeting
                 .Where(b=>b.StartTime.Date == DateTime.Parse(BookingDate).Date)
@@ -97,7 +100,7 @@ namespace BPMPlus.Controllers
             return Json(new { success = true, data = bookedTimes });
         }
 
-
+		[Authorize]
 		[HttpPost]
 		public async Task<IActionResult> SubmitBooking([FromBody] BookingMeetingRoomVM vm)
 		{
@@ -174,6 +177,7 @@ namespace BPMPlus.Controllers
 				meeting.UpdatedTime = DateTime.Now.AddHours(-8);
 				await _context.Meeting.AddAsync(meeting);
 				await _context.SaveChangesAsync();
+
 				var meetingid = _context.Meeting
 					.Include(x => x.Users)
 					.FirstOrDefault(x => x.MeetingId == id[0]);

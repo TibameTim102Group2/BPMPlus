@@ -368,16 +368,18 @@ namespace BPMPlus.Controllers
             return View();
         }
 
-        //設定大頭貼
 
-        [HttpGet]
+		//設定大頭貼
+		[Authorize]
+		[HttpGet]
         public IActionResult UploadProfilePicture()
         {
             
             return View();
         }
 
-        [HttpPost]
+		[Authorize]
+		[HttpPost]
         public async Task<IActionResult> UploadProfilePicture(IFormFile file)
         {
             User user = await GetAuthorizedUser();
@@ -435,7 +437,8 @@ namespace BPMPlus.Controllers
             return Json(new { success = true, message = "上傳成功" });
         }
 
-        [HttpGet]
+		[Authorize]
+		[HttpGet]
         public async Task<IActionResult> ProfilePicture()
         {
             User user = await GetAuthorizedUser();
@@ -468,8 +471,8 @@ namespace BPMPlus.Controllers
 
         }
 
-
-        [HttpGet]
+		[Authorize]
+		[HttpGet]
         public async Task<IActionResult> DeletePicture()
         {
             User user = await GetAuthorizedUser();
