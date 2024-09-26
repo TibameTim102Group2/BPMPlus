@@ -8,22 +8,30 @@
 
     <style>
 
-        .content-wrapper {
-            background-color: rgb(225, 239, 252);
+        .content-wrapper{
+            background-image: linear-gradient(120deg, #ffffff 0%, #0079ff2e 100%);
+        }
+
+        .content-wrapper > .content {
+        padding: inherit;
         }
 
         .outside {
-            padding: 20px;
+            padding: 0 36px;
+        }
+
+        .meeting-container {
+            padding-top: 20px;
         }
 
         .title {
             color: rgba(0, 81, 255, 0.884);
             font-weight: bold;
+            margin-bottom: 30px;
         }
 
         .inside {
             background-color: white;
-            margin-top: 30px;
             padding: 20px;
             border-radius: 0.25rem;
             box-shadow: 0 0 1px rgba(0, 0, 0, .125), 0 1px 3px rgba(0, 0, 0, .2);
@@ -165,112 +173,112 @@
 
 <!-- outside -->
 <div class="outside">
-    <h2 class="title">新增預約</h2>
+    <div class="meeting-container">
+        <h2 class="title">新增預約</h2>
+        <!-- inside -->
+        <div class="inside row">
+            <div class="col-5">
+                <div class="form-group">
+                    <label for="">預約日期</label>
+                    <input type="date" min="@ViewBag.MinDate" class="form-control bookingDate" style="outline:none;" />
+                </div>
 
-    <!-- inside -->
-    <div class="inside row">
+                <div class="form-group">
+                    <label>選擇會議室</label>
+                    <select class="form-control selectRoom" asp-items="ViewBag.MeetingRooms">
+                        <option value="">-- 請選擇會議室 --</option>
+                    </select>
+                </div>
 
-        <div class="col-5">
-            <div class="form-group">
-                <label for="">預約日期</label>
-                <input type="date" min="@ViewBag.MinDate" class="form-control bookingDate" style="outline:none;" />
-            </div>
+                <div class="form-group">
+                    <label for="">可容納人數</label>
+                    <input class="form-control accommodation" Disabled />
+                </div>
 
-            <div class="form-group">
-                <label>選擇會議室</label>
-                <select class="form-control selectRoom" asp-items="ViewBag.MeetingRooms">
-                    <option value="">-- 請選擇會議室 --</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="">可容納人數</label>
-                <input class="form-control accommodation" Disabled />
-            </div>
-
-            <div class="form-group">
-                <label for="">開始時間</label>
-                <select id="startTimeSelect" class="form-control startTimeSelect" style="outline:none;">
-                    <option value="">-- 請選擇開始時間 --</option>
-                    @foreach (var time in ViewBag.TimeSlots)
+                <div class="form-group">
+                    <label for="">開始時間</label>
+                    <select id="startTimeSelect" class="form-control startTimeSelect" style="outline:none;">
+                        <option value="">-- 請選擇開始時間 --</option>
+                        @foreach (var time in ViewBag.TimeSlots)
                         {
-                        <option>@time.ToString("HH:mm")</option>
+                            <option>@time.ToString("HH:mm")</option>
                         }
-                </select>
-            </div>
+                    </select>
+                </div>
 
-            <div class="form-group">
-                <label for="">結束時間</label>
-                <select id="endTimeSelect" class="form-control endTimeSelect" style="outline:none;">
-                    <option value="">-- 請選擇結束時間 --</option>
-                    @foreach (var time in ViewBag.TimeSlots)
-                    {
-                        <option>@time.ToString("HH:mm")</option>
-                    }
+                <div class="form-group">
+                    <label for="">結束時間</label>
+                    <select id="endTimeSelect" class="form-control endTimeSelect" style="outline:none;">
+                        <option value="">-- 請選擇結束時間 --</option>
+                        @foreach (var time in ViewBag.TimeSlots)
+                        {
+                            <option>@time.ToString("HH:mm")</option>
+                        }
 
-                </select>
-            </div>
+                    </select>
+                </div>
 
-            <div class="form-group">
-                <label for="">預約人</label>
-                <input type="text" class="form-control meetingHost" value="@ViewBag.MeetingHost" Disabled />
-            </div>
+                <div class="form-group">
+                    <label for="">預約人</label>
+                    <input type="text" class="form-control meetingHost" value="@ViewBag.MeetingHost" Disabled />
+                </div>
 
-            <div class="form-group">
-                <label for="">預約部門</label>
-                <input type="text" class="form-control" value="@ViewBag.DepartmentName" Disabled />
-            </div>
+                <div class="form-group">
+                    <label for="">預約部門</label>
+                    <input type="text" class="form-control" value="@ViewBag.DepartmentName" Disabled />
+                </div>
 
-            <div class="form-group">
-                <label for="">與會者</label>
-                <div class="multiselect-container">
-                    <div class="multiselect-input-container">
-                        <input type="text" class="multiselect-input form-control members" placeholder="-- 請加入與會者 --">
-                        <span class="dropdown-arrow">▼</span>
-                        <div class="multiselect-dropdown">
-                            <input type="text" class="search-input" placeholder="搜尋">
+                <div class="form-group">
+                    <label for="">與會者</label>
+                    <div class="multiselect-container">
+                        <div class="multiselect-input-container">
+                            <input type="text" class="multiselect-input form-control members" placeholder="-- 請加入與會者 --">
+                            <span class="dropdown-arrow">▼</span>
+                            <div class="multiselect-dropdown">
+                                <input type="text" class="search-input" placeholder="搜尋">
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div id="members" class="selected-items" style="margin-bottom:10px;"></div>
+                <div id="members" class="selected-items" style="margin-bottom:10px;"></div>
 
-            <div class="form-group">
-                <label for="">備註</label>
-                <textarea class="form-control note"></textarea>
-            </div>
+                <div class="form-group">
+                    <label for="">備註</label>
+                    <textarea class="form-control note"></textarea>
+                </div>
 
-            <div class="btn-center">
-                <button id="submitButton" class="btn btn-success">送出</button>
+                <div class="btn-center">
+                    <button id="submitButton" class="btn btn-success">送出</button>
+                </div>
             </div>
-        </div>
-        <div class="col-1"></div>
-        <div class="col-6">
-            <table id="scheduleTable" class="table-bordered">
-                <thead>
-                    <tr>
-                        <th style="color: rgba(0, 81, 255, 0.884);">Time</th>
-                        @foreach (var room in ViewBag.Rooms)
-                        {
-                            <th style="color: rgba(0, 81, 255, 0.884);">@room</th>
-                        }
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var timeSlot in ViewBag.TimeSlots)
-                    {
+            <div class="col-1"></div>
+            <div class="col-6">
+                <table id="scheduleTable" class="table-bordered">
+                    <thead>
                         <tr>
-                            <td style="vertical-align: top; height:50px;">@timeSlot.ToString("HH:mm")</td>
+                            <th style="color: rgba(0, 81, 255, 0.884);">Time</th>
                             @foreach (var room in ViewBag.Rooms)
                             {
-                                <td data-room="@room" data-time="@timeSlot.ToString("HH:mm")"></td>
+                                <th style="color: rgba(0, 81, 255, 0.884);">@room</th>
                             }
                         </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody>
+                        @foreach (var timeSlot in ViewBag.TimeSlots)
+                        {
+                            <tr>
+                                <td style="vertical-align: top; height:50px;">@timeSlot.ToString("HH:mm")</td>
+                                @foreach (var room in ViewBag.Rooms)
+                                {
+                                    <td data-room="@room" data-time="@timeSlot.ToString("HH:mm")"></td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
 
+        </div>
     </div>
 </div>
 
