@@ -60,28 +60,35 @@
         }
 
         .content-wrapper {
-            background-color: rgb(225, 239, 252);
+            background-image: linear-gradient(120deg, #ffffff 0%, #0079ff2e 100%);
+        }
+
+        #cardContainer{
+            margin-top: 8%;
+            background-color: rgb(0 123 255 / 16%);
+            display: flex;
+            overflow-x: auto;
+            width: 100%;
+            box-shadow: 0 0 1px rgba(0, 0, 0, .125), 0 1px 3px rgba(0, 0, 0, .2);
+            border-radius: 0.25rem;
         }
 
         .outside {
-            padding: 1%;
-            background-color: #fffacd;
+            padding: 20px;
             height: 100%;
         }
 
         .title {
-            color: #aaa689;
-            margin-top: 20px;
-            margin-bottom: 30px;
-            margin-left: 30px;
+            color: #007bff;
             font-weight: bold;
+            margin-bottom:30px;
         }
 
         .inside {
-            margin-top: 30px;
-            padding: 1%;
-            background-color: #eee9bc;
-            border: 0.5px solid gainsboro;
+            padding: 2%;
+            background-color: white;
+            border-radius: 0.25rem;
+            box-shadow: 0 0 1px rgba(0, 0, 0, .125), 0 1px 3px rgba(0, 0, 0, .2);
         }
 
         .list {
@@ -174,6 +181,20 @@
             width: 100%;
         }
 
+        button#submitButton {
+            margin:10px 0;
+            width: 90px;
+        }
+
+        button#duplicateButton {
+            font-weight: bold;
+            color: #007bff;
+            background-color: #ffffff;
+            border-style: none;
+            border-radius: 0.25rem;
+            font-size: xx-large;
+        }
+
     </style>
 }
 
@@ -185,7 +206,7 @@
     <div style="color:red;">
         @ViewBag.errMsg
     </div>
-    <h1 class="title">新增工單需求類別</h1>
+    <h2 class="title">新增工單需求類別</h2>
 
     <!-- inside -->
     <div class="inside">
@@ -198,7 +219,7 @@
             </div>
         </form>
         
-        <div style="margin-top: 10%; background-color: rgb(200, 200, 200); display: flex; overflow-x: auto; width: 100%;" id="cardContainer">
+        <div id="cardContainer">
             @for (int nodeIndex = 0; nodeIndex < Model.TemplateOfNodeTemplates.Nodes.Count; ++nodeIndex)
             {
                 <div class="card card-primary" id="process-node" style="min-width: 300px; max-width: 300px; margin-right: 10px;">
@@ -273,7 +294,7 @@
         
 
         <!-- 送出按鈕 -->
-        <div class="submit-btn" style="margin-top: 10%">
+        <div class="submit-btn">
             <button type="submit" id="submitButton" class="btn btn-primary">送出</button>
         </div>
     </div>
