@@ -28,16 +28,18 @@
 @*     <link rel="stylesheet" href="~/AdminLTE/dist/css/adminlte.min.css"> *@
     <link rel="stylesheet" href="~/font-awesome/css/all.css" />
     <style>
-        .title {
-            color: rgba(0, 81, 255, 0.884);
-            margin-top: 20px;
-            margin-bottom: 30px;
-            margin-left: 30px;
-            font-weight: bold;
+        .content-wrapper {
+            background-image: linear-gradient(120deg, #ffffff 0%, #0079ff2e 100%);
         }
 
-        .backcolor {
-            background-color: rgb(225, 239, 252);
+        .wrapper.backcolor {
+            padding: 2.5px;
+        }
+
+        .title {
+            color: rgba(0, 81, 255, 0.884);
+            font-weight: bold;
+            margin-bottom:30px;
         }
 
         .item-name {
@@ -83,7 +85,7 @@
         }
 
         .content {
-            padding: 3%
+            padding: 10px;
         }
 
         .form-group {
@@ -95,6 +97,14 @@
             line-height: 1.5;
             width: 100%;
             table-layout: fixed; /* 固定表格佈局 */
+        }
+
+        .txtPart{
+            border-radius: 0.15rem;
+            padding: 0 5px;
+            border: 1px solid #c2c2c2;
+            width: 100%;
+            margin-bottom: 20px;
         }
 
         /* 固定表頭 */
@@ -118,9 +128,9 @@
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
-            <h3 class="title">
+            <h2 class="title">
                 工單細節
-            </h3>
+            </h2>
             <!-- SELECT2 EXAMPLE -->
             <div class="card card-default col-md-12">
 
@@ -274,7 +284,7 @@
                                 <div class="form-group">
                                     <label class="item-name">需求內容</label>
                                 </div>
-                                <div style="border:1px solid grey; width:100%;margin-bottom:20px;">
+                                <div class="txtPart">
                                     <div class="form-control''=" floatingTextarea">@Html.Raw(Model.FormDetails.Content)</div>
                                 </div>
                             </div>

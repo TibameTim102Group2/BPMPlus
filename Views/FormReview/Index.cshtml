@@ -32,8 +32,8 @@
     <!-- Theme style -->
 @*     <link rel="stylesheet" href="~/AdminLTE/dist/css/adminlte.min.css"> *@
     <style>
-        body {
-            background-color: #f4f6f9;
+        .content-wrapper {
+            background-image: linear-gradient(120deg, #ffffff 0%, #0079ff2e 100%);
         }
 
         #formArea{
@@ -43,13 +43,15 @@
         .txtTitle {
             color: #007bff;
             font-weight: bold;
-            margin: 15px 70px;
+            margin:20px;
+            margin-bottom: 30px;
         }
 
         form {
             background-color: white;
             padding: 20px;
-            margin: 15px 70px;
+            margin: 15px 20px;
+            border-radius: 0.25rem;
         }
 
         .form-row {
@@ -208,7 +210,7 @@
 <div id="fullPage">
     <!--  title  -->
     <div class="title">
-        <h4 class="txtTitle">審核工單</h4>
+        <h2 class="txtTitle">審核工單</h2>
     </div>
 
     <form id="formArea" asp-controller="FormReview" method="post" asp-action="CreateAndUpdate" enctype="multipart/form-data">

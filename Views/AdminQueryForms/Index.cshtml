@@ -4,9 +4,12 @@
     <link rel="stylesheet" href="~/font-awesome/css/all.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" />
     <style>
+        .content-wrapper {
+            background-image: linear-gradient(135deg, #f5f7fa 0%, #f2f7ff 100%);
+        }
+
         .connectedSortable {
-            margin: 15px 0;
-            padding: 0 15px;
+            padding:20px;
         }
 
         #mainpart {
@@ -102,9 +105,9 @@
         }
 
         .pageTitle{
-            color: black;
+            color: #333333;
             font-weight: bold;
-            margin-bottom:15px;
+            margin-bottom: 30px;
         }
 
     </style>
@@ -113,7 +116,7 @@
 <div class="container-fluid">
         <div class="row">
             <section class="connectedSortable">
-                <h4 class="pageTitle">查詢工單</h4>
+                <h2 class="pageTitle">查詢工單</h2>
                     <div id="mainpart" class="card">
                         <div class="row justify-content-between mb-3">
 
