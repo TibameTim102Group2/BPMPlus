@@ -272,14 +272,14 @@
 
             // 隱藏復原按鈕方法
             // 檢查表格中每一個tr的工單狀態
-            // 是存活就隱藏復原btn , 反之顯現
+            // 是生效就隱藏復原btn , 反之顯現
             function updateButtonStatus() {
                 table.rows().every(function (rowIdx, tableLoop, rowLoop) {
                     var data = this.data();                 // 抓取DataTables數據
                     var $row = $(this.node());         // 抓取該row == 抓tr
                     var $recoveryButton = $row.find('.recovery-single');
 
-                    if (data.formActive === "存活") {
+                    if (data.formActive === "生效") {
                         $recoveryButton.prop('disabled', true);
                     } else {
                         $recoveryButton.prop('disabled', false);
@@ -297,11 +297,11 @@
                 var $batchRecoveryButton = $('#recoverySelected');
                 var hasActiveChecked = false;
 
-                // 遍歷有被選中的checkbox, 找其tr的內容檢查如果formActive === "存活", 代表狀態是true, 回傳false,
-                // 因為被選中的tr是存活所以將批次刪除的btn隱藏
+                // 遍歷有被選中的checkbox, 找其tr的內容檢查如果formActive === "生效", 代表狀態是true, 回傳false,
+                // 因為被選中的tr是生效所以將批次刪除的btn隱藏
                 table.$('input:checked').each(function () {
                     var rowData = table.row($(this).closest('tr')).data();
-                    if (rowData.formActive === "存活") {
+                    if (rowData.formActive === "生效") {
                         hasActiveChecked = true;
                         return false;
                     }

@@ -54,7 +54,7 @@ namespace BPMPlus.Controllers
                     .FirstOrDefault(),
                     CreatedTime = c.CreatedTime.ToLocalTime().ToString("yyyy-MM-dd HH:mm"),
                     isFormActive = c.FormIsActive,
-                    FormActive = c.FormIsActive ? "存活" : "作廢",
+                    FormActive = c.FormIsActive ? "生效" : "作廢",
                 }).ToList();
 
             // 設置前端下拉選單
@@ -65,7 +65,7 @@ namespace BPMPlus.Controllers
             // 設置前端下拉選單, 替換相對文字
             ViewBag.FormActive = new SelectList(new List<SelectListItem>
             {
-                new SelectListItem { Text = "存活", Value = "True" },
+                new SelectListItem { Text = "生效", Value = "True" },
                 new SelectListItem { Text = "作廢", Value = "False" }
             }, "Value", "Text");
 
@@ -118,7 +118,7 @@ namespace BPMPlus.Controllers
                     .FirstOrDefault(),
                 CreatedTime = c.CreatedTime.ToLocalTime().ToString("yyyy-MM-dd HH:mm"),
                 isFormActive = c.FormIsActive,
-                FormActive = c.FormIsActive ? "存活" : "作廢",
+                FormActive = c.FormIsActive ? "生效" : "作廢",
             }).ToListAsync();
 
             if (result.Count == 0)
@@ -158,7 +158,7 @@ namespace BPMPlus.Controllers
                   .FirstOrDefault(),
                   CreatedTime = c.CreatedTime.ToLocalTime().ToString("yyyy-MM-dd HH:mm"),
                   isFormActive = c.FormIsActive,
-                  FormActive = c.FormIsActive ? "存活" : "作廢",
+                  FormActive = c.FormIsActive ? "生效" : "作廢",
               }).ToList();
 
             return Json(query);
