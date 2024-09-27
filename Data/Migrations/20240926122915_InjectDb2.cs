@@ -15,9 +15,9 @@ namespace BPMPlus.Data.Migrations
                 ('G0010',N'專案管理員','2024-09-16','2024-09-16');
                 GO
                 INSERT INTO Users (DepartmentId, UserId, GradeId, UserIsActive, CreatedTime, UpdatedTime, TEL, UserName, Email, Password) VALUES
-                ('D002', 'A001', '05', 1, '2024-08-19', '2024-08-19', '0912345001', N'人資部管理員風間', 'dawen5@domain.com', '$2b$10$5Gix0lXUXZ.NoDqXx6VtOuBWJQBb/dwXjNHwc8CNlxQ.VlEBXmIji'),
-                ('D002', 'A002', '01', 1, '2024-08-19', '2024-08-19', '0912345002', N'人資部職員阿呆', 'dawen5@domain.com', '$2b$10$TerkGwFIc4vMrzWEie5gzOgNjWtr4MTFD2Qvgu3PUHbSBakgu3AjG'),
-                ('D001', 'A003', '05', 1, '2024-08-19', '2024-08-19', '0912345003', N'資訊部管理員妮妮', 'dawen5@domain.com', '$2b$10$a0P.SVqYtRkw44VVSQDn2OfjMaxKIdOF9d.WbsEIDFVb1EJRTiE1u');
+                ('D002', 'A001', '05', 1, '2024-08-19', '2024-08-19', '0912345001', N'風間', 'dawen5@domain.com', '$2b$10$5Gix0lXUXZ.NoDqXx6VtOuBWJQBb/dwXjNHwc8CNlxQ.VlEBXmIji'),
+                ('D002', 'A002', '01', 1, '2024-08-19', '2024-08-19', '0912345002', N'阿呆', 'dawen5@domain.com', '$2b$10$TerkGwFIc4vMrzWEie5gzOgNjWtr4MTFD2Qvgu3PUHbSBakgu3AjG'),
+                ('D001', 'A003', '05', 1, '2024-08-19', '2024-08-19', '0912345003', N'妮妮', 'dawen5@domain.com', '$2b$10$1BTZnYMyEyUx2YDaS0i.HOGNBh6cJxkVU2515tqZjv9b6bFVw3KKa');
                 GO
                 INSERT INTO PermissionGroupUserActivity(PermissionGroupsPermissionGroupId, UserActivitiesUserActivityId) VALUES 
                 ('G0009','09'),('G0008','08'),('G0006','03'),('G0005','02'),('G0003','06'),('G0002','07'),('G0006', '08'),
