@@ -128,13 +128,19 @@
                         <!-- User -->
                         <li class="nav-item">
                             <a href="#" class="nav-link">
+
                                 <img id="profilePicture" src="~/images/default.jpg" class="img-circle" style="width:30px;height:30px" asp-append-version="true">
+                                @*  <img id="profilePicture" src="@ViewBag.ProfilePicturePath" class="img-circle" style="width:30px;height:30px"> *@
+
                                 @{
+                                    var userDepartment = HttpContextAccessor.HttpContext.Request.Cookies["Department"];
                                     var userName = HttpContextAccessor.HttpContext.Request.Cookies["UserName"];
-                                    <p style="margin-left:5px;">@userName</p>
+                                    <p style="margin-left:5px;">@userDepartment @userName</p>
                                 }
-                                <div class="user-panel pb-3 mb-3 d-flex image"></div>
+
                             </a>
+                            <div class="user-panel d-flex image"></div>
+
                             <ul class="nav nav-treeview">
                                 <li class="nav-item" style="margin-left:10%;">
                                     <a class="nav-link" href="@Url.Action("ResetPassWord","Login")">修改密碼</a>
