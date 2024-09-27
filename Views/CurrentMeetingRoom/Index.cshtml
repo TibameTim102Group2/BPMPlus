@@ -322,12 +322,15 @@
 					let _this = this;
 					axios.get(`${_this.baseAddress}/getMeetingBook/${_this.selectedDate}`)
 						.then(response => {
-							if (response.data && Array.isArray(response.data.data)) {
+							if (response.data) {
+							    //把收到回應的資料放入
 								_this.bookings = response.data.data;
+								//重新計算預約筆數
 								_this.calculateBookedSlots();
 								_this.meetingHostDistinguish = false;
 							} else {
 								console.error('Unexpected data format:', response.data);
+
 							}
 						})
 						.catch(error => {
@@ -349,7 +352,8 @@
 				calculateBookedSlots() {
 
 					if (!Array.isArray(this.bookings)) {
-						console.error("Bookings is not an array:", this.bookings);
+						//直接讓bookedSlots是空的
+						this.bookedSlots = {};
 						return;
 					}
 					this.bookedSlots = {};
