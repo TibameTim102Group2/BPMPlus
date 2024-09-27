@@ -42,8 +42,9 @@ namespace BPMPlus.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        /* 登入 */
-        [HttpPost]
+
+		/* 登入 */
+		[HttpPost]
         public async Task<IActionResult> Login(LoginInputVM login, string returnUrl)
         {
 
@@ -57,19 +58,25 @@ namespace BPMPlus.Controllers
                 //判斷密碼是否為空
                 if (login.Password != null)
                 {
-                    //BCrypt 判斷密碼是否正確
+                    //BCrypt 解密判斷密碼是否正確
                     bool isTruePassword = BCryptHelper.Verify(login.Password, user.Password);
 
                     if (isTruePassword == true)
                     {
+
+                        var getDepartment = await _context.User.Where(u => u.UserId == login.UserId).Select(u => u.Department.DepartmentName).FirstOrDefaultAsync();
+
+
                         // 登入成功，建立驗證 cookie
-                        Claim[] claims = new[] { new Claim("UserId", login.UserId)};
+                        Claim[] claims = new[] { new Claim("UserId", login.UserId), new Claim("Department", getDepartment) };
                         ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                         ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
                         string userName = user.UserName;
+                        string userDepartment = getDepartment;
                         CookieOptions option = new CookieOptions();
                         Response.Cookies.Append("UserName", userName, option);
+                        Response.Cookies.Append("Department", getDepartment, option);
 
                         // 呼叫 SignInAsync 以登入使用者
                         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal, new AuthenticationProperties()
