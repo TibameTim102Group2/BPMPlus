@@ -331,7 +331,7 @@
 							// 30分鐘內重設過密碼
 							if (response.code == 400) {
 								alert(response.message);
-								window.location.href = "Login/";
+							window.location.replace("/Home/Index");
 							}else
 							{ 
 							alert(response.message);
@@ -340,7 +340,7 @@
 						}
 						else{
 							alert(response.message);
-							window.location.href = "Login/";
+						window.location.replace("/Home/Index");
 						}
 					}
 
