@@ -169,9 +169,9 @@ namespace BPMPlus.Controllers
             err = "";
             return true;
         }
-        // GET: ProcessTemplates
-
-        public async Task<IActionResult> Index()
+		// GET: ProcessTemplates
+		[Authorize]
+		public async Task<IActionResult> Index()
         {
             User user = await GetAuthorizedUser();
             //functionId:  01 -> 需求方申請人送出
@@ -214,8 +214,9 @@ namespace BPMPlus.Controllers
             );
         }
 
-        // GET: ProcessTemplates/Details/5
-        public async Task<IActionResult> Details(string id)
+		// GET: ProcessTemplates/Details/5
+		[Authorize]
+		public async Task<IActionResult> Details(string id)
         {
             if (id == null)
             {
@@ -301,7 +302,8 @@ namespace BPMPlus.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
+		[Authorize]
+		[ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ProcessTemplateId,UserActivityId,DepartmentId,CategoryId,CreatedTime,UpdatedTime")] ProcessTemplate processTemplate)
         {
             if (ModelState.IsValid)
@@ -315,8 +317,9 @@ namespace BPMPlus.Controllers
             return View(processTemplate);
         }
 
-        // GET: ProcessTemplates/Edit/5
-        public async Task<IActionResult> Edit(string id)
+		[Authorize]
+		// GET: ProcessTemplates/Edit/5
+		public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
             {
@@ -337,7 +340,8 @@ namespace BPMPlus.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
+		[Authorize]
+		[ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("ProcessTemplateId,UserActivityId,DepartmentId,CategoryId,CreatedTime,UpdatedTime")] ProcessTemplate processTemplate)
         {
             if (id != processTemplate.ProcessTemplateId)
@@ -370,8 +374,9 @@ namespace BPMPlus.Controllers
             return View(processTemplate);
         }
 
-        // GET: ProcessTemplates/Delete/5
-        public async Task<IActionResult> Delete(string id)
+		// GET: ProcessTemplates/Delete/5
+		[Authorize]
+		public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
             {
@@ -390,8 +395,9 @@ namespace BPMPlus.Controllers
             return View(processTemplate);
         }
 
-        // POST: ProcessTemplates/Delete/5
-        [HttpPost, ActionName("Delete")]
+		// POST: ProcessTemplates/Delete/5
+		[Authorize]
+		[HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
