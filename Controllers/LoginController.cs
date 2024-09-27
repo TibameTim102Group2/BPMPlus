@@ -335,31 +335,36 @@ namespace BPMPlus.Controllers
 
             //判斷舊密碼是否輸入正確
             bool isTruePassword = BCryptHelper.Verify(vm.OldPassword, user.Password);
-            if (isTruePassword != true)
+            if (isTruePassword == false)
             {
                 return Json(new { success = false, message = "舊密碼輸入錯誤!" });
             }
             else
             {
+                bool isSamePassWord = BCryptHelper.Verify(vm.NewPassword, user.Password);
+
                 //判斷新舊密碼是否重複
-                if (vm.NewPassword == user.Password)
+                if (isSamePassWord == true)
                 {
                     return Json(new { success = false, message = "新舊密碼不得重複!" });
                 }
+                else
+                {
+                    //新密碼加密後儲存
+                    string newPassword = BCryptHelper.HashPassword(vm.NewPassword);
+                    user.Password = newPassword;
+                    await _context.SaveChangesAsync();
+
+                    //取得儲存密碼時間戳並儲存
+                    DateTimeOffset saveChangeTime = new DateTimeOffset(DateTime.Now);
+                    user.ModifyPasswordTime = saveChangeTime.ToUnixTimeSeconds();
+                    await _context.SaveChangesAsync();
+
+                    return Json(new { success = true, data = "密碼修改成功!" });
+
+                }
             }
 
-
-            //新密碼加密後儲存
-            string newPassword = BCryptHelper.HashPassword(vm.NewPassword);
-            user.Password = newPassword;
-            await _context.SaveChangesAsync();
-
-            //取得儲存密碼時間戳並儲存
-            DateTimeOffset saveChangeTime = new DateTimeOffset(DateTime.Now);
-            user.ModifyPasswordTime = saveChangeTime.ToUnixTimeSeconds();
-            await _context.SaveChangesAsync();
-
-            return Json(new { success = true, data = "密碼修改成功!" });
         }
 
         [Authorize]
