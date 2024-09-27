@@ -29,10 +29,10 @@ namespace BPMPlus.Data.Migrations
                 INSERT INTO Users (DepartmentId, UserId, GradeId, UserIsActive, CreatedTime, UpdatedTime, TEL, UserName, Email, Password) VALUES
                 ('D002', 'A001', '05', 1, '2024-08-19', '2024-08-19', '0912345001', N'風間', 'dawen5@domain.com', '$2b$10$5Gix0lXUXZ.NoDqXx6VtOuBWJQBb/dwXjNHwc8CNlxQ.VlEBXmIji'),
                 ('D002', 'A002', '01', 1, '2024-08-19', '2024-08-19', '0912345002', N'阿呆', 'dawen5@domain.com', '$2b$10$TerkGwFIc4vMrzWEie5gzOgNjWtr4MTFD2Qvgu3PUHbSBakgu3AjG'),
-                ('D001', 'A003', '05', 1, '2024-08-19', '2024-08-19', '0912345003', N'妮妮', 'dawen5@domain.com', '$2b$10$a0P.SVqYtRkw44VVSQDn2OfjMaxKIdOF9d.WbsEIDFVb1EJRTiE1u');
+                ('D001', 'A003', '05', 1, '2024-08-19', '2024-08-19', '0912345003', N'妮妮', 'dawen5@domain.com', '$2b$10$a0P.SVqYtRkw44VVSQDn2OfjMaxKIdOF9d.WbsEIDFVb1EJRTiE1u'),
                 ('D003', 'A004', '01', 1, '2024-08-19', '2024-08-19', '0912345004', N'小白', 'dawen5@domain.com', '$2b$10$a0P.SVqYtRkw44VVSQDn2OfjMaxKIdOF9d.WbsEIDFVb1EJRTiE1u'),
                 ('D004', 'A005', '02', 1, '2024-08-19', '2024-08-19', '0912345005', N'園長', 'dawen5@domain.com', '$2b$10$/SK4Q607gsBhEpySWpehAOACA76zvl0rGBJsS8YayPryMVHEM.Sfa'),
-                ('D005', 'A006', '03', 1, '2024-08-19', '2024-08-19', '0912345006', N'吉永', 'dawen5@domain.com', '$2b$10$CzvuZ5.Tr9pc1o2kW2m9G.NI/1NuKi6/dGt5UWaPjsgGRmkEfPLfa');
+                ('D005', 'A006', '03', 1, '2024-08-19', '2024-08-19', '0912345006', N'吉永', 'dawen5@domain.com', '$2b$10$CzvuZ5.Tr9pc1o2kW2m9G.NI/1NuKi6/dGt5UWaPjsgGRmkEfPLfa'),
                 ('D005', 'A007', '04', 1, '2024-08-19', '2024-08-19', '0912345007', N'娜娜子', 'dawen5@domain.com', '$2b$10$iL/pyleJEwCyZCFuPdAW7OrnsUYGqylRyjITvhw3cj0lISB0QS2C2');
                 GO
 
@@ -41,12 +41,11 @@ namespace BPMPlus.Data.Migrations
                     ('P001', 'A002'),
                     ('P001', 'A003'),
                     ('P002', 'A001'),
-                    ('P002', 'A010'),
-                    ('P002', 'A011'),
-                    ('P002', 'A008'),
+                    ('P002', 'A002'),
+                    ('P002', 'A007'),
                     ('P003', 'A002'),
-                    ('P003', 'A010'),
-                    ('P003', 'A012'),
+                    ('P003', 'A003'),
+                    ('P003', 'A001'),
                     ('P004', 'A002'),
                     ('P005', 'A003'),
                     ('P006', 'A003');
