@@ -365,10 +365,16 @@
                 'contentType': false, //required
                 'processData': false, // required
                 'mimeType': 'multipart/form-data',
-                'data': formData
+                'data': formData,
+                'dataType': 'json'
             }).done(function (response) {
-                alert(response.message);
-                window.location.href = "/QueryForms/Index/";
+                console.log(response);
+                if (response) {
+                    alert(response.message);
+                    window.location.href = "/QueryForms/Index/";
+                } else {
+                    alert("作廢成功，但未收到預期回應!");
+                }
             }).fail(function (response) {
                 alert("作廢失敗，請重新嘗試或洽管理員!")
             })
