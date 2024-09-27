@@ -29,7 +29,7 @@ namespace BPMPlus.Controllers
         // GET: CreateForms
         [Authorize]
 
-        public async Task<ActionResult> Index(string ReturnUrl)
+        public async Task<ActionResult> Index()
         {
             User user = await GetAuthorizedUser();
             //functionId:  01 -> 需求方申請人送出

@@ -63,10 +63,10 @@ namespace BPMPlus.Controllers
         public async Task<List<string>> GetCreateFormIdListAsync(int count)
         {
             
-            var LastForm = await _context.Form.OrderBy(f => f.FormId).LastAsync();
+            Form? LastForm = await _context.Form.OrderBy(f => f.FormId).LastOrDefaultAsync();
                 
             string id = LastForm == null?"F0":LastForm.FormId;
-            id = id[2..];//拿掉第一個 F
+            id = id[1..];//拿掉第一個 F
             int idNum = Convert.ToInt32(id);
             idNum++;
             for (int i = 0; i < count; i++, idNum++ )
@@ -81,7 +81,7 @@ namespace BPMPlus.Controllers
         public async Task<List<string>> GetCreateFormRecordIdListAsync(int count)
         {
             
-            var LastFormRecord = await _context.FormRecord.OrderBy(f => f.ProcessingRecordId).LastAsync();
+            var LastFormRecord = await _context.FormRecord.OrderBy(f => f.ProcessingRecordId).LastOrDefaultAsync();
             string id = LastFormRecord == null ? "PR0" : LastFormRecord.ProcessingRecordId;
             id = id[2..];//拿掉前二個 PR
             int idNum = Convert.ToInt32(id);
@@ -133,7 +133,7 @@ namespace BPMPlus.Controllers
         public async Task<List<string>> GetProcessNodeIdListAsync(int count)
         {
             
-            var LastNode = await _context.ProcessNodes.OrderBy(f => f.ProcessNodeId).LastAsync();
+            var LastNode = await _context.ProcessNodes.OrderBy(f => f.ProcessNodeId).LastOrDefaultAsync();
             string id = LastNode == null ? "PN0" : LastNode.ProcessNodeId;
             id = id[2..];//拿掉前二個 PN
             int idNum = Convert.ToInt32(id);
@@ -198,9 +198,9 @@ namespace BPMPlus.Controllers
         [Authorize]
         public async Task<List<string>> CreateProjectIdListAsync(int count)
         {
-            var LastNode = await _context.Project.OrderBy(f => f.ProjectId).LastAsync();
+            var LastNode = await _context.Project.OrderBy(f => f.ProjectId).LastOrDefaultAsync();
             string id = LastNode == null ? "P0" : LastNode.ProjectId;
-            id = id[2..];//拿掉第兩個 P0
+            id = id[1..];//拿掉第兩個 P0
             int idNum = Convert.ToInt32(id);
             idNum++;
             for (int i = 0; i < count; i++, idNum++)
@@ -213,9 +213,9 @@ namespace BPMPlus.Controllers
 		[Authorize]
 		public async Task<List<string>> CreateUserIdListAsync(int count)
 		{
-			var LastNode = await _context.User.OrderBy(f => f.UserId).LastAsync();
+			var LastNode = await _context.User.OrderBy(f => f.UserId).LastOrDefaultAsync();
 			string id = LastNode == null ? "A0" : LastNode.UserId;
-			id = id[2..];//拿掉第一個 A
+			id = id[1..];//拿掉第一個 A
 			int idNum = Convert.ToInt32(id);
 			idNum++;
 			for (int i = 0; i < count; i++, idNum++)
@@ -228,9 +228,9 @@ namespace BPMPlus.Controllers
 
 		public async Task<List<string>> CreateMeetingIdListAsync(int count)
 		{
-			var LastNode = await _context.Meeting.OrderBy(f => f.MeetingId).LastAsync();
+			var LastNode = await _context.Meeting.OrderBy(f => f.MeetingId).LastOrDefaultAsync();
 			string id = LastNode == null ? "M0" : LastNode.MeetingId;
-			id = id[2..];//拿掉第一個M
+			id = id[1..];//拿掉第一個M
 			int idNum = Convert.ToInt32(id);
 			idNum++;
 			for (int i = 0; i < count; i++, idNum++)
