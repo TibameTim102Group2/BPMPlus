@@ -92,11 +92,50 @@
             display: flex;
         }
 
+        .table-container {
+            max-height: 300px;
+            overflow-y: auto;
+            position: relative;
+        }
+
         table {
             text-align: center;
             line-height: 1.5;
             width: 100%;
             table-layout: fixed; /* 固定表格佈局 */
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        thead {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            background-color: #fff; /* 確保標題背景不透明 */
+        }
+
+            /* 固定表頭 */
+            thead th {
+                position: sticky; /* 表頭固定 */
+                top: 0; /* 固定在頂部 */
+                z-index: 1; /* 確保表頭位於內容上方 */
+            }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2; /* 為標題添加背景色 */
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9; /* 為偶數行添加背景色，提高可讀性 */
+        }
+
+        tbody tr:hover {
+            background-color: #f5f5f5; /* 滑鼠懸停效果 */
         }
 
         .txtPart{
@@ -181,7 +220,7 @@
 
                                 </div>
                                 <div style="width:15%"></div>
-                                <form id="myform" method="post" asp-controller="FormDetails" asp-action="Invalid">
+                              
                                     <input type="hidden" name="id" value="@Model.FormDetails.Id" />
                                     <div class="form-group">
                                         @if (Model.FormDetails.IsUser && Model.FormDetails.IsApply)
@@ -194,7 +233,7 @@
                                         }
 
                                     </div>
-                                </form>
+                              
                             </div>
 
                             <br />
@@ -249,34 +288,35 @@
                             </div>
                         </div><br /><br />
 
-                        <!--  工單處理紀錄  -->
-                        <label>處理紀錄</label>
-                        <table class="table table-hover table-bordered ">
-                            <thead>
-                                <tr>
-                                    <th>時間</th>
-                                    <th>處理狀態</th>
-                                    <th>處理人員</th>
-                                    <th>出示意見</th>
-                                    <th>審核結果</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.FormDetails.FormDetailsFormProcesses)
-                                {
+                        <div class="table-container">
+                            <!--  工單處理紀錄  -->
+                            <label>處理紀錄</label>
+                            <table class="table table-hover table-bordered ">
+                                <thead>
                                     <tr>
-                                        <td>@item.Date</td>
-                                        <td>@item.UserActivityIdDescription</td>
-                                        <td>@item.EmployeeName</td>
-                                        <td>@item.Remark</td>
-                                        <td>@item.ResultDescription</td>
+                                        <th>時間</th>
+                                        <th>處理狀態</th>
+                                        <th>處理人員</th>
+                                        <th>出示意見</th>
+                                        <th>審核結果</th>
                                     </tr>
-                                }
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.FormDetails.FormDetailsFormProcesses)
+                                    {
+                                        <tr>
+                                            <td>@item.Date</td>
+                                            <td>@item.UserActivityIdDescription</td>
+                                            <td>@item.EmployeeName</td>
+                                            <td>@item.Remark</td>
+                                            <td>@item.ResultDescription</td>
+                                        </tr>
+                                    }
 
 
-                            </tbody>
-                        </table>
-
+                                </tbody>
+                            </table>
+                        </div>
 
                         <!-- /.row -->
                         <div class="row">
@@ -322,6 +362,7 @@
                 <!-- /.row -->
             </div>
             <!-- /.container-fluid -->
+        </div>
     </section>
     <!-- /.content -->
     <!-- /.content-wrapper -->
@@ -352,10 +393,16 @@
                 'contentType': false, //required
                 'processData': false, // required
                 'mimeType': 'multipart/form-data',
-                'data': formData
+                'data': formData,
+                'dataType': 'json'
             }).done(function (response) {
-                alert(response.message);
-                window.location.href = "/QueryForms/Index/";
+                console.log(response);
+                if (response) {
+                           alert(response.message);
+                    window.location.href = "/QueryForms/Index/";
+                } else {
+                    alert("作廢成功，但未收到預期回應!");
+                }
             }).fail(function (response) {
                 alert("作廢失敗，請重新嘗試或洽管理員!")
             })

@@ -211,7 +211,7 @@
                                                     <td>${item.departmentName}</td>
                                                     <td>${item.userName}</td>
                                                     <td>${item.categoryDescription}</td>
-                                                    <td>${item.projectName}</td>
+                                                     <td>${item.projectName || ""}</td>
                                                     <td>${item.situation}</td>
                                                     <td>${item.createdTime}</td>
                                                 </tr>`;
@@ -260,7 +260,7 @@
                                                         <td>${model.departments[item.departmentId]}</td>
                                                         <td>${model.userName[item.userId]}</td>
                                                         <td>${model.category[item.categoryId]}</td>
-                                                        <td>${model.projectName[item.projectId]}</td>
+                                                                <td>${model.projectName[item.projectId] || ""}</td>
                                                         <td>${model.userActivity[model.processNodes[item.processNodeId]]}</td>
                                                         <td>${item.createdTime}</td>
                                                     </tr>`;
@@ -313,7 +313,7 @@
                                                                 <td>${model.departments[item.departmentId]}</td>
                                                                 <td>${model.userName[item.userId]}</td>
                                                                 <td>${model.category[item.categoryId]}</td>
-                                                                <td>${model.projectName[item.projectId]}</td>
+                                                                        <td>${model.projectName[item.projectId] || ""}</td>
                                                                 <td>${model.userActivity[model.processNodes[item.processNodeId]]}</td>
                                                                 <td>${item.createdTime}</td>
                                                             </tr>`;
@@ -365,7 +365,7 @@
                                                                         <td>${model.departments[item.departmentId]}</td>
                                                                         <td>${model.userName[item.userId]}</td>
                                                                         <td>${model.category[item.categoryId]}</td>
-                                                                        <td>${model.projectName[item.projectId]}</td>
+                                                                                <td>${model.projectName[item.projectId] || ""}</td>
                                                                         <td>${model.userActivity[model.processNodes[item.processNodeId]]}</td>
                                                                         <td>${item.createdTime}</td>
                                                                     </tr>`;
@@ -419,7 +419,7 @@
                                                                                 <td>${model.departments[item.departmentId]}</td>
                                                                                 <td>${model.userName[item.userId]}</td>
                                                                                 <td>${model.category[item.categoryId]}</td>
-                                                                                <td>${model.projectName[item.projectId]}</td>
+                                                                                <td>${model.projectName[item.projectId] || ""}</td>
                                                                                 <td>${model.userActivity[model.processNodes[item.processNodeId]]}</td>
                                                                                         <td>${item.createdTime}</td>
                                                                             </tr>`;
