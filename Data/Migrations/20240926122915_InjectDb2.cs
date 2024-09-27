@@ -4,13 +4,13 @@
 
 namespace BPMPlus.Data.Migrations
 {
-	/// <inheritdoc />
-	public partial class InjectDb2 : Migration
-	{
-		/// <inheritdoc />
-		protected override void Up(MigrationBuilder migrationBuilder)
-		{
-			migrationBuilder.Sql($@"
+    /// <inheritdoc />
+    public partial class InjectDb2 : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.Sql($@"
                 INSERT INTO PermissionGroup (PermissionGroupId,PermissionGroupName,CreatedTime,UpdatedTime) VALUES
                 ('G0010',N'專案管理員','2024-09-16','2024-09-16');
                 GO
@@ -62,17 +62,6 @@ namespace BPMPlus.Data.Migrations
 
                 INSERT INTO PermissionGroupUser 
                 VALUES
-                    ('G0009', 'A001'),
-                    ('G0009', 'A002'),
-                    ('G0009', 'A003'),
-                    ('G0009', 'A004'),
-                    ('G0009', 'A005'),
-                    ('G0009', 'A006'),
-                    ('G0009', 'A007'),
-                    ('G0009', 'A008'),
-                    ('G0009', 'A009'),
-                    ('G0009', 'A010'),
-                    ('G0009', 'A011'),
                     ('G0010', 'A001'),
                     ('G0010', 'A002'),
                     ('G0010', 'A003'),
@@ -84,6 +73,17 @@ namespace BPMPlus.Data.Migrations
                     ('G0010', 'A009'),
                     ('G0010', 'A010'),
                     ('G0010', 'A011'),
+                    ('G0009', 'A001'),
+                    ('G0009', 'A002'),
+                    ('G0009', 'A003'),
+                    ('G0009', 'A004'),
+                    ('G0009', 'A005'),
+                    ('G0009', 'A006'),
+                    ('G0009', 'A007'),
+                    ('G0009', 'A008'),
+                    ('G0009', 'A009'),
+                    ('G0009', 'A010'),
+                    ('G0009', 'A011'),
                     ('G0008', 'A001'),
                     ('G0008', 'A002'),
                     ('G0008', 'A003'),
@@ -95,6 +95,14 @@ namespace BPMPlus.Data.Migrations
                     ('G0008', 'A009'),
                     ('G0008', 'A010'),
                     ('G0008', 'A011'),
+                    ('G0005', 'A009'),
+                    ('G0005', 'A010'),
+                    ('G0005', 'A001'),
+                    ('G0005', 'A003'),
+                    ('G0002', 'A009'),
+                    ('G0002', 'A010'),
+                    ('G0002', 'A001'),
+                    ('G0002', 'A003'),
                     ('G0001', 'A001'),
                     ('G0001', 'A003');
                 GO
@@ -134,12 +142,12 @@ namespace BPMPlus.Data.Migrations
                       ('PR00000002','good','F00001','D001','A001','RS4','02','2024-08-01','05','2024-08-01','2024-08-01');
             ");
 
-		}
+        }
 
-		/// <inheritdoc />
-		protected override void Down(MigrationBuilder migrationBuilder)
-		{
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
 
-		}
-	}
+        }
+    }
 }

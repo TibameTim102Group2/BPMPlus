@@ -408,7 +408,7 @@
     <!-- AdminLTE for demo purposes -->
     <script src="~/AdminLTE/dist/js/demo.js"></script>
     <script>
-        // 一進到審核頁發請求詢問身分是否為接收方一級主管or 處理人員 or 驗收方, 是的話移除唯讀, 提供輸入指派者 or 處理人員輸入預估工時
+        // 一進到審核頁發請求詢問身分是否為處理方一級主管or 處理人員 or 驗收方, 是的話移除唯讀, 提供輸入指派者 or 處理人員輸入預估工時
         document.addEventListener('DOMContentLoaded', async function () {
             let formId = '@Model.FormId';
             let needEmp = document.querySelector(".assignEmp");
