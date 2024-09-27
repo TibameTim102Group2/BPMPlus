@@ -27,7 +27,18 @@ namespace BPMPlus.Data.Migrations
                     ('P009', 'A006',N'超級美味！B級美食大逃亡！！', N'吃美食', '2024-09-30', '2024-09-25', '2024-09-25'),
                     ('P010', 'A005',N'春日部幼稚園改建', N'春日部幼稚園', '2024-09-30', '2024-09-25', '2024-09-25');
                 GO
-
+                    INSERT INTO ProjectUser (ProjectsProjectId, UsersUserId) VALUES
+                    ('P001', 'A009'),
+                    ('P002', 'A009'),
+                    ('P003', 'A009'),
+                    ('P004', 'A004'),
+                    ('P005', 'A003'),
+                    ('P006', 'A003'),
+                    ('P007', 'A002'),
+                    ('P008', 'A006'),
+                    ('P009', 'A006'),
+                    ('P010', 'A005');
+                GO
                 INSERT INTO Users (DepartmentId, UserId, GradeId, UserIsActive, CreatedTime, UpdatedTime, TEL, UserName, Email, Password) VALUES
                     ('D002', 'A001', '05', 1, '2024-08-19', '2024-08-19', '0912345001', N'風間', 'dawen5@domain.com', '$2b$10$5Gix0lXUXZ.NoDqXx6VtOuBWJQBb/dwXjNHwc8CNlxQ.VlEBXmIji'),
                     ('D002', 'A002', '01', 1, '2024-08-19', '2024-08-19', '0912345002', N'阿呆', 'dawen5@domain.com', '$2b$10$TerkGwFIc4vMrzWEie5gzOgNjWtr4MTFD2Qvgu3PUHbSBakgu3AjG'),
