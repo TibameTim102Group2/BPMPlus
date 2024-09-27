@@ -29,8 +29,8 @@ namespace BPMPlus.Controllers
             this.emailService = emailService;
         }
 
-
-        [HttpGet]
+		[Authorize]
+		[HttpGet]
         public async Task<JsonResult> CheckEmp(string id)
         {
             // 查詢該工單的流程節點表的功能編號是否跟最新工單紀錄的功能編號相同
@@ -112,8 +112,9 @@ namespace BPMPlus.Controllers
             return Json(new { status = false });
         }
 
-        // 指派方輸入人員時會檢查是否與指派方同部門以及有權限處理者
-        [HttpPost]
+		// 指派方輸入人員時會檢查是否與指派方同部門以及有權限處理者
+		[Authorize]
+		[HttpPost]
         public async Task<JsonResult> AssignEmp(string empName)
         {
             User user = await GetAuthorizedUser();
@@ -147,7 +148,8 @@ namespace BPMPlus.Controllers
         //GET: /FormReview/Index/1
 
         [HttpGet]
-        [AuthAttribute]
+		[Authorize]
+		[AuthAttribute]
         public async Task<ActionResult> Index(string id)
         {
             User user = await GetAuthorizedUser();
@@ -187,7 +189,8 @@ namespace BPMPlus.Controllers
         // 同時創建新的FormRecord來顯示下一筆審核紀錄
         // 並更新該工單上的ProcessNodeId, or Manday
         [HttpPost]
-        public async Task<IActionResult> CreateAndUpdate(FormReviewViewModel fvm, string reviewResult)
+		[Authorize]
+		public async Task<IActionResult> CreateAndUpdate(FormReviewViewModel fvm, string reviewResult)
         {
 
             User user = await GetAuthorizedUser();

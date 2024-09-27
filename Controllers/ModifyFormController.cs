@@ -86,8 +86,8 @@ namespace BPMPlus.Controllers
         }
 
 
-       
-        [HttpPost]
+		[Authorize]
+		[HttpPost]
         public async Task<IActionResult>Invalid(string id) 
         {
 
@@ -125,7 +125,8 @@ namespace BPMPlus.Controllers
 
         }
 
-        [HttpPost]
+		[Authorize]
+		[HttpPost]
         public async Task<IActionResult> Edit(UploadInputModel data)
         {
 

@@ -48,6 +48,7 @@ namespace BPMPlus.Controllers
             return View();
 		}
 		// GET: Users
+		[Authorize]
 		[HttpGet]
 		public async Task<JsonResult> userData()
 		{
@@ -71,6 +72,7 @@ namespace BPMPlus.Controllers
 		}
 
 		// GET: Users/Details/5
+		[Authorize]
 		public async Task<IActionResult> Details(string id)
 		{
 			if (id == null)
@@ -104,6 +106,7 @@ namespace BPMPlus.Controllers
 
 
 		// GET: Users/Create
+		[Authorize]
 		[HttpGet]
 		public async Task<IActionResult> Create()
 		{
@@ -142,6 +145,7 @@ namespace BPMPlus.Controllers
 		// POST: Users/Create
 		// To protect from overposting attacks, enable the specific properties you want to bind to.
 		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+		[Authorize]
 		[HttpPost]
 		public async Task<IActionResult> Create([FromBody] bKUserCreateViewModel userdata)
 		{
@@ -150,7 +154,11 @@ namespace BPMPlus.Controllers
 			{
 				string defaultPassword = $"{userdata.UserId}@tim102";
 				string newPassword = BCryptHelper.HashPassword(defaultPassword);
-
+				User? sameEmailUser = await _context.User.FirstOrDefaultAsync(u => u.Email == userdata.Email);
+				if(sameEmailUser != null)
+				{
+					return Json(new { message = "emailExists" });
+				}	
 				var NewUser = new User();
 				NewUser.UserId = userdata.UserId;
 				NewUser.UserName = userdata.UserName;
@@ -183,6 +191,7 @@ namespace BPMPlus.Controllers
 
 		//編輯
 		// GET: Users/Edit/5
+		[Authorize]
 		public async Task<IActionResult> Edit(string id)
 		{
 
@@ -242,6 +251,7 @@ namespace BPMPlus.Controllers
 		// POST: Users/Edit/5
 		// To protect from overposting attacks, enable the specific properties you want to bind to.
 		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+		[Authorize]
 		[HttpPost]
 		public async Task<IActionResult> Edit([FromBody] bKUserEditViewModel userData)
 		{
@@ -320,6 +330,7 @@ namespace BPMPlus.Controllers
 		}
 
 		// Delete: Users/Invalid/5
+		[Authorize]
 		[HttpDelete]
 		public async Task<IActionResult> Invalid(string id)
 		{

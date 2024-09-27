@@ -206,6 +206,11 @@
 						}
 					})
 						.then(response => {
+							if(response.data.message && response.data.message == "emailExists")
+							{
+								alert("email 重複");
+								return;
+							}
 							this.items = response.data;
 							alert("新增人員成功");
 							window.location.href = `${_this.baseAddress}`;

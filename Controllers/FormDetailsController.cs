@@ -122,7 +122,8 @@ namespace BPMPlus.Controllers
             return View(result ?? new FormDetailsGroupViewModel());
     }
         [HttpPost]
-        public async Task<IActionResult> Invalid(string id)
+		[Authorize]
+		public async Task<IActionResult> Invalid(string id)
         {
 
 
@@ -163,7 +164,8 @@ namespace BPMPlus.Controllers
        
 
         [HttpPost]
-        public IActionResult Download(string id)
+		[Authorize]
+		public IActionResult Download(string id)
         {
             //讀取檔案
             var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "upload");
