@@ -71,10 +71,10 @@ values: new object[,]
     { "02", "需求方一級主管審核",  new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
     { "03", "需求方二級主管審核",  new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
     { "04", "需求方三級主管審核",  new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
-    { "05", "接收方三級主管指派(審核)",  new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
-    { "06", "接收方二級主管指派(審核)",  new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
-    { "07", "接收方一級主管指派(審核)",  new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
-    { "08", "接收方人員接單處理",  new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
+    { "05", "處理方三級主管指派(審核)",  new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
+    { "06", "處理方二級主管指派(審核)",  new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
+    { "07", "處理方一級主管指派(審核)",  new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
+    { "08", "處理方人員接單處理",  new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
     { "09", "需求方驗收",  new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
     { "10", "驗收完成",  new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
     { "11", "專案管理",  new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
@@ -86,13 +86,13 @@ values: new object[,]
             values: new object[,]
             {
     { "G0001", "系統管理員",  new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
-    { "G0002", "接收方一級主管",  new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
-    { "G0003", "接收方二級主管",  new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
-    { "G0004", "接收方三級主管",  new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
+    { "G0002", "處理方一級主管",  new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
+    { "G0003", "處理方二級主管",  new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
+    { "G0004", "處理方三級主管",  new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
     { "G0005", "申請方一級主管",  new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
     { "G0006", "申請方二級主管",  new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
     { "G0007", "申請方三級主管",  new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
-    { "G0008", "接收方基層人員",  new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
+    { "G0008", "處理方基層人員",  new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
     { "G0009", "申請方基層人員",  new DateTime(2024, 8, 1), new DateTime(2024, 8, 1) },
             });
             migrationBuilder.InsertData(

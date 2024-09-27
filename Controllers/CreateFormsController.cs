@@ -161,7 +161,9 @@ namespace BPMPlus.Controllers
                 }
                 if (noAvailableOwner && pt.UserActivityId != "10")
                 {
-                    return Json(new { errorCode = 400, message = $"審核流程無法建立，因部門{pt.DepartmentId} 無人能執行功能{pt.UserActivityId}" });
+                    Department dep = (await _context.Department.FirstOrDefaultAsync(d => d.DepartmentId == pt.DepartmentId));
+					UserActivity uat = (await _context.UserActivity.FirstOrDefaultAsync(u => u.UserActivityId== pt.UserActivityId));
+					return Json(new { errorCode = 400, message = $"審核流程無法建立，因{dep.DepartmentName} 無人能執行功能 : {uat.UserActivityIdDescription}" });
                 }
                 if(pt.UserActivityId == "10")
                 {
