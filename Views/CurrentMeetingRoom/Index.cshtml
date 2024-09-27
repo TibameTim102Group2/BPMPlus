@@ -352,9 +352,8 @@
 				calculateBookedSlots() {
 
 					if (!Array.isArray(this.bookings)) {
-						//需要使bookings 為一個陣列 但是裡面的room 是空的
+						//直接讓bookedSlots是空的
 						this.bookedSlots = {};
-						// console.error("Bookings is not an array:", this.bookings);
 						return;
 					}
 					this.bookedSlots = {};
