@@ -101,9 +101,9 @@ namespace BPMPlus.Controllers
                 findForm.Category.CategoryDescription,
                 DepartmentName = (await _context.Department.AsNoTracking().FirstOrDefaultAsync(c => c.DepartmentId == findForm.DepartmentId))?.DepartmentName,
                 UserName = (await _context.User.AsNoTracking().FirstOrDefaultAsync(c => c.UserId == findForm.UserId))?.UserName,
-                findForm.Project.ProjectName,
                 Situation = (await _context.UserActivity.AsNoTracking().FirstOrDefaultAsync(c => c.UserActivityId == UserActivity))?.UserActivityIdDescription,
-                CreatedTime = creatTime
+                CreatedTime = creatTime,
+                ProjectName = findForm.Project != null ? findForm.Project.ProjectName : "",
             };
             return Json(new { success = true, data = result });
 
