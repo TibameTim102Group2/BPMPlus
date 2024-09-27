@@ -17,6 +17,7 @@ using BPMPlus.Attributes;
 using Microsoft.AspNetCore.Hosting;
 using BPMPlus.ViewModels;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using System;
 
 namespace BPMPlus.Controllers
 {
@@ -197,7 +198,6 @@ namespace BPMPlus.Controllers
         {
             var _service = aesAndTimestampService;
 
-
             //dataStr url解碼
             var dataStrDecode = HttpUtility.UrlDecode(vm.dataStr);
             //換回符號+/
@@ -261,10 +261,9 @@ namespace BPMPlus.Controllers
                                 string newPassword = BCryptHelper.HashPassword(vm.ResetPassword);
                                 user.Password = newPassword;
                                 await _context.SaveChangesAsync();
-                                //取得儲存密碼時間戳
+                                //取得儲存密碼時間戳並儲存
                                 DateTimeOffset saveChangeTime = new DateTimeOffset(DateTime.Now);
                                 user.ModifyPasswordTime = saveChangeTime.ToUnixTimeSeconds();
-                                //儲存修改密碼時間戳
                                 await _context.SaveChangesAsync();
 
                                 return Json(new { success = true, message = "密碼重設成功!" });
@@ -333,36 +332,48 @@ namespace BPMPlus.Controllers
         {
             var user = await GetAuthorizedUser();
 
-            //判斷舊密碼是否輸入正確
-            bool isTruePassword = BCryptHelper.Verify(vm.OldPassword, user.Password);
-            if (isTruePassword == false)
-            {
-                return Json(new { success = false, message = "舊密碼輸入錯誤!" });
-            }
-            else
-            {
-                bool isSamePassWord = BCryptHelper.Verify(vm.NewPassword, user.Password);
+            //取得現在時間戳
+            DateTimeOffset dateTimeOffset = new DateTimeOffset(DateTime.Now);
+            long nowStampTime = dateTimeOffset.ToUnixTimeSeconds();
 
-                //判斷新舊密碼是否重複
-                if (isSamePassWord == true)
+            if (nowStampTime >= (user.ModifyPasswordTime ?? 0) + 1800)
+            {
+                //判斷舊密碼是否輸入正確
+                bool isTruePassword = BCryptHelper.Verify(vm.OldPassword, user.Password);
+                if (isTruePassword == false)
                 {
-                    return Json(new { success = false, message = "新舊密碼不得重複!" });
+                    return Json(new { success = false, message = "舊密碼輸入錯誤!" });
                 }
                 else
                 {
-                    //新密碼加密後儲存
-                    string newPassword = BCryptHelper.HashPassword(vm.NewPassword);
-                    user.Password = newPassword;
-                    await _context.SaveChangesAsync();
+                    bool isSamePassWord = BCryptHelper.Verify(vm.NewPassword, user.Password);
 
-                    //取得儲存密碼時間戳並儲存
-                    DateTimeOffset saveChangeTime = new DateTimeOffset(DateTime.Now);
-                    user.ModifyPasswordTime = saveChangeTime.ToUnixTimeSeconds();
-                    await _context.SaveChangesAsync();
+                    //判斷新舊密碼是否重複
+                    if (isSamePassWord == true)
+                    {
+                        return Json(new { success = false, message = "新舊密碼不得重複!" });
+                    }
+                    else
+                    {
+                        //新密碼加密後儲存
+                        string newPassword = BCryptHelper.HashPassword(vm.NewPassword);
+                        user.Password = newPassword;
+                        await _context.SaveChangesAsync();
 
-                    return Json(new { success = true, data = "密碼修改成功!" });
+                        //取得儲存密碼時間戳並儲存
+                        DateTimeOffset saveChangeTime = new DateTimeOffset(DateTime.UtcNow);
+                        user.ModifyPasswordTime = saveChangeTime.ToUnixTimeSeconds();
+                        await _context.SaveChangesAsync();
 
+                        return Json(new { success = true, data = "密碼修改成功!" });
+                    }
                 }
+
+            }
+            //30分鐘內修改過密碼
+            else
+            {
+                return Json(new { success = false, message = "30分鐘內已重設過密碼, 請稍後再嘗試或聯繫系統管理員!" });
             }
 
         }
