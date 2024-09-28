@@ -209,7 +209,7 @@
                             <div style="display:flex">
                                 <div style="width:27%"></div>
                                 <div class="form-group">
-                                    @if (Model.FormDetails.IsUser && Model.FormDetails.IsApply)
+                                    @if (Model.FormDetails.IsUser && Model.FormDetails.IsApply&&Model.FormDetails.FormIsActive)
                                     {
                                         <a class="button btn btn-warning btn-link" asp-area="" asp-controller="ModifyForm" asp-action="Index" asp-route-id="@Model.FormDetails.FormId"><i class="fa-solid fa-pen-to-square"></i> 修改</a>
                                     }
@@ -223,7 +223,7 @@
                               
                                     <input type="hidden" name="id" value="@Model.FormDetails.Id" />
                                     <div class="form-group">
-                                        @if (Model.FormDetails.IsUser && Model.FormDetails.IsApply)
+                                    @if (Model.FormDetails.IsUser && Model.FormDetails.IsApply && Model.FormDetails.FormIsActive)
                                         {
                                             <button id="btnInvalid" class="button btn btn-danger" type="button"><i class="fa-solid fa-trash"></i> 作廢</button>
                                         }
