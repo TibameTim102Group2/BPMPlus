@@ -67,8 +67,11 @@ namespace BPMPlus.Controllers
                         var getDepartment = await _context.User.Where(u => u.UserId == login.UserId).Select(u => u.Department.DepartmentName).FirstOrDefaultAsync();
 
 
-                        // 登入成功，建立驗證 cookie
-                        Claim[] claims = new[] { new Claim("UserId", login.UserId), new Claim("Department", getDepartment) };
+						// 登入成功，建立驗證 cookie
+						string sessionToken = Guid.NewGuid().ToString(); // 生成唯一會話 Token
+						user.SessionToken = sessionToken;
+						await _context.SaveChangesAsync();
+						Claim[] claims = new[] { new Claim("UserId", login.UserId), new Claim("Department", getDepartment), new Claim("SessionToken", sessionToken) };
                         ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                         ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
