@@ -1,8 +1,12 @@
 ﻿using BPMPlus.Data;
 using BPMPlus.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 
@@ -157,14 +161,15 @@ namespace BPMPlus.Controllers
                 .Include(u => u.Projects)         // 加載 Projects
                 .Include(u => u.Meetings)
                 .FirstOrDefaultAsync(m => m.UserId == userId && m.UserIsActive == true);
-            
-            if (user == null)
+            var browerSessionToken = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "SessionToken")?.Value;
+
+			if (user == null || user.SessionToken != browerSessionToken)
             {
-                throw new Exception("Server error, User is null");
-            }
+				await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+			}
             return user;
         }
-        [Authorize]
+		[Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task UploadFiles(List<IFormFile> Files, string DirectoryName)
