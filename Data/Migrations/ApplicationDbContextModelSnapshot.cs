@@ -41,7 +41,7 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("Category", (string)null);
+                    b.ToTable("Category");
                 });
 
             modelBuilder.Entity("BPMPlus.Models.Department", b =>
@@ -63,7 +63,7 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasKey("DepartmentId");
 
-                    b.ToTable("Department", (string)null);
+                    b.ToTable("Department");
                 });
 
             modelBuilder.Entity("BPMPlus.Models.Form", b =>
@@ -132,7 +132,7 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Form", (string)null);
+                    b.ToTable("Form");
                 });
 
             modelBuilder.Entity("BPMPlus.Models.FormRecord", b =>
@@ -192,7 +192,7 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("FormRecord", (string)null);
+                    b.ToTable("FormRecord");
                 });
 
             modelBuilder.Entity("BPMPlus.Models.Grade", b =>
@@ -214,7 +214,7 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasKey("GradeId");
 
-                    b.ToTable("Grade", (string)null);
+                    b.ToTable("Grade");
                 });
 
             modelBuilder.Entity("BPMPlus.Models.Meeting", b =>
@@ -250,7 +250,7 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasIndex("MeetingRoomId");
 
-                    b.ToTable("Meeting", (string)null);
+                    b.ToTable("Meeting");
                 });
 
             modelBuilder.Entity("BPMPlus.Models.MeetingRooms", b =>
@@ -270,7 +270,7 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasKey("MeetingRoomId");
 
-                    b.ToTable("MeetingRooms", (string)null);
+                    b.ToTable("MeetingRooms");
                 });
 
             modelBuilder.Entity("BPMPlus.Models.PermissionGroup", b =>
@@ -292,7 +292,7 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasKey("PermissionGroupId");
 
-                    b.ToTable("PermissionGroup", (string)null);
+                    b.ToTable("PermissionGroup");
                 });
 
             modelBuilder.Entity("BPMPlus.Models.ProcessNode", b =>
@@ -332,7 +332,7 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasIndex("UserActivityId");
 
-                    b.ToTable("ProcessNode", (string)null);
+                    b.ToTable("ProcessNode");
                 });
 
             modelBuilder.Entity("BPMPlus.Models.ProcessTemplate", b =>
@@ -366,7 +366,7 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasIndex("UserActivityId");
 
-                    b.ToTable("ProcessTemplate", (string)null);
+                    b.ToTable("ProcessTemplate");
                 });
 
             modelBuilder.Entity("BPMPlus.Models.Project", b =>
@@ -401,7 +401,7 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasKey("ProjectId");
 
-                    b.ToTable("Project", (string)null);
+                    b.ToTable("Project");
                 });
 
             modelBuilder.Entity("BPMPlus.Models.Result", b =>
@@ -423,7 +423,7 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasKey("ResultId");
 
-                    b.ToTable("Result", (string)null);
+                    b.ToTable("Result");
                 });
 
             modelBuilder.Entity("BPMPlus.Models.User", b =>
@@ -448,9 +448,6 @@ namespace BPMPlus.Data.Migrations
                     b.Property<string>("GradeId")
                         .HasMaxLength(20)
                         .HasColumnType("VARCHAR");
-
-                    b.Property<bool>("IsLogin")
-                        .HasColumnType("bit");
 
                     b.Property<long?>("ModifyPasswordTime")
                         .HasColumnType("bigint");
@@ -485,7 +482,7 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasIndex("GradeId");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("BPMPlus.Models.UserActivity", b =>
@@ -507,7 +504,7 @@ namespace BPMPlus.Data.Migrations
 
                     b.HasKey("UserActivityId");
 
-                    b.ToTable("UserActivity", (string)null);
+                    b.ToTable("UserActivity");
                 });
 
             modelBuilder.Entity("MeetingUser", b =>

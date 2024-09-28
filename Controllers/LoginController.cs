@@ -56,11 +56,6 @@ namespace BPMPlus.Controllers
             // user存在
             if (user != null)
             {
-                if(user.IsLogin)
-                {
-					ViewBag.errMsg = "使用者已登入，請待登出後再行登入";
-					return View("Index", login); // 登入失敗導回頁面
-				}
                 //判斷密碼是否為空
                 if (login.Password != null)
                 {
@@ -72,9 +67,7 @@ namespace BPMPlus.Controllers
 
                         var getDepartment = await _context.User.Where(u => u.UserId == login.UserId).Select(u => u.Department.DepartmentName).FirstOrDefaultAsync();
 
-                        user.IsLogin = true;
-                        _context.User.Update(user);
-                        await _context.SaveChangesAsync();
+
 						// 登入成功，建立驗證 cookie
 						string sessionToken = Guid.NewGuid().ToString(); // 生成唯一會話 Token
 						user.SessionToken = sessionToken;
@@ -165,13 +158,6 @@ namespace BPMPlus.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            var user = await GetAuthorizedUser();
-            if(user != null)
-            {
-                user.IsLogin = false;
-                _context.User.Update(user);
-                await _context.SaveChangesAsync();
-            }
             return RedirectToAction("Index", "Home");       // 導至登入頁
         }
 
