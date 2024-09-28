@@ -142,6 +142,10 @@ namespace BPMPlus.Controllers
 			else
 			{
 				HttpContext.Session.SetString("IsAdmin", "false");
+				if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+				{
+					return Redirect(returnUrl);
+				}
 				return RedirectToAction("Index", "Home");
 			}
 		}
