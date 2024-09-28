@@ -160,6 +160,7 @@
                 columns: [
                     {
                         "data": "projectId",
+                        "orderable": true,
                         "render": function (data, type, row, meta) {
                             // 將 projectId 動態放入鏈接中
                             return `<a href='/ProjectCRUD/ProjectDetails/${row.projectId}' target='_blank'>${row.projectId}</a>`;
@@ -170,6 +171,7 @@
                     { "data": "deadLine" },
                     { "data": "projectManager" },
                 ],
+                "order": [[0, 'desc']], 
                 fixedHeader: {
                     header: true
                 },
@@ -222,6 +224,7 @@
                             "columns": [
                                 {
                                     "data": "projectId",
+                                    "orderable": true,
                                     "render": function (data, type, row, meta) {
                                         // 將 projectId 動態放入鏈接中
                                         return `<a href='/ProjectCRUD/ProjectDetails/${row.projectId}' target='_blank'>${row.projectId}</a>`;
@@ -232,6 +235,7 @@
                                 { "data": "deadLine" },
                                 { "data": "projectManager" }
                             ],
+                            "order": [[0, 'desc']], 
                             "fixedHeader": {
                                 "header": true
                             },

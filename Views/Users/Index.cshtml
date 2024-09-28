@@ -78,6 +78,9 @@
 			font-size: 18px;
 		}
 
+
+
+
 	</style>
 	<link rel="stylesheet" href="~/font-awesome/css/all.css" />
 	<link href="https://unpkg.com/vue3-easy-data-table/dist/style.css" rel="stylesheet" />
@@ -114,7 +117,8 @@
 								 buttons-pagination
 								 :rows-per-page="10"
 								 :search-value="searchValue"
-								 style="width: 100%; height: 450px;">
+								 style="width: 100%;"
+				@@pagination-change="updateTableHeight">
 					<template #empty-message>
 						<a href="#">未發現符合條件的記錄!</a>
 					</template>
@@ -155,7 +159,7 @@
 					baseAddress: "https://localhost:7129/Users",
 					headers: [
 						{ text: "員工編號", value: "userId", sortable: true },
-						{ text: "員工姓名", value: "userName", sortable: true },
+						{ text: "姓名", value: "userName", sortable: true },
 						{ text: "部門", value: "departmentName", sortable: true },
 						{ text: "職位", value: "gradeName", sortable: true },
 						{ text: "Email", value: "email" },
@@ -167,7 +171,20 @@
 					searchValue: "",
 				};
 			},
+			watch: {
+				rowsPerPage() {
+					this.updateTableHeight();
+				},
+				items() {
+					this.updateTableHeight();
+				},
+			},
 			methods: {
+				updateTableHeight() {
+					const rowHeight = 50; 
+					const newHeight = this.items.length * rowHeight;
+					this.tableHeight = Math.min(newHeight, 1000); 
+				},
 				fetchItems() {
 					let _this = this;
 					axios.get(`${this.baseAddress}/userData`)
