@@ -170,7 +170,8 @@ namespace BPMPlus.Controllers
 				NewUser.CreatedTime = DateTime.UtcNow;
 				NewUser.UpdatedTime = DateTime.UtcNow;
 				NewUser.Password = newPassword;
-				await _context.User.AddAsync(NewUser);
+				NewUser.SessionToken = Guid.NewGuid().ToString();
+                await _context.User.AddAsync(NewUser);
 			}
 			await _context.SaveChangesAsync();
 			var user = _context.User.Include(x => x.PermissionGroups).FirstOrDefault(x => x.UserId == userdata.UserId);
