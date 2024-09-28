@@ -70,7 +70,7 @@ namespace BPMPlus.Controllers
                     DepartmentName = c.Department.DepartmentName,
                     Content = c.Content,
                     Tel = c.Tel,
-                    FormIsActive = true
+                    FormIsActive = c.FormIsActive
                 }).FirstOrDefault();
 
             //FormGroupViewModel
