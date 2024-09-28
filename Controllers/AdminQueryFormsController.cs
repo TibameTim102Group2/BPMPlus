@@ -170,6 +170,7 @@ namespace BPMPlus.Controllers
         // 單筆刪除
         public async Task<IActionResult> DeleteSingle(string formId)
         {
+			User user = await GetAuthorizedUser();
             //  抓有關該工單的表
             var form = await _context.Form
                 .Include(f => f.FormRecord)
@@ -186,8 +187,26 @@ namespace BPMPlus.Controllers
             _context.ProcessNodes.RemoveRange(form.ProcessNode);
             _context.Form.Remove(form);
             await _context.SaveChangesAsync();
-            return Json(new { success = true });
-        }
+
+			string folderName = formId;
+			var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "upload");
+			var folderPath = Path.Combine(uploadPath, folderName);
+
+			if (Directory.Exists(folderPath))
+			{
+				try
+				{
+					Directory.Delete(folderPath, true);
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine($"刪除資料夾失敗: {folderPath}. 錯誤: {ex.Message}");
+					return Json(new { success = false, message = $"刪除資料夾失敗: {ex.Message}" });
+				}
+			}
+
+			return Json(new { success = true });
+		}
 
 		[Authorize]
 		[HttpPost]
@@ -215,7 +234,38 @@ namespace BPMPlus.Controllers
             _context.ProcessNodes.RemoveRange(processNodeDelte);
             _context.Form.RemoveRange(forms);
             await _context.SaveChangesAsync();
-            return Json(new { success = true });
+
+			var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "upload");
+
+			if (Directory.Exists(uploadPath))
+			{
+				foreach (var formId in formIds)
+				{
+					var folderPath = Path.Combine(uploadPath, formId);
+
+					if (Directory.Exists(folderPath))
+					{
+						try
+						{
+							Directory.Delete(folderPath, true);
+						}
+						catch (Exception ex)
+						{
+							return Json(new { success = false, message = ex.Message });
+						}
+					}
+					else
+					{
+						return Json(new { success = false, message = "該文件資料夾不存在" });
+					}
+				}
+			}
+			else
+			{
+				return Json(new { success = false, message = "檔案路徑不存在" });
+			}
+
+			return Json(new { success = true });
         }
 
 		[Authorize]
