@@ -46,8 +46,8 @@ namespace BPMPlus.Models
         [MaxLength(20)]
         public string TEL { get; set; }
         public long? ModifyPasswordTime { get; set; }
-
-        public bool PermittedTo(string functionId)
+		public string SessionToken { get; set; }
+		public bool PermittedTo(string functionId)
         {
             foreach (var permissionGroup in PermissionGroups)
             {
