@@ -62,7 +62,7 @@ namespace BPMPlus.Controllers
                     DepartmentName = c.Department.DepartmentName,
                     EmployeeName = c.User.UserName,
                     ProcessNodeId=c.ProcessNodeId,
-                    FormIsActive=true,
+                    FormIsActive=c.FormIsActive,
                     FormDetailsProcessNodes = c.ProcessNode.Select(d => new FormDetailsProcessNodeViewModel
                     {
                       ProcessNodeId=d.ProcessNodeId

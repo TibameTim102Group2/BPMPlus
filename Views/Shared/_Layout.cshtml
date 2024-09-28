@@ -304,6 +304,28 @@
                 console.log("Error retrieving profile picture.");
             }
         });
+    window.addEventListener('beforeunload', function (event) {
+        // 呼叫你的 Logout function
+        Logout();
+
+        // 如果你需要阻止預設的關閉行為，則可以取消這段註釋
+        // event.preventDefault();
+        // event.returnValue = '';
+    });
+    function Logout() {
+        // 使用 fetch 或 XMLHttpRequest 來進行 AJAX 呼叫
+        fetch('/Login/Logout', {
+            method: 'GET', // 假設你的登出是 POST 請求
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        }).then(response => {
+            // 可以根據需要處理回應
+            console.log("User logged out.");
+        }).catch(error => {
+            console.error('Error logging out:', error);
+        });
+    }
 
 
 </script>
