@@ -142,6 +142,10 @@ namespace BPMPlus.Controllers
 			else
 			{
 				HttpContext.Session.SetString("IsAdmin", "false");
+				if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+				{
+					return Redirect(returnUrl);
+				}
 				return RedirectToAction("Index", "Home");
 			}
 		}
@@ -301,31 +305,6 @@ namespace BPMPlus.Controllers
             return View();
         }
 
-        /* 測試修改密碼
-        [HttpGet]
-        public async Task<IActionResult> ResetPW(string password)
-        {
-            var resetPasswordService = new ResetPasswordService();
-            string PW = "A@1234567";
-            ValidationResult result = resetPwService.ValidatePassword(PW);
-
-            if (result.IsValid)
-            {
-                Console.WriteLine("Password is valid.");
-                return Ok("Password is valid.");
-            }
-            else
-            {
-                Console.WriteLine("Password is invalid. Errors:");
-                foreach (var error in result.Errors)
-                {
-                    Console.WriteLine($"- {error}");
-                    return Ok($"- {error}");
-                }
-            }
-            return Ok("!");
-        }
-        */
 
         /* 修改密碼 */
         [Authorize]
@@ -388,19 +367,12 @@ namespace BPMPlus.Controllers
             return View();
         }
 
-        //重設密碼失敗跳轉
-        public IActionResult ErrorPage()
-        {
-            return View();
-        }
-
 
 		//設定大頭貼
 		[Authorize]
 		[HttpGet]
         public IActionResult UploadProfilePicture()
         {
-            
             return View();
         }
 
@@ -455,9 +427,6 @@ namespace BPMPlus.Controllers
             {
                 return Json(new { success = false, message = ex.Message });
             }
-            
-
-            
 
 
             return Json(new { success = true, message = "上傳成功" });
@@ -490,7 +459,6 @@ namespace BPMPlus.Controllers
             {
                 TempData["FilePath"] =null;
             }
-
 
 
             return Json(new { filePath = TempData["FilePath"] });
