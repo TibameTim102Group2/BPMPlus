@@ -18,8 +18,7 @@
         }
 
         .selectbtn {
-            background-color: #458bfc;
-            color: white;
+            color: black;
             font-weight: bold;
         }
 
@@ -38,7 +37,7 @@
         }
 
         ::placeholder {
-            color: aliceblue;
+            color: black;
         }
 
         .txtTitle{
@@ -50,7 +49,9 @@
         .dataTables_filter input::placeholder{
             color: black;
         }
-
+        .inputb{
+            border: #ced4da 1px solid;
+        }
         
 
     </style>
@@ -69,7 +70,7 @@
 
 
                         <div class="col-2 d-flex justify-content-center">
-                            <input type="text" class="btn btn-primary fID" style="outline:none ;width:80%" placeholder="請填工單編號" />
+                            <input type="text" class="btn inputb fID" style="width:80%;border:#ced4da 1px solid" placeholder="請填工單編號" />
                         </div>
                         <div class="col-3 d-flex justify-content-center">
                             <select class="form-select selectbtn selectUserName" asp-items="ViewBag.UserId">
@@ -90,7 +91,7 @@
                         </div>
 
                         <div class="col-2 d-flex justify-content-center">
-                            <input type="date" class="btn btn-primary createddate" style="outline:none" min="2024-01-01" />
+                            <input type="date" class="btn inputb createddate" style="outline:none" min="2024-01-01" />
                         </div>
                     </div>
                     <table class="table table-bordered" >
@@ -159,7 +160,7 @@
                                         @situation
                                     </td>
                                     <td>
-                                        @item.Date.ToLocalTime().ToString("yyyy-MM-dd HH:mm")
+                                        @item.Date.AddHours(8).ToString("yyyy-MM-dd HH:mm")
                                     </td>
 
 
