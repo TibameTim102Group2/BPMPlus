@@ -296,7 +296,7 @@
                                 @foreach (var item in Model.FormRecordList)
                                 {
                                     <tr>
-                                        <td>@item.Date.ToLocalTime()</td>
+                                        <td>@item.Date.AddHours(8)</td>
                                         <td>@item.UserActivityDes</td>
                                         <td>@item.UserName</td>
                                         <td>@item.Remark</td>
