@@ -16,7 +16,7 @@ namespace BPMPlus.Data.Migrations
                 GO
                 INSERT INTO Users (DepartmentId, UserId, GradeId, UserIsActive, CreatedTime, UpdatedTime, TEL, UserName, Email, Password) VALUES
                     ('D002', 'A001', '05', 1, '2024-08-19', '2024-08-19', '0912345001', N'風間', 'a001bpmplus@zohomail.com', '$2b$10$5Gix0lXUXZ.NoDqXx6VtOuBWJQBb/dwXjNHwc8CNlxQ.VlEBXmIji'),
-                    ('D002', 'A002', '01', 1, '2024-08-19', '2024-08-19', '0912345002', N'阿呆', 'A002bochan@domain.com', '$2b$10$TerkGwFIc4vMrzWEie5gzOgNjWtr4MTFD2Qvgu3PUHbSBakgu3AjG'),
+                    ('D002', 'A002', '01', 1, '2024-08-19', '2024-08-19', '0912345002', N'阿呆', 'bochan1122@yahoo.com', '$2b$10$TerkGwFIc4vMrzWEie5gzOgNjWtr4MTFD2Qvgu3PUHbSBakgu3AjG'),
                     ('D001', 'A003', '05', 1, '2024-08-19', '2024-08-19', '0912345003', N'妮妮', 'A003nene@domain.com', '$2b$10$a0P.SVqYtRkw44VVSQDn2OfjMaxKIdOF9d.WbsEIDFVb1EJRTiE1u'),
                     ('D003', 'A004', '01', 1, '2024-08-19', '2024-08-19', '0912345004', N'小白', 'A004Shiro@domain.com', '$2b$10$cGur3G0a5HX.lQ8K58eyIeAPrj4l57cZZE5KfIANBCQMBBh5qtS9e'),
                     ('D004', 'A005', '02', 1, '2024-08-19', '2024-08-19', '0912345005', N'園長', 'A005@domain.com', '$2b$10$UGn9mWne7CC728HVl1ZeJOX.dtRZHMDt71WlNVeH4DfzQ16c6CoBa'),
