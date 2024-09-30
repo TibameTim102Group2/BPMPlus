@@ -11,6 +11,7 @@ namespace BPMPlus.Data.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            //Scrap
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
