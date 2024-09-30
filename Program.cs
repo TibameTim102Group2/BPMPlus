@@ -64,7 +64,12 @@ namespace BPMPlus
             });
 
             var app = builder.Build();
-
+            //測試自動部屬
+            using (var scope = app.Services.CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                dbContext.Database.Migrate(); // 自動應用遷移
+            }
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
