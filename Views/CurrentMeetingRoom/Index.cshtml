@@ -86,7 +86,9 @@
 				<tbody>
 					<tr v-for="time in times" :key="time">
 						<td>{{ time }}</td>
-						<td v-for="room in rooms" :key="room" :class="{ booked: isBooked(room, time) }" @@click="handclick(room,time)"></td>
+						<td v-for="room in rooms" :key="room" :class="{ booked: isBooked(room, time) }" @@click="handclick(room,time)">
+@* 								{{ isBooked(room, time) ? '已預定' : '' }} *@
+						</td>
 					</tr>
 				</tbody>
 			</table>
