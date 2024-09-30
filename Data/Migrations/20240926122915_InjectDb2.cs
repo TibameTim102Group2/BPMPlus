@@ -25,7 +25,11 @@ namespace BPMPlus.Data.Migrations
                     ('D006', 'A008', '01', 1, '2024-08-19', '2024-08-19', '0912345008', N'小新', 'bpmplusa024@zohomail.com', '$2b$10$tjstqLk0Z1Ua/TJ/7WRSp.dq1l3ca2yseZv35fUVAGloHuJ0VCkjy'),
                     ('D006', 'A009', '05', 1, '2024-08-19', '2024-08-19', '0912345009', N'正男', 'jangnanforthewin@gmail.com', '$2b$10$SMCWgjVLxgM2HUe0iAhcuOVtlnqYfvtDsQZCA0ZxzeJkOzWFSBAaS'),
                     ('D003', 'A010', '05', 1, '2024-08-19', '2024-08-19', '0912345010', N'小葵', 'bpmplus102@gmail.com', '$2b$10$Dc8ggWvs95ZtilMyBb.q8uK8O1TNxR9gzofXMQ5reU6Eyu18lNlNG'),
-                    ('D003', 'A011', '01', 1, '2024-08-19', '2024-08-19', '0912345011', N'小愛', 'bpmplusa027@yahoo.com', '$2b$10$sNX9mLIvwyZ2KOVDJkaFOeXFO0LDxxqRM9Qn4RyzaSz3I95vgUpla');
+                    ('D003', 'A011', '01', 1, '2024-08-19', '2024-08-19', '0912345011', N'小愛', 'bpmplusa027@yahoo.com', '$2b$10$sNX9mLIvwyZ2KOVDJkaFOeXFO0LDxxqRM9Qn4RyzaSz3I95vgUpla'),
+                    ('D004', 'A012', '02', 1, '2024-08-19', '2024-08-19', '0912345012', N'松坂', 'A012ume@domain.com', '$2b$10$I5Pnv05Nd5nnQnBvwpylReIDS.hjEOdNPTosySnzltk3p1dqgQxkm'),
+                    ('D001', 'A013', '05', 1, '2024-08-19', '2024-08-19', '0912345013', N'黑磯', 'A013kuroiso@domain.com', '$2b$10$pKv8qs7bqwZqlCP7m9a8Jekf9zUqXyHvowFDL2y8XCxU1Wwqbz8JO');
+
+
                 GO
                 INSERT INTO Project (ProjectId,ProjectManagerId, ProjectName, Summary, DeadLine, CreatedTime, UpdatedTime) VALUES
                     ('P001', 'A009',N'春日部音樂會', N'音樂會', '2024-09-30', '2024-09-25', '2024-09-25'),
@@ -73,6 +77,8 @@ namespace BPMPlus.Data.Migrations
                     ('G0010', 'A009'),
                     ('G0010', 'A010'),
                     ('G0010', 'A011'),
+                    ('G0010', 'A012'),
+                    ('G0010', 'A013'),
                     ('G0009', 'A001'),
                     ('G0009', 'A002'),
                     ('G0009', 'A003'),
@@ -84,6 +90,8 @@ namespace BPMPlus.Data.Migrations
                     ('G0009', 'A009'),
                     ('G0009', 'A010'),
                     ('G0009', 'A011'),
+                    ('G0009', 'A012'),
+                    ('G0009', 'A013'),
                     ('G0008', 'A001'),
                     ('G0008', 'A002'),
                     ('G0008', 'A003'),
@@ -95,6 +103,8 @@ namespace BPMPlus.Data.Migrations
                     ('G0008', 'A009'),
                     ('G0008', 'A010'),
                     ('G0008', 'A011'),
+                    ('G0008', 'A012'),
+                    ('G0008', 'A013'),
                     ('G0005', 'A009'),
                     ('G0005', 'A010'),
                     ('G0005', 'A001'),
