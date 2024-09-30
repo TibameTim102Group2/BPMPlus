@@ -248,7 +248,7 @@
             <div class="mb-3 form-label">
                 <label for="xxx1">複製單號</label>
                 <input id="formDropdown" list="datal" class="form-control" onchange="updateFormId()" id="Input" name="ice-cream-choice" />
-                <datalist id="datal">
+                <datalist id="datal" autocomplete="off">
                     @foreach (var form in ViewBag.Forms as List<Form>)
                     {
                         <option value="@form.FormId" data-id="@form.FormId">@form.FormId</option>

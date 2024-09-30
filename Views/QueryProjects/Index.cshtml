@@ -84,7 +84,7 @@
             <div class="col-6">
                 <label class="groupLabel">參與員工</label>
                 <input placeholder="請選擇員工" list="employeeId" id="employeeList" />
-                <datalist id="employeeId" >
+                <datalist id="employeeId" autocomplete="off" >
                     <@* option value="">--請選擇員工--</option> *@
                     @foreach (var employee in Model.QueryProjectsSearchEmployees)
                     {
