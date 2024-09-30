@@ -56,7 +56,7 @@ namespace BPMPlus.Controllers
                     ProjectName = c.Project.ProjectName,
                     CategoryDescription = c.Category.CategoryDescription,
                     Tel = c.Tel,
-                    ExpectedFinishedDay = c.ExpectedFinishedDay.ToString("yyyy-MM-dd"),
+                    ExpectedFinishedDay = c.ExpectedFinishedDay.AddHours(8).ToString("yyyy-MM-dd"),
                     Content = c.Content,
                     Date = c.Date.AddHours(8).ToString("yyyy-MM-dd"), //當地時間加8小時
                     DepartmentName = c.Department.DepartmentName,
