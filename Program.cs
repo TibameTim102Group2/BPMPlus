@@ -13,6 +13,7 @@ namespace BPMPlus
     {
         public static void Main(string[] args)
         {
+            //start buil
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
