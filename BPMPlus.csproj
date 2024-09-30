@@ -8,6 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\upload\NewFolder\**" />
+    <Content Remove="wwwroot\upload\NewFolder\**" />
+    <EmbeddedResource Remove="wwwroot\upload\NewFolder\**" />
+    <None Remove="wwwroot\upload\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Views\Users\bKUserCreate.cshtml.cs" />
   </ItemGroup>
 
@@ -26,7 +33,7 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\images\userdata\" />
-    <Folder Include="wwwroot\upload\NewFolder\" />
+    <Folder Include="wwwroot\upload\" />
   </ItemGroup>
 
 </Project>
