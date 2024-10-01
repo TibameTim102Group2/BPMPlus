@@ -241,7 +241,7 @@
                     </div>
                     <div class="col-6 form-label form-group-centered">
                         <label>希望完成日期</label>
-                        <input asp-for="@Model.HopeFinishDate" type="text" class="form-control" value="@Model.HopeFinishDate.ToLocalTime().ToString(" yyyy-MM-dd")" readonly />
+                    <input asp-for="@Model.HopeFinishDate" type="text" class="form-control" value="@Model.HopeFinishDate.AddHours(8).ToString(" yyyy-MM-dd")" readonly />
                     </div>
                     <div class="col-6 form-label form-group-centered">
                         <label>所屬專案</label>
