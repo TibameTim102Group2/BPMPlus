@@ -45,6 +45,8 @@
 
 		.booked {
 			background-color: #42a8fa;
+			color: white;
+			font-weight: bold;
 		}
 
 			.booked:hover {
@@ -86,9 +88,11 @@
 				<tbody>
 					<tr v-for="time in times" :key="time">
 						<td>{{ time }}</td>
-						<td v-for="room in rooms" :key="room" :class="{ booked: isBooked(room, time) }" @@click="handclick(room,time)">
-								{{ isBooked(room, time) ? room : '' }}
-						</td>
+							<td v-for="room in rooms" :key="room" :class="{ booked: isBooked(room, time) }" @@click="handclick(room, time)">
+								<template v-if="isBooked(room, time)">
+									{{ isBooked(room, time).meetingHost }}
+								</template>
+							</td>
 					</tr>
 				</tbody>
 			</table>
@@ -349,7 +353,11 @@
 				},
 				isBooked(room, time) {
 					const hour = parseInt(time.split(':')[0], 10);
-					return this.bookedSlots[room] && this.bookedSlots[room].includes(hour);
+					if (this.bookedSlots[room]) {
+						const booking = this.bookings.find(booking => booking.meetingRoomId === room && booking.startTime <= hour && booking.endTime > hour);
+						return booking ? booking : false;
+					}
+					return false;
 				},
 				calculateBookedSlots() {
 
