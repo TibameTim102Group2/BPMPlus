@@ -53,15 +53,19 @@
 - SQL server management studio
 
 ## 資料遷移指令(套件管理主控台)
+
 ```
 update-database -context ApplicationDbContext //更新 DB 至最新的 migration script
 ```
+
 ```
 update-database {migration name} -context ApplicationDbContext //更新 DB 至指定版本
 ```
+
 ```
 add-migration "YourMigrationName" -context ApplicationDbContext // 依照 model file 以及 applicationDbContext 的修改自動產生資料遷移腳本
 ```
+
 ```
 remove-migration -context ApplicationDbContext // 移除最新的 migration
 ``` 
