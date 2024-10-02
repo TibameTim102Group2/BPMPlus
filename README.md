@@ -36,10 +36,12 @@
 - 後台-人員查詢
 - 後台-人員修改
 <br>
+
 ## 建議體驗流程
 
 - 可參考腳本執行 https://docs.google.com/spreadsheets/d/106yY2lQMB4msqVr9MGo6ASZf00H1srSecuhV5qU9HpQ/edit?gid=186436850#gid=186436850
 <br>
+
 ## 專案資料架構
 
 ```
@@ -60,6 +62,7 @@ BPMPlus
   └── libman.json // 用戶端程式庫套件管理
 ```
 <br>
+
 ## Git 協作規範
 
 ###Branch
@@ -68,6 +71,7 @@ BPMPlus
 
 ex.  Risa_Login
 <br>
+
 ## 技術規格
 
 ### 後端
