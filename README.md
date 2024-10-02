@@ -42,6 +42,26 @@
 - 可參考腳本執行 https://docs.google.com/spreadsheets/d/106yY2lQMB4msqVr9MGo6ASZf00H1srSecuhV5qU9HpQ/edit?gid=186436850#gid=186436850
 <br>
 
+## 程式執行環境
+
+- Visual Studio 2022
+- SQL server management studio
+
+## 資料遷移指令(套件管理主控台)
+```
+update-database -context ApplicationDbContext //更新 DB 至最新的 migration script
+```
+```
+update-database {migration name} -context ApplicationDbContext //更新 DB 至指定版本
+```
+```
+add-migration "YourMigrationName" -context ApplicationDbContext // 依照 model file 以及 applicationDbContext 的修改自動產生資料遷移腳本
+```
+```
+remove-migration -context ApplicationDbContext // 移除最新的 migration
+``` 
+
+
 ## 專案資料架構
 
 ```
