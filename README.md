@@ -1,5 +1,3 @@
-# BPMPlus
-
 <h1 align="center" style="font-weight: 700">BPMPlus | 公司內部系統 </h1>
 <div align="center" style="margin-bottom:24px">
 
