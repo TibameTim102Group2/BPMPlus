@@ -7,11 +7,11 @@
 </div>
 <br/>
 
-## 設計沿革
+##設計沿革
 
 此服務旨對企業內部資源分配及跨部門協作提供一個有效率、權限劃分清楚的平台，並提供企業內部良好的客製化、彈性設計。包括工單處理流程、人員管理、工單流程追蹤、專案管理以及會議室預約系統
 <br>
-## 功能清單
+##功能清單
 
 - 首頁
 - 登入登出
@@ -36,11 +36,11 @@
 - 後台-人員查詢
 - 後台-人員修改
 <br>
-## 建議體驗流程
+##建議體驗流程
 
 - 可參考腳本執行 https://docs.google.com/spreadsheets/d/106yY2lQMB4msqVr9MGo6ASZf00H1srSecuhV5qU9HpQ/edit?gid=186436850#gid=186436850
 <br>
-## 專案資料架構
+##專案資料架構
 
 ```
 BPMPlus
@@ -60,9 +60,9 @@ BPMPlus
   └── libman.json // 用戶端程式庫套件管理
 ```
 <br>
-## Git 協作規範
+##Git 協作規範
 
-### Branch
+###Branch
 
 {成員姓名}_ {功能}  
 
@@ -70,7 +70,7 @@ ex.  Risa_Login
 <br>
 ## 技術規格
 
-### 後端
+###後端
 
 - C#
 - [ASP.NET](http://ASP.NET) Core MVC
@@ -80,7 +80,7 @@ ex.  Risa_Login
 - EF Core
 - Azure app service
 
-### 前端
+###前端
 
 - Vue
 - jQuery
