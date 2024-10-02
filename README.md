@@ -5,7 +5,7 @@
 </div>
 <br/>
 
-![bpmbanner](https://github.com/user-attachments/assets/ac355906-1001-4cc8-82f9-492f565bcf5c)
+![image](https://github.com/user-attachments/assets/ac355906-1001-4cc8-82f9-492f565bcf5c)
 
 
 <br>
