@@ -42,7 +42,7 @@
 
 ## 建議體驗流程
 
-- 可參考腳本執行 https://docs.google.com/spreadsheets/d/106yY2lQMB4msqVr9MGo6ASZf00H1srSecuhV5qU9HpQ/edit?gid=186436850#gid=186436850
+- 可參考腳本執行 https://docs.google.com/spreadsheets/d/1YRZnviZospUyJJe2puAvFB74tEEhu_Xz95ZeoM4_t38/edit?gid=161174274#gid=161174274
 <br>
 
 ## 程式執行環境
