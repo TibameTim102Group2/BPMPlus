@@ -70,6 +70,13 @@ add-migration "YourMigrationName" -context ApplicationDbContext // 依照 model 
 remove-migration -context ApplicationDbContext // 移除最新的 migration
 ``` 
 
+## appsetting.json
+
+```
+"ConnectionStrings": {
+  "DefaultConnection": "Server={YourServer};Database=BPMPlus;Encrypt=True;Trusted_Connection=True;MultipleActiveResultSets=true"
+},
+```
 
 ## 專案資料架構
 
