@@ -55,6 +55,8 @@
 
         td {
             background-color: white;
+            color: white;
+            font-weight: bold;
         }
 
         .form-group {
@@ -410,7 +412,7 @@
                 let bookingDate = $(this).val();
                 $('#tableNote').hide;
                 $.ajax({
-                    url: '@Url.Action("CheakMeetingRooms", "BookingMeetingRoom")',
+                    url: '@Url.Action("CheckMeetingRooms", "BookingMeetingRoom")',
                     type: 'GET',
                     data: {
                         BookingDate: bookingDate
@@ -433,13 +435,14 @@
                     let startTime = booking.startTime;
                     let endTime = booking.endTime;
                     let roomId = booking.roomId;
+                    let userName = booking.userName;
 
                     $("#scheduleTable td").each(function () {
                         let cellTime = $(this).data("time");
                         let cellRoom = $(this).data("room");
 
                         if (cellRoom == roomId && cellTime >= startTime && cellTime < endTime) {
-                            $(this).css("background-color", "#42a8fa");
+                            $(this).css("background-color", "#42a8fa").css("color", "white").text(userName);
                         }
                     });
                 });
