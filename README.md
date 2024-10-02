@@ -50,7 +50,7 @@
 ## 程式執行環境
 
 - Visual Studio 2022
-  下載 Visual studio 2022 社群版本，開啟 BPMPlus.csproj，然後執行，並執行 update-database -context ApplicationDbContext
+  <br> 下載 Visual studio 2022 社群版本，開啟 BPMPlus.csproj，然後執行，並執行 update-database -context ApplicationDbContext
   
 - SQL server management studio
 
