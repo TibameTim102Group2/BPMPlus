@@ -92,21 +92,15 @@ namespace BPMPlus.Controllers
             var bookedTimes = await _context.Meeting
                 .Where(b=>b.StartTime.Date == DateTime.Parse(BookingDate).Date)
                 .Join(_context.User, // 假設您的使用者表格名為 "User"
-				m => m.MeetingHost,
-				u => u.UserId,
-				(m, u) => new {
-				    StartTime = m.StartTime.AddHours(8).ToString("HH:mm"),
-				    EndTime = m.EndTime.AddHours(8).ToString("HH:mm"),
-				    roomId = m.MeetingRoomId,
-				    host = m.MeetingHost,
-				    userName = u.UserName
-				})
-                //           .Select(b=>new {
-                //               StartTime = b.StartTime.AddHours(8).ToString("HH:mm"),
-                //               EndTime = b.EndTime.AddHours(8).ToString("HH:mm"),
-                //               roomId = b.MeetingRoomId,
-                //host = b.MeetingHost
-                //           })
+						m => m.MeetingHost,
+						u => u.UserId,
+						(m, u) => new {
+							StartTime = m.StartTime.AddHours(8).ToString("HH:mm"),
+							EndTime = m.EndTime.AddHours(8).ToString("HH:mm"),
+							roomId = m.MeetingRoomId,
+							host = m.MeetingHost,
+							userName = u.UserName
+						})
                 .ToListAsync();
             return Json(new { success = true, data = bookedTimes });
         }
