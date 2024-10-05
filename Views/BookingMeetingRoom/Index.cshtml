@@ -55,8 +55,7 @@
 
         td {
             background-color: white;
-            color: white;
-            font-weight: bold;
+
         }
 
         .form-group {
@@ -442,7 +441,7 @@
                         let cellRoom = $(this).data("room");
 
                         if (cellRoom == roomId && cellTime >= startTime && cellTime < endTime) {
-                            $(this).css("background-color", "#42a8fa").css("color", "white").text(userName);
+                            $(this).css("background-color", "#42a8fa").css("color", "white").css("font-weight", "bold").text(userName);
                         }
                     });
                 });
